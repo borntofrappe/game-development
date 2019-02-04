@@ -4,16 +4,13 @@
 
 The [first video](https://youtu.be/jZqYXSmgDuM) in the playlist behind this repository tackles the lua programming language and the love2d environment with the video game Pong in mind.
 
-<!-- convention -->
-<!-- each section is prefaced by an h2 heading and structured as follows
-Index: according to the h3, h4 headings which explain the section
-Snippets: referencing the actual code produced alongside the section
-Each snippet ought to be pushed in the repo for reference
--->
+The project is structred as follows:
+
+- in this README you find general information on the Pong repository and introductory remarks about Lua and Love2D;
+
+- in each separate folder (Pong 0, Pong 1 and so forth and so on) you find an additional README, detailing the lessons learned from the codebase and the actual video. You also find the snippets, the working code for each sub-section, documented as neatly as possible.
 
 ## Getting Started
-
-Index:
 
 - [Installing Love2D](#installing-love2d)
 
@@ -21,7 +18,7 @@ Index:
 
 Snippets:
 
-- 01 getting_started.lua
+- main.lua
 
 ### Installing Love2D
 
@@ -74,82 +71,4 @@ If you think of a 1x1 square, the following representation highlights this coord
 ```text
 (0, 0) (1, 0)
 (0, 1) (1, 1)
-```
-
-## Pong 0
-
-<!-- for each branch explained in the video include
-- a section devoted to lessons learned while reading the codebase
-- a section devoted to lessons learned while watching the video, itself commenting the codebase
--->
-
-Index:
-
-- [Pong 0 Code](#pong-0-code)
-
-- [Pong 0 Notes](#pong-0-notes)
-
-Snippets:
-
-- 02 love_setup.lua
-
-### Pong 0 Code
-
-- resolutions is set in the form of screen width and height. Two constant variables are declared in the global scope:
-
-    ```lua
-    WINDOW_WIDTH = 1280
-    WINDOW_HEIGHT = 720
-    ```
-
-Notice again the lack of semicolons. Notice also the lack of a type or any identifier for the variable.
-
-- love works <!-- in mysterious ways --> through two main functions: `love.load()` and `love.draw()`.
-
-    `love.load()` runs once, as the game starts out. It is here that you ought to set those variables and options which initialize the games.
-
-    `love.draw()` runs after a love2d update, to literally draw something on th screen.
-
-- in the load function, the size of the screen is modified through the `setMode()` method. This alters the size of the window as follows:
-
-      ```lua
-      love.window.setMode(width, height, options)
-      ```
-
-     `options` relates to an object detailing additional settings on the window.
-
-- in the draw function, text is printed on the screen through the `printf` method. It works as follows:
-
-      ```lua
-      love.graphics.printf(text, x, y, centerScope, centerKeyword)
-      ``` 
-    
-    `x` and `y` dictacte where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width if the screen). Finally `centerKeyword` is exactly that, a keyword like `center` to deetermine the actual position.
-
-- last, but perhaps most importantly, comments are included following two dashes: `--`. Multi line comments follow up the two dashes with two sets of square brackets `--[[ ]]`.
-
-## Pong 0 Notes
-
-The three main functions are:
-
-- `love.load()`. Love2d will look in a main.lua file and run love.load(). This is akin to a startup function, where you ought to initialize the project.
-
-- `love.update(dt)`. `dt` being delta time. Love2D calls this function on each frame, and you can use the argument to update the application according to the passage of time.
-
-- `love.draw()`. Drawing and rendering behavior is encapsulated in this function.
-
-Also important functions, but nested within the big three are:
-
-- `love.graphics.printf()`. Drawing physically to the screen.
-
-- `love.window.setMode()`. Setting up the window and a few parameters.
-
-Beside these elements from the love2D framework, and regarding more the programming language, tables in lua are the equivalent of objects in JavaScript, and follow the syntax:
-
-```lua
-{
-  property = value,
-  property = value,
-  property = value,
-}
 ```
