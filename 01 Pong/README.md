@@ -46,3 +46,77 @@ In the [getting started](https://love2d.org/wiki/Getting_Started) section, the w
 1. drag the folder containing the `main.lua` file on top of the `Love2D` program, or a shortcut to said program. Personally, I created a shortcut and placed it in the root folder, right beside the `Pong` folder.
 
     This should fire up Love2D and present the hello world string. The two integers seem to be referencing the coordinates of the string. The coordinate system, as explained in the video, works like the coordinate system in SVG land: from the top left corner.
+    
+## Introductory concepts
+
+Index:
+
+- Game Loop
+
+- 2D Coordinate Systems
+
+- Pong 0
+
+Snippets:
+
+- 02 love_setup.lua
+
+### Game Loop
+
+Infinite loop which continuously:
+
+- listens for input
+
+- updates the game according to the input
+
+- renders whatever has updated <!-- react?! -->.
+
+### 2D Coordinate Systems
+
+Exactly like with SVG syntax, the coordinate system works top to bottom, left to right.
+
+If you think of a 1x1 square, the following representation highlights this coordinate system
+
+```text
+(0, 0) (1, 0)
+(0, 1) (1, 1)
+```
+
+### Pong 0
+
+Lessons learned from the codebase:
+
+- resolutions is set in the form of screen width and height. Two constant variables are declared in the global scope:
+
+    ```lua
+    WINDOW_WIDTH = 1280
+    WINDOW_HEIGHT = 720
+    ```
+
+Notice again the lack of semicolons. Notice also the lack of a type or any identifier for the variable.
+
+- love works <!-- in mysterious ways --> through two main functions: `love.load()` and `love.draw()`.
+
+    `love.load()` runs once, as the game starts out. It is here that you ought to set those variables and options which initialize the games.
+
+    `love.draw()` runs after a love2d update, to literally draw something on th screen.
+
+- in the load function, the size of the screen is modified through the `setMode()` method. This alters the size of the window as follows:
+
+      ```lua
+      love.window.setMode(width, height, options)
+      ```
+
+      `options` relates to an object detailing additional settings on the window.
+
+- in the draw function, text is printed on the screen through the `printf` method. It works as follows:
+
+      ```lua
+      love.graphics.printf(text, x, y, centerScope, centerKeyword)
+      ```
+
+      `x` and `y` dictacte where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width if the screen). Finally `centerKeyword` is exactly that, a keyword like `center` to deetermine the actual position.
+
+- last, but perhaps most importantly, comments are included following two dashes: `--`. Multi line comments follow up the two dashes with two sets of square brackets `--[[ ]]`.
+
+
