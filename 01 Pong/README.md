@@ -51,15 +51,9 @@ In the [getting started](https://love2d.org/wiki/Getting_Started) section, the w
 
 Index:
 
-- Game Loop
+- [Game Loop](#game-loop)
 
-- 2D Coordinate Systems
-
-- Pong 0
-
-Snippets:
-
-- 02 love_setup.lua
+- [2D Coordinate System](#2d-coordinate-system)
 
 ### Game Loop
 
@@ -71,7 +65,7 @@ Infinite loop which continuously:
 
 - renders whatever has updated <!-- react?! -->.
 
-### 2D Coordinate Systems
+### 2D Coordinate System
 
 Exactly like with SVG syntax, the coordinate system works top to bottom, left to right.
 
@@ -82,9 +76,24 @@ If you think of a 1x1 square, the following representation highlights this coord
 (0, 1) (1, 1)
 ```
 
-### Pong 0
+## Pong 0
 
-Lessons learned from the codebase:
+<!-- for each branch explained in the video include
+- a section devoted to lessons learned while reading the codebase
+- a section devoted to lessons learned while watching the video, itself commenting the codebase
+-->
+
+Index:
+
+- [Pong 0 Code](#pong-0-code)
+
+- [Pong 0 Notes](#pong-0-notes)
+
+Snippets:
+
+- 02 love_setup.lua
+
+### Pong 0 Code
 
 - resolutions is set in the form of screen width and height. Two constant variables are declared in the global scope:
 
@@ -107,16 +116,16 @@ Notice again the lack of semicolons. Notice also the lack of a type or any ident
       love.window.setMode(width, height, options)
       ```
 
-      `options` relates to an object detailing additional settings on the window.
+     `options` relates to an object detailing additional settings on the window.
 
 - in the draw function, text is printed on the screen through the `printf` method. It works as follows:
 
       ```lua
       love.graphics.printf(text, x, y, centerScope, centerKeyword)
-      ```
-
-      `x` and `y` dictacte where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width if the screen). Finally `centerKeyword` is exactly that, a keyword like `center` to deetermine the actual position.
+      ``` 
+    
+    `x` and `y` dictacte where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width if the screen). Finally `centerKeyword` is exactly that, a keyword like `center` to deetermine the actual position.
 
 - last, but perhaps most importantly, comments are included following two dashes: `--`. Multi line comments follow up the two dashes with two sets of square brackets `--[[ ]]`.
 
-
+<!-- ### Pong 0 Notes -->
