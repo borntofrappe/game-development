@@ -4,13 +4,26 @@
 
 The [first video](https://youtu.be/jZqYXSmgDuM) in the playlist behind this repository tackles the lua programming language and the love2d environment with the video game Pong in mind.
 
+<!-- convention -->
+<!-- each section is prefaced by an h2 heading and structured as follows
+Index: according to the h3, h4 headings which explain the section
+Snippets: referencing the actual code produced alongside the section
+Each snippet ought to be pushed in the repo for reference
+-->
+
 ## Getting Started
 
-- installing Love2D
+Index:
 
-- running a silly program
+- [Installing Love2D](#installing-love2d)
 
-### Intalling Love2D
+- [Running a silly program](#running-a-silly-program)
+
+Snippets:
+
+- 01 getting_started.lua
+
+### Installing Love2D
 
 It is first necessary to install the Love2D framework. From [the homepage itself](https://love2d.org/) the installer provides the quickest solution. Once installed, the main reference is [the wiki](https://love2d.org/wiki/Main_Page).
 
