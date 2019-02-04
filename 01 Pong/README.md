@@ -128,4 +128,28 @@ Notice again the lack of semicolons. Notice also the lack of a type or any ident
 
 - last, but perhaps most importantly, comments are included following two dashes: `--`. Multi line comments follow up the two dashes with two sets of square brackets `--[[ ]]`.
 
-<!-- ### Pong 0 Notes -->
+## Pong 0 Notes
+
+The three main functions are:
+
+- `love.load()`. Love2d will look in a main.lua file and run love.load(). This is akin to a startup function, where you ought to initialize the project.
+
+- `love.update(dt)`. `dt` being delta time. Love2D calls this function on each frame, and you can use the argument to update the application according to the passage of time.
+
+- `love.draw()`. Drawing and rendering behavior is encapsulated in this function.
+
+Also important functions, but nested within the big three are:
+
+- `love.graphics.printf()`. Drawing physically to the screen.
+
+- `love.window.setMode()`. Setting up the window and a few parameters.
+
+Beside these elements from the love2D framework, and regarding more the programming language, tables in lua are the equivalent of objects in JavaScript, and follow the syntax:
+
+```lua
+{
+  property = value,
+  property = value,
+  property = value,
+}
+```
