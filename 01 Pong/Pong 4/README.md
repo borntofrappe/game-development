@@ -12,7 +12,7 @@ Snippet:
 
 - main.lua
 
-### Randomness
+## Randomness
 
 To avoid a predictable behavior, the project introduces randomness in the form or random integers and through the concept of seeds.
 
@@ -60,7 +60,7 @@ This for the vertical direction.
 
 Direction would actually be a misnomer on my part though. It is actually the value which is latter added to the coordinate of the ball to make it move across the screen. In this sense it is closer to the horizontal and vertical speed.
 
-### Clamping
+## Clamping
 
 An issue with the previous update concerned the movement of the paddles once said paddles would reach the upper and lower edge of the screen. Without additional consideration, the paddles can and indeed go past the boundaries of the window, which is something the game should not allow.
 
@@ -73,7 +73,7 @@ Simply put, instead of checking the position of the paddles and avoiding any mov
 player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
 ```
 
-### Game State
+## Game State
 
 As the game stands, the ball can be made moving without need for further input. It quickly moves outside of the window's scope and without detection of any collision, but those are issues for a later update.
 
