@@ -1,6 +1,6 @@
 # Flappy Bird 4 - Anti Gravity
 
-Anti gravity is added to offset the effects of the increasing gravity following a 'jump'. Before diving into how anti gravity is technically implemented <!-- I wasn't that far off with modifying dy --> the lecturer displays how to efficiently listen for user input and have a way to react to user input outside of the `main-lua` function. This gives the possibility to rapidly react to input directly in the Bird class.
+Anti gravity is added to offset the effects of the increasing gravity following a 'jump'. Before diving into how anti gravity is technically implemented <!-- I wasn't that far off with modifying dy --> the lecturer displays how to efficiently listen for user input and have a way to react to user input outside of the `main.lua` file. This gives the possibility to rapidly react to input directly in the Bird class.
 
 ## Custom Tables & Functions
 
