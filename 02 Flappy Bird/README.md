@@ -128,3 +128,9 @@ Once it is passed through the second argument, it can be then used in the specif
   ```
 
 - in the `render()` function, show one single badge right below the score, and before a number actually counting the number of badges awarded. This of course in case the score warrants a medal.
+
+### TODO
+
+- pause feature.
+
+This is rather challenging feature, and might require a bit more work. Something for a later update.
