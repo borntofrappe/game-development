@@ -51,3 +51,21 @@ To include randomness in the height of the gaps I modified `PlayState.lua` and `
   ```
 
 And then modified the use of the gap variable in the instance of the bottom `Pipe`, from `GAP_HEIGHT` to `self.gap`.
+
+### Slightly random pipe interval
+
+I had previously and already stored a reference to the interval in a variable used in the `update(dt)` function of the play state.
+
+Making it random is a matter of initializing it randomly:
+
+```lua
+self.interval = math.random(2, 4)
+```
+
+And later re-assign a random value as a new pipe gets spawned. Right after setting the timer back to 0:
+
+```lua
+-- when adding a pipe
+self.timer = 0
+self.interval = math.random(2, 4)
+```
