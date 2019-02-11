@@ -25,3 +25,29 @@ Even when a snippet is meant to be exactly the same, I will avoid copy-paste to 
 There actually isn't any update 13, but I decided to create one for the assignment given by the lecturer to expand on the game.
 
 These are tasks that go beyond the scope of the video, but it is teaching and also entertaining to indulge in them.
+
+### Slightly random pipe gaps
+
+To include randomness in the height of the gaps I modified `PlayState.lua` and `PipePair.lua` as follows:
+
+- in `PlayState.lua`, and specifically where each pair of pipe is generated, I created a new variable in gap. This is a local variable just like `y`, and just like `y` it is passed to the instance of the `PipePair` class inserted in the table.
+
+  ```lua
+  -- in update(dt), when adding a pair of pipe
+  local gap = math.random(90, 150)
+
+  -- local y logic
+
+  -- insert an instance of the pipe pair class with the specified vertical coordinate and the random gap value
+  table.insert(self.pipePairs, PipePair(y, gap))
+  ```
+
+- in `PipePair.lua` I adjusted the `init()` function as to describe a field for the gap as well.
+
+  ```lua
+  function PipePair:init(y, gap)
+    self.gap = gap -- in addition to previous fields
+  end
+  ```
+
+And then modified the use of the gap variable in the instance of the bottom `Pipe`, from `GAP_HEIGHT` to `self.gap`.
