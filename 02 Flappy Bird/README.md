@@ -129,8 +129,121 @@ Once it is passed through the second argument, it can be then used in the specif
 
 - in the `render()` function, show one single badge right below the score, and before a number actually counting the number of badges awarded. This of course in case the score warrants a medal.
 
-### TODO
+#### Pause feature
 
-- pause feature.
+The new flow of the application can be then described as follows:
 
-This is rather challenging feature, and might require a bit more work. Something for a later update.
+```text
+title ---- → countdown --- → play ↔ pause
+                ↑             ↓
+                 -------- score
+```
+
+With the pause state affecting only the play state and allowing indefinitely to switch between the two.
+
+Progressively, I was able to complete the feature as follows:
+
+- add `PlayState.lua`. This means requiring the file in `main.lua` and have it referenced in the instance of the state machine;
+
+- structure the pause state much alike `TitleScreenState`, with `printf` functions describing the nature of the state;
+
+- in the play state, listen for a press on the enter key, at which point call the `:change()` function to change toward the pause state. Mirroring this feat, listen for a press on the enter key also in the pause state, to revert back to the play state.
+
+This had the effect of creating a separate screen, allowing to pause and switch back to the play state. Unfortunately, this simple implementation doesn't reflect a pause feature, but more a reset feature. Every time the `PlayState` gets called through the state machine, the `init` function initializes all the variables, essentially resetting the game. The score goes back to 0, the bird starts from the center of the screen, the pipes are added from an empty table.
+
+The approach I took to actually implement the pause **and** resume feature took consideration of the `:enter` function, and specifically how I was able to have the score value passed from the play state to the score state.
+
+In light of this, `PauseState` is called with an object specifying the values which need persisting:
+
+```lua
+if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+  gStateMachine:change('pause', {
+    score = self.score,
+    bird = self.bird,
+    pipePairs = self.pipePairs,
+    timer = self.timer,
+    interval = self.interval,
+    lastY = self.lastY
+  })
+end
+```
+
+And in the `enter()` function, the class sets the same values through the `self` keyword:
+
+```lua
+function PauseState:enter(params)
+  self.score = params.score
+  self.bird = params.bird
+  self.pipePairs = params.pipePairs
+  self.timer = params.timer
+  self.interval = params.interval
+  self.lastY = params.lastY
+end
+```
+
+This means that the pause state has access to the score, but also the bird, pairs of pipes and the connected logic regarding their movement and position.
+
+It is possible to use this values already in the play state, perhaps as to show the current score:
+
+```lua
+love.graphics.setFont(normalFont)
+love.graphics.printf(
+  'Current score: ' .. tostring(self.score),
+  0,
+  -- display the text just above the 16 height ground
+  VIRTUAL_HEIGHT * 3 / 4 - 4,
+  VIRTUAL_WIDTH,
+  'center'
+)
+```
+
+But most importantly, it is possible to have these values thrown back to the play state to have it effectively start from the previous setting.
+
+```lua
+function PauseState:update(dt)
+  if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    gStateMachine:change('play', {
+      score = self.score,
+      bird = self.bird,
+      pipePairs = self.pipePairs,
+      timer = self.timer,
+      interval = self.interval,
+      lastY = self.lastY
+    })
+  end
+end
+```
+
+`PlayState` needs to be of course modified as to accept these parameters. Parameters which can be set through the `enter()` function to existing values, if any.
+
+```lua
+function PlayState:enter(params)
+  if params then
+    self.score = params.score
+    self.bird = params.bird
+    self.pipePairs = params.pipePairs
+    self.timer = params.timer
+    self.interval = params.interval
+    self.lastY = params.lastY
+  else
+    self.score = 0
+    self.bird = Bird()
+    self.pipePairs = {}
+    self.timer = 0
+    self.interval = math.random(2, 4)
+    self.lastY = -PIPE_HEIGHT + math.random(80) + 20
+  end
+end
+```
+
+In case parameters are defined, the fields are initialized with those values, else there's a fallback for the default values describing the starting point.
+
+It is also possible to use a ternary operator:
+
+```lua
+self.score = params and params.score or 0
+```
+
+But given the number of fields I found it best to separate the two possible branches in the `if then else` statement.
+
+Such a conditional is necessary as the play might be called without parameters (and it is after the countdown state).
