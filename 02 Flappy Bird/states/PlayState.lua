@@ -4,23 +4,36 @@
 -- inherit from the BaseState class
 PlayState = Class{__includes = BaseState}
 
+-- set the fields of the application to the value passed through the enter parameters or default values
 --[[
-  in the init function, inclue the following fields
-  - bird, with an instance of the bird class
-  - pipePairs, with a table to be filled with instances of the pipePairs class
+  the class describes the game through the following fields
+  - score, an integer to keep track of the score
+  - bird, an instance of the bird class
+  - pipePairs, a table to be filled with instances of the pipePair class
   - timer and interval, to regulate the rate of appearance of the pipes
   - lastY, as to maintain a certain consistency between pairs of pipes
 ]]
-function PlayState:init()
-  self.bird = Bird()
-  self.pipePairs = {}
-  self.timer = 0
-  self.interval = math.random(2, 4)
-  -- subtract the height of the pipe, as the pipe is later flipped upside down, to effectively reference the top of the screen
-  -- math.random(80) + 20 then references a distance from the top
-  self.lastY = -PIPE_HEIGHT + math.random(80) + 20
-  -- include a variable to keep track of the score
-  self.score = 0
+function PlayState:enter(params)
+  -- this in case the play state gets called from the pause state, to resume from existing values
+  if params then
+    self.score = params.score
+    self.bird = params.bird
+    self.pipePairs = params.pipePairs
+    self.timer = params.timer
+    self.interval = params.interval
+    self.lastY = params.lastY
+  -- this in case to parameter is specified, and the game can start from the very beginning
+  else
+    self.score = 0
+    self.bird = Bird()
+    self.pipePairs = {}
+    self.timer = 0
+    self.interval = math.random(2, 4)
+    self.lastY = -PIPE_HEIGHT + math.random(80) + 20
+  end
+end
+
+function PlayState:init(score)
   -- include a variable referencing the star icon
   self.image = love.graphics.newImage('Resources/graphics/medal.png')
 end
@@ -83,8 +96,6 @@ function PlayState:update(dt)
         pair.scored = true
       end
     end
-
-
   end
 
   -- create a second losing condition, when the bird hits the ground
@@ -100,8 +111,20 @@ function PlayState:update(dt)
   -- update the position of the bird
   self.bird:update(dt)
 
+  -- listen for a press on the enter key
+  -- if so call the global state machine variable to change the state to the pause state
+  -- pass through a second argument the values which need persisting after the pause
+  if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    gStateMachine:change('pause', {
+      score = self.score,
+      bird = self.bird,
+      pipePairs = self.pipePairs,
+      timer = self.timer,
+      interval = self.interval,
+      lastY = self.lastY
+    })
+  end
 end
-
 
 -- in the render function, render the pipes contained in the self.pipePairs table and the bird
 function PlayState:render()

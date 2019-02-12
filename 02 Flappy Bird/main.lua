@@ -28,6 +28,7 @@ require 'StateMachine'
 require 'states/BaseState'
 require 'states/TitleScreenState'
 require 'states/PlayState'
+require 'states/PauseState'
 require 'states/ScoreState'
 require 'states/CountdownState'
 
@@ -104,6 +105,7 @@ function love.load()
   gStateMachine = StateMachine {
     ['title'] = function() return TitleScreenState() end,
     ['play'] = function() return PlayState() end,
+    ['pause'] = function() return PauseState() end,
     ['score'] = function() return ScoreState() end,
     ['countdown'] = function() return CountdownState() end
   }
