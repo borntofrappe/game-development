@@ -250,3 +250,35 @@ require 'src/Util
 
 require 'src/states/PlayState'
 ```
+
+## Update 1+ - Pause
+
+As I mentioned, the lecturer hints at a pause screen, and specifies logic in the `PlayState` to accommodate for such a feat. The feature is never actually implemented, but for practice with creating a state and interacting with the keyboard, I decided to develop it on my own.
+
+### Add PauseState
+
+This means:
+
+- include a file in the `state` folder;
+
+- reference the value in the `Dependencies.lua` file;
+
+- add the state to the instance of the state machine.
+
+### Transition to PauseState
+
+Pause state is added as a possibility from the play state, and opportunity is given to reach the pause state and leave it only in connection to the play state.
+
+From the play state, the state is introduced by pressing the `enter` key.
+
+From the pause state, this is left once more by pressing the pause key.
+
+### Maintain State
+
+To have some values persist in the play state (currently for the horizontal position only, but later for the score and brick structure), the `:enter()` function available on every state instance can be used.
+
+- when moving toward the pause state specify the `x` coordinate in the enter parameters;
+
+- when entering into the pause state, define a field storing this value;
+
+- when reverting back to the play state, re-send the value in the play state, which needs to be equipped as to receive it, in its own `:enter()` function.
