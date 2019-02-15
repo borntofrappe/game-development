@@ -47,4 +47,12 @@ For the bricks, the game currently removes the them, but the movement of the bal
 
 The idea is to here check through a series of conditional statements if the ball hits the brick on the left, right, top or bottom side.
 
-## TODO: find a better collision detection and explain the process
+Here's the approach with which I went in the end. It mirrors the logic saw in the video, but I crafted each conditional to make evident the underlying reasoning:
+
+1. check whether the ball is moving to the right/left, to the top/bottom.
+
+Based on this first set of conditionals, you are able to narrow down the possible collisions. If moving to the right and to the bottom, indeed the brick can only be hit on the left or top edge.
+
+1. once you are able to narrow down your options, check the horizontal coordinate of the ball vis a vis the horizontal coordinate of the brick. The idea is that if the ball hits the brick on the left or right side, the ball is right outside of the horizontal dimension making up the brick. If it falls within the brick (horizontally), it is then presumed that the collision is on the top or bottom edge.
+
+Barring edge cases, the approach is rather solid. Most importantly, it allows me to have the ball estimate with good accuracy the behavior of the ball when it goes atop a row of contiguous bricks.

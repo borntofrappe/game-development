@@ -76,24 +76,79 @@ function PlayState:update(dt)
     if brick.inPlay and self.ball:collides(brick) then
       brick:hit()
 
-      -- to change the direction of the ball when it hits a brick, consider its movement and coordinates with respect to the brick's coordinates
+      --[[
+        to change the direction of the ball when it hits a brick consider
+        dx and dy
+        how much the ball falls within the brick, horizontally vis a vis vertically
+      ]]
 
-      if self.ball.dx > 0 and self.ball.x + self.ball.width + 4 < brick.x then
-        self.ball.dx = -self.ball.dx
-        self.ball.x = brick.x - self.ball.width
+      -- moving rightwards
+      if self.ball.dx > 0 then
+        -- moving downwards (and rightwards)
+        if self.ball.dy > 0 then
+          -- the ball has hit the brick either on the left or top of the brick
+          -- to find which side, consider if the coordinate of the ball falls right before the edge of the brick
+          -- if so, the ball finds itself to the left of the brick and you need to bounce it horizontally
+          beforeX = (self.ball.x + self.ball.width) - brick.x - 3
+          -- left side (right before the brick), bounce dx
+          if beforeX < 0 then
+            self.ball.dx = -self.ball.dx
+            self.ball.x = brick.x - self.ball.width
+          -- top side (after the left edge of the brick), bounce dy
+          else
+            self.ball.dy = -self.ball.dy
+            self.ball.y = brick.y - self.ball.height
+          end
 
-      elseif self.ball.dx < 0 and self.ball.x - 4 > brick.x + brick.width then
-        self.ball.dx = -self.ball.dx
-        self.ball.x = brick.x + brick.width
+        -- moving upwards (and rightwards)
+        else
+          -- the ball has hit the brick either on the left or bottom
+          -- consider if the ball is following the brick
+          beforeX = (self.ball.x + self.ball.width) - brick.x - 3
+          -- left side (after the brick), bounce dx
+          if beforeX < 0 then
+            self.ball.dx = -self.ball.dx
+            self.ball.x = brick.x - self.ball.width
+          -- bottom side (before the brick), bounce dy
+          else
+            self.ball.dy = -self.ball.dy
+            self.ball.y = brick.y + brick.height
+          end
 
-      elseif self.ball.y + self.ball.height < brick.y then
-        self.ball.dy = -self.ball.dy
-        self.ball.y = brick.y - self.ball.height
+        end
 
+      -- moving leftwards
       else
-        self.ball.dy = -self.ball.dy
-        self.ball.y = brick.y + brick.height
 
+        -- moving downwards (and leftwards)
+        if self.ball.dy > 0 then
+          -- the ball has hit the brick either on the right or top
+          afterX = self.ball.x - (brick.x + brick.width) + 3
+          -- right side, bounce dx
+          if afterX > 0 then
+            self.ball.dx = -self.ball.dx
+            self.ball.x = brick.x + brick.width
+          -- top side, bounce dy
+          else
+            self.ball.dy = -self.ball.dy
+            self.ball.y = brick.y - self.ball.height
+          end
+
+        -- moving upwards (and leftwards)
+        else
+          -- the ball has hit the brick either on the right or bottom
+          afterX = self.ball.x - (brick.x + brick.width) + 3
+          -- right side, bounce dx
+          if afterX > 0 then
+            self.ball.dx = -self.ball.dx
+            self.ball.x = brick.x + brick.width
+          -- bottom side, bounce dy
+          else
+            self.ball.dy = -self.ball.dy
+            self.ball.y = brick.y + brick.height
+          end
+
+        end
       end
 
     end
