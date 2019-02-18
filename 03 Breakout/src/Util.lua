@@ -1,8 +1,10 @@
 --[[
   utility functions
   - GenerateQuads() to create quads from the sprite image
-  - table.slice to subdivide a table in smaller chunks
-  - GenerateQuandsPaddles() to identify the different paddles
+  - table.slice to section a table in smaller chunks
+  - GenerateQuadsPaddles() to identify the paddles
+  - GenerateQuadsBalls() to identify the balls
+  - GenerateQuadsBricks() to identify the bricks
 ]]
 
 function GenerateQuads(atlas, tileWidth, tileHeight)
@@ -26,7 +28,7 @@ function GenerateQuads(atlas, tileWidth, tileHeight)
         y * tileHeight,
         tileWidth,
         tileHeight,
-        atlas:getDimension() -- object returned from the image to-be-sectioned
+        atlas:getDimensions() -- object returned from the image to-be-sectioned
       )
 
       -- increment the counter to target the following rectangle
@@ -117,5 +119,71 @@ function GenerateQuadsPaddles(atlas)
 
   -- return the table of paddles (16 paddles total, for the paddle of solid blue, gree, red, purple)
   return quads
-
 end
+
+
+function GenerateQuadsBalls(atlas)
+  -- describe the starting coordinates of the balls
+  -- described in two rows, each 8px wide and tall
+  -- 4 balls in the first row, 3 in the second (the second being 48+8px from the top)
+  local x = 96
+  local y = 48
+
+  -- initialize a counter variable to identify as many balls as there are in the sprite image
+  local counter = 1
+  -- initialize a table in which to describe the quads
+  local quads = {}
+
+  -- for the first row, target the 4 balls side by side
+  for i = 0, 3 do
+    -- blue
+    quads[counter] = love.graphics.newQuad(x, y, 8, 8, atlas:getDimensions())
+    counter = counter + 1
+
+    -- green
+    quads[counter] = love.graphics.newQuad(x + 8, y, 8, 8, atlas:getDimensions())
+    counter = counter + 1
+
+    -- red
+    quads[counter] = love.graphics.newQuad(x + 16, y, 8, 8, atlas:getDimensions())
+    counter = counter + 1
+
+    -- pink
+    quads[counter] = love.graphics.newQuad(x + 24, y, 8, 8, atlas:getDimensions())
+    counter = counter + 1
+  end
+
+  -- move toward the second row, and back to the horizontal coordinate
+  y = y + 8
+  x = 96
+
+  -- for the second row, targe the 3 balls side by side
+  for i = 0, 2 do
+    -- yellow
+    quads[counter] = love.graphics.newQuad(x, y, 8, 8, atlas:getDimensions())
+    counter = counter + 1
+
+    -- grey
+    quads[counter] = love.graphics.newQuad(x + 8, y, 8, 8, atlas:getDimensions())
+    counter = counter + 1
+
+    -- orange
+    quads[counter] = love.graphics.newQuad(x + 16, y, 8, 8, atlas:getDimensions())
+    counter = counter + 1
+  end
+
+  -- return the table of balls (7 in total)
+  return quads
+end
+
+
+
+function GenerateQuadsBricks(atlas)
+  -- the bricks are retrieved from the beginning of the breakout image
+  -- slicing the table making up the quads
+  -- 32 and 15 being the size of the bricks
+  -- 21 being the number of bricks
+  return table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+end
+
+

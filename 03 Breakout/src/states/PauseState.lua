@@ -1,28 +1,50 @@
--- state showing the pause screen
+--[[
+  pause state
+
+  showing:
+
+  - pause
+  - how to proceed
+
+  allowing to:
+  - go to the play state
+]]
 
 -- inherit from the BaseState class
 PauseState = Class{__includes = BaseState}
 
--- in the enter function create a field storing the horizontal coordinate of the paddle
+-- in the enter() function instantiate the variables received from the play state
 function PauseState:enter(params)
-  self.x = params.x
+  self.paddle = params.paddle
+  self.bricks = params.bricks
+  self.health = params.health
+  self.maxHealth = params.maxHealth
+  self.score = params.score
+  self.level = params.level
+  self.ball = params.ball
+  self.highScores = params.highScores
 end
 
--- -- in the update functionlisten for a selection of keys
+-- -- in the update(dt) function listen on a selection of keys
 function PauseState:update(dt)
-  -- listen for a key press on the enter key, at which point go back to the play state
+  -- when registering a click on the enter key, go back to the play state
   if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-    -- send back the horizontal coordinate to the play state
+    -- send back the variables specified on enter
     gStateMachine:change('play', {
-      x = self.x
+      paddle = self.paddle,
+      bricks = self.bricks,
+      health = self.health,
+      maxHealth = self.maxHealth,
+      score = self.score,
+      level = self.level,
+      ball = self.ball,
+      highScores = self.highScores
     })
-    -- play a sound as the game moves to the play screen
     gSounds['confirm']:play()
   end
-
 end
 
--- in the render function, show text describing the pause screen and how to go back playing
+-- in the render() function, show text describing the pause screen and how to go back to the play state
 function PauseState:render()
   love.graphics.setFont(gFonts['big'])
   love.graphics.printf(
@@ -41,5 +63,4 @@ function PauseState:render()
     VIRTUAL_WIDTH,
     'center'
   )
-
 end
