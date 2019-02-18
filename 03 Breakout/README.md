@@ -43,7 +43,7 @@ There's a rather more complex flow to the game, most notably due to the presence
 
 ## Update
 
-Just like for flappy bird, I decided to introduce the final project as breakout 13. There isn't any actual update 13, but the idea is to take the preceding 12 updates and finalize the game. Starting with a revision of the codebase and continuing with the assignment.
+Just like for flappy bird, I decided to introduce the final, working project in the root folder of the game's own repo. There isn't any actual update 13, but the idea is to take the preceding 12 updates and finalize the game. Starting with a revision of the codebase and continuing with the assignment.
 
 ### State
 
