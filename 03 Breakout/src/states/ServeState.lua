@@ -29,10 +29,11 @@ function ServeState:enter(params)
   self.level = params.level
   self.highScores = params.highScores
 
-  -- initialize also an instance of the ball class
-  self.ball = Ball{}
-  -- change the skin of the ball
-  self.ball.skin = math.random(7)
+  -- initialize an instance of the ball class and add it to an empty table
+  -- this to later allow the possibility of multiple balls
+  self.balls = {}
+  self.ball = Ball()
+  table.insert(self.balls, self.ball)
 end
 
 
@@ -61,7 +62,8 @@ function ServeState:update(dt)
       maxHealth = self.maxHealth,
       score = self.score,
       level = self.level,
-      ball = self.ball,
+      -- pass the table of balls instead of the single instance
+      balls = self.balls,
       highScores = self.highScores
     })
     gSounds['select']:play()

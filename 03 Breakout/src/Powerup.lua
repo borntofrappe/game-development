@@ -14,7 +14,7 @@ function Powerup:init(x, y)
   self.y = y
   self.width = 16
   self.height = 16
-  self.power = math.random(8)
+  self.power = math.random(9)
   self.dy = 50
   self.inPlay = true
 end
@@ -25,12 +25,13 @@ function Powerup:update(dt)
     self.y = self.y + (self.dy * dt)
   end
 
+  -- when reaching the bottom of the screen switch the boolean to false to stop updating/rendering the powerup
   if self.inPlay and self.y >= VIRTUAL_HEIGHT then
     self.inPlay = false
   end
 end
 
--- in the collides() function check for a collision between the power up and the paddle
+-- in the collides(paddle) function check for a collision between the powerup and the paddle
 -- aabb detection collision test
 function Powerup:collides(paddle)
   if self.x + self.width / 2 < paddle.x or self.x - self.width / 2 > paddle.x + paddle.width then

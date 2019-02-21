@@ -44,8 +44,6 @@ colorPalette = {
   - hasPowerup, a boolean to dictate whether or not to include one
   - powerup, an instance of the actuall Powerup class
   the idea is to have the power up hidden in the brick and have it rendered/updated when the bricks is removed from play
-
-
 ]]
 function Brick:init(x, y, color, tier)
   self.x = x
@@ -57,10 +55,14 @@ function Brick:init(x, y, color, tier)
   self.tier = tier
 
   self.inPlay = true
+
+  -- POWERUP
+  -- 25% chance of there being a powerup
   self.hasPowerup = math.random(4) == 1 and true or false
   -- powerup included in the center of the brick
   self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2)
 
+  -- PARTICLE SYSTE;
   -- create a particle system using the texture of the particle
   self.particleSystem = love.graphics.newParticleSystem(gTextures['particle'], 80)
 

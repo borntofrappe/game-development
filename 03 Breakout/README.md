@@ -82,13 +82,13 @@ While going through the different files, I updated the comments and included the
 
 The assignment given at the end of the lecture concerns mainly powerups, as available in the `breakout,png` asset. That being said, there are three specific expansions foreseen by the lecturer:
 
-- have the paddle shrink or increase in size.
+- [x] have the paddle shrink or increase in size.
 
-- have a powerup include two additional balls, colliding with the wall, bricks, paddle. In this instance only when every ball is lost a heath point is removed.
+- [x] have a powerup include two additional balls, colliding with the wall, bricks, paddle. In this instance only when every ball is lost a heath point is removed.
 
 - use the locked brick in conjunction with the key item. The idea is to have the key being a powerup which unlocks the brick. Only by picking up the key it should be possible to destroy said a brick.
 
-### Powerups
+### Assignment #1 - Powerups
 
 Starting from the first point, I decided to consider the entire last row of the texture found in `breakout.png`, and include the following alterations:
 
@@ -143,3 +143,85 @@ Without further specification, the powerup are introduced and moved to the botto
 When updating the bricks, check if an existing powerup collides with the paddle. If so, set the boolean to false (no longer rendering the powerup) and based on the value of `self.power` implement the different features.
 
 The features are rather easy to implement. Change the size of the paddle, change the speed of the ball, change the movement of the ball. I decided to add a touch more detail, for instance by making the paddle's size alter the speed of the paddle as well. Small elements like this add a bit of subtlety which rather improves the gameplay.
+
+### Assignment #2 - Powerup #9
+
+The ninth asset in the powerup table can be used for the second point of the assignment: spawning additional balls. The idea is to have new balls act as the existing one would. As they spawn, they are able to collide with walls, paddle, bricks. When colliding with bricks, they allow to increase the score. The only difference introduced with multiple balls regards the removal of health points, which doesn't occur when one ball goes past the bottom of the screen, but when every ball has gone past the bottom edge of the screen.
+
+Here's my approach, inspired this time around by the way bricks are updated and rendered on the page: instead of including the ball through a `self.ball` field, add a table of balls in `self.balls`. This table nests as many instances of the `Ball` class as dictated by the game, which means 1 by default and any additional ball added through powerup #9.
+
+This means update #9 is ideally implemented by inserting a new ball in said table:
+
+```lua
+table.insert(self.balls, ball)
+```
+
+To achieve this feat, here's how I updated the different, reponsiblle files.
+
+#### Ball.lua
+
+Just like for the `Brick` class, and the `Powerup` class for that matter, I added a `self.inPlay` boolean to aptly determine whether the ball is in play or not (read: whether it has yet to go past the bottom edge of the screen).
+
+```lua
+self.inPlay = true
+```
+
+This is default-ed to true and used in the update and render function, updating and rendering the ball as long as the boolean holds true.
+
+#### ServeState.lua
+
+The previous instance of the `Ball` class was created in the serve state, passed to the play state and back and forth persisted between play and pause state.
+
+When updating the game for multiple balls, create a field for `self.balls`, initializing it as an empty table.
+
+```lua
+self.balls = {}
+```
+
+To this empty table immediately add the instance of the default, single ball.
+
+```lua
+self.balls = {}
+self.ball = Ball()
+table.insert(self.balls, self.ball)
+```
+
+It actually makes sense to hold a specific value for the starting ball, considering the different logic of the serve and play state:
+
+- in the serve state, there exist a single ball. Moreover, this should be fixed at the top center of the paddle.
+
+- in the play state, there exist the possibility of multiple balls, moving on the screen based on their own values.
+
+The serve state can therefore use `self.ball`, as earlier, and pass to the play state `self.balls`.
+
+It is actually and even unnecessary to pass `self.ball`, as this is already included in the table.
+
+To sum up: describe a table in which a single ball is added. Handle the single ball in the serve state, but pass the table of balls to the play state
+
+### PlayState.lua
+
+In the play state there needs to be a few changes, based of the fact that there is no longer a single ball, but a table of balls. For this change any reference to `self.ball` with a for loop, looping through `self.balls` and considering every instance nested in the table.
+
+For instance, change `self.ball:update(dt)` to:
+
+```lua
+for k, ball in pairs(self.balls) do
+    ball:update(dt)
+end
+```
+
+This covers how the play state is basically updated.
+
+In `update(dt)`, the for loop is introduced to:
+
+- update every ball;
+
+- check for a collision between every ball and the paddle;
+
+- check when every ball goes below the bottom edge of the screen.
+
+- finally and in the for loop describing the bricks, check for a collision between the every ball and every brick.
+
+In `render()`, the loop is introduced to render every single instance of the ball class.
+
+The `update(dt)` function actually calls a function in `self.checkForLoss`. This function is created with the exact same logic of `checkForVictory`, but to determine when **every single** ball is no longer in play (read: it has gone past the bottom edge of the screen). Through this function, `update(dt)` is able to remove a health point not when every single ball goes past the bottom of the screen, but when every single one of them is gone.
