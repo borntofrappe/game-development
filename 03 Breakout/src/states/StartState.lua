@@ -107,4 +107,5 @@ function StartState:render()
   )
   -- reset the color to white
   love.graphics.setColor(1, 1, 1, 1)
+
 end

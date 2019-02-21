@@ -43,6 +43,7 @@ function love.load()
     ['select'] = love.audio.newSource('sounds/select.wav', 'static'),
     ['victory'] = love.audio.newSource('sounds/victory.wav', 'static'),
     ['wall_hit'] = love.audio.newSource('sounds/wall_hit.wav', 'static'),
+    ['power-up'] = love.audio.newSource('sounds/power-up.wav', 'static'),
 
     ['music'] = love.audio.newSource('sounds/music.wav', 'static')
   }
@@ -56,13 +57,15 @@ function love.load()
     - bricks (different skins and tiers)
     - hearts (different icons)
     - arrows (different orientation)
+    - power ups (different graphics)
   ]]
   gFrames = {
     ['paddles'] = GenerateQuadsPaddles(gTextures['breakout']),
     ['balls'] = GenerateQuadsBalls(gTextures['breakout']),
     ['bricks'] = GenerateQuadsBricks(gTextures['breakout']),
     ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9),
-    ['arrows'] = GenerateQuads(gTextures['arrows'], 24, 24)
+    ['arrows'] = GenerateQuads(gTextures['arrows'], 24, 24),
+    ['powerups'] = GenerateQuadsPowerups(gTextures['breakout'])
   }
 
   -- for the pixelated look, use the push library with a particular filter

@@ -81,10 +81,91 @@ function PlayState:update(dt)
     -- update the brick (mainly the particle system of the brick)
     brick:update(dt)
 
+    -- include the logic of the power up when the brick is hit
+    -- check for a collision between the powerup and the paddle
+    -- ! check it as long as the power up is in play to avoid overlaps
+    if brick.powerup:collides(self.paddle) and brick.powerup.inPlay then
+      -- set the inPlay boolean to false, to remove the power up from view
+      brick.powerup.inPlay = false
+      gSounds['power-up']:play()
+
+      --[[
+        possible powers
+        1 reduce paddle size
+        2 increase paddle size
+        3 increase health (maxhealth if health is already capped)
+        4 decrease health
+        5 increase ball speed
+        6 decrease ball speed
+        7 make ball 'lighter'
+        8 make ball 'heavier'
+        9 make balls appear
+        10 key to unlock the locked brick
+      ]]
+
+      if brick.powerup.power == 1 and self.paddle.size > 1 then
+        self.paddle.size = self.paddle.size - 1
+        self.paddle.width = self.paddle.size * 32
+        -- change the size of the paddle and offset the x coordinate to maintain the paddle centered
+        self.paddle.x = self.paddle.x + self.paddle.width / 4
+        -- change the speed to have smaller paddles move faster
+        self.paddle.speed = 160 + (4 - self.paddle.size) * 20
+
+      elseif brick.powerup.power == 2 and self.paddle.size < 4 then
+        self.paddle.size = self.paddle.size + 1
+        self.paddle.width = self.paddle.size * 32
+        -- change the size of the paddle and offset the x coordinate to maintain the paddle centered
+        self.paddle.x = self.paddle.x - self.paddle.width / 4
+        -- change the speed to have bigger paddles move slower
+        self.paddle.speed = 160 + (4 - self.paddle.size) * 20
+
+      elseif brick.powerup.power == 3 then
+        -- if the health is capped increment max health
+        if self.health == self.maxHealth then
+          self.maxHealth = self.maxHealth + 1
+        end
+        -- increment health
+        self.health = self.health + 1
+
+      elseif brick.powerup.power == 4 then
+        -- decrement health
+        self.health = self.health - 1
+        -- if health reaches 0, go to the gameover state
+        if self.health == 0 then
+          gStateMachine:change('gameover', {
+            score = self.score,
+            highScores = self.highScores
+          })
+        end
+
+      elseif brick.powerup.power == 5 then
+        -- increase the speed of the ball uniformly
+        self.ball.dy = self.ball.dy * 1.2
+        self.ball.dx = self.ball.dx * 1.2
+
+      elseif brick.powerup.power == 6 then
+        -- decrease the speed of the ball uniformly
+        self.ball.dy = self.ball.dy * 0.8
+        self.ball.dx = self.ball.dx * 0.8
+
+
+      elseif brick.powerup.power == 7 then
+        -- reduce the horizontal movement and have the ball move slightly faster and always upwards
+        self.ball.dy = -math.abs(self.ball.dy) * 1.2
+        self.ball.dx = self.ball.dx * 0.5
+
+      elseif brick.powerup.power == 8 then
+        -- reduce the horizontal movement and have the ball move slightly faster and always downwards
+        self.ball.dy = math.abs(self.ball.dy) * 1.2
+        self.ball.dx = self.ball.dx * 0.5
+      end
+    end
+
     -- check for collision with a brick which is in play
     if self.ball:collides(brick) and brick.inPlay then
       -- increase the score accounting for the tier and color of the brick
       self.score = self.score + ((brick.tier - 1) * 200 + brick.color * 50)
+
       -- call the function handling the appearance of the brick
       brick:hit()
 
