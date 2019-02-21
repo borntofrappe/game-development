@@ -10,22 +10,23 @@ Paddle = Class{}
   - size, for the size of the paddle   |__- both are used knowing that the paddles table sorts the paddles in order of size and then color
 ]]
 function Paddle:init()
-  self.x = VIRTUAL_WIDTH / 2 - 32
-  self.y = VIRTUAL_HEIGHT - 32
-  self.width = 64
-  self.height = 16
-  self.dx = 0
-  self.skin = 1
   self.size = 2
+  self.width = self.size * 32
+  self.height = 16
+  self.skin = 1
+  self.x = VIRTUAL_WIDTH / 2 - self.width / 2
+  self.y = VIRTUAL_HEIGHT - 32
+  self.dx = 0
+  self.speed = 160 + (4 - self.size) * 20
 end
 
 -- in the :update(dt) function, describe how the paddle alters its horizontal position considering a key press and the dx value
 function Paddle:update(dt)
   -- when pressing the left or right key, update `dx` according to the PADDLE_SPEED constant
   if love.keyboard.isDown('left') then
-    self.dx = -PADDLE_SPEED * dt
+    self.dx = -self.speed * dt
   elseif love.keyboard.isDown('right') then
-    self.dx = PADDLE_SPEED * dt
+    self.dx = self.speed * dt
   -- set the default speed to 0 to avoid continuing the horizontal movement
   else
     self.dx = 0

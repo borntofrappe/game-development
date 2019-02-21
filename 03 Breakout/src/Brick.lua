@@ -38,8 +38,14 @@ colorPalette = {
   - color, for the color of the brick (up to 4 variants)
   - tier, for the tier of the brick (5 variants + a single brick type)
   - inPlay, whether or not the brick is to be rendered on the screen
-
   ! specify color and tier when creating an instance of the class
+
+  in addition and for the powerups
+  - hasPowerup, a boolean to dictate whether or not to include one
+  - powerup, an instance of the actuall Powerup class
+  the idea is to have the power up hidden in the brick and have it rendered/updated when the bricks is removed from play
+
+
 ]]
 function Brick:init(x, y, color, tier)
   self.x = x
@@ -51,6 +57,9 @@ function Brick:init(x, y, color, tier)
   self.tier = tier
 
   self.inPlay = true
+  self.hasPowerup = math.random(4) == 1 and true or false
+  -- powerup included in the center of the brick
+  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2)
 
   -- create a particle system using the texture of the particle
   self.particleSystem = love.graphics.newParticleSystem(gTextures['particle'], 80)
@@ -140,17 +149,26 @@ function Brick:hit()
 end
 
 
--- in the :update(dt) function update the particle system
+-- in the :update(dt) function update the particle system and the powerup
+-- ! update the power up but only if the brick is not in play **and** the brick has an actual power up
 function Brick:update(dt)
   self.particleSystem:update(dt)
+  if not self.inPlay and self.hasPowerup then
+    self.powerup:update(dt)
+  end
 end
 
 
 -- in the :render function, use love.graphics to draw the brick as identified from the color and tier
+-- ! render the power up but only if the brick is not in play **and** the brick has an actual power up
 function Brick:render()
   if self.inPlay then
     -- 4 colors for every tier
     love.graphics.draw(gTextures['breakout'], gFrames['bricks'][self.tier + 4 * (self.color - 1)], self.x, self.y)
+  else
+    if self.hasPowerup then
+      self.powerup:render()
+    end
   end
 end
 

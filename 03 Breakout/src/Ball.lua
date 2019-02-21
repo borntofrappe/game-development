@@ -15,8 +15,8 @@ function Ball:init()
   self.height = 8
   -- initialize dx and dy with random values in a range
   -- this to have the ball move at varying speed , but always upwards (at first starting from the paddle)
-  self.dx = math.random(2) == 1 and math.random(60, 120) or math.random(-60, -120)
-  self.dy = math.random(-80, -140)
+  self.dx = math.random(2) == 1 and math.random(80, 150) or math.random(-80, -150)
+  self.dy = math.random(-100, -170)
   self.skin = 1
 end
 

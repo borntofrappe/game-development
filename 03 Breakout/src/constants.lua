@@ -6,6 +6,3 @@ WINDOW_HEIGHT = 720
 -- virtual measures for the push library
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
-
--- speed for the paddle
-PADDLE_SPEED = 180

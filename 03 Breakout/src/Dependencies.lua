@@ -17,10 +17,11 @@ require 'src/Util'
 -- LevelMaker.lua, with the function generating a table of bricks
 require 'src/LevelMaker'
 
--- paddle, ball, brick (elements of the game)
+-- paddle, ball, brick, powerup (elements of the game)
 require 'src/Paddle'
 require 'src/Ball'
 require 'src/Brick'
+require 'src/Powerup'
 
 -- the different state classes
 require 'src/states/BaseState'

@@ -103,7 +103,7 @@ function GenerateQuadsPaddles(atlas)
 
     -- 96 as 32 + 64 (where the previous paddle ends)
     -- large
-    quads[counter] = love.graphics.newQuad(x + 96, y, 32, 16, atlas:getDimensions())
+    quads[counter] = love.graphics.newQuad(x + 96, y, 96, 16, atlas:getDimensions())
     counter = counter + 1
 
     -- the largest paddle being in a new row
@@ -184,6 +184,16 @@ function GenerateQuadsBricks(atlas)
   -- 32 and 15 being the size of the bricks
   -- 21 being the number of bricks
   return table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+end
+
+
+function GenerateQuadsPowerups(atlas)
+  -- the powerups are retrieved from the last row of the breakout image
+  -- slicing the table making up the quads
+  -- 16 and 16 being the size of the powerups
+  -- 145 being the tile at which the powerups begin
+  -- 154 where they end (10 tiles)
+  return table.slice(GenerateQuads(atlas, 16, 16), 145, 154, 1)
 end
 
 
