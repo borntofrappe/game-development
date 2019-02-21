@@ -98,3 +98,53 @@ function love.draw()
   )
 end
 ```
+
+## New Approach - main.lua
+
+Using the `knife` library and an anonymous function, it is possible to implement a more efficient solution by referencing a timer object.
+
+Instead of initializing and updating multiple variables, it is possible to centralize the logic in a `Timer` object.
+
+Start by requiring [knife timer](https://github.com/airstruck/knife/blob/master/knife/timer.lua). From here, the two main functions used in the game are:
+
+- `Timer.after`
+
+  Takes as argument `delay` as well as a `callback` function. The logic described in the callback will be implemented when the delay has run its course.
+
+- `Timer.every`
+
+  Takes as argument `interval` as well as a `callback` function. The logic will run every time the interval has lapsed.
+
+With the second function in particular, it is possible to simplify the use of multiple intervals as follows:
+
+- in the `load()` function create tables for the different intervals and counters.
+
+- always in `load()` create a timer for every counter, using the `Timer.every` function in a loop.
+
+  ```lua
+  for i = 0, #counters
+  Timer.every(intervals[i], function()
+
+    end)
+  end
+  ```
+
+  It is in the anonymous, callback function where the behavior we want occurrying is specified. In this instance, increment the counter value by 1.
+
+  ```lua
+  for i = 0, #counters
+  Timer.every(intervals[i], function()
+    counters[i] = counters[i] + 1
+    end)
+  end
+  ```
+
+  For every counter in the `counters` table the value will be updated every time `dt` goes past the matching value in the `intervals` table.
+
+- in the `update(dt)` function update the logic of each timer by calling `Timer.update(dt)`. This single line is responsible for updating every interval set up on the object.
+
+- in the `render()` function render the counters.
+
+The library takes care of updating the various values, which is certainly more scalable and less prone to error.
+
+Adding another timer is a matter of expanding the `counters` and `intervals` table.

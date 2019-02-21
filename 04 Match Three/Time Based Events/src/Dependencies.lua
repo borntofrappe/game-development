@@ -4,6 +4,9 @@
 push = require 'lib/push'
 -- class, to work with classes
 Class = require 'lib/class'
+-- knife timer, to work with time-based events
+Timer = require 'lib/timer'
+
 
 -- constants specified in constants.lua
 require 'src/constants'
