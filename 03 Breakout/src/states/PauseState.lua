@@ -21,7 +21,7 @@ function PauseState:enter(params)
   self.maxHealth = params.maxHealth
   self.score = params.score
   self.level = params.level
-  self.ball = params.ball
+  self.balls = params.balls
   self.highScores = params.highScores
 end
 
@@ -37,7 +37,7 @@ function PauseState:update(dt)
       maxHealth = self.maxHealth,
       score = self.score,
       level = self.level,
-      ball = self.ball,
+      balls = self.balls,
       highScores = self.highScores
     })
     gSounds['confirm']:play()

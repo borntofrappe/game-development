@@ -5,6 +5,7 @@
   - GenerateQuadsPaddles() to identify the paddles
   - GenerateQuadsBalls() to identify the balls
   - GenerateQuadsBricks() to identify the bricks
+  - GenerateQuadsPowerups() to identify the powerups
 ]]
 
 function GenerateQuads(atlas, tileWidth, tileHeight)
