@@ -30,3 +30,71 @@ To show a timer for instance:
 - in the `render()` function render the variable with the `printf` function.
 
 Here's the problem with this approach: when you need to create multiple instances of the timer, with 2 variables for each instance, to keep track of `dt` and to update the actual value. This is not a scalable solution.
+
+## Previous Approach's Issues - problematic.lua
+
+To highlight the issues with the previous approach, multiple timers are setup in `problematic.lua`. As mentioned, for each single timer there needs to be a set of variables and updating logic.
+
+```lua
+-- first timer
+-- updated every second
+currentSecond1 = 0
+secondTimer1 = 0
+-- second timer
+-- updated every 2 second
+currentSecond2 = 0
+secondTimer2 = 0
+-- third timer
+-- updated every 3 second
+currentSecond3 = 0
+secondTimer3 = 0
+
+-- in the update function
+function love.update(dt)
+  secondTimer1 = secondTimer1 + dt
+  if secondTimer1 > 1 then
+    currentSecond1 = currentSecond1 + 1
+    secondTimer1 = secondTimer1 % 1
+  end
+
+
+  secondTimer2 = secondTimer2 + dt
+  if secondTimer2 > 2 then
+    currentSecond2 = currentSecond2 + 1
+    secondTimer2 = secondTimer2 % 1
+  end
+
+  secondTimer3 = secondTimer3 + dt
+  if secondTimer3 > 3 then
+    currentSecond3 = currentSecond3 + 1
+    secondTimer3 = secondTimer3 % 1
+  end
+
+end
+
+function love.draw()
+  love.graphics.setColor(1,1,1,1)
+  love.graphics.setFont(gFonts['big'])
+  love.graphics.printf(
+    'Timer 1: ' .. tostring(currentSecond1),
+    0,
+    VIRTUAL_HEIGHT / 4 - 16,
+    VIRTUAL_WIDTH,
+    'center'
+  )
+  love.graphics.printf(
+    'Timer 2: ' .. tostring(currentSecond2),
+    0,
+    VIRTUAL_HEIGHT / 2 - 16,
+    VIRTUAL_WIDTH,
+    'center'
+  )
+  love.graphics.printf(
+    'Timer 3: ' .. tostring(currentSecond3),
+    0,
+    VIRTUAL_HEIGHT * 3 / 4 - 16,
+    VIRTUAL_WIDTH,
+    'center'
+  )
+end
+```
