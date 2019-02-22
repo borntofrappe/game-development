@@ -32,7 +32,7 @@ function love.load()
   shapeX = 0
   shapeY = VIRTUAL_HEIGHT / 2 - size / 2
 
-  -- constant describing the duration of the chage
+  -- constant describing the duration of the change
   MOVE_DURATION = 2
   -- variable describing the final value assumed by shapeX
   endX = VIRTUAL_WIDTH - size
