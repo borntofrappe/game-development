@@ -4,7 +4,7 @@ require 'src/Dependencies'
 -- in the load function set up the screen with the push library
 function love.load()
   -- title of the screen
-  love.window.setTitle('Time keeps passing by')
+  love.window.setTitle('Chain Chain Chain')
 
   -- table for the fonts
   gFonts = {
@@ -24,13 +24,14 @@ function love.load()
   -- table in which to store the last recorded key press
   love.keyboard.keyPressed = {}
 
-  -- maximum amount of time the shapes can take to complete the transition
+  -- maximum amount of time the shapes can take to complete each transition
   TIMER_MAX = 1
 
   -- size of the shape
   size = 25
 
   -- table describing the possible destinations of the shape
+  -- targeting the four corners of the screen (considering the width and height of the shape itself)
   destinations = {
     [1] = {
       x = VIRTUAL_WIDTH - size,
@@ -51,6 +52,7 @@ function love.load()
   }
 
   -- add a boolean to each destination determining if the shape has reached the coordinates
+  -- the idea is to switch the value to true when the shape reaches each set of coordinates and change the coordinates one set at a time
   for k, destination in pairs(destinations) do
     destination.reached = false
   end
@@ -65,7 +67,6 @@ function love.load()
   -- variables updated through dt
   -- as we move in different directions, we need to describe the starting point from which to update shapeX and shapeY
   baseX, baseY = shapeX, shapeY
-
 end
 
 -- in the resize function update the resolution through the push library
@@ -85,15 +86,22 @@ end
 
 -- in the update function update the position of the shape using dt, baseX, baseY and the table of destinations
 function love.update(dt)
-  -- update timer with dt to be up to the constant value
+  -- update timer with dt to be the smallest between the incremented timer and the defined constant
   timer = math.min(timer + dt, TIMER_MAX)
 
   -- loop through the table of destinations
-  -- ! use ipairs to go through the table in order
+  -- ! use `ipairs` to go through the table in order (as opposed to `pairs`)
   for k, destination in ipairs(destinations) do
     -- if the destination is not reached
     if not destination.reached then
-      -- move the shape from its current position up to destination.x and destiation.y
+      --[[
+        move the shape from its current position up to destination.x and destiation.y
+        (destination.x - baseX) * timer / TIMER_MAX describes the change in coordinate
+        baseX the starting point (which at first is 0, then VIRTUAL_WIDTH - size), updated every time the shape needs to change direction
+
+        same reasoning for destination.y and baseY
+      ]]
+
       shapeX, shapeY =
         baseX + (destination.x - baseX) * timer / TIMER_MAX,
         baseY + (destination.y - baseY) * timer / TIMER_MAX
@@ -102,7 +110,7 @@ function love.update(dt)
       if timer == TIMER_MAX then
         timer = 0
         destination.reached = true
-        -- set baseX and baseY to refer to the acquired destination
+        -- set baseX and baseY to refer to the acquired set of coordinates
         baseX, baseY = destination.x, destination.y
       end
 
@@ -131,7 +139,6 @@ function love.draw()
   love.graphics.setColor(0.15,1,0.55,1)
   love.graphics.setFont(gFonts['normal'])
   love.graphics.print(tostring(timer), 8, 8)
-
 
   push:finish()
 end
