@@ -100,3 +100,52 @@ It seems that `pairs` doesn't guarantee that the loop will go through an indexed
 - in the `update` function we want to go through the table in order, so we use `ipairs`.
 
 - in the `load` function we want to include the `reached` key irrespective of order, so both solutions work.
+
+## New Approach - main.lua
+
+Using the `knife.timer` library and the `tween` object we can chain transitions by sequentially describing the values we want the shape to assume.
+
+- add the first tween:
+
+```lua
+Timer.tween(TIMER_MAX, {
+  [shape] = { x = VIRTUAL_WIDTH - shape.width, y = 0}
+})
+```
+
+- after the closing parens `)` chain another transition with the `:finish()` function:
+
+```lua
+Timer.tween(TIMER_MAX, {
+  [shape] = { x = VIRTUAL_WIDTH - shape.width, y = 0}
+}):finish()
+```
+
+This one takes as argument a callback function which can precisely reference another tween.
+
+```lua
+Timer.tween(TIMER_MAX, {
+  [shape] = { x = VIRTUAL_WIDTH - shape.width, y = 0}
+}):finish(function()
+  Timer.Tween(TIMER_MAX, {
+    [shape] = { x = VIRTUAL_WIDTH - shape.width, y = VIRTUAL_HEIGHT - shape.height}
+  })
+end)
+```
+
+With many chained functions this approach does prove to be difficult to maintain, but for the time being it allows to rapidly go from value to value. Just remember to position the `end` keyword **at the end** of each function declared in the `finish()` statement,
+
+```lua
+Timer.tween(TIMER_MAX, {
+  [shape] = { x = VIRTUAL_WIDTH - shape.width, y = 0}
+}):finish(function()
+  Timer.Tween(TIMER_MAX, {
+    [shape] = { x = VIRTUAL_WIDTH - shape.width, y = VIRTUAL_HEIGHT - shape.height}
+    -- additional tweens before the end keyword, after each tween
+  }):finish(function()
+    -- tween logic
+  end)
+end)
+```
+
+It is definitely an improvement in the instance of the game, and insofar as it allows to update the entirety of the transition through `Timer.update(dt)`. I feel uneasy with the fact that lua is indentation based though, and there is need for more practice to understand how much to indent what.
