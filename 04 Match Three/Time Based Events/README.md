@@ -27,7 +27,7 @@ To show a timer for instance:
   end
   ```
 
-- in the `render()` function render the variable with the `printf` function.
+- in the `draw()` function render the variable with the `printf` function.
 
 Here's the problem with this approach: when you need to create multiple instances of the timer, with 2 variables for each instance, to keep track of `dt` and to update the actual value. This is not a scalable solution.
 
@@ -143,7 +143,7 @@ With the second function in particular, it is possible to simplify the use of mu
 
 - in the `update(dt)` function update the logic of each timer by calling `Timer.update(dt)`. This single line is responsible for updating every interval set up on the object.
 
-- in the `render()` function render the counters.
+- in the `draw()` function render the counters.
 
 The library takes care of updating the various values, which is certainly more scalable and less prone to error.
 
