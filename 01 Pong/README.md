@@ -10,15 +10,25 @@ The project is organized as follows:
 
 - in each separate folder, `Pong 0`, `Pong 1`, and so forth and so on, you find the game developed one feature at a time. Following the video itself, you find dedicated `README.md` files, detailing the change in the codebase as well as the lessons learned throughout the development, and you find also `.lua` files, with the actual working code documented as neatly as possible.
 
+**Index**
+
+- [Getting Started](#getting-started)
+
+  - [Installing Love2D](#installing-love2d)
+
+  - [Running a silly program](#running-a-silly-program)
+
+  - [Game Loop](#game-loop)
+
+  - [2D Coordinate System](#2d-coordinate-system)
+
+- [Update](#update)
+
+  - [Pong 13](#pong-13)
+
+  - [Assignment](#assignment)
+
 ## Getting Started
-
-- [Installing Love2D](#installing-love2d)
-
-- [Running a silly program](#running-a-silly-program)
-
-- [Game Loop](#game-loop)
-
-- [2D Coordinate System](#2d-coordinate-system)
 
 ### Installing Love2D
 
@@ -64,3 +74,9 @@ If you think of a 1x1 square, the following representation highlights this coord
 (0, 0) (1, 0)
 (0, 1) (1, 1)
 ```
+
+## Update
+
+### Pong 13
+
+As mentioned in the folder, the video completes itself on Update 12. That being said, I chose to include Update 13 as a way to save for posterity the final, complete project. The files which are described in Pong 13 allow to play a full-fledged game of Pong in which both paddles are moved following user input.
