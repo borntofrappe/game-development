@@ -4,21 +4,31 @@ The [first video](https://youtu.be/jZqYXSmgDuM) in the playlist behind this repo
 
 The project is organized as follows:
 
-- in this `README.md` you find introductory remarks about Lua and Love2D;
+- in this folder you find the `README.md` introducing and then concluding the project. You also find the `.lua` files making up the game _with_ the assignment.
 
 - in the `Resources` folder you find the libraries, fonts and sound files used in each iteration, as to avoid repeating them in each update.
 
 - in each separate folder, `Pong 0`, `Pong 1`, and so forth and so on, you find the game developed one feature at a time. Following the video itself, you find dedicated `README.md` files, detailing the change in the codebase as well as the lessons learned throughout the development, and you find also `.lua` files, with the actual working code documented as neatly as possible.
 
+**Index**
+
+- [Getting Started](#getting-started)
+
+  - [Installing Love2D](#installing-love2d)
+
+  - [Running a silly program](#running-a-silly-program)
+
+  - [Game Loop](#game-loop)
+
+  - [2D Coordinate System](#2d-coordinate-system)
+
+- [Update](#update)
+
+  - [Pong 13](#pong-13)
+
+  - [Assignment](#assignment)
+
 ## Getting Started
-
-- [Installing Love2D](#installing-love2d)
-
-- [Running a silly program](#running-a-silly-program)
-
-- [Game Loop](#game-loop)
-
-- [2D Coordinate System](#2d-coordinate-system)
 
 ### Installing Love2D
 
@@ -64,3 +74,27 @@ If you think of a 1x1 square, the following representation highlights this coord
 (0, 0) (1, 0)
 (0, 1) (1, 1)
 ```
+
+## Update
+
+### Pong 13
+
+As mentioned in the folder, the video completes itself on Update 12. That being said, I chose to include Update 13 as a way to save for posterity the final, complete project. The files which are described in Pong 13 allow to play a full-fledged game of Pong in which both paddles are moved following user input.
+
+### Assignment
+
+Introduced as the [AI Update](https://cs50.harvard.edu/games/2019/spring/assignments/0/), the final project as created throughout the video is expanded to have one paddle moving on its own. I decided to have the right paddle move followin user input, and I implemented the feature as follows:
+
+- in the `update(dt)` function I check for the horizontal coordinate of the ball;
+
+- once the ball is in the half of the screen where the paddle of the computer resides, compute where the ball will land. This is done by calculating the time it takes for the ball to go to the left edge as well as the vertical space covered during said time.
+
+- move the paddle with the constant speed until it reaches the designated point.
+
+This solution is rather nifty, as it allows for some exchange between paddles, but definitely allows the player to win. The speed is the same for both paddles, and this means that if the vertical distance is greater than the space the computer can make up, the player will score.
+
+The approach is a tad more complex than described above, but it boils down to use very simple math (speed = space / time). Most importatly, it boils down to compute the exact vertical coordinate of where the ball will end only as the ball goes past the half of the screen. **Or** when the ball hits the top or bottom edge. Indeed, as it is computed, the final coordinate doesn't consider a possible bounce. I decided to leave in this detail to make for a less AI-looking approach, as the paddle moves toward the ball, before adjusting its coordinate appropriately.
+
+One small note: I also updated the description of the serving of winner player, as to fittingly describe whether the serving/winning side is the computer or the player.
+
+Finally, I decided to update the code as to allow for increasing difficulty and also variable behavior on the computer side. I added `startingX` to describe where the AI will consider the ball, instead of always using the half of the screen's width. `startingX` begins randomly, between the center and three fourths of the screen, and is updated again at random whenever the ball hits the paddle of the player. It is a minor addition, which could be expanded to consider the passing of time, or the speed of the ball, but already a change which quite improves the gameplay.
