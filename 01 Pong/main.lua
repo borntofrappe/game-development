@@ -73,12 +73,14 @@ function love.load()
 
   --[[
     variables to update the position of the paddle without user input
+    - startingX (the horizontal coordinate dictating where the AI-powered paddle will begin moving)
     - startingY (the vertical coordinate of the ball in the middle of the screen)
     - startingDY (the vertical speed of the ball in the middle of the screen)
     the idea is to the paddle move only when the ball resides in the matching half
     - time (to compute the time it takes to go from the center of the screen to the edge of the pall)
     - computing (a boolean to compute the time only as the ball reaches the center of the screen or when hitting a wall)
   ]]
+  startingX = math.random(VIRTUAL_WIDTH / 2, VIRTUAL_WIDTH * 3 / 4)
   startingY = 0
   startingDY = 0
   time = 0
@@ -172,6 +174,9 @@ function love.update(dt)
       ball.dx = -ball.dx * 1.1
       ball.x = player2.x - ball.width
 
+      -- compute startingX once more, to have the paddle move at a different coordinate
+      startingX = math.random(VIRTUAL_WIDTH / 2, VIRTUAL_WIDTH * 3 / 4)
+
       if ball.dy < 0 then
         ball.dy = -math.random(10, 150)
       else
@@ -248,7 +253,7 @@ function love.update(dt)
 
   -- instead of changing player1 following user input, change it on its own according to dx and dy
   -- when the ball falls within the half of player1
-  if  ball.x < VIRTUAL_WIDTH / 2 then
+  if  ball.x < startingX then
     -- compute where the ball will land on the basis of the coordinates and the speed of the ball
     -- ! as the coordinates change, use the boolean to compute the values only once, and avoid continuously updating the value
     if computing then
