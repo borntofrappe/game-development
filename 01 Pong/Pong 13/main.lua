@@ -1,8 +1,8 @@
 -- require the push library
-push = require 'push'
+push = require 'Resources/push'
 
 -- require the class library
-Class = require 'class'
+Class = require 'Resources/class'
 
 -- require the Paddle and Ball classes
 require 'Paddle'
@@ -34,21 +34,21 @@ function love.load()
   math.randomseed(os.time())
 
   -- create a new font through the local ttf file
-  appFont = love.graphics.newFont('font.ttf', 8)
+  appFont = love.graphics.newFont('Resources/font.ttf', 8)
 
   -- create another instance of the font for the score, larger in size
-  scoreFont = love.graphics.newFont('font.ttf', 32)
+  scoreFont = love.graphics.newFont('Resources/font.ttf', 32)
 
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
 
   -- set the audio files to be used in the application
   sounds = {
-    ['playing'] = love.audio.newSource('sounds/playing.wav', 'static'),
-    ['paddle_hit'] = love.audio.newSource('sounds/paddle_hit.wav', 'static'),
-    ['wall_hit'] = love.audio.newSource('sounds/wall_hit.wav', 'static'),
-    ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
-    ['victory'] = love.audio.newSource('sounds/victory.wav', 'static')
+    ['playing'] = love.audio.newSource('Resources/sounds/playing.wav', 'static'),
+    ['paddle_hit'] = love.audio.newSource('Resources/sounds/paddle_hit.wav', 'static'),
+    ['wall_hit'] = love.audio.newSource('Resources/sounds/wall_hit.wav', 'static'),
+    ['score'] = love.audio.newSource('Resources/sounds/score.wav', 'static'),
+    ['victory'] = love.audio.newSource('Resources/sounds/victory.wav', 'static')
   }
 
   -- push:setupScreen works similarly to setMode, but with two additional arguments in the virtual dimensions
