@@ -1,15 +1,5 @@
 # Pong 1
 
-Index:
-
-- [Code](#code)
-
-<!-- no additional notes from the video -->
-
-Snippet:
-
-- main.lua
-
 ## Code
 
 This is a note more about lua than the working code, but I think it provides a glimpse into the programming language and it can ultimately improve my understanding of the code.

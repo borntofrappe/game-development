@@ -1,13 +1,5 @@
 # Pong 6
 
-Index:
-
-- [Code](#Code)
-
-Snippet:
-
-- main.lua
-
 ## Code
 
 The seventh installment of updates focuses on the frames per second in which the game runs. The game is set to show this performance metric using the Love2D native function `love.timer.getFPS()`, so the update is rather minor, but it does show how it is possible to create a function for any feature, and posit even later in the codebase.

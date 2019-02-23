@@ -1,15 +1,5 @@
 # Pong 3
 
-Index:
-
-- [Code](#code)
-
-<!-- - [Video](#video) -->
-
-Snippet:
-
-- main.lua
-
 ## Code
 
 This update sets out to make the game interactive, in so far as it allows to manouver the paddles vertically, and through the use of the keyboard. This using the `w` and `s` keys as well as the `up` and `down` keys, for the left and right paddle respectively.

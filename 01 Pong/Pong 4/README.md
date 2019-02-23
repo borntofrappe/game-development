@@ -8,10 +8,6 @@ Index:
 
 - [Game State](#game-state)
 
-Snippet:
-
-- main.lua
-
 ## Randomness
 
 To avoid a predictable behavior, the project introduces randomness in the form or random integers and through the concept of seeds.

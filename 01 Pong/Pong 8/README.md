@@ -1,15 +1,5 @@
 # Pong 8
 
-Index:
-
-- [Score](#score)
-
-Snippet:
-
-- main.lua
-
-- Paddle.lua
-
 ## Score
 
 To keep track of the score, the application is updated in the `load` function, as to keep track of the individual score in two different variables. I'd rather try to migrate this information in the two instances of the paddle class though, to practice a bit more with the class structure.

@@ -1,31 +1,25 @@
 # Pong 0
 
-Index:
-
 - [Code](#code)
 
 - [Video](#video)
-
-Snippet:
-
-- main.lua
 
 ## Code
 
 - resolutions is set in the form of screen width and height. Two constant variables are declared in the global scope:
 
-    ```lua
-    WINDOW_WIDTH = 1280
-    WINDOW_HEIGHT = 720
-    ```
+  ```lua
+  WINDOW_WIDTH = 1280
+  WINDOW_HEIGHT = 720
+  ```
 
 Notice again the lack of semicolons. Notice also the lack of a type or any identifier for the variable.
 
 - love works <!-- in mysterious ways --> through two main functions: `love.load()` and `love.draw()`.
 
-    `love.load()` runs once, as the game starts out. It is here that you ought to set those variables and options which initialize the games.
+  `love.load()` runs once, as the game starts out. It is here that you ought to set those variables and options which initialize the games.
 
-    `love.draw()` runs after a love2d update, to literally draw something on th screen.
+  `love.draw()` runs after a love2d update, to literally draw something on th screen.
 
 - in the load function, the size of the screen is modified through the `setMode()` method. This alters the size of the window as follows:
 
@@ -33,15 +27,15 @@ Notice again the lack of semicolons. Notice also the lack of a type or any ident
       love.window.setMode(width, height, options)
       ```
 
-     `options` relates to an object detailing additional settings on the window.
+  `options` relates to an object detailing additional settings on the window.
 
 - in the draw function, text is printed on the screen through the `printf` method. It works as follows:
 
       ```lua
       love.graphics.printf(text, x, y, centerScope, centerKeyword)
-      ``` 
-    
-    `x` and `y` dictacte where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width if the screen). Finally `centerKeyword` is exactly that, a keyword like `center` to deetermine the actual position.
+      ```
+
+  `x` and `y` dictacte where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width if the screen). Finally `centerKeyword` is exactly that, a keyword like `center` to deetermine the actual position.
 
 - last, but perhaps most importantly, comments are included following two dashes: `--`. Multi line comments follow up the two dashes with two sets of square brackets `--[[ ]]`.
 
@@ -70,4 +64,3 @@ Beside these elements from the love2D framework, and regarding more the programm
   property = value,
 }
 ```
-

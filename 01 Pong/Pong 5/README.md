@@ -1,17 +1,5 @@
 # Pong 5
 
-Index:
-
-- [Class](#class)
-
-Snippet:
-
-- main.lua
-
-- Paddle.lua
-
-- Ball.lua
-
 ## Class
 
 The project restructures the existing code through _classes_. These are data structures included to more easily manage the elements of the game, namely the paddles and the ball. You can think of a class as an independent entity, with its own variables and functions.
