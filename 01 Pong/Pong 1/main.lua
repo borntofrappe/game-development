@@ -1,5 +1,5 @@
 -- require the push library
-push = require 'push'
+push = require 'Resources/push'
 
 --[[
 global variables for the screen size

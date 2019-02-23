@@ -1,5 +1,5 @@
 -- require the push library
-push = require 'push'
+push = require 'Resources/push'
 
 --[[
 global variables for the screen size
@@ -21,10 +21,10 @@ function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
 
   -- create a new font through the local ttf file
-  appFont = love.graphics.newFont('font.ttf', 8)
+  appFont = love.graphics.newFont('Resources/font.ttf', 8)
 
   -- create another instance of the font for the score, larger in size
-  scoreFont = love.graphics.newFont('font.ttf', 32)
+  scoreFont = love.graphics.newFont('Resources/font.ttf', 32)
 
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
