@@ -4,7 +4,7 @@ The [first video](https://youtu.be/jZqYXSmgDuM) in the playlist behind this repo
 
 The project is organized as follows:
 
-- in this `README.md` you find introductory remarks about Lua and Love2D;
+- in this folder you find the `README.md` introducing and then concluding the project. You also find the `.lua` files making up the game _with_ the assignment.
 
 - in the `Resources` folder you find the libraries, fonts and sound files used in each iteration, as to avoid repeating them in each update.
 
