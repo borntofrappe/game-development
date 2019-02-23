@@ -1,16 +1,14 @@
 # Pong with Lua
 
-## Preface
-
 The [first video](https://youtu.be/jZqYXSmgDuM) in the playlist behind this repository tackles the lua programming language and the love2d environment with the video game Pong in mind.
 
-The project is structred as follows:
+The project is organized as follows:
 
-- in this README you find general information on the Pong repository and introductory remarks about Lua and Love2D;
+- in this `README.md` you find introductory remarks about Lua and Love2D;
 
-- in the Libraries folder you find the files referenced in each sub-project, to avoid repetition;
+- in the `Resources` folder you find the libraries, fonts and sound files used in each iteration, as to avoid repeating them in each update.
 
-- in each separate folder Pong 0, Pong 1 (and so forth and so on) you find an additional README, detailing the lessons learned from the codebase and the actual video. You also find the snippets, the working code for each sub-section, documented as neatly as possible.
+- in each separate folder, `Pong 0`, `Pong 1`, and so forth and so on, you find the game developed one feature at a time. Following the video itself, you find dedicated `README.md` files, detailing the change in the codebase as well as the lessons learned throughout the development, and you find also `.lua` files, with the actual working code documented as neatly as possible.
 
 ## Getting Started
 
@@ -18,9 +16,9 @@ The project is structred as follows:
 
 - [Running a silly program](#running-a-silly-program)
 
-Snippets:
+- [Game Loop](#game-loop)
 
-- main.lua
+- [2D Coordinate System](#2d-coordinate-system)
 
 ### Installing Love2D
 
@@ -45,14 +43,6 @@ In the [getting started](https://love2d.org/wiki/Getting_Started) section, the w
 1. drag the folder containing the `main.lua` file on top of the `Love2D` program, or a shortcut to said program. Personally, I created a shortcut and placed it in the root folder, right beside the `Pong` folder.
 
    This should fire up Love2D and present the hello world string. The two integers seem to be referencing the coordinates of the string. The coordinate system, as explained in the video, works like the coordinate system in SVG land: from the top left corner.
-
-## Introductory concepts
-
-Index:
-
-- [Game Loop](#game-loop)
-
-- [2D Coordinate System](#2d-coordinate-system)
 
 ### Game Loop
 

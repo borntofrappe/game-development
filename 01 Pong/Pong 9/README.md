@@ -6,10 +6,6 @@ Index:
   - [Variable](#variable)
   - [State](#state)
 
-Snippet:
-
-- main.lua
-
 ## Serving
 
 Once a point has been scored, the game directs the ball toward the player which has suffered the loss. To allow for such a feature, the application introduces a new game state in `serving`, which complements the game's logic with `playing` and `waiting`. The interplay between the three can be highlighted for clarity as follows:

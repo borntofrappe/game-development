@@ -1,15 +1,5 @@
 # Pong 11
 
-Index:
-
-- [Audio](#audio)
-
-Snippet:
-
-- main.lua
-
-Small note: the audio files reference in `main.lua` are present in the Resources folder, to avoid repetition, but in the file they are located in a `sounds` folder, sibling to `main.lua`.
-
 ## Audio
 
 Including audio is a simple matter of initializing variables in the `load()` function and later access them where needed. Where needed, using an audio file is a matter of calling the `:play()` function on them.

@@ -1,13 +1,5 @@
 # Pong 10
 
-Index:
-
-- [Victory](#victory)
-
-Snippet:
-
-- main.lua
-
 ## Victory
 
 With this update the game is set to conclude itself as somebody reaches ten points. This is assured by a conditional statement, directly checking the score of either player, and it is hown with a string boldly and atop the scores themselves.

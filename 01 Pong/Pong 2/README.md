@@ -1,15 +1,5 @@
 # Pong 2
 
-Index:
-
-- [Code](#code)
-
-<!-- - [Video](#video) -->
-
-Snippet:
-
-- main.lua
-
 ## Code
 
 The new update to the project includes a custom font in the application run in Love2D. Such a font is included through a local `ttf` file and as follows:
@@ -55,5 +45,3 @@ This object is used to:
   _mode_ is simply a filler word which actually translates to one of two values: `fill` or `line`, to respectively draw a filled shape or just the outline.
 
 These are included, as the `printf` statement, in between the virtual resolution set up with the `push` library.
-
-<!-- ## Video -->

@@ -1,16 +1,8 @@
 # Pong 7
 
-Index:
-
 - [Update Collision](#update-collision)
 
 - [Ball Collision](#ball-collision)
-
-Snippet:
-
-- main.lua
-
-- Ball.lua
 
 Pong 7 focuses on detecting collision between the paddles and the ball, but also adds a title to the page. This is a minor tweak, but it is allowed by the `setTitle()` function, available on the `love.window` module.
 
