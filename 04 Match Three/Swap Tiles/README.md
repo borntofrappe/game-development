@@ -286,3 +286,24 @@ This allows to effectively swap the tiles. That being said, two more additions a
     -- SWAP AWAY
   end
   ```
+
+## Swap 2 - main.lua
+
+Update 1 provides the biggest change in the codebase. With update 2, the swap is animated through the `Timer.tween` function introduced in the _Tween Between Values_ folder.
+
+As a refresher, a tween is set up through the `knife` library as follows:
+
+- declare the tween, describing the duration of the tween as well as the final values the entity or entities need to have **after** the duration.
+
+  ```lua
+  Timer.tween(0.2, {
+    [tile2] = {x = tile1.x, y = tile1.y, gridX = tile1.gridX, gridY = tile1.gridY},
+    [tile1] = {x = tempX, y = tempY, gridX = tempgridX, gridY = tempgridY}
+  })
+  ```
+
+  Notice how the logic implemented in the swap is here included in the tween, describing the entities in `[` squre brackers `]` and assigning the final values in `{` curly `}` brackets.
+
+  Importantly, the tween toward `gridX` and `gridY` is superfluous, as the values do not reflect on the interface on the screen. The tween can just as well include `x` and `y`, while the other two fields can be immediately updated.
+
+- update the tween, through `Timer.update(dt)`.
