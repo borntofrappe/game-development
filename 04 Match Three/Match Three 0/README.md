@@ -105,3 +105,11 @@ To complete the mentioned files, `main.lua` is responsible for:
 - createing an instance of the `Board` class, passing the values necessary for its `init` function;
 
 - introducing the background as the bottom layer of the entire application. A background which is updated in its horizontal coordinate to have the image constantly scroll to the left.
+
+## constants.lua
+
+This is where the constant of the game are included. Values which are not meant to be modified, such as the screen size, or the offset speed of the background image.
+
+## Util.lua
+
+Storing utility-type methods, this file currently describes the `GenerateQuads` function, to divvy up an image into quads.
