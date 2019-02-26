@@ -33,3 +33,5 @@ The idea in the play screen is to have a timer and a goal. Clear the goal before
 ## Project Structure
 
 The game isn't developed in the same manner as Pong, Flappy Bird or Breakout. Instead of developing the game continuously, one step at a time, the video proceeds by introducing the different concepts behind the game, such as the timer or tweening, and only later develop the actual game. In light of this change, the organization of the repository is also modified: you find the concepts into their own folder and later you find the game with the same naming convention used for the first three games (you will therefore find folders labeled 'Timer', 'Tweening', and only later 'Match Three 0', 'Match Three 1' and so forth and so on).
+
+Small update: I decided to label the folders describing the founding concept with the **Prep** prefix. Following up from the code developed in each one of them, the game is developed in increments following the mentioned convention.
