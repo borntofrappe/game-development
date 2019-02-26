@@ -71,3 +71,25 @@ function Tile:render()
   love.graphics.draw(gTextures['spritesheet'], self.tiles[self.color][self.variety], self.x, self.y)
 end
 ```
+
+## Board.lua
+
+The `Board` class is where most of the logic explained in the previous three folders resides. In here we take the quads from the `gFrames` global variable, create a table of `Tile` instances and render them in a grid layout, spanning 8 rows and 8 columns.
+
+Since the class builds on top of the concepts explained in the three prep folder, I'll briefly describe the file's purpose.
+
+- the `init()` function describes the variables required for the board. This means where the board ought to be positioned, through `offsetX` and `offsetY`, and the table of tiles, created through the `generateBoard()` function. The `init` function is also where the variables for the swap are included:
+
+  - the highlighted tile, alongside a boolean describing whether this tile ought to be displayed;
+
+  - the selected tile.
+
+- the `update(dt)` function reacts to a key press on the arrow and enter keys, repeating the logic explained in the swap folder.
+
+- the `render()` function makes use of the `drawBoard()` function, where the drawing of the tiles is centralized.
+
+To complete these three main functions, `generateBoard()` and `drawBoard()` are defined each to solve a specific goal:
+
+- `generateBoard()` creates a table of tiles. Since we now have a class for the tiles, in `Tile.lua`, the function creates a table of instances of said class, and not a table of tables. as introduced in the preparatory sub-folders.
+
+- `drawBoard()` loops through the newly-created table to render the different tiles. Since we have instances of the `Tile` class, the tiles are drawn through the `Tile:render()` method.
