@@ -93,3 +93,15 @@ To complete these three main functions, `generateBoard()` and `drawBoard()` are 
 - `generateBoard()` creates a table of tiles. Since we now have a class for the tiles, in `Tile.lua`, the function creates a table of instances of said class, and not a table of tables. as introduced in the preparatory sub-folders.
 
 - `drawBoard()` loops through the newly-created table to render the different tiles. Since we have instances of the `Tile` class, the tiles are drawn through the `Tile:render()` method.
+
+## main.lua
+
+The main file is considerably modified insofar the logic described in the preparatory folders is not distributed in `Board.lua` and `Tile.lua`.
+
+To complete the mentioned files, `main.lua` is responsible for:
+
+- setting up the global variables, referring to the fonts, images and otherwise assets used throughout the game;
+
+- createing an instance of the `Board` class, passing the values necessary for its `init` function;
+
+- introducing the background as the bottom layer of the entire application. A background which is updated in its horizontal coordinate to have the image constantly scroll to the left.
