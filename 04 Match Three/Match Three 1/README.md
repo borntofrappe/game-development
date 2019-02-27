@@ -155,3 +155,24 @@ return #self.matches > 0 and self.matches or false
 ```
 
 Once more, it is a rather complex function, but understandable when broken piece by piece. To check it working, I included a simple string in the top left corner, describing through a boolean whether a match is foun.
+
+## Update
+
+Update and important fix I might add. The code checking for a match on the last tile, be it in a row or column, needs to go **after** the for loop looping through said row or column. Indeed, it is only after the loop that we reach the end of the tiles sequence and we can check for matches spanning to the very last tile.
+
+```lua
+for x = 2, 8 do
+  -- check every tile in the row
+
+end
+-- ! after the for loop, check for a match considering tthe last tile
+if colorMatches >= 3 then
+  -- add the matching tiles to a local table and add the table to the overarching data structure
+  local match = {}
+  for x = 8, 8 - colorMatches, -1 do
+    table.insert(match, self.tiles[y][x])
+  end
+
+  table.insert(matches, match)
+end
+```

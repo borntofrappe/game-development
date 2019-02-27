@@ -97,7 +97,9 @@ function Board:update(dt)
 
     end
 
+    -- calculate and remove matches
     self:calculateMatches()
+    self:removeMatches()
   end
 
   -- update the timer to show the swap
@@ -107,10 +109,6 @@ end
 -- in the :render function render each tile in self.tiles as well as the highlighted and selected tiles
 function Board:render()
   self:drawBoard()
-
-  love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.setFont(gFonts['normal'])
-  love.graphics.print(tostring(#self.matches > 0), 8, 8)
 end
 
 
@@ -138,10 +136,12 @@ end
 function Board:drawBoard()
   -- draw the tiles
   -- 8 rows
-  for y = 1, 8 do
+  for y = 1, #self.tiles do
     -- 8 columns
-    for x = 1, 8 do
-      self.tiles[y][x]:render()
+    for x = 1, #self.tiles[y] do
+      if self.tiles[y][x] then
+        self.tiles[y][x]:render()
+      end
     end
   end
 
@@ -168,6 +168,7 @@ end
 function Board:calculateMatches()
   -- initialize a variable in which to store all possible matches
   local matches = {}
+  local colorMatches = 1
 
   -- loop through the rows
   for y = 1, 8 do
@@ -200,25 +201,29 @@ function Board:calculateMatches()
 
         end
 
+        -- reset colorMatches to 1
+        colorMatches = 1
+
         -- pre emptively go to the following row if there are only two tiles left
         if x >= 7 then
           break
         end
 
-        -- reset colorMatches to 1
-        colorMatches = 1
+
       end
     end
+
     -- check for a match considering tthe last tile in the row
     if colorMatches >= 3 then
       -- add the matching tiles to a local table and add the table to the overarching data structure
       local match = {}
-      for x = 8, 8 - colorMatches, -1 do
+      for x = 8, 8 - colorMatches + 1, -1 do
         table.insert(match, self.tiles[y][x])
       end
 
       table.insert(matches, match)
     end
+
   end
 
   -- loop through the columns
@@ -249,22 +254,26 @@ function Board:calculateMatches()
 
           -- add the match table to the overarching table of matches
           table.insert(matches, match)
+
         end
+
+        -- reset colorMatches to 1
+        colorMatches = 1
 
         -- pre emptively go to the following row if there are only two tiles left
         if y >= 7 then
           break
         end
 
-        -- reset colorMatches to 1
-        colorMatches = 1
+
       end
+
     end
-    -- check for a match considering tthe last tile in the row
+    -- check for a match considering tthe last tile in the column
     if colorMatches >= 3 then
       -- add the matching tiles to a local table and add the table to the overarching data structure
       local match = {}
-      for y = 8, 8 - colorMatches, -1 do
+      for y = 8, 8 - colorMatches + 1, -1 do
         table.insert(match, self.tiles[y][x])
       end
 
@@ -276,5 +285,21 @@ function Board:calculateMatches()
   self.matches = matches
 
   -- return the matches, or false if no match is stored in the table
-  return #self.matches > 0 and true or false
+  return #self.matches > 0 and self.matches or false
+end
+
+
+-- function removing matches from the grid
+function Board:removeMatches()
+  -- loop through the table of matches
+  for k, match in pairs(self.matches) do
+    -- loop through the tiles of each match
+    for j, tile in pairs(match) do
+      -- set the tiles in self.tiles which match the tiles' own coordinates to nil
+      self.tiles[tile.gridY][tile.gridX] = nil
+    end
+  end
+
+  -- reset matches to nil
+  self.matches = nil
 end
