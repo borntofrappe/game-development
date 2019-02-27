@@ -208,18 +208,16 @@ function Board:calculateMatches()
         -- reset colorMatches to 1
         colorMatches = 1
       end
-
-      -- check for a match considering tthe last tile in the row
-      if colorMatches >= 3 then
-        -- add the matching tiles to a local table and add the table to the overarching data structure
-        local match = {}
-        for x = 8, 8 - colorMatches, -1 do
-          table.insert(match, self.tiles[y][x])
-        end
-
-        table.insert(matches, match)
+    end
+    -- check for a match considering tthe last tile in the row
+    if colorMatches >= 3 then
+      -- add the matching tiles to a local table and add the table to the overarching data structure
+      local match = {}
+      for x = 8, 8 - colorMatches, -1 do
+        table.insert(match, self.tiles[y][x])
       end
 
+      table.insert(matches, match)
     end
   end
 
@@ -251,7 +249,6 @@ function Board:calculateMatches()
 
           -- add the match table to the overarching table of matches
           table.insert(matches, match)
-
         end
 
         -- pre emptively go to the following row if there are only two tiles left
@@ -262,17 +259,16 @@ function Board:calculateMatches()
         -- reset colorMatches to 1
         colorMatches = 1
       end
-
-      -- check for a match considering tthe last tile in the row
-      if colorMatches >= 3 then
-        -- add the matching tiles to a local table and add the table to the overarching data structure
-        local match = {}
-        for y = 8, 8 - colorMatches, -1 do
-          table.insert(match, self.tiles[y][x])
-        end
-
-        table.insert(matches, match)
+    end
+    -- check for a match considering tthe last tile in the row
+    if colorMatches >= 3 then
+      -- add the matching tiles to a local table and add the table to the overarching data structure
+      local match = {}
+      for y = 8, 8 - colorMatches, -1 do
+        table.insert(match, self.tiles[y][x])
       end
+
+      table.insert(matches, match)
     end
   end
 
