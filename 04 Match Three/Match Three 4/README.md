@@ -43,3 +43,7 @@ end
 ```
 
 The code also includes a rather neat transition, to have every tile fall down to its respective place, but the logic is sound. Just remember to always specify how the tile is include on the screen **and** in the table of tiles. This to have the table of tiles always match the grid on the screen.
+
+## Update
+
+It is a rather small change, but I decided to accellerate the tween responsible for the swap, to make the game feel snappier. While adjusting the tiles, I also shortened their tween's duration and included a slight delay between the falling down of existing tiles and the creation of new ones.
