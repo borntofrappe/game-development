@@ -129,3 +129,63 @@ Considering each conditional more carefully:
   Based on this, it is clear why in the first conditional statement `y` is assigned the value of `spaceY` and `spaceY` is set back to the default `0`. We want to consider the column from where the first space has been found (a space currently populated by a tile), and start afresh without any existing space.
 
 This covers the logic which allows to update the board. Personally, I chose to call the `updateBoard` function in the function removing the matches, as to update the appearance only when a match is found. Just like with **update 2**, the game will crush after the first match is found, removed and updated, because the table of tile has `nil` values. With the following update the table will be populated once more to fill the table with new tiles, but the current update already shows how to react to the removal of tiles when considering the tiles above a match.
+
+## Update
+
+### Timer Object
+
+One small modification can be introduced in the way the vertical coordinate is updated. Instead of having the `y` value immediately go to the new coordinate in the board, it is possible to animate the transition with the `Timer.tween` function.
+
+Modifying the following:
+
+```lua
+tile.y = (tile.gridY - 1) * 32 + self.offsetY
+```
+
+With the `Timer` object:
+
+```lua
+Timer.tween(0.2, {
+  [tile] = { y = (tile.gridY - 1) * 32 + self.offsetY}
+})
+```
+
+This allows to transition the tiles into place, but introduces an issue insofar the swap-tiles tween might overlap with the falling-tile tween. This might result in a swapped tile overlap with a falling tile.
+
+This might not be the best way to fix it, but it introduces a nice effect in the game as well: include a delay when moving the tiles downward. It was introduced briefly in the **Time Based Events** sub-folders, but the `Timer.after` function can be used for this exact purpose:
+
+```code
+Timer.after(delay, function()
+end)
+```
+
+The function takes as argument a delay, in seconds, and a callback function fired after said delay. In this function it is possible to include the tween mentioned earlier.
+
+```lua
+Timer.after(0.2, function()
+  Timer.tween(0.2, {
+    [tile] = { y = (tile.gridY - 1) * 32 + self.offsetY}
+  })
+end)
+```
+
+Once a match is found, it is immediately removed. After a brief delay, the tiles above are dropped down.
+
+### Calling updateBoard()
+
+As mentioned, `updateBoard()` is called in the function removing matches, but the structure can be improved to have the logic run only when matches are indeed found. It is inefficient to have `removeMatches()` and `updateBoard()` run regardless of there being a match.
+
+Luckily, and perhaps this was the meaning behind the structure of the function, `calculateMatches()` returns either the list of matches or false. It is possible to use this value as a conditional for the removal of the tile and the following update of the board.
+
+```lua
+function Board:removeMatches()
+  -- conditional to matches being found
+  if self:calculateMatches() then
+    -- logic to remove matches
+
+    -- update board
+    self:upadteBoard()
+  end
+
+end
+```
