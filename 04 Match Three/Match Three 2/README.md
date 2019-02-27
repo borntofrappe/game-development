@@ -57,3 +57,56 @@ This assuming there are two matches, of three and four tiles each.
 Upon setting the tiles to nil, the board effectively disregards the tiles. It is however important to note that this will break the code insofar the `lua` file will try to consider the coordinate, color and variety of items which do not have coordinate, color nor variety.
 
 This can be fixed by immediately placing new tiles, or conditionally rendering tiles as long as they are not nil, but before re-tiling the board it is necessary to animate the rest of the board in light of the empty spaces.
+
+## Update - Fix
+
+The code erroneously removes matches when they are found on the last tile, in the row and or column.
+
+```lua
+-- check for a match considering tthe last tile in the row
+if colorMatches >= 3 then
+  -- add the matching tiles to a local table and add the table to the overarching data structure
+  local match = {}
+  for x = 8, 8 - colorMatches, -1 do
+    table.insert(match, self.tiles[y][x])
+  end
+
+  table.insert(matches, match)
+end
+```
+
+The mistakke is specifically in the for loop, which copies the structure of the previous loop.
+
+For the tiles inside the board:
+
+```lua
+for x2 = x - 1, x - colorMatches, -1 do
+  table.insert(match, self.tiles[y][x2])
+end
+```
+
+For the last tile:
+
+```lua
+for x = 8, 8 - colorMatches, -1 do
+  table.insert(match, self.tiles[y][x])
+end
+```
+
+It is however important to note that the two differ in the way they loop back to the matching tiles. In the first instance we need to go back from the tile preceding the current one (`x - 1`), but in the second we do not. Indeed the matching tile is already the current tile. Given this, the end condition needs to be updated. While the first loop needs to go back according to the number of matches, the second needs to stop one tile before said threshold.
+
+For the tiles inside the board, as-is:
+
+```lua
+for x2 = x - 1, x - colorMatches, -1 do
+  table.insert(match, self.tiles[y][x2])
+end
+```
+
+For the last tile, adding 1 to the end condition:
+
+```lua
+for x = 8, 8 - colorMatches + 1, -1 do
+  table.insert(match, self.tiles[y][x])
+end
+```

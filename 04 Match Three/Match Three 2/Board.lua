@@ -97,7 +97,7 @@ function Board:update(dt)
 
     end
 
-    -- calculate matches and remove them
+    -- calculate and remove matches
     self:calculateMatches()
     self:removeMatches()
   end
@@ -217,7 +217,7 @@ function Board:calculateMatches()
     if colorMatches >= 3 then
       -- add the matching tiles to a local table and add the table to the overarching data structure
       local match = {}
-      for x = 8, 8 - colorMatches, -1 do
+      for x = 8, 8 - colorMatches + 1, -1 do
         table.insert(match, self.tiles[y][x])
       end
 
@@ -269,11 +269,11 @@ function Board:calculateMatches()
       end
 
     end
-    -- check for a match considering tthe last tile in the row
+    -- check for a match considering tthe last tile in the column
     if colorMatches >= 3 then
       -- add the matching tiles to a local table and add the table to the overarching data structure
       local match = {}
-      for y = 8, 8 - colorMatches, -1 do
+      for y = 8, 8 - colorMatches + 1, -1 do
         table.insert(match, self.tiles[y][x])
       end
 
