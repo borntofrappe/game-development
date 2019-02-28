@@ -16,19 +16,27 @@ It is not a complex structure, but the transitions introduced in between the sta
 
 ## Goal
 
-With this update I will forgo the time-based animations and create the different states, which can be alternated by pressing enter or a selection of keys. Here's the goal of the update:
+With this update I will forgo the time-based animations and create the different states, which can be alternated by pressing enter . Here's the goal of the update:
 
 - introduce a start state in which the title and a menu are shown;
 
-- when pressing enter go to the play state, which incorporates the functional board;
+- when pressing enter go to the play state;
 
-- when pressing a key, go to the gameover state, showing an appropriate message;
+- when pressing a enter go to the gameover state;
 
 - when pressing enter go back to the start state.
 
 Lather, rinse, repeat.
 
-Ultimately the gameover state ought to be shown when a timer hits 0. Ultimately there needs to be a victory, or level state showing the level being reached, but to get started with the structure of the game this seems to be enough.
+Ultimately:
+
+- the play state needs to incorporate a panel with the game information, not to mention the actual board;
+
+- the gameover state ought to be shown when a timer hits 0;
+
+- there needs to be a victory, or level state showing the level being reached.
+
+To get started with the state machine behind the game, adding the functionality detailed above seems to be enough.
 
 ## Getting Started
 
@@ -85,3 +93,15 @@ And each letter is included using the `love.graphics.printf()` function looping 
 A bit of match is required to have the word centered on the screen, but the idea is to have each letter spread around the center according to its position in the table. Notice that the penultimate item is an empty string. This is include to have the number three separated from the word match, but it might cause a few issues when the change in colors is introduced. Just remember that the table is 1 letter longer than the actual word.
 
 One last note in terms of design: the `init` function also introduces `self.colors`, describing the colors ultimately used for the headings. This feature will be implemented in a future update.
+
+## PlayState & GameoverState
+
+The two state classes are introduced without much consideration, simply to alternate between the different states.
+
+Indeed the goal of this update was to introduce the state machine. While I got a bit carried away with the `StartState`, the game is now set up to include time-based events.
+
+Such as:
+
+- color each word of the heading at an interval;
+
+- count down a certain number of seconds, incrementing the value and reacting to it reaching 0.
