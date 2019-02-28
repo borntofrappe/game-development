@@ -13,3 +13,19 @@ startState → playState
 ```
 
 It is not a complex structure, but the transitions introduced in between the states provide a bit of a challenge. Not to mention the transitions included in the states, like the title `Match 3` changing in color rapidly and one letter at a time.
+
+## Goal
+
+With this update I will forgo the time-based animations and create the different states, which can be alternated by pressing enter or a selection of keys. Here's the goal of the update:
+
+- introduce a start state in which the title and a menu are shown;
+
+- when pressing enter go to the play state, which incorporates the functional board;
+
+- when pressing a key, go to the gameover state, showing an appropriate message;
+
+- when pressing enter go back to the start state.
+
+Lather, rinse, repeat.
+
+Ultimately the gameover state ought to be shown when a timer hits 0. Ultimately there needs to be a victory, or level state showing the level being reached, but to get started with the structure of the game this seems to be enough.
