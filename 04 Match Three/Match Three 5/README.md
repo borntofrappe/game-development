@@ -29,3 +29,14 @@ With this update I will forgo the time-based animations and create the different
 Lather, rinse, repeat.
 
 Ultimately the gameover state ought to be shown when a timer hits 0. Ultimately there needs to be a victory, or level state showing the level being reached, but to get started with the structure of the game this seems to be enough.
+
+## Getting Started
+
+Using the same assets introduced in Flappy Bird, and reiterated in breakout, the folder is restructured as to include:
+
+- `StateMachine.lua`, in the `src` folder;
+
+- the different states in the the `src/states` sub-folder. Starting with `BaseState.lua`, from which all following states inherit.
+
+To include these components, `Dependencies.lua` is updated to require each one of the `.lua` files.
+
