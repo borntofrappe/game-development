@@ -40,3 +40,6 @@ Using the same assets introduced in Flappy Bird, and reiterated in breakout, the
 
 To include these components, `Dependencies.lua` is updated to require each one of the `.lua` files.
 
+## main.lua
+
+The entry point to the game is updated as to include an instance of the state machine and immediately move the game to the `StartState`. I also modified the file to remove any reference to the board, included later in the `PlayState`, and rearranged a bit the code, in the hope of making it easier to parse through.
