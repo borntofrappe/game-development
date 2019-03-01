@@ -71,3 +71,7 @@ end
 ```
 
 With this logic, the score can be updated to effectively reflect the number of tiles being matched. The logic of a scoring system can be them refined to give additional points depending on the variety of each shape, provide additional time for each match, but this ultimately covers how to include the `Board` in the `PlayState`. It is necessary to be mindful of what is updated where (to avoid overlapping calls to the `Timer` object) and to understand the consequences of the logic included in tboth files. `Board` allows to confine much of the logic for the board of tiles, but `PlayState` is the file ultimately responsible for the state of the game.
+
+## GameoverState.lua
+
+This is rather minor, but the gamover state is modified to accept the score from the play state, and render said value in the center of the screen.
