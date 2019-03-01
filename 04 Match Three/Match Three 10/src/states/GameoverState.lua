@@ -13,7 +13,7 @@
 -- inherit from the BaseState class
 GameoverState = Class{__includes = BaseState}
 
--- in the enter() function
+-- in the enter() function receive the score from the play state
 function GameoverState:enter(params)
   self.score = params.score
 end
@@ -37,7 +37,7 @@ function GameoverState:render()
   love.graphics.rectangle('fill', VIRTUAL_WIDTH / 2 - VIRTUAL_WIDTH / 6, VIRTUAL_HEIGHT / 2 - VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH / 3, VIRTUAL_HEIGHT / 2.5, 5)
 
 
-  -- include the heading and strings of text evenly space in the overlay
+  -- include the score below a gameover string
   love.graphics.setFont(gFonts['big'])
   love.graphics.setColor(0.42, 0.59, 0.94, 1)
   love.graphics.printf(
@@ -49,7 +49,6 @@ function GameoverState:render()
   )
 
   love.graphics.setFont(gFonts['normal'])
-
   love.graphics.printf(
     'Score: ' .. tostring(self.score),
     0,
@@ -58,8 +57,8 @@ function GameoverState:render()
     'center'
   )
 
+  -- detail how to proceed
   love.graphics.setFont(gFonts['small'])
-
   love.graphics.printf(
     'Press enter to continue',
     0,

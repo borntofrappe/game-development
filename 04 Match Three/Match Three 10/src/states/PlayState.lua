@@ -14,7 +14,7 @@
 -- inherit from the BaseState class
 PlayState = Class{__includes = BaseState}
 
--- in the init() function initialize the variables for the game
+-- in the init() function initialize the variables for the game and the timer transitioning the state into view
 function PlayState:init()
   self.level = 1
   self.score = 0
