@@ -25,9 +25,23 @@ function love.load()
   -- the tiles from tiles.png (each 16x16 in size)
   -- the background from backgrounds.png (256x128 each)
   gFrames = {
-    ['tiles'] = GenerateQuads(gTextures['tilesheet'], 16, 16),
-    ['background'] = GenerateQuads(gTextures['backgrounds'], 256, 128)
+    ['tiles'] = GenerateQuads(gTextures['tilesheet'], TILE_SIZE, TILE_SIZE),
+    ['background'] = GenerateQuads(gTextures['backgrounds'], BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
   }
+
+  -- create a table in which to describe the tiles
+  tiles = {}
+  for y = 1, MAP_HEIGHT do
+    -- insert a table for each row
+    table.insert(tiles, {})
+    -- insert one table describing an id for each cell
+    for x = 1, MAP_WIDTH do
+      table.insert(tiles[y], {
+        -- have the first 5 rows be sky tiles
+        id = y < 12 and TILE_SKY or TILE_GROUND
+      })
+    end
+  end
 
   -- PUSH
   -- virtualization set up through the push library
@@ -77,17 +91,27 @@ function love.draw()
     0, -- x origin
     0, -- y origin
     0, -- rotation
-    VIRTUAL_WIDTH / 256, -- x scale
-    VIRTUAL_HEIGHT / 128 -- y scale
+    VIRTUAL_WIDTH / BACKGROUND_WIDTH, -- x scale
+    VIRTUAL_HEIGHT / BACKGROUND_HEIGHT -- y scale
   )
 
-  -- include the tiles
-  love.graphics.draw(
-    gTextures['tilesheet'],
-    gFrames['tiles'][1],
-    0,
-    0
-  )
+  --[[
+    include the tiles looping through the tiles table
+  ]]
+  for y = 1, MAP_HEIGHT do
+    for x = 1, MAP_WIDTH do
+      local tile = tiles[y][x]
+
+      love.graphics.draw(
+        gTextures['tilesheet'],
+        gFrames['tiles'][tile.id],
+        (x - 1) * TILE_SIZE,
+        (y - 1) * TILE_SIZE
+      )
+
+    end
+  end
+
 
 
   -- include a simple string in the top left corner
