@@ -15,3 +15,5 @@ After a bit of experimentation and taking stock of the lessons learned with SVG 
 The second update allows to move the character left and right. This is achieved much alike the camera scroll, through a constant variable describing the speed and a cumuative variable changing the `x` coordinate of the shape being drawn.
 
 I decided to take the concept a bit further and already include a small animation, by changing the quad being drawn in the page, but that will be covered in a later update. I started by including separate variables, and then create a table centralizing all the values held by the character. In the end it might be best to have a separate class, `Character`, which handles the entire logic through proprietary values.
+
+Also: I temporarily disabled the scroll of the camera. Ultimately, it will stroll alongside the character, but at different speeds (less) to allow for the character to continue throughout the level.
