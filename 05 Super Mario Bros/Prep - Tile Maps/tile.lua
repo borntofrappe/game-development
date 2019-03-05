@@ -37,7 +37,7 @@ function love.load()
     -- insert one table describing an id for each cell
     for x = 1, MAP_WIDTH do
       table.insert(tiles[y], {
-        -- have the first 5 rows be sky tiles
+        -- have the first y rows be sky tiles
         id = y < 12 and TILE_SKY or TILE_GROUND
       })
     end
