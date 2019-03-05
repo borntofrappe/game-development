@@ -4,7 +4,7 @@ With the scrolling of the camera implemented, the character is drawn through the
 
 ## Update 0 - character.lua
 
-With the first update `main.lua` is updated to include the character.
+With the first update the application is updated to include the character.
 
 This allows to practice once more with the quad function and most prominently with the coordinate system of Love2D. Indeed the character needs to be included atop the tiles making up the ground, and this is achieved by placing in a variable the number of tiles making up the sky.
 

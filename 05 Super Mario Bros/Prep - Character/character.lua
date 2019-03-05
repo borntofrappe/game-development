@@ -3,7 +3,7 @@ require 'src/Dependencies'
 
 -- in the load function set up the game's title and screen
 function love.load()
-  love.window.setTitle('Tilemaps')
+  love.window.setTitle('Character')
 
   -- GLOBALS
   -- font
@@ -114,7 +114,7 @@ function love.draw()
   -- include a simple string in the top left corner
   love.graphics.setFont(gFonts['big'])
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.print('Tilemaps', 8, 8)
+  love.graphics.print('Character', 8, 8)
 
 
   -- translate the camera using love.graphics.translate() and the cameraScroll variable
