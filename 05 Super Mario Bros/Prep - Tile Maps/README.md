@@ -29,3 +29,19 @@ To include the quads, it is helpful to reiterate the arguments accepted by the f
 - yScale, vertical scale.
 
 For the tiles making up the cells the last three arguments are currently unnecessary. For the background however, they are used to have the quad scaled up to cover the entirety of the width and height of the screen.
+
+## Update 1 - main.lua
+
+Once the ground is created the lecturer introduces the `love.graphics.translate(x,y)` function, to move the camera as a result of player input. By changing the coordinate system, mostly through the `x` coordinate, while keeping a reference on the character, it is possible to fake horizontal movement.
+
+You apply this translation by:
+
+- creating a variable in the `love.load()` function;
+
+- updating the value of said variable in `lova.update(dt)`;
+
+- use the variable in the `love.draw()` function.
+
+It is specifically in `love.draw()` that the translating function is included. Anything that follows a call to this function reacts to the change in scroll, anything preceding it (like the background or the text) is left unaffected.
+
+A small note: instead of using the `keyboard.wasPressed` function which is created to check for a key being pressed *once*, make use of `love.keyboard.isDown` to accommodate for continuous presses on the left and right arrow keys.
