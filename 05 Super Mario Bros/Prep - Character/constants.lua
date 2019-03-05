@@ -25,8 +25,10 @@ BACKGROUND_WIDTH = 256
 BACKGROUND_HEIGHT = 128
 
 -- speed of the camera scroll
-CAMERA_SCROLL_SPEED = 100
+CAMERA_SCROLL_SPEED = 50
 
 -- size of the character
 CHARACTER_WIDTH = 16
 CHARACTER_HEIGHT = 20
+-- speed of the character
+CHARACTER_SCROLL_SPEED = 100
