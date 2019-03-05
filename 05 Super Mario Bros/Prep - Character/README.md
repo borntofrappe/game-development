@@ -18,7 +18,7 @@ I decided to take the concept a bit further and already include a small animatio
 
 Also: I temporarily disabled the scroll of the camera. Ultimately, it will stroll alongside the character, but at different speeds (less) to allow for the character to continue throughout the level.
 
-## Update 2 - tracking.lua
+## Update 2 - main.lua
 
 With update 2 the application is modified as to move the character in the context of the camera. The idea is to have the character always centered in the middle of the screen. The feat is achieved by having `cameraScroll` refer to the character.
 
