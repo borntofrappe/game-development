@@ -21,3 +21,6 @@ MAP_HEIGHT = 18
 -- size of the background
 BACKGROUND_WIDTH = 256
 BACKGROUND_HEIGHT = 128
+
+-- speed of the camera scroll
+CAMERA_SCROLL_SPEED = 50
