@@ -2,11 +2,9 @@
 
 While I have already made a first attempt in animating the character, by rapidly changing the stance through dedicated variables, the lecturer includes animation through a custom class, `Animation`. I therefore decided to remove my variables in favor of this solution. This doesn't mean the code was include for nothing though. The logic of how the character is updated, like a flip book, and the way the character is made to look the opposite way, by setting the `xScale` to negative values, are concepts which repeat themselves.
 
-## Update 0
+## Animation.lua
 
 I tried to comment the **Animation.lua** as much as possible, to understand the inner logic of the class, but here I'll also add a few notes jotted down while reviewing the video.
-
-### Animation.lua
 
 Here's the idea behind the class:
 
@@ -22,9 +20,9 @@ Back to the class:
 
 The idea seems to have the class update the frames and use the function in `main.lua` to actually change the appearance of the character. Rather comprehensible once the `def` argument is understood.
 
-### moving.lua
+## Update 0 - moving.lua
 
-Once the `Animation` class is set up, its logic is incorporated in `main.lua` as follows (I use `moving.lua` as a temporary file to describe the update, but the logic is included in a `main.lua` file to have it run in the Love2D engine).
+Once the `Animation` class is set up, its logic is incorporated in the application to allow for horizontal movement.
 
 - include the animation class in the list of dependencies of the game. Or simply include it atop the `lua` file;
 
@@ -102,3 +100,11 @@ To change the animation and most importantly to have it update the appearance of
   ```lua
   currentAnimation:update(dt)
   ```
+
+## Update 1 - main.lua
+
+With the second round of animation-related update, the goal is to animate a jump. This relates not only to the animation class, but also a change in the vertical position of the character.
+
+In terms of vertical coordinate, the solution in inspired by the approach incorporated in Flappy Bird, changing the `y` coordinate as to emulate gravity.
+
+In terms of animation, and instead of creating one instance of the animation class, the movement is differentiated in two instances: jumping and falling. This is because the character behaves inherently different when it is jumping (destroying for instance blocks) vis a vis when it is falling (eliminating enemies). It becomes important to separate the two states.
