@@ -108,3 +108,61 @@ With the second round of animation-related update, the goal is to animate a jump
 In terms of vertical coordinate, the solution in inspired by the approach incorporated in Flappy Bird, changing the `y` coordinate as to emulate gravity.
 
 In terms of animation, and instead of creating one instance of the animation class, the movement is differentiated in two instances: jumping and falling. This is because the character behaves inherently different when it is jumping (destroying for instance blocks) vis a vis when it is falling (eliminating enemies). It becomes important to separate the two states.
+
+The change in vertical coordinate is implemented as follows:
+
+- create a `dy` variable in which to describe the vertical offset, from the `y` coordinate;
+
+  ```lua
+  gCharacter = {
+    -- horizontally centered
+    ['x'] = (VIRTUAL_WIDTH / 4) - (CHARACTER_WIDTH / 2),
+    -- vertically right atop the ground tiles
+    ['y'] = (MAP_SKY - 1) * TILE_SIZE - CHARACTER_HEIGHT,
+    ['dy'] = 0
+  }
+  ```
+
+
+- in the update function change the `y` coordinate according to `dy`;
+
+  ```lua
+  gCharacter.y = gCharacter.y + gCharacter.dy * dt
+  ```
+
+- itself, `dy` is updated as time passes and as the player hits the up arrow key.
+
+  As time passes, the offset is weighed by a constant referring to the gravity.
+
+  ```lua
+  gCharacter.dy = gCharacter.dy + GRAVITY
+  ```
+
+  As the up arrow key it pressed, the offset considers the variable stored in a constant referring to the character's own speed.
+
+  ```lua
+  gCharacter.dy = CHARACTER_JUMP_SPEED
+  ```
+
+  In light of this, `CHARACTER_JUMP_SPEED` refers to a negative value (pushing the character upwards). `GRAVITY` refers instead to a positive value (bringing the character back).
+
+- to avoid having the character fall below the tiles making up the ground, be sure to include a safety hatch, a condition to have `dy` reverrt back to 0 as the ground is hit.
+
+  ```lua
+  if gCharacter.y >= (MAP_SKY - 1) * TILE_SIZE - CHARACTER_HEIGHT then
+    gCharacter.y = (MAP_SKY - 1) * TILE_SIZE - CHARACTER_HEIGHT
+    gCharacter.dy = 0
+  end
+  ```
+
+  Just remember that the coordinate system goes top to bottom with increasing values.
+
+## Final Notes
+
+I decided to apply the following changes:
+
+- the background is darkened with a semi-transparent black overlay. The color was striking a bad balance with the character's own color;
+
+- the character is animated as to squat, whenever the down key is being pressed. This allows to detail another animation;
+
+- the animation of the character, moving to the left and right is applied conditional to `dy` being equal to 0. Otherwise the jumping and falling animation is overriden by the horizontal one.
