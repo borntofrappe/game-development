@@ -9,3 +9,11 @@ Think of a condition including a chasm, by skipping tiles making up the ground f
 - positioning the top exactly where the sky ends;
 
 - looping through the tiles and updating the tiles being used when typing r.
+
+## Update 0 - Tiles & Tops
+
+In the first update the appearance of the world is altered whenever pressing `r`. To achieve this feat, **tiles.png** and **tile_tops.png** are introduced to style the ground and the first layer of ground tiles respectively.
+
+I decided to update `Util.lua` as to extract the precise information for both use cases. With the commented functions, it is possible to create a reference to a table aptly describing every type of tile and every type of top.
+
+By additionally setting up a variable (instead of a constant), it is possible to reference a value which can be updated as needed. In the specific instance of the update, this variable is updated to draw from both tables, at random. This has the effect to draw different patterns, but it is on its own trivial. The idea is to ultimately have the level change in appearance as it is generated, to have the character spawn in a setting changing constantly.
