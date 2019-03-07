@@ -116,3 +116,34 @@ end
 Important note: so far I've included `MAP_WIDTH * 2` to have the level exceeds the horizontal boundary of the screen. With the current update I decided to have the loop refer only to `MAP_WIDTH` and to change the constant value as needed.
 
 I also included `math.randomseed(os.time())`, an essential part of `love.load`. This allows to have the `math.random()` functions actually use random values.
+
+## Update 2 - Chasms
+
+Beside pillars, the levels ought to include chasms, in the form of columns without any ground tile.
+
+Immediately I can think of implementing this feat by including ground tiles conditional to a flag being true, or false:
+
+```lua
+local isChasm = math.random(8) == 1
+if not isChasm then
+  -- include ground tiles and pillars
+end
+```
+
+Without specific update to the grid, the column would be filled entirely with sky tiles.
+
+The lecturer actually uses `goto`, to have the loop skip one column. As explained, lua doesn't have a concept of `continue`, so the skip feature is implemented as follows:
+
+- describe where the program should go through the `goto` keyword.
+
+  ```lua
+  goto continue
+  ```
+
+- specify the destination wrapping the chosen word in between two sets of `:` colons.
+
+  ```lua
+  ::continue::
+  ```
+
+`continue` is just by convention, but the destination can be described by any arbitrary string.
