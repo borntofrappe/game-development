@@ -304,10 +304,17 @@ function generateLevel()
 
   -- loop through the table one column at a time
   for x = 1, MAP_WIDTH do
+  -- boolean describing whether or not to add a chasm (skip a colum)
+    local isChasm = math.random(8) == 1
+    -- ifChasm go to the end of the loop
+    if isChasm then
+      goto continue
+    end
+
     -- initialize a variable referring to the ground level (by default equal to the constant in MAP_SKY)
     local groundLevel = MAP_SKY
     -- boolean describing whether or not to add a pillar
-    local isPillar = math.random(5) == 1
+    local isPillar = math.random(4) == 1
     -- if the flag resolves to true, decrement groundLevel to show a taller ground column
     if isPillar then
       -- include a pillar between 1 and 3 tiles tall
@@ -322,7 +329,11 @@ function generateLevel()
         topper = y == groundLevel and true or false
       }
     end
+
+    -- where the isChasm boolean leads (skipping the inclusion of ground tiles)
+    ::continue::
   end
+
 
 
   -- return the overarching table
