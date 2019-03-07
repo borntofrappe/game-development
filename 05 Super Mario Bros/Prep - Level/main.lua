@@ -5,6 +5,9 @@ require 'src/Dependencies'
 function love.load()
   love.window.setTitle('Level Generation')
 
+  -- random seed for math.random
+  math.randomseed(os.time())
+
   -- GLOBALS
   -- font
   gFonts = {
@@ -181,7 +184,7 @@ function love.update(dt)
     tileTopRandom = math.random(#gFrames['tops'])
     -- update the .id of each tile which references a ground tile
     for y = 1, MAP_HEIGHT do
-      for x = 1, MAP_WIDTH * 2 do
+      for x = 1, MAP_WIDTH do
         -- the conditional is set into place to avoid updating the sky tiles
         if tiles[y][x].id == tileGround then
           tiles[y][x].id = tileGroundRandom
@@ -242,7 +245,7 @@ function love.draw()
     include the tiles looping through the tiles table
   ]]
   for y = 1, MAP_HEIGHT do
-    for x = 1, MAP_WIDTH * 2 do
+    for x = 1, MAP_WIDTH do
       local tile = tiles[y][x]
 
       love.graphics.draw(
@@ -285,21 +288,42 @@ end
 function generateLevel()
   -- initialize an empty table
   local tiles = {}
-  -- populate the table with as many items as there are cells
+  -- populate the table with sky tiles only
   for y = 1, MAP_HEIGHT do
     -- one table for each column
     table.insert(tiles, {})
-    for x = 1, MAP_WIDTH * 2 do
-      -- one table for each cell
-      -- ! detailing the actual values required for the rendering of different tiles
+    for x = 1, MAP_WIDTH do
       table.insert(tiles[y], {
-        id = y < MAP_SKY and TILE_SKY or tileGround,
-        -- include a boolean describing the top of the tiles after the sky's own tiles
-        topper = y == MAP_SKY and true or false
+        id = TILE_SKY,
+        topper = false
       })
 
     end
   end
+
+
+  -- loop through the table one column at a time
+  for x = 1, MAP_WIDTH do
+    -- initialize a variable referring to the ground level (by default equal to the constant in MAP_SKY)
+    local groundLevel = MAP_SKY
+    -- boolean describing whether or not to add a pillar
+    local isPillar = math.random(5) == 1
+    -- if the flag resolves to true, decrement groundLevel to show a taller ground column
+    if isPillar then
+      -- include a pillar between 1 and 3 tiles tall
+      groundLevel = groundLevel - math.random(3)
+    end
+
+    -- starting from the tile identifying the ground level, and ending at the bottom of the screen
+    for y = groundLevel, MAP_HEIGHT do
+    -- include the ground tile and the topper flag only if the level matches the groundlevel
+      tiles[y][x] = {
+        id = tileGround,
+        topper = y == groundLevel and true or false
+      }
+    end
+  end
+
 
   -- return the overarching table
   return tiles
