@@ -16,10 +16,11 @@ TILE_TOP = 1
 TILE_SIZE = 16
 
 -- number of tiles present in the height/width of the screen
-MAP_WIDTH = 32
+MAP_WIDTH = 32 * 3
 MAP_HEIGHT = 18
 -- row at which point to start drawing the tiles for the ground
-MAP_SKY = 12
+MAP_SKY = 14
+PILLAR_HEIGHT = 2
 
 -- size of the background
 BACKGROUND_WIDTH = 256
