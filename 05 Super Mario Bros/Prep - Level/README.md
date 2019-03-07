@@ -74,3 +74,45 @@ end
 It may not seem like a substantial difference, but there's an underlying shift in the way the world is generated and then rendered. There is a separation of concerns, if you want to speak in terms of web development. This separation of concerns allows to further the cause of the `generateLevel` function, which is itself and solely responsible for the appearance of the world.
 
 With the aforementioned function, two additional variables are included in `tileGround` and `tileTop`. These refer to a random index in the table of tiles and tops respectively, to have the world be rendered through different shapes and colors. The main feature of the update, pressing `r` to alter the world's appearance, is implemented by modifying these values and updating the tiles making up the ground.
+
+## Update 1 - Pillars
+
+To make the levels 'less flat' we start by introducing pillars.
+
+Pillars, like chasms, are introduced on a column by column basis. To achieve this feat, the lecturer updates the `generateLevel()` function as follows:
+
+- populate the tiles table with sky tiles only;
+
+- once the table is set up, proceed to conditionally include the ground tiles, at varying heights for the pillars, by considering the tiles column after column.
+
+My solution varies slightly from the lecturer's one, but for once I do believe my approach is rather cleaner. Instead of conditionally setting the tiles for the pillars and below those the tiles for the ground, I decided to have a single declaration describing the two together.
+
+Essentially, I included a variable describing where ground tiles should begin and I modified this pending a certain flag resolving to true.
+
+```lua
+-- loop through the table one column at a time
+for x = 1, MAP_WIDTH do
+  -- initialize a variable referring to the ground level (by default equal to the constant in MAP_SKY)
+  local groundLevel = MAP_SKY
+  -- boolean describing whether or not to add a pillar
+  local isPillar = math.random(5) == 1
+  -- if the flag resolves to true, decrement groundLevel to show a taller ground column
+  if isPillar then
+    -- include a pillar between 1 and 3 tiles tall
+    groundLevel = groundLevel - math.random(3)
+  end
+
+  -- starting from the tile identifying the ground level, and ending at the bottom of the screen
+  for y = groundLevel, MAP_HEIGHT do
+  -- include the ground tile and the topper flag only if the level matches the groundlevel
+    tiles[y][x] = {
+      id = tileGround,
+      topper = y == groundLevel and true or false
+    }
+  end
+end
+```
+
+Important note: so far I've included `MAP_WIDTH * 2` to have the level exceeds the horizontal boundary of the screen. With the current update I decided to have the loop refer only to `MAP_WIDTH` and to change the constant value as needed.
+
+I also included `math.randomseed(os.time())`, an essential part of `love.load`. This allows to have the `math.random()` functions actually use random values.
