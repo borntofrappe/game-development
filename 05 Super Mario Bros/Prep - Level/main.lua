@@ -31,25 +31,13 @@ function love.load()
     ['character'] = GenerateQuads(gTextures['character'], CHARACTER_WIDTH, CHARACTER_HEIGHT)
   }
 
+
+  -- initialize two variables referring to a random value in the tiles and tops tables
+  tileGround = math.random(#gFrames['tiles'])
+  tileTop = math.random(#gFrames['tops'])
+
   -- create a table in which to describe the tiles
-  tiles = {}
-
-  -- initialize two variables referring at first to the tile and top tile specified in the constants file
-  tileGround = TILE_GROUND
-  tileTop = TILE_TOP
-
-  -- add as many tiles as specified by MAP_HEIGHT and MAP_WIDTH
-  for y = 1, MAP_HEIGHT do
-    -- insert a table for each row
-    table.insert(tiles, {})
-    -- insert one table describing an id for each cell
-    for x = 1, MAP_WIDTH * 2 do
-      table.insert(tiles[y], {
-        -- include the ground tiles after as many rows as described by the MAP_SKY constant
-        id = y < MAP_SKY and TILE_SKY or tileGround
-      })
-    end
-  end
+  tiles = generateLevel()
 
   -- include a variable for the horizontal scroll of the camera
   cameraScroll = 0
@@ -264,7 +252,7 @@ function love.draw()
         (y - 1) * TILE_SIZE
       )
 
-      if y == MAP_SKY then
+      if tile.topper then
         love.graphics.draw(
           gTextures['topsheet'],
           gFrames['tops'][tileTop],
@@ -293,4 +281,26 @@ function love.draw()
 end
 
 
+-- function describing the levels through specific id(s) and flags
+function generateLevel()
+  -- initialize an empty table
+  local tiles = {}
+  -- populate the table with as many items as there are cells
+  for y = 1, MAP_HEIGHT do
+    -- one table for each column
+    table.insert(tiles, {})
+    for x = 1, MAP_WIDTH * 2 do
+      -- one table for each cell
+      -- ! detailing the actual values required for the rendering of different tiles
+      table.insert(tiles[y], {
+        id = y < MAP_SKY and TILE_SKY or tileGround,
+        -- include a boolean describing the top of the tiles after the sky's own tiles
+        topper = y == MAP_SKY and true or false
+      })
 
+    end
+  end
+
+  -- return the overarching table
+  return tiles
+end
