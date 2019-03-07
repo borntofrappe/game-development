@@ -10,10 +10,67 @@ Think of a condition including a chasm, by skipping tiles making up the ground f
 
 - looping through the tiles and updating the tiles being used when typing r.
 
-## Update 0 - Tiles & Tops
+## Update 0 - Flat Levels
 
 In the first update the appearance of the world is altered whenever pressing `r`. To achieve this feat, **tiles.png** and **tile_tops.png** are introduced to style the ground and the first layer of ground tiles respectively.
 
-I decided to update `Util.lua` as to extract the precise information for both use cases. With the commented functions, it is possible to create a reference to a table aptly describing every type of tile and every type of top.
+I decided to update `Util.lua` as to extract the precise information for both use cases. With the commented functions, it is possible to create a reference to a table aptly describing every type of tile and every type of top. The lecturer actually puts more thought into the these tables, with nested levels for different colors and types. I might consider this at a later stage, but for the time being I am satisfied with the simpler approach of having two giant tables, one of which refers to every squared tile, one of which refers to every straight top.
 
-By additionally setting up a variable (instead of a constant), it is possible to reference a value which can be updated as needed. In the specific instance of the update, this variable is updated to draw from both tables, at random. This has the effect to draw different patterns, but it is on its own trivial. The idea is to ultimately have the level change in appearance as it is generated, to have the character spawn in a setting changing constantly.
+The lecturer also separates the logic making up the world in a dedicated function, `generateLevel`. This is similarly to the level maker introduced in Breakout, and it might be helpful especially when the generation of levels starts to get more complicated. Think pillars, chasms.
+
+In this function a table of tiles is created, as previously done in `love.load`:
+
+```lua
+-- function describing the levels through specific id(s) and flags
+function generateLevel()
+  -- initialize an empty table
+  local tiles = {}
+  -- populate the table with as many items as there are cells
+  for y = 1, MAP_HEIGHT do
+    -- one table for each column
+    table.insert(tiles, {})
+    for x = 1, MAP_WIDTH * 2 do
+      -- one table for each cell
+      -- ! detailing the actual values required for the rendering of different tiles
+      table.insert(tiles[y], {
+        id = y < MAP_SKY and TILE_SKY or tileGround,
+        -- include a boolean describing the top of the tiles after the sky's own tiles
+        topper = y == MAP_SKY and true or false
+      })
+
+    end
+  end
+  -- return the overarching table
+  return tiles
+end
+```
+
+Notice the inclusion of a flag in `topper`. This is introduced to later have the `love.draw` function draw a tile when the boolean is true, again moving the logic inside of the `generateFunction` instead of specifying the value where the world is being drawn. Put it simply: with the previous approach the top of the tile was introduced in `love.draw`.
+
+```lua
+if y == MAP_SKY then
+  love.graphics.draw(
+    gTextures['topsheet'],
+    gFrames['tops'][tileTop],
+    (x - 1) * TILE_SIZE,
+    (y - 1) * TILE_SIZE
+  )
+end
+```
+
+With the new approach the top of the tile is introduced through the boolean.
+
+```lua
+if tile.topper then
+  love.graphics.draw(
+    gTextures['topsheet'],
+    gFrames['tops'][tileTop],
+    (x - 1) * TILE_SIZE,
+    (y - 1) * TILE_SIZE
+  )
+end
+```
+
+It may not seem like a substantial difference, but there's an underlying shift in the way the world is generated and then rendered. There is a separation of concerns, if you want to speak in terms of web development. This separation of concerns allows to further the cause of the `generateLevel` function, which is itself and solely responsible for the appearance of the world.
+
+With the aforementioned function, two additional variables are included in `tileGround` and `tileTop`. These refer to a random index in the table of tiles and tops respectively, to have the world be rendered through different shapes and colors. The main feature of the update, pressing `r` to alter the world's appearance, is implemented by modifying these values and updating the tiles making up the ground.
