@@ -16,7 +16,7 @@ TILE_TOP = 1
 TILE_SIZE = 16
 
 -- number of tiles present in the height/width of the screen
-MAP_WIDTH = 32 * 3
+MAP_WIDTH = 32 * 4
 MAP_HEIGHT = 18
 -- row at which point to start drawing the tiles for the ground
 MAP_SKY = 14
@@ -34,4 +34,4 @@ CHARACTER_SCROLL_SPEED = 100
 
 -- speed of the jump
 CHARACTER_JUMP_SPEED = -400
-GRAVITY = 20
+GRAVITY = 15
