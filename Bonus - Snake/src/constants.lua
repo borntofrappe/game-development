@@ -6,14 +6,11 @@ WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 500
 CELL_SIZE = 20
 
-SNAKE_WIDTH = CELL_SIZE
-SNAKE_HEIGHT = CELL_SIZE
+SNAKE_SIZE = CELL_SIZE
 SNAKE_SPEED = 2
 
 -- size of the item
 ITEM_SIZE = CELL_SIZE
--- overlap that must occur before detecting a collision
-ITEM_OVERLAP = 5
 
--- size of the appendage
-APPENDAGE_SIZE = CELL_SIZE
+-- overlap that must occur before detecting a collision
+SHAPE_OVERLAP = CELL_SIZE
