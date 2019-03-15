@@ -1,45 +1,47 @@
+
 --[[
   Snake "class"
-  - setting up a series of variables describing the position, size and movement of the snake
-  - updating the position depending on dt
-  - drawing the snake through a square
+  describing a square moved according to dx and dy values
 ]]
 Snake = {
   x = 0,
   y = 0,
-  width = SNAKE_WIDTH,
-  height = SNAKE_HEIGHT,
+  size = SNAKE_SIZE,
   dx = 0,
   dy = 0,
-  direction = nil
+  -- direction modifying the movement of the snake
+  direction = nil,
+  -- variable describing if the shape has changed in dx or dy
+  hasTurned = false,
+  color = {
+    r = 1,
+    g = 1,
+    b = 1
+  }
 }
 
-
-
--- a class is created through a metatable
+-- init function initializing the snake
+-- picking up the values described by default if not specified otherwise
 function Snake:init(o)
-  -- o refers to the table passed as argument
-  -- when it isn't passed it is set to an empty table
   o = o or {}
-  -- __index allows to have the class use the fields of the Snake table when they aren't specified
   self.__index = self
   setmetatable(o, self)
   return o
 end
 
 
-
--- the position of the snake is modified according dt describing the passing of time
 function Snake:update(dt)
   -- update the position of the square according to dx and dy
   self.x = self.x + self.dx
   self.y = self.y + self.dy
 
-  -- update the position of the square when reaching a track in the grid
-  if self.x % SNAKE_WIDTH == 0 and self.y % SNAKE_HEIGHT == 0 then
-    -- look at the direction of the self (nil by default, updated according to the arrow keys)
-    if self.direction then
-      -- retrieve the direction to avoid typying self. every time
+
+  -- change dx and dy only if the direction is specified
+  -- the direction is specified exclusively on the first instance of the snake class
+  if self.direction then
+    -- when reaching the first track in the grid
+    if self.x % CELL_SIZE == 0 and self.y % CELL_SIZE == 0 then
+      -- retrieve the direction to avoid typying self.direction every time
       local direction = self.direction
       -- change dx and dy according to the actual value of direction
       if direction == 'up' then
@@ -51,42 +53,44 @@ function Snake:update(dt)
       elseif direction == 'right' then
         self.dy = 0
         self.dx = SNAKE_SPEED
-
       elseif direction == 'left' then
         self.dy = 0
         self.dx = -SNAKE_SPEED
       end
-      -- set self.direction back to nil
-      self.direction = nil
-    end
-  end
 
+      -- set self.hasTurned to true
+      self.hasTurned = true
+
+    end -- end of cell size condition
+
+  end -- end of direction condition
+
+
+
+
+  -- EXCEEDING WINDOW
   -- if the square exceeds the boundaties of the screen, have it spawn the opposite way from which it came
-  if self.x < 0 - self.width then
+  if self.x < 0 - self.size then
     self.x = WINDOW_WIDTH
+  elseif self.x > WINDOW_WIDTH then
+    self.x = 0 - self.size
   end
 
-  if self.x > WINDOW_WIDTH then
-    self.x = 0 - self.width
-  end
-
-  if self.y < 0 - self.height then
+  if self.y < 0 - self.size then
     self.y = WINDOW_HEIGHT
-  end
-
-  if self.y > WINDOW_HEIGHT then
-    self.y = 0 - self.height
+  elseif self.y > WINDOW_HEIGHT then
+    self.y = 0 - self.size
   end
 end
 
 
--- function detecting a collision with an item
-function Snake:collides(item)
-  -- check if the snake and item cannot overlap
-  if self.x  + self.width < item.x + ITEM_OVERLAP or self.x > item.x + item.size - ITEM_OVERLAP then
+-- detect a collision with another shape
+function Snake:collides(shape)
+  -- check if the snake and shape cannot overlap
+  if self.x  + self.size < shape.x + SHAPE_OVERLAP or self.x > shape.x + shape.size - SHAPE_OVERLAP then
     return false
   end
-  if self.y + self.height < item.y + ITEM_OVERLAP or self.y > item.y + item.size - ITEM_OVERLAP then
+  if self.y + self.size < shape.y + SHAPE_OVERLAP or self.y > shape.y + shape.size - SHAPE_OVERLAP then
     return false
   end
 
@@ -94,15 +98,10 @@ function Snake:collides(item)
   return true
 end
 
-
--- the snake itself is drawn through a square
+-- draw the snake through a square
 function Snake:render()
-  love.graphics.setColor(0.224, 0.824, 0.604, 1)
-  love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
-end
+  -- love.graphics.setColor(0.224, 0.824, 0.604, 1)
+  love.graphics.setColor(self.color.r, self.color.g, self.color.b, 1)
 
-
-
-function goToGrid(gridX, gridY)
-
+  love.graphics.rectangle('fill', self.x, self.y, self.size, self.size)
 end
