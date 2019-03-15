@@ -2,56 +2,67 @@
 require 'src/Dependencies'
 
 --[[
-  love.load
-  - game's title
-  - window's size
-  - snake instance
-  - table of item instances
-  - table of appendage instances
-  - opacity for the grid
-  - score
+  love.load()
 ]]
 function love.load()
+  -- title
   love.window.setTitle('Snake')
 
+  -- window size
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, {
     fullscreen = false,
     resizable = false,
     vsync = true
   })
 
+  -- fonts
   gFonts = {
     ['small'] = love.graphics.newFont('fonts/font.ttf', 8),
     ['normal'] = love.graphics.newFont('fonts/font.ttf', 16),
     ['big'] = love.graphics.newFont('fonts/font.ttf', 32),
     ['humongous'] = love.graphics.newFont('fonts/font.ttf', 48)
   }
+
   -- random seed to have math.random() truly random
   math.randomseed(os.time())
 
-  -- create an instance of the snake class specifying the x and y coordinates
-  snake = Snake:init({x = randomCell(), y = randomCell()})
+  -- create a table in which to add the snakes instances
+  snakes = {}
+  -- immediately add an instance of the snake class specifying the x and y coordinates
+  -- the first square is positioned at random in the grid
+  local snakeX, snakeY = randomCell()
+  local snake = Snake:init({
+    x = snakeX,
+    y = snakeY,
+    color = {
+      r = 0.224,
+      g = 0.824,
+      b = 0.604
+    }
+  })
+
+  table.insert(snakes, snake)
 
   -- create a table for the instances of the item class
   items = {}
   -- immediately add an instance to have it rendered/updated on the screen
+  -- as with each instance, position it at random in the grid and give it a random color
+  local itemX, itemY = randomCell()
+  local color = randomColor()
   local item = Item:init({
-      x = randomCell(),
-      y = randomCell(),
-      color = randomColor()
+      x = itemX,
+      y = itemY,
+      color = color
     })
   table.insert(items, item)
 
 
-  -- create a table for the instances of the appendage class
-  appendages = {}
-
   -- opacity to toggle the visibility of the grid
   gridOpacity = 0
 
-  -- score = 0
+  -- score updated when detecting a collision with the items
+  score = 0
 end
-
 
 
 -- react to a key press on a selection of keys
@@ -67,8 +78,12 @@ function love.keypressed(key)
   -- loop through the table of acceptable keys
   for k, value in pairs(keys) do
     -- if the key matches one of the values, update the direction of the snake
+    -- ! update the direction of only the first instance, identifying the head of the snake
+
+
     if key == value then
-      snake.direction = key
+      -- update the direction of the first instance only (the head of the snake)
+      snakes[1].direction = key
     end
   end
 
@@ -91,8 +106,6 @@ end
 
 --[[
   love.update(dt)
-  - update the appearance of the itemss
-  - update the position of the snake
 ]]
 function love.update(dt)
   -- loop through the table items
@@ -100,81 +113,99 @@ function love.update(dt)
     -- update each item
     item:update(dt)
 
-    -- detect collision between snake and the single item
-    -- update the score and set the flag inPlay to false
-    if snake:collides(item) then
+  -- detect collision between each instance of the snake shape and the item
+    if snakes[1]:collides(item) then
+      -- update score
+      score = score + 50
+      -- set inPlay on the item to false, to have it later removed from the table
       item.inPlay = false
-      -- score = score + 50
 
-      -- appendage
-      -- initialize the variables describing the coordinates of the appendage
-      local appendageX = snake.x
-      local appendageY = snake.y
+      -- NEW INSTANCE of SNAKE
+      -- detail the x and y coordinate on the basis of the position and movement of the previous instance
+      local previousSnake = snakes[#snakes]
+      local snakeX = previousSnake.x
+      local snakeY = previousSnake.y
 
-      -- modify the coordinates according to the movement of the snake and to always have the appendage spawn the opposite side the snake hits the item
-      -- ! use the number of appendages to determine the distance from the snake's head
-      if snake.dx == 0 then
+      -- modify the coordinates according to the movement of the previous square and to always have the new square on the back of the previous one
+      if previousSnake.dx == 0 then
         -- vertical movement
-        appendageY = snake.dy > 0 and appendageY - snake.height * (#appendages + 1) or appendageY + snake.height * (#appendages + 1)
+        snakeY = previousSnake.dy > 0 and snakeY - CELL_SIZE or snakeY + CELL_SIZE
       else
         -- horizontal movement
-        appendageX = snake.dx > 0 and appendageX - snake.width * (#appendages + 1) or appendageX + snake.width * (#appendages + 1)
+        snakeX = previousSnake.dx > 0 and snakeX - CELL_SIZE or snakeX + CELL_SIZE
       end
 
-      local appendage = Appendage:init({
-          x = appendageX,
-          y = appendageY,
-          dx = snake.dx,
-          dy = snake.dy,
-          -- include the number of cells the appendage needs to cross before turning
-          turns = #appendages + 1
-        })
-      table.insert(appendages, appendage)
-    end
+      -- define the instance of the snake
+      local snake = Snake:init({
+        -- coordinates computed on the basis of the previous square
+        x = snakeX,
+        y = snakeY,
+        -- speed of the previous square
+        dx = previousSnake.dx,
+        dy = previousSnake.dy,
+        threshold = 5,
+        -- slightly lighter hue
+        color = {
+          r = 0.4,
+          g = 0.75,
+          b = 0.5
+        }
+      })
+      -- include the instance
+      table.insert(snakes, snake)
 
-    -- if the item has the boolean inPlay set to false remove it from the table
+    end -- end of loop detecting collision
+
+    -- if the item has the inPlay flag set to false remove it from the table
     if not item.inPlay then
       -- ! k refers to the index of the item in the table, not an identifier describing the item itself
       table.remove(items, k)
     end
-  end
+  end -- end of loop through the items
 
-  -- if the table of items is empty (which can occur given that every item is eventually hidden from view with the inPlay boolean)
-  -- add an item
+  -- if the table of items is empty add an item
   if #items == 0 then
     addItem()
   end
 
-  -- update the instance(s) of the Appendage class
-  -- pass the direction taken by the snake to update the direction of the appendage(s) if need be
-  for k, appendage in pairs(appendages) do
-    appendage:update(dt, snake.dx, snake.dy)
+
+  -- loop through the table of snakes
+  for i = 1, #snakes do
+    -- if the hasTurned flag is true
+    if snakes[i].hasTurned then
+      -- switch hasTurned and direction to false and nil respesctively
+      snakes[i].hasTurned = false
+      -- ! for all instances except the last give the direction to the instance which follows
+      if i < #snakes then
+        snakes[i + 1].direction = snakes[i].direction
+      end
+      snakes[i].direction = nil
+    end
   end
 
-  -- update the snake
-  snake:update(dt)
+  -- update the instances of the snake class
+  for t, snake in pairs(snakes) do
+    snake:update(dt)
+  end
 end
 
 
 
 --[[
-  love.draw
-  - solid background
-  - grid to show the movement of the square
-  - circle(s) for the item(s)
-  - square(s) for the appendages
-  - square for the snake
-  - score
+  love.draw()
 ]]
 function love.draw()
+  -- background
   love.graphics.clear(0.035, 0.137, 0.298, 1)
 
-  -- use the opacity defined in the variable
+  -- grid
+  -- display the grid using the opacity defined in the matching variable
+  -- creating a grid based on the cell size
   love.graphics.setColor(0.224, 0.824, 0.604, gridOpacity)
-  -- include the stroke of a rectangle for each cell of the grid
-  for x = 1, WINDOW_WIDTH / SNAKE_WIDTH do
-    for y = 1, WINDOW_HEIGHT / SNAKE_HEIGHT do
-      love.graphics.rectangle('line', (x - 1) * SNAKE_WIDTH, (y - 1) * SNAKE_HEIGHT, SNAKE_WIDTH, SNAKE_HEIGHT)
+
+  for x = 1, WINDOW_WIDTH / CELL_SIZE do
+    for y = 1, WINDOW_HEIGHT / CELL_SIZE do
+      love.graphics.rectangle('line', (x - 1) * CELL_SIZE, (y - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
     end
   end
   -- reset the opacity (this would be reset in the item or snake class, but may cause unexpected behaviors otherwise)
@@ -185,25 +216,23 @@ function love.draw()
     item:render()
   end
 
-  -- the order between the appendages and the snake is less relevant, but have the snake above the other shapes
-  for k, appendage in pairs(appendages) do
-    appendage:render()
+  -- draw the instances of the snake class
+  for k, snake in pairs(snakes) do
+    snake:render()
   end
 
-  snake:render()
-
-  -- love.graphics.setFont(gFonts['normal'])
-  -- love.graphics.setColor(1, 1, 1, 1)
-  -- love.graphics.print('Score: ' .. tostring(score), 8, 8)
+  -- include the score in the top left corner
+  love.graphics.setFont(gFonts['normal'])
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.print('Score: ' .. tostring(score), 8, 8)
 
 end
 
 
-
-
 -- function returning the coordinates of a random cell in the grid made up of CELL_SIZE tiles
+-- returing 2 random values
 function randomCell()
-  return (math.random(WINDOW_WIDTH / CELL_SIZE) - 1) * CELL_SIZE
+  return (math.random(WINDOW_WIDTH / CELL_SIZE) - 1) * CELL_SIZE, (math.random(WINDOW_WIDTH / CELL_SIZE) - 1) * CELL_SIZE
 end
 
 --[[
@@ -229,10 +258,12 @@ end
 
 -- function adding an instance of the item class in the items table
 function addItem()
+  local x, y = randomCell()
+  local color = randomColor()
   local newItem = Item:init({
-    x = randomCell(),
-    y = randomCell(),
-    color = randomColor()
+    x = x,
+    y = y,
+    color = color
   })
 
   table.insert(items, newItem)
