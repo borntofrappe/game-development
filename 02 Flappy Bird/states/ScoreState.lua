@@ -7,7 +7,17 @@ ScoreState = Class{__includes = BaseState}
 -- consider also the image representing the score
 function ScoreState:enter(params)
   self.score = params.score
-  self.image = params.image
+  self.medalPoints = params.medalPoints
+  self.isLow = params.isLow
+  self.isHigh = params.isHigh
+  self.hasJumpedSixtyTimes = params.hasJumpedSixtyTimes
+end
+
+-- in the init function set up the images for the badges
+function ScoreState:init()
+  self.medalLow = love.graphics.newImage('Resources/graphics/medal-low.png')
+  self.medalHigh = love.graphics.newImage('Resources/graphics/medal-high.png')
+  self.medalJump = love.graphics.newImage('Resources/graphics/medal-jump.png')
 end
 
 -- in the update(dt) function listen for a press on the enter key
@@ -33,25 +43,61 @@ function ScoreState:render()
   -- in between the score and the instruction add the medal icon with a description of the number of medals collected
   if self.score >= 5 then
     love.graphics.draw(
-      self.image,
-      VIRTUAL_WIDTH / 2 - 10,
-      VIRTUAL_HEIGHT / 2 - self.image:getHeight() / 2) -- offsetting for the height of the image
+      self.medalPoints,
+      VIRTUAL_WIDTH / 2 - self.medalPoints:getWidth(),
+      VIRTUAL_HEIGHT / 2 + self.medalPoints:getHeight() / 2 - 8)
 
     love.graphics.setFont(normalFont)
     love.graphics.print(
       'x' .. tostring(math.floor(self.score / 5)),
-      VIRTUAL_WIDTH / 2 + 10,
-      VIRTUAL_HEIGHT / 2 - 8) -- offsetting for the heifht of the font
+      VIRTUAL_WIDTH / 2 + 5,
+      VIRTUAL_HEIGHT / 2 + 8
+    )
   end
 
 
+  -- show the other medals in the bottom of the screen, each in a setion of the width
   love.graphics.setFont(normalFont)
-  love.graphics.printf(
-    'Press enter to play once more',
-    0,
-    VIRTUAL_HEIGHT * 3 / 4,
-    VIRTUAL_WIDTH,
-    'center'
-  )
+  if self.isHigh then
+    love.graphics.draw(
+      self.medalHigh,
+      8,
+      VIRTUAL_HEIGHT - 48
+    )
+    love.graphics.print(
+      'Griffon',
+      8 + self.medalHigh:getWidth() + 8,
+      VIRTUAL_HEIGHT - 48 + self.medalHigh:getHeight() / 2 - 8
+    )
+  end
+
+
+  if self.isLow then
+    love.graphics.draw(
+      self.medalLow,
+      VIRTUAL_WIDTH / 2 - self.medalLow:getWidth() - 16,
+      VIRTUAL_HEIGHT - 48
+    )
+    love.graphics.print(
+      'Penguin',
+      VIRTUAL_WIDTH / 2 - 8,
+      VIRTUAL_HEIGHT - 48 + self.medalLow:getHeight() / 2 - 8
+    )
+  end
+
+
+  if self.hasJumpedSixtyTimes then
+    love.graphics.draw(
+      self.medalJump,
+      VIRTUAL_WIDTH - self.medalLow:getWidth() - 72,
+      VIRTUAL_HEIGHT - 48
+    )
+    love.graphics.print(
+      'Ostrich',
+      VIRTUAL_WIDTH - 64,
+      VIRTUAL_HEIGHT - 48 + self.medalLow:getHeight() / 2 - 8
+    )
+  end
+
 
 end
