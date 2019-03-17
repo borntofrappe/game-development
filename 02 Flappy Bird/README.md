@@ -35,9 +35,9 @@ The assignment puts forwards a few additions, which can be described in the foll
 - [x] _Implement a pause feature, such that the user can simply press “P” (or some other key) and pause the state of the game_
 
   - [x] _a simple sound effect should play_
-  
+
   - [ ] _the music should pause_
-  
+
   - [ ] _display a pause icon in the middle of the screen_
 
 ### Slightly random pipe gaps
@@ -88,7 +88,7 @@ self.interval = math.random(2, 4)
 
 At first I picked an icon from [google's material icons](https://material.io/tools/icons/), to focus on the feature more than the design, but after finding the pixel perfect icon rendered blurry (thanks to the push library 'virtualization'), I decided to craft my own blocky icon. It ought to represent a circle with a letter 'J' in it, but it is an icon good enough not to be unnerving. I also decided to craft my own background and ground images, but I've been less than lucky there.
 
-That being said, I decided to award a medal every time the player scores 5 points. This is shown immediately below the score. 
+That being said, I decided to award a medal every time the player scores 5 points. This is shown immediately below the score.
 
 #### PlayState.lua
 
@@ -143,13 +143,15 @@ Once it is passed through the second argument, it can be then used in the specif
 
 - in the `render()` function, show one single badge right below the score, and before a number actually counting the number of badges awarded. This of course in case the score warrants a medal.
 
-This covers the point-based badge, but to fulfill the assignment in full 2 more badges are at least needed. These can be attributed in the `ScoreState` only and relate to the following achievement:
+This covers the point-based badge, but to fulfill the assignment in full 2 more badges are at least needed. I decided to add three badges for the following feats:
 
-- playing for more than 30 seconds. Sort of a _persistence_ badge.
+- made the bird jump more than 30 times;
 
-- made the bird jump more than 30 times. Sort of a _tapping_ or _jumping_ badge. 
+- had the bird exceed the top of the screen;
 
-<!-- TODO: design the two new badges and include them in the ScoreState after the prescribed conditions are fulfilled -->
+- have the bird almost reach the bottom of the screen.
+
+On top of these, the points badge has been redesigned to highlight how it is awarded every five points. While the points badge is awarded on screen, while playing, I decided to include the other badges only in the `ScoreState`.
 
 ### Pause feature
 
