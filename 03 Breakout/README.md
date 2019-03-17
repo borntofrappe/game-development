@@ -80,15 +80,27 @@ While going through the different files, I updated the comments and included the
 
 ## Assignment
 
-The assignment given at the end of the lecture concerns mainly powerups, as available in the `breakout,png` asset. That being said, there are three specific expansions foreseen by the lecturer:
+The assignment given at the end of the lecture concerns mainly powerups, as available in the `breakout,png` asset. That being said, there are three expansions foreseen by the lecturer.
 
-- [x] have the paddle shrink or increase in size.
+Small foreword to the assignment: I decided to tweak some of the actual requests to make for what I believe to be a more compelling gameplay. The paddle changes in size, for instance, when picking up a particular powerup. Modifications are included after each assignment, which is highllighted through _italic typeface_. 
 
-- [x] have a powerup include two additional balls, colliding with the wall, bricks, paddle. In this instance only when every ball is lost a heath point is removed.
+- [x] _Add a Powerup class to the game that spawns a powerup_ 
 
-- use the locked brick in conjunction with the key item. The idea is to have the key being a powerup which unlocks the brick. Only by picking up the key it should be possible to destroy said a brick.
+  - [x] _a Powerup should spawn randomly, be it on a timer or when the Ball hits a Block enough times, and gradually descend toward the player_
 
-### Assignment #1 - Powerups
+  - [x] _Once collided with the Paddle, two more Balls should spawn and behave identically to the original, including all collision and scoring points for the player_. In addition to the powerup including a new ball (just one), I made use of the other quads making up the powerup. Whenever the ball destroys a brick, there's a chance to have one of these powerups spawn and one in particular achieves the doubling feat.
+
+  - [x] _Once the player wins and proceeds to the VictoryState for their current level, the Balls should reset so that there is only one active again_.
+ 
+- [x]  _Grow and shrink the Paddle such that it’s no longer just one fixed size forever_. As I believe the assignment specified a rather questionable design choice (changing the size of the paddle relative to health or the score), I tied the change in size to two different powerups. As they are picked up, it is then that the paddle grows/shrinks.
+ 
+- [ ] _Add a locked Brick to the level spawning, as well as a key powerup_
+
+  - [ ] _The locked Brick should not be breakable by the ball normally, unless they of course have the key Powerup_
+
+  - [ ] _The key Powerup should spawn randomly just like the Ball Powerup and descend toward the bottom of the screen just the same, where the Paddle has the chance to collide with it and pick it up_
+
+### Powerups
 
 Starting from the first point, I decided to consider the entire last row of the texture found in `breakout.png`, and include the following alterations:
 
@@ -144,7 +156,7 @@ When updating the bricks, check if an existing powerup collides with the paddle.
 
 The features are rather easy to implement. Change the size of the paddle, change the speed of the ball, change the movement of the ball. I decided to add a touch more detail, for instance by making the paddle's size alter the speed of the paddle as well. Small elements like this add a bit of subtlety which rather improves the gameplay.
 
-### Assignment #2 - Powerup #9
+### Powerup #9
 
 The ninth asset in the powerup table can be used for the second point of the assignment: spawning additional balls. The idea is to have new balls act as the existing one would. As they spawn, they are able to collide with walls, paddle, bricks. When colliding with bricks, they allow to increase the score. The only difference introduced with multiple balls regards the removal of health points, which doesn't occur when one ball goes past the bottom of the screen, but when every ball has gone past the bottom edge of the screen.
 
@@ -198,7 +210,7 @@ It is actually and even unnecessary to pass `self.ball`, as this is already incl
 
 To sum up: describe a table in which a single ball is added. Handle the single ball in the serve state, but pass the table of balls to the play state
 
-### PlayState.lua
+#### PlayState.lua
 
 In the play state there needs to be a few changes, based of the fact that there is no longer a single ball, but a table of balls. For this change any reference to `self.ball` with a for loop, looping through `self.balls` and considering every instance nested in the table.
 
@@ -225,3 +237,7 @@ In `update(dt)`, the for loop is introduced to:
 In `render()`, the loop is introduced to render every single instance of the ball class.
 
 The `update(dt)` function actually calls a function in `self.checkForLoss`. This function is created with the exact same logic of `checkForVictory`, but to determine when **every single** ball is no longer in play (read: it has gone past the bottom edge of the screen). Through this function, `update(dt)` is able to remove a health point not when every single ball goes past the bottom of the screen, but when every single one of them is gone.
+
+<!-- ### Powerup #10
+ TODO: include the locked brick and the key powerup, to have the brick destroyed conditional to the key being picked up 
+-->
