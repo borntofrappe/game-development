@@ -9,6 +9,7 @@ Bird = Class{}
   - x and y, the initial coordinates of the image
   (for now center it)
   - dy, for the vertical movement
+  - booleans to award badges on the basis of the jumps/position of the bird
 ]]
 
 GRAVITY = 28
@@ -21,6 +22,10 @@ function Bird:init()
   self.x = VIRTUAL_WIDTH / 2 - (self.width / 2)
   self.y = VIRTUAL_HEIGHT / 2 - (self.height / 2)
   self.dy = 0
+  self.jumps = 0
+  self.isLow = false
+  self.isHigh = false
+  self.hasJumpedSixtyTimes = false
 end
 
 -- in the :collides() function checks if the bird collides with the pipe passed as argument
@@ -61,6 +66,26 @@ function Bird:update(dt)
   if love.keyboard.wasPressed('space') then
     -- play the matching audio
     sounds['jump']:play()
+
+    -- before updating the position of the bird, check for the vertical coordinate to award the medals
+
+    if not self.isHigh and self.y < 0 then
+      self.isHigh = true
+    end
+
+    if not self.isLow and self.y > VIRTUAL_HEIGHT - 16 - self.height then
+      self.isLow = true
+    end
+
+    -- if jumps hasn't reached 60 yet, increment the variable
+    if self.jumps < 60 then
+      self.jumps = self.jumps + 1
+    end
+    -- if jumps has reached 60, award the last medal
+    if not self.hasJumpedSixtyTimes and self.jumps >= 60 then
+      self.hasJumpedSixtyTimes = true
+    end
+
     -- set dy to be negative, effectively moving the bird upwards
     self.dy = -7
   end

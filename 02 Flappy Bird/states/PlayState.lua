@@ -12,6 +12,7 @@ PlayState = Class{__includes = BaseState}
   - pipePairs, a table to be filled with instances of the pipePair class
   - timer and interval, to regulate the rate of appearance of the pipes
   - lastY, as to maintain a certain consistency between pairs of pipes
+  - flags determining the medals being awarded (the badges are awarded on the basis of the counterpart variable on the bird instance)
 ]]
 function PlayState:enter(params)
   -- this in case the play state gets called from the pause state, to resume from existing values
@@ -22,20 +23,26 @@ function PlayState:enter(params)
     self.timer = params.timer
     self.interval = params.interval
     self.lastY = params.lastY
+    self.isLow = params.isLow
+    self.isHigh = params.isHigh
+    self.hasJumpedSixtyTimes = params.hasJumpedSixtyTimes
   -- this in case to parameter is specified, and the game can start from the very beginning
   else
-    self.score = 0
+    self.score = 7
     self.bird = Bird()
     self.pipePairs = {}
     self.timer = 0
     self.interval = math.random(2, 4)
     self.lastY = -PIPE_HEIGHT + math.random(80) + 20
+    self.isLow = false
+    self.isHigh = false
+    self.hasJumpedSixtyTimes = false
   end
 end
 
 function PlayState:init(score)
-  -- include a variable referencing the star icon
-  self.image = love.graphics.newImage('Resources/graphics/medal.png')
+  -- include the medal rewarded every 5 points
+  self.medalPoints = love.graphics.newImage('Resources/graphics/medal-points.png')
 end
 
 -- in the update function, update teh pipes and the bird
@@ -45,7 +52,7 @@ function PlayState:update(dt)
   -- when reaching rouhgly self.interval seconds, insert a pipe and set the timer variable back to 0
   if self.timer > self.interval then
     -- set gap to be a random value
-    local gap = math.random(90, 150)
+    local gap = math.random(110, 150)
     -- define the vertical coordinate by clamping the value in a selected range
     -- ! to each value the negative - PIPE_HEIGHT is included because the asset is ultimately flipped upside down
     -- think of -PIPE_HEIGHT + 10 as 10 from the top
@@ -72,10 +79,13 @@ function PlayState:update(dt)
     for l, pipe in pairs(pair.pipes) do
       -- if the self.bird collides with one of the pipes go to the score screen
       if self.bird:collides(pipe) then
-        -- pass the score and the image to the scoring state
+        -- pass the score and the medals to the scoring state
         gStateMachine:change('score', {
           score = self.score,
-          image = self.image
+          medalPoints = self.medalPoints,
+          isLow = self.isLow,
+          isHigh = self.isHigh,
+          hasJumpedSixtyTimes = self.hasJumpedSixtyTimes
         })
       end
     end
@@ -104,8 +114,23 @@ function PlayState:update(dt)
     sounds['lose']:play()
     gStateMachine:change('score', {
       score = self.score,
-      image = self.image
+      medalPoints = self.medalPoints,
+      isLow = self.isLow,
+      isHigh = self.isHigh,
+      hasJumpedSixtyTimes = self.hasJumpedSixtyTimes
     })
+  end
+
+  -- set the boolean for the medals depending on the value on the bird instance
+  -- if the medals haven't been awarded yet
+  if not self.isHigh and self.bird.isHigh then
+    self.isHigh = true
+  end
+  if not self.isLow and self.bird.isLow then
+    self.isLow = true
+  end
+  if not self.hasJumpedSixtyTimes and self.bird.hasJumpedSixtyTimes then
+    self.hasJumpedSixtyTimes = true
   end
 
   -- update the position of the bird
@@ -121,7 +146,10 @@ function PlayState:update(dt)
       pipePairs = self.pipePairs,
       timer = self.timer,
       interval = self.interval,
-      lastY = self.lastY
+      lastY = self.lastY,
+      isLow = self.isLow,
+      isHigh = self.isHigh,
+      hasJumpedSixtyTimes = self.hasJumpedSixtyTimes
     })
   end
 end
@@ -146,7 +174,7 @@ function PlayState:render()
   -- math.floor(self.score / 5) returns 0, 1
   if self.score >= 5 then
     for i = 0, math.floor(self.score / 5) - 1 do
-      love.graphics.draw(self.image, (15 * i) + (self.image:getWidth() / 2), 25)
+      love.graphics.draw(self.medalPoints, ((self.medalPoints:getWidth() + 5) * i) + (self.medalPoints:getWidth() / 2), 25)
     end
   end
 end

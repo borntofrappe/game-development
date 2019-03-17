@@ -12,6 +12,9 @@ function PauseState:enter(params)
   self.timer = params.timer
   self.interval = params.interval
   self.lastY = params.lastY
+  self.isLow = params.isLow
+  self.isHigh = params.isHigh
+  self.hasJumpedSixtyTimes = params.hasJumpedSixtyTimes
 end
 
 -- in the update(dt) function listen for a press on the enter key
@@ -19,13 +22,19 @@ end
 -- include in the second argument the values retrieved from the play state to have the game resumed from the previous point
 function PauseState:update(dt)
   if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    -- sounds['soundtrack']:setLooping(true)
+    -- sounds['soundtrack']:play()
+
     gStateMachine:change('play', {
       score = self.score,
       bird = self.bird,
       pipePairs = self.pipePairs,
       timer = self.timer,
       interval = self.interval,
-      lastY = self.lastY
+      lastY = self.lastY,
+      isLow = self.isLow,
+      isHigh = self.isHigh,
+      hasJumpedSixtyTimes = self.hasJumpedSixtyTimes
     })
   end
 end
