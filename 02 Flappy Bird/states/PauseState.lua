@@ -22,8 +22,8 @@ end
 -- include in the second argument the values retrieved from the play state to have the game resumed from the previous point
 function PauseState:update(dt)
   if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-    -- sounds['soundtrack']:setLooping(true)
-    -- sounds['soundtrack']:play()
+    -- resume the soundtrack
+    sounds['soundtrack']:play()
 
     gStateMachine:change('play', {
       score = self.score,

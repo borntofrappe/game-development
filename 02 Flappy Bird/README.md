@@ -273,3 +273,45 @@ But given the number of fields I found it best to separate the two possible bran
 This allows to implement the bulk of the pause features, but two modifications are required to complete the assignment. First, the music should pause while in the `PlayState`. Second, instead of showing a string describing the `PauseState`, or perhaps in addition to this text, show a giant pause icon.
 
 The second requirement is easily achieved. Alternatively to an actual icon, I decided to include the outline of a pause icon through basis shapes, rectangles, but the bulk of the logic does not change. Through a series of `love.graphics.rectangle()` functions, alongside the never-used-before `love.graphics.setLineWidth()` method, the pause icon is placed between the giant string describing the pause state and the smaller text detailing the current score.
+
+The audio feature behind the first point is however a tad more complicated. Beside adding the audio through the `love.audio.newSource()` method, for the soundbite that should play as the pause state is entered, it is indeed necessary to stop the music playing in the game.
+
+Turns out it was easier than I realized, but mostly because of the placement of the function playing the soundtrack. Previously, I had the function called in `love.update(dt)` of `main.lua`, meaning that it was always playing regardless of the state. Even if stopping the audio through the `love.audio.stop()` function, like it is necessary to stop the sound file, the music would immediately start from the top. With this in mind:
+
+- start playing the soundtrack when setting up the game, on load.
+
+  ```lua
+  function love.load()
+    -- set up the game
+
+    -- play suondtrack
+    sounds['soundtrack']:setLooping(true)
+    sounds['soundtrack']:play()
+  end
+  ```
+
+- when going to the pause state, stop the soundtrack.
+
+  ```lua
+  -- in love.update(dt)
+  if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+      -- stop the soundtrack
+      sounds['soundtrack']:setLooping(false)
+      sounds['soundtrack']:stop()
+  end
+  ```
+
+  Notice how to stop the sound the `:stop()` method is called on the audio source in question. `love.audio.stop()` terminates any sound file, with similar results.
+
+- when going back from the pause to the play state, play again the soundtrack.
+
+  ```lua
+  -- in love.update(dt)
+  if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    -- play the soundtrack
+    sounds['soundtrack']:setLooping(true)
+    sounds['soundtrack']:play()
+  end
+  ```
+
+This effectively stops the audio, but the assignment calls for resuming the audio when going back playing. Turns out, there's no need to find the current timeframe in the audio. Just use `:pause()`. Setting the loop to `false` and then back to `true` proves also to be unnecessary. The loop just continues from where it left off.

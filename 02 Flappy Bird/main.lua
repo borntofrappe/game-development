@@ -73,6 +73,7 @@ function love.load()
     ['hit'] = love.audio.newSource('Resources/sounds/hit.wav', 'static'),
     ['lose'] = love.audio.newSource('Resources/sounds/lose.wav', 'static'),
     ['score'] = love.audio.newSource('Resources/sounds/score.wav', 'static'),
+    ['pause'] = love.audio.newSource('Resources/sounds/pause.wav', 'static'),
     -- audio set to be repeated
     ['soundtrack'] = love.audio.newSource('Resources/sounds/soundtrack.wav', 'static')
   }
@@ -122,6 +123,10 @@ function love.load()
     resizable = true,
     vsync = true
   })
+
+  -- play the soundtrack in a loop
+  sounds['soundtrack']:setLooping(true)
+  sounds['soundtrack']:play()
 end
 
 -- on resize, account for the new width and height through the pusj library
@@ -160,9 +165,6 @@ end
 -- ! include the logic of only those features which are meant to span across all possible states
 -- delegate state-specific logic (like the movement of the bird and of the pipes) to the specific state class (like the play state class)
 function love.update(dt)
-  -- play the soundtrack in a loop
-  sounds['soundtrack']:setLooping(true)
-  sounds['soundtrack']:play()
   --[[
       retrieve the offset by computing the remainder of the following division
       total offset / looping point

@@ -140,6 +140,12 @@ function PlayState:update(dt)
   -- if so call the global state machine variable to change the state to the pause state
   -- pass through a second argument the values which need persisting after the pause
   if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    -- pause the soundtrack
+    sounds['soundtrack']:pause()
+
+    -- play the pause sound
+    sounds['pause']:play()
+
     gStateMachine:change('pause', {
       score = self.score,
       bird = self.bird,
