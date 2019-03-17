@@ -39,25 +39,44 @@ function PauseState:update(dt)
   end
 end
 
--- in the render function, describe how the game is paused and how to resume the game
+-- in the render function, describe how the game is paused and the score
 function PauseState:render()
   love.graphics.setFont(bigFont)
   love.graphics.printf(
     'Pause',
     0,
-    VIRTUAL_HEIGHT / 3 - 24,
+    VIRTUAL_HEIGHT / 3 - 48,
     VIRTUAL_WIDTH,
     'center'
   )
 
-  love.graphics.setFont(normalFont)
-  love.graphics.printf(
-    'Press enter to resume playing',
-    0,
-    VIRTUAL_HEIGHT / 2 - 8,
-    VIRTUAL_WIDTH,
-    'center'
+  -- create a pause icon out of rectangle elements
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setLineWidth(7)
+  love.graphics.rectangle(
+    'line',
+    VIRTUAL_WIDTH / 2 - 30,
+    VIRTUAL_HEIGHT / 2 - 30,
+    60,
+    60
   )
+
+  love.graphics.rectangle(
+    'fill',
+    VIRTUAL_WIDTH / 2 - 15,
+    VIRTUAL_HEIGHT / 2 - 15,
+    10,
+    30
+  )
+
+  love.graphics.rectangle(
+    'fill',
+    VIRTUAL_WIDTH / 2 + 5,
+    VIRTUAL_HEIGHT / 2 - 15,
+    10,
+    30
+  )
+
 
   love.graphics.setFont(normalFont)
   love.graphics.printf(

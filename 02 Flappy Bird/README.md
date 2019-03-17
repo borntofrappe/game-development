@@ -272,4 +272,4 @@ But given the number of fields I found it best to separate the two possible bran
 
 This allows to implement the bulk of the pause features, but two modifications are required to complete the assignment. First, the music should pause while in the `PlayState`. Second, instead of showing a string describing the `PauseState`, or perhaps in addition to this text, show a giant pause icon.
 
-<!-- TODO: implement the features to pause the music and show a pause icon -->
+The second requirement is easily achieved. Alternatively to an actual icon, I decided to include the outline of a pause icon through basis shapes, rectangles, but the bulk of the logic does not change. Through a series of `love.graphics.rectangle()` functions, alongside the never-used-before `love.graphics.setLineWidth()` method, the pause icon is placed between the giant string describing the pause state and the smaller text detailing the current score.
