@@ -30,15 +30,15 @@ The assignment puts forwards a few additions, which can be described in the foll
 
 - [x] _When a player enters the ScoreState, award them a “medal” via an image displayed along with the score_
 
-  - [ ] _Choose 3 different ones, as well as the minimum score needed for each one_
+  - [x] _Choose 3 different ones, as well as the minimum score needed for each one_
 
 - [x] _Implement a pause feature, such that the user can simply press “P” (or some other key) and pause the state of the game_
 
   - [x] _a simple sound effect should play_
 
-  - [ ] _the music should pause_
+  - [x] _the music should pause_
 
-  - [ ] _display a pause icon in the middle of the screen_
+  - [x] _display a pause icon in the middle of the screen_
 
 ### Slightly random pipe gaps
 
