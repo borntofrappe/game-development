@@ -14,17 +14,31 @@ For the second project in the Introductory to Game Development course, the game 
 
 ## Project structure
 
-Like for **Pong**, this game will be created in increments, in folders labeled fittingly 'FP 0', 'FP 1' and so forth. The repo also has a **Resources** folder, in which any file which is not a `.lua` file coded by hand will be included. What's more, the resources folder mirrors the actual structure in which I work locally (and the structure of the folder I feed to the Love2D .exe file).
+Like for **Pong**, this game will be created in increments, in folders labeled fittingly 'FB 0', 'FB 1' and so forth. The repo also has a **Resources** folder, in which any file which is not a `.lua` file coded by hand will be included. What's more, the resources folder mirrors the actual structure in which I work locally (and the structure of the folder I feed to the Love2D .exe file).
 
 Each sub-folder will have its own README, in which I'll try to detail the purpose of the code found in the existing files. I will include only those files which are altered between updates and try my best to explain the reasoning behind the addition. Unlike for Pong, in which I mostly read the source code and tried to grasp each line of code, I will try to code along the lecturer and write my own solutions.
 
-Even when a snippet is meant to be exactly the same, I will avoid copy-paste to reinforce my learning of the subject.
+## Update
 
-## Update & Assignment
+Following the completion of the video available in **FB 12** I decided to include in the root structure for the Flappy Bird game the code fulfilling the assignment as described [right here](https://cs50.harvard.edu/games/2019/spring/assignments/1/).
 
-There actually isn't any update 13, but I decided to create one for the assignment given by the lecturer to expand on the game.
+The assignment puts forwards a few additions, which can be described in the following wish list.
 
-These are tasks that go beyond the scope of the video, but it is teaching and also entertaining to indulge in them.
+- [x] _Randomize the gap between pipes (vertical space), such that they’re no longer hardcoded to 90 pixels_
+
+- [x] _Randomize the interval at which pairs of pipes spawn, such that they’re no longer always 2 seconds apart_
+
+- [x] _When a player enters the ScoreState, award them a “medal” via an image displayed along with the score_
+
+  - [ ] _Choose 3 different ones, as well as the minimum score needed for each one_
+
+- [x] _Implement a pause feature, such that the user can simply press “P” (or some other key) and pause the state of the game_
+
+  - [x] _a simple sound effect should play_
+  
+  - [ ] _the music should pause_
+  
+  - [ ] _display a pause icon in the middle of the screen_
 
 ### Slightly random pipe gaps
 
@@ -74,7 +88,7 @@ self.interval = math.random(2, 4)
 
 At first I picked an icon from [google's material icons](https://material.io/tools/icons/), to focus on the feature more than the design, but after finding the pixel perfect icon rendered blurry (thanks to the push library 'virtualization'), I decided to craft my own blocky icon. It ought to represent a circle with a letter 'J' in it, but it is an icon good enough not to be unnerving. I also decided to craft my own background and ground images, but I've been less than lucky there.
 
-Anyhow, to award a medal, I decided to give a copy on the medal in two instances, and at the condition that the player has reaches a multiple of 5 points.
+That being said, I decided to award a medal every time the player scores 5 points. This is shown immediately below the score. 
 
 #### PlayState.lua
 
@@ -129,7 +143,15 @@ Once it is passed through the second argument, it can be then used in the specif
 
 - in the `render()` function, show one single badge right below the score, and before a number actually counting the number of badges awarded. This of course in case the score warrants a medal.
 
-#### Pause feature
+This covers the point-based badge, but to fulfill the assignment in full 2 more badges are at least needed. These can be attributed in the `ScoreState` only and relate to the following achievement:
+
+- playing for more than 30 seconds. Sort of a _persistence_ badge.
+
+- made the bird jump more than 30 times. Sort of a _tapping_ or _jumping_ badge. 
+
+<!-- TODO: design the two new badges and include them in the ScoreState after the prescribed conditions are fulfilled -->
+
+### Pause feature
 
 The new flow of the application can be then described as follows:
 
@@ -244,6 +266,8 @@ It is also possible to use a ternary operator:
 self.score = params and params.score or 0
 ```
 
-But given the number of fields I found it best to separate the two possible branches in the `if then else` statement.
+But given the number of fields I found it best to separate the two possible branches in the `if then else` statement. Such a conditional is necessary as the `PlayState` might be called without parameters (and it is after the countdown state).
 
-Such a conditional is necessary as the play might be called without parameters (and it is after the countdown state).
+This allows to implement the bulk of the pause features, but two modifications are required to complete the assignment. First, the music should pause while in the `PlayState`. Second, instead of showing a string describing the `PauseState`, or perhaps in addition to this text, show a giant pause icon.
+
+<!-- TODO: implement the features to pause the music and show a pause icon -->
