@@ -55,6 +55,7 @@ function Brick:init(x, y, color, tier, locked)
   self.color = color
   self.tier = tier
   self.locked = locked
+  self.unlocked = false
   self.inPlay = true
   -- POWERUP
   -- 25% chance of there being a powerup
@@ -124,31 +125,36 @@ function Brick:hit()
     0
   )
 
-  --[[ play the animation provided by the particle system
-    argument:
-    - the number of particles being emitted
-  ]]
-  self.particleSystem:emit(80)
-
   -- play the hit sound, giving precedence to the last hit being recorded
   gSounds['brick-hit-1']:stop()
   gSounds['brick-hit-1']:play()
 
-  -- higher color, decrement the color
-  if self.color > 1 then
-    self.color = self.color - 1
-  -- color 1, check tier
-  else
-    -- color 1 **and** higher tier, decrement the tier
-    if self.tier > 1 then
-      self.tier = self.tier - 1
-    -- color 1 **and** tier 1, make the brick disappear
+  -- if the brick is locked, avoid changing tier or color
+  if not self.locked then
+    -- not locked
+    --[[ play the animation provided by the particle system
+      argument:
+      - the number of particles being emitted
+    ]]
+    self.particleSystem:emit(80)
+
+    -- higher color, decrement the color
+    if self.color > 1 then
+      self.color = self.color - 1
+    -- color 1, check tier
     else
-      self.inPlay = false
-      gSounds['score']:stop()
-      gSounds['score']:play()
+      -- color 1 **and** higher tier, decrement the tier
+      if self.tier > 1 then
+        self.tier = self.tier - 1
+      -- color 1 **and** tier 1, make the brick disappear
+      else
+        self.inPlay = false
+        gSounds['score']:stop()
+        gSounds['score']:play()
+      end
     end
   end
+
 end
 
 
@@ -168,8 +174,7 @@ function Brick:render()
   if self.inPlay then
     -- depending on locked describe the pattern
     -- 22 or the pattern identified by the tier/color
-    local pattern = self.locked and 22 or self.tier + 4 * (self.color - 1)
-
+    local pattern = self.locked and 22 or self.unlocked and 21 or self.tier + 4 * (self.color - 1)
     love.graphics.draw(gTextures['breakout'], gFrames['bricks'][pattern], self.x, self.y)
   else
     if self.hasPowerup then

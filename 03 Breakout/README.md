@@ -348,3 +348,13 @@ if lockedFlag then
     true
 )
 ```
+
+Through the newly added boolean, the locked brick can avoid being destroyed through a simple conditional.
+
+```lua
+if not self.locked then
+    -- logic to change the tier/color and ultimately destroy the brick
+end
+```
+
+I also decided to include another boolean, in `self.unlocked`. This one to show the 21st sprite once the key powerup is picked up.
