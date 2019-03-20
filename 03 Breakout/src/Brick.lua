@@ -37,7 +37,7 @@ colorPalette = {
   - width and height, matching the pixel value of the sprite to maintain the ratio
   - color, for the color of the brick (up to 4 variants)
   - tier, for the tier of the brick (5 variants + a single brick type)
-  - locked, for powerup #10
+  - locked, (boolean)
   - inPlay, whether or not the brick is to be rendered on the screen
   ! specify color and tier when creating an instance of the class
 
@@ -166,8 +166,11 @@ end
 -- ! render the power up but only if the brick is not in play **and** the brick has an actual power up
 function Brick:render()
   if self.inPlay then
-    -- 5 tiers, 4 colors, plus the value held by `self.locked`
-    love.graphics.draw(gTextures['breakout'], gFrames['bricks'][self.tier + 4 * (self.color - 1) + self.locked], self.x, self.y)
+    -- depending on locked describe the pattern
+    -- 22 or the pattern identified by the tier/color
+    local pattern = self.locked and 22 or self.tier + 4 * (self.color - 1)
+
+    love.graphics.draw(gTextures['breakout'], gFrames['bricks'][pattern], self.x, self.y)
   else
     if self.hasPowerup then
       self.powerup:render()

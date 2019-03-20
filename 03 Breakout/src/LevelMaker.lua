@@ -31,11 +31,11 @@ function LevelMaker.createMap(level)
             -- same position of the ordinary bricks
             (col - 1) * 32 + (VIRTUAL_WIDTH - numCols * 32) / 2,
             row * 16,
-            -- last color and tier
-            5,
-            4,
-            -- 2 to have the locked integer refer to the 22nd brick
-            2
+            -- first color and tier
+            1,
+            1,
+            -- true to have the locked integer refer to the 22nd brick
+            true
           )
 
         else
@@ -62,8 +62,8 @@ function LevelMaker.createMap(level)
             row * 16,
             color,
             tier,
-            -- 0 describing the fact that the brick is not locked
-            0
+            -- false describing the fact that the brick is not locked
+            false
           )
         end
 
