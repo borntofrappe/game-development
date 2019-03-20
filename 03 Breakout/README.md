@@ -252,7 +252,6 @@ One thing at a time though.
 
 Modify the `GenerateBricks` function to incorporate one additional brick pattern.
 
-
 ```lua
 function GenerateQuadsBricks(atlas)
 -- previous bricks
@@ -267,4 +266,57 @@ end
 
 This means that the table referring to the bricks now holds one additional item, even if not included on the screen. 22 bricks, the 22nd of which desribes the locked shape, while the 21st the unlocked version.
 
+## LevelMaker.lua
 
+The locked version is included through a flag not too dissimular from the boolean describing whether or not to skip a cell.
+
+```lua
+-- solid brick
+if not skipFlag then
+    -- create a flag to determine whether the brick is included through a locked version
+    lockedFlag = math.random(1, 2) == 2 and true or false
+    -- if locked specify the values for the locked brick (22nd sprite in the brick's table)
+    if lockedFlag then
+        brick = Brick(
+        -- same position of the ordinary bricks
+        (col - 1) * 32 + (VIRTUAL_WIDTH - numCols * 32) / 2,
+        row * 16,
+        -- last color and tier
+        5,
+        4,
+        -- 2 to have the locked integer refer to the 22nd brick
+        2
+        )
+
+    else
+        -- if not locked include a brick choosing a tier and color
+        -- as earlier
+    end
+
+    -- insert the brick in the table
+    table.insert(bricks, brick)
+end
+```
+
+Notice the addition of a `2` after the tier and color. This is used to find the specific sprite in the table. Notice also the tier and color, capped to their respective maximum value. The idea is to here have the locked brick incrementally destroyed from the most challenging pattern.
+
+## Brick.lua
+
+Once the level maker has the possibility to specify the locked sprite, the `Brick` flag needs to be updated as to render the appropriate brick.
+
+In the `init()` function the `locked` value is included in the instance of the class:
+
+
+```lua
+function Brick:init(x, y, color, tier, locked)
+  self.locked = locked -- addition
+end
+```
+
+
+
+In the `render()` function the brick is drawn adding the value of `self.locked`:
+
+```lua
+love.graphics.draw(gTextures['breakout'], gFrames['bricks'][self.tier + 4 * (self.color - 1) + self.locked], self.x, self.y)
+```
