@@ -7,7 +7,6 @@
   - GenerateQuadsBricks() to identify the bricks
   - GenerateQuadsPowerups() to identify the powerups
 ]]
-
 function GenerateQuads(atlas, tileWidth, tileHeight)
   -- retrieve the number of tiles to be created horizontally
   local sheetWidth = atlas:getWidth() / tileWidth
@@ -123,6 +122,7 @@ function GenerateQuadsPaddles(atlas)
 end
 
 
+
 function GenerateQuadsBalls(atlas)
   -- describe the starting coordinates of the balls
   -- described in two rows, each 8px wide and tall
@@ -182,10 +182,16 @@ end
 function GenerateQuadsBricks(atlas)
   -- the bricks are retrieved from the beginning of the breakout image
   -- slicing the table making up the quads
-  -- 32 and 15 being the size of the bricks
+  -- 32 and 16 being the size of the bricks
   -- 21 being the number of bricks
-  return table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+  local quads = table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+
+  -- add the last brick to desribe the locked pattern
+  local quad = love.graphics.newQuad(160, 48, 32, 16, atlas:getDimensions())
+  table.insert(quads, quad)
+  return quads
 end
+
 
 
 function GenerateQuadsPowerups(atlas)
@@ -198,3 +204,7 @@ function GenerateQuadsPowerups(atlas)
 end
 
 
+
+function GenerateQuadsLockedBrick(atlas)
+  return table.slice(GenerateQuads(atlas, 32, 16), 24)
+end

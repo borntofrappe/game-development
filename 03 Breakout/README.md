@@ -82,18 +82,18 @@ While going through the different files, I updated the comments and included the
 
 The assignment given at the end of the lecture concerns mainly powerups, as available in the `breakout,png` asset. That being said, there are three expansions foreseen by the lecturer.
 
-Small foreword to the assignment: I decided to tweak some of the actual requests to make for what I believe to be a more compelling gameplay. The paddle changes in size, for instance, when picking up a particular powerup. Modifications are included after each assignment, which is highllighted through _italic typeface_. 
+Small foreword to the assignment: I decided to tweak some of the actual requests to make for what I believe to be a more compelling gameplay. The paddle changes in size, for instance, when picking up a particular powerup. Modifications are included after each assignment, which is highllighted through _italic typeface_.
 
-- [x] _Add a Powerup class to the game that spawns a powerup_ 
+- [x] _Add a Powerup class to the game that spawns a powerup_
 
   - [x] _a Powerup should spawn randomly, be it on a timer or when the Ball hits a Block enough times, and gradually descend toward the player_
 
   - [x] _Once collided with the Paddle, two more Balls should spawn and behave identically to the original, including all collision and scoring points for the player_. In addition to the powerup including a new ball (just one), I made use of the other quads making up the powerup. Whenever the ball destroys a brick, there's a chance to have one of these powerups spawn and one in particular achieves the doubling feat.
 
   - [x] _Once the player wins and proceeds to the VictoryState for their current level, the Balls should reset so that there is only one active again_.
- 
-- [x]  _Grow and shrink the Paddle such that it’s no longer just one fixed size forever_. As I believe the assignment specified a rather questionable design choice (changing the size of the paddle relative to health or the score), I tied the change in size to two different powerups. As they are picked up, it is then that the paddle grows/shrinks.
- 
+
+- [x] _Grow and shrink the Paddle such that it’s no longer just one fixed size forever_. As I believe the assignment specified a rather questionable design choice (changing the size of the paddle relative to health or the score), I tied the change in size to two different powerups. As they are picked up, it is then that the paddle grows/shrinks.
+
 - [ ] _Add a locked Brick to the level spawning, as well as a key powerup_
 
   - [ ] _The locked Brick should not be breakable by the ball normally, unless they of course have the key Powerup_
@@ -238,6 +238,33 @@ In `render()`, the loop is introduced to render every single instance of the bal
 
 The `update(dt)` function actually calls a function in `self.checkForLoss`. This function is created with the exact same logic of `checkForVictory`, but to determine when **every single** ball is no longer in play (read: it has gone past the bottom edge of the screen). Through this function, `update(dt)` is able to remove a health point not when every single ball goes past the bottom of the screen, but when every single one of them is gone.
 
-<!-- ### Powerup #10
- TODO: include the locked brick and the key powerup, to have the brick destroyed conditional to the key being picked up 
--->
+### Powerup #10
+
+The final section of the assignment relates to what I labeled as powerup #10, but most importantly the locked brick. To rapidly sum up the feature, the game should be updated to incorporate, within a reasonable amount, locked bricks which behave as follows:
+
+- hit the brick and a powerup with the key is spawned;
+
+- pick up the powerup to have the brick 'unlocked', and destroy-able.
+
+One thing at a time though.
+
+#### Util.lua
+
+Modify the `GenerateBricks` function to incorporate one additional brick pattern.
+
+
+```lua
+function GenerateQuadsBricks(atlas)
+-- previous bricks
+local quads = table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+
+-- add the last brick to desribe the locked pattern
+local quad = love.graphics.newQuad(160, 48, 32, 16, atlas:getDimensions())
+table.insert(quads, quad)
+return quads
+end
+```
+
+This means that the table referring to the bricks now holds one additional item, even if not included on the screen. 22 bricks, the 22nd of which desribes the locked shape, while the 21st the unlocked version.
+
+
