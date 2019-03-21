@@ -380,4 +380,71 @@ locked
 
 Meaning that the process repeats itself if the key is not picked up in time. It is essential to account for this occurrence by basically resetting the scene: the powerup is once more set behind the brick; hitting it results in the spawning of the same type of power.
 
-It might sound convoluted, but by updating `Brick.lua`, `PlayState.lua` alongside `Powerup.lua`, the feature can be implemented as described.
+It might sound convoluted, but taking it one step at a time it is definitely easier to grasp.
+
+#### Powerup.lua
+
+The class is updated as to always spawn the key powerup when the brick behind it represents a locked instance.
+
+```lua
+function Powerup:init(x, y, key)
+  self.x = x
+  self.y = y
+  self.width = 16
+  self.height = 16
+  -- through the boolean passed as third argument specify the key powerup (the boolean is true for the instances of a locked brick)
+  self.key = key -- new
+  self.power = self.key and 10 or math.random(9) -- modified
+  self.dy = 50
+  self.inPlay = true
+end
+```
+
+In addition to this value, the class is made to hold another value, in `startingY`. This is used to have the original vertical coordinate of the powerup, before its position is updated as per gravity.
+
+```lua
+function Powerup:init(x, y, key)
+  self.x = x
+  self.y = y
+  self.startingY = y -- new
+  self.width = 16
+  self.height = 16
+  self.key = key -- new
+  self.power = self.key and 10 or math.random(9) -- modified
+  self.dy = 50
+  self.inPlay = true
+end
+```
+
+This value is used in the `update(dt)` function and specifically in the occurrence in which the powerup disappears below the edge of the window.
+
+```lua
+-- in update
+if self.inPlay and self.y >= VIRTUAL_HEIGHT then
+    self.inPlay = false
+    -- if the powerup is for the key item, restore the y coordinate (this to have the powerup reset to its original position if the paddle fails to pick up the item)
+    if self.key then
+        self.y = self.startingY
+    end
+end
+```
+
+The idea is to have the powerup for the locked brick fundamentally return to its original position if the paddle hasn't had a chance to catch it. Inevitably, this covers the situation in which the locked brick is still locked, to have the powerup continuously spawn where the brick lies.
+
+Finally, and perhaps most influentially, the value held in `self.inPlay` is defaulted to `false`.
+
+```lua
+function Powerup:init(x, y, key)
+  self.x = x
+  self.y = y
+  self.startingY = y -- new
+  self.width = 16
+  self.height = 16
+  self.key = key -- new
+  self.power = self.key and 10 or math.random(9) -- modified
+  self.dy = 50
+  self.inPlay = false -- modified
+end
+```
+
+This is part of the more declarative approach taken with the feature. Instead of having the powerup conditionally set through the `Brick` class, following the destruction of the connected brick, the idea is to have the logic baked in the `Powerup` class. From `Brick.lua` the idea is no longer to update or render the powerup when the brick is no longer in play, but only when the powerup is. Not just a matter of semantics, as will be clearer in the following file.
