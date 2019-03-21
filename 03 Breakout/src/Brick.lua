@@ -100,24 +100,18 @@ function Brick:init(x, y, color, tier, locked)
 end
 
 --[[
-  in the hit function consider the lo color and tier of the brick
-  - reduce the color
-  - reduce the tier
-  - make the brick disappear
-  play the sound brick-hit-1 when the brick needs to disappear
+  in the hit function consider how the brick might be locked/unlocked or othewise pattern-ed
 ]]
 function Brick:hit()
-
-  -- play the hit sound, giving precedence to the last hit being recorded
-  gSounds['brick-hit-1']:stop()
-  gSounds['brick-hit-1']:play()
-
   -- if the brick is locked, avoid changing tier or color
   if self.locked then
     -- if the powerup is not in play (by default and when the powerup goes past the bottom of the screeen), show it
     if not self.powerup.inPlay then
       self.powerup.inPlay = true
     end
+    -- play the appropriate sound
+    gSounds['brick-hit-3']:stop()
+    gSounds['brick-hit-3']:play()
   else
     -- if unlocked, set the color for the particle system for the last possible value
     if self.unlocked then
@@ -141,6 +135,9 @@ function Brick:hit()
 
       -- for normal bricks, set the color of the particle system according to the pattern of the brick
     else
+      -- play the sound for the hit
+      gSounds['brick-hit-1']:stop()
+      gSounds['brick-hit-1']:play()
       self.particleSystem:setColors(
         colorPalette[self.color]['r'],
         colorPalette[self.color]['g'],
@@ -170,6 +167,7 @@ function Brick:hit()
           if self.hasPowerup then
             self.powerup.inPlay = true
           end
+          -- play the sound for the destrution of the brick
           gSounds['score']:stop()
           gSounds['score']:play()
         end

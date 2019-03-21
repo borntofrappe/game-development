@@ -94,11 +94,11 @@ Small foreword to the assignment: I decided to tweak some of the actual requests
 
 - [x] _Grow and shrink the Paddle such that it’s no longer just one fixed size forever_. As I believe the assignment specified a rather questionable design choice (changing the size of the paddle relative to health or the score), I tied the change in size to two different powerups. As they are picked up, it is then that the paddle grows/shrinks.
 
-- [ ] _Add a locked Brick to the level spawning, as well as a key powerup_
+- [x] _Add a locked Brick to the level spawning, as well as a key powerup_
 
-  - [ ] _The locked Brick should not be breakable by the ball normally, unless they of course have the key Powerup_
+  - [x] _The locked Brick should not be breakable by the ball normally, unless they of course have the key Powerup_
 
-  - [ ] _The key Powerup should spawn randomly just like the Ball Powerup and descend toward the bottom of the screen just the same, where the Paddle has the chance to collide with it and pick it up_
+  - [x] _The key Powerup should spawn randomly just like the Ball Powerup and descend toward the bottom of the screen just the same, where the Paddle has the chance to collide with it and pick it up_
 
 ### Powerups
 
@@ -626,3 +626,11 @@ This completes the feature. However, the play state is further modified to accou
 - unlocked brick: 2000 points;
 
 - pattern-ed bricks: score dependant on the tier and color, as earlier.
+
+#### Finishing Touches
+
+With the feature implemented correctly, the code is updated as follows:
+
+- include appropriate sound files (especially for the locked variant);
+
+- modify the level maker to display locked bricks with less likelihood, and after level 5.

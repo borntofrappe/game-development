@@ -32,6 +32,7 @@ function love.load()
   gSounds = {
     ['brick-hit-1'] = love.audio.newSource('sounds/brick-hit-1.wav', 'static'),
     ['brick-hit-2'] = love.audio.newSource('sounds/brick-hit-2.wav', 'static'),
+    ['brick-hit-3'] = love.audio.newSource('sounds/brick-hit-3.wav', 'static'),
     ['confirm'] = love.audio.newSource('sounds/confirm.wav', 'static'),
     ['high_score'] = love.audio.newSource('sounds/high_score.wav', 'static'),
     ['hurt'] = love.audio.newSource('sounds/hurt.wav', 'static'),
@@ -55,6 +56,7 @@ function love.load()
     - paddles (different sizes and colors)
     - balls (different colors)
     - bricks (different skins and tiers)
+    - locked brik (for powerup #10)
     - hearts (different icons)
     - arrows (different orientation)
     - power ups (different graphics)
@@ -63,6 +65,7 @@ function love.load()
     ['paddles'] = GenerateQuadsPaddles(gTextures['breakout']),
     ['balls'] = GenerateQuadsBalls(gTextures['breakout']),
     ['bricks'] = GenerateQuadsBricks(gTextures['breakout']),
+    ['locked'] = GenerateQuadsLockedBrick(gTextures['breakout']),
     ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9),
     ['arrows'] = GenerateQuads(gTextures['arrows'], 24, 24),
     ['powerups'] = GenerateQuadsPowerups(gTextures['breakout'])

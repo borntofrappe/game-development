@@ -24,7 +24,11 @@ function LevelMaker.createMap(level)
 
       if not skipFlag then
         -- create a flag to determine whether the brick is included through a locked version
-        lockedFlag = math.random(1, 2) == 2 and true or false
+        lockedFlag = false
+        -- include the locked variant starting with level 5 and with 10% of probability
+        if level >= 5 and math.random(10) == 2 then
+          lockedFlag = true
+        end
         -- if locked specify the values for the locked brick (22nd sprite in the brick's table)
         if lockedFlag then
           brick = Brick(
