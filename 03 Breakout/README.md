@@ -529,15 +529,14 @@ Each fork has its own logic.
 
 - brick is locked: if the powerup is not already in play, set it to be so.
 
-
-  ```lua
-  if self.locked then
-      -- if the powerup is not in play (by default and when the powerup goes past the bottom of the screeen), show it
-      if not self.powerup.inPlay then
-          self.powerup.inPlay = true
-      end
-  else
-  ```
+```lua
+if self.locked then
+    -- if the powerup is not in play (by default and when the powerup goes past the bottom of the screeen), show it
+    if not self.powerup.inPlay then
+        self.powerup.inPlay = true
+    end
+else
+```
 
 - brick is not locked, but it was: style the particle system with the last possible color in the `colorPalette` table and with the brief animation remove the brick from view.
 
@@ -601,3 +600,29 @@ Each fork has its own logic.
   ```
 
 Notice how the powerup is shown. One at a time with a locked brick. Not at all with the unlocked variant. Depending on chane and the destruction of the brick otherwise.
+
+#### PlayState.lua
+
+Unexpectedly, the play state is perhaps the least-affected file. It is however responsible for the locked brick having its booleans updated, essential for the brick becoming unlocked and later destroyed.
+
+The state is updated in the function checking for a collision between the paddle and the powerup, to account for powerup #10.
+
+```lua
+elseif brick.powerup.power == 10 then
+    -- set the booleans of the brick to have it show/include the unlocked brick
+    brick.locked = false
+    brick.unlocked = true
+end
+```
+
+As the powerup is collected, the brick is updated to show its unlocked variant.
+
+And that's pretty much it. With the switch occurring in the play state, the `Brick` class is responsible for the brick changing in appearance, triggering the powerup, while the `Powerup` class is responsible for the actual dymanics of the powerup.
+
+This completes the feature. However, the play state is further modified to account for the following scoring system:
+
+- locked brick: do not change the score;
+
+- unlocked brick: 2000 points;
+
+- pattern-ed bricks: score dependant on the tier and color, as earlier.

@@ -214,6 +214,11 @@ function PlayState:update(dt)
           newBall.x = VIRTUAL_WIDTH - newBall.width
         end
         table.insert(self.balls, newBall)
+
+      elseif brick.powerup.power == 10 then
+        -- set the booleans of the brick to have it show/include the unlocked brick
+        brick.locked = false
+        brick.unlocked = true
       end
     end
 
@@ -221,8 +226,16 @@ function PlayState:update(dt)
     for j, ball in pairs(self.balls) do
 
       if ball:collides(brick) and brick.inPlay then
-        -- increase the score accounting for the tier and color of the brick
-        self.score = self.score + ((brick.tier - 1) * 200 + brick.color * 50)
+        -- score: no changes for the locked brick, 2000 points for the unlocked brick, variable amount for pattern-ed bricks
+        if not brick.locked then
+          if brick.unlocked then
+            -- add a sizeable number of points for the
+            self.score = self.score + 2000
+          else
+            -- increase the score accounting for the tier and color of the brick
+            self.score = self.score + ((brick.tier - 1) * 200 + brick.color * 50)
+          end
+        end
 
         -- call the function handling the appearance of the brick
         brick:hit()
