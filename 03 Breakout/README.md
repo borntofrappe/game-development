@@ -388,15 +388,15 @@ The class is updated as to always spawn the key powerup when the brick behind it
 
 ```lua
 function Powerup:init(x, y, key)
-  self.x = x
-  self.y = y
-  self.width = 16
-  self.height = 16
-  -- through the boolean passed as third argument specify the key powerup (the boolean is true for the instances of a locked brick)
-  self.key = key -- new
-  self.power = self.key and 10 or math.random(9) -- modified
-  self.dy = 50
-  self.inPlay = true
+    self.x = x
+    self.y = y
+    self.width = 16
+    self.height = 16
+    -- through the boolean passed as third argument specify the key powerup (the boolean is true for the instances of a locked brick)
+    self.key = key -- new
+    self.power = self.key and 10 or math.random(9) -- modified
+    self.dy = 50
+    self.inPlay = true
 end
 ```
 
@@ -404,15 +404,15 @@ In addition to this value, the class is made to hold another value, in `starting
 
 ```lua
 function Powerup:init(x, y, key)
-  self.x = x
-  self.y = y
-  self.startingY = y -- new
-  self.width = 16
-  self.height = 16
-  self.key = key -- new
-  self.power = self.key and 10 or math.random(9) -- modified
-  self.dy = 50
-  self.inPlay = true
+    self.x = x
+    self.y = y
+    self.startingY = y -- new
+    self.width = 16
+    self.height = 16
+    self.key = key -- new
+    self.power = self.key and 10 or math.random(9) -- modified
+    self.dy = 50
+    self.inPlay = true
 end
 ```
 
@@ -435,16 +435,169 @@ Finally, and perhaps most influentially, the value held in `self.inPlay` is defa
 
 ```lua
 function Powerup:init(x, y, key)
-  self.x = x
-  self.y = y
-  self.startingY = y -- new
-  self.width = 16
-  self.height = 16
-  self.key = key -- new
-  self.power = self.key and 10 or math.random(9) -- modified
-  self.dy = 50
-  self.inPlay = false -- modified
+    self.x = x
+    self.y = y
+    self.startingY = y -- new
+    self.width = 16
+    self.height = 16
+    self.key = key -- new
+    self.power = self.key and 10 or math.random(9) -- modified
+    self.dy = 50
+    self.inPlay = false -- modified
 end
 ```
 
 This is part of the more declarative approach taken with the feature. Instead of having the powerup conditionally set through the `Brick` class, following the destruction of the connected brick, the idea is to have the logic baked in the `Powerup` class. From `Brick.lua` the idea is no longer to update or render the powerup when the brick is no longer in play, but only when the powerup is. Not just a matter of semantics, as will be clearer in the following file.
+
+#### Brick.lua
+
+Already diverging from the notes included in the update section, each instance of the `Brick` class is set up with two new fields (as opposed to three): `locked` and `unlocked`.
+
+```lua
+function Brick:init(x, y, color, tier, locked)
+    self.x = x
+    self.y = y
+    self.width = 32
+    self.height = 16
+    self.color = color
+    self.tier = tier
+    self.locked = locked -- new
+    self.unlocked = false -- new
+    self.inPlay = true
+    -- POWERUP
+    -- always add a powerup when the brick is locked
+    self.hasPowerup = self.locked and true or math.random(4) == 1 and true or false -- modified
+    -- powerup included in the center of the brick
+    self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2, self.locked) -- modified
+
+    -- particle system
+end
+```
+
+`locked` is retrieved come the initialization of the class, in the level maker, while `unlocked` is defaulted to false.
+
+Notice how `locked` is used also in `hasPowerup` and `powerup`. This is to make sure that a locked brick has always a powerup, and that is the key, number 10 powerup.
+
+Before diving in the `hit()` function, and to match the changes introduced in the `Powerup` class, the `update()` and `render()` function are modified to update and render respectively the powerups, when their `inPlay` boolean resolves to true.
+
+```lua
+-- update
+function Brick:update(dt)
+    self.particleSystem:update(dt)
+
+    -- the powerup is updated in its own class, conditional to its inPlay flag being set to true
+    if self.powerup.inPlay then
+        self.powerup:update(dt)
+    end
+end
+
+
+-- render
+function Brick:render()
+    -- brick
+    if self.inPlay then
+        -- depending on locked describe the pattern
+        -- 22 or the pattern identified by the tier/color
+        local pattern = self.locked and 22 or self.unlocked and 21 or self.tier + 4 * (self.color - 1)
+        love.graphics.draw(gTextures['breakout'], gFrames['bricks'][pattern], self.x, self.y)
+    end
+
+    -- powerup
+    if self.powerup.inPlay then
+        self.powerup:render()
+    end
+end
+```
+
+Notice how the logic of the powerup is specified exclusively though the powerup value of `inPlay`, and no longer the fact that the brick has been destroyed.
+
+Notice also how the brick is drawn on screen. The inclusion of the `pattern` variable and the modification of the `love.graphics` function makes it possible to draw the locked and unlocked sprites if need be.
+
+Back to the `Brick:hit()` function. The logic is updated to account for a binary distinction:
+
+- the brick is locked
+
+- the brick is not locked.
+
+In this last instance, tha path is again forked to account for two different occurrences:
+
+- the brick is unlocked (in other words **was** locked);
+
+- the brick is not unlocked (in other words a normal, tier-and-color brick).
+
+Each fork has its own logic.
+
+- brick is locked: if the powerup is not already in play, set it to be so.
+
+
+  ```lua
+  if self.locked then
+      -- if the powerup is not in play (by default and when the powerup goes past the bottom of the screeen), show it
+      if not self.powerup.inPlay then
+          self.powerup.inPlay = true
+      end
+  else
+  ```
+
+- brick is not locked, but it was: style the particle system with the last possible color in the `colorPalette` table and with the brief animation remove the brick from view.
+
+  ```lua
+  -- if locked
+  else
+    if self.unlocked then
+        self.particleSystem:setColors(
+            colorPalette[#colorPalette]['r'],
+            colorPalette[#colorPalette]['g'],
+            colorPalette[#colorPalette]['b'],
+            0.5,
+            colorPalette[#colorPalette]['r'],
+            colorPalette[#colorPalette]['g'],
+            colorPalette[#colorPalette]['b'],
+            0
+        )
+        self.particleSystem:emit(80)
+
+        -- destroy the brick by setting its flag to false
+        self.inPlay = false
+        -- play the appropriate sound
+        gSounds['score']:stop()
+        gSounds['score']:play()
+
+    else
+
+  end
+  ```
+
+- brick is not locked, and it never was: logic described in the project so far. Look at the tier, color and incrementally make the brick disappear. When it disappears, highligiht the powerup if the brick has one.
+
+  ```lua
+  -- if locked
+  else
+    -- if unlocked
+    else
+        -- particle system
+
+        -- color/tier update
+        if self.color > 1 then
+            self.color = self.color - 1
+        -- color 1, check tier
+        else
+        -- color 1 **and** higher tier, decrement the tier
+        if self.tier > 1 then
+            self.tier = self.tier - 1
+        -- color 1 **and** tier 1, make the brick disappear
+        else
+            self.inPlay = false
+            -- if the brick has a powerup, display it
+            if self.hasPowerup then
+            self.powerup.inPlay = true
+            end
+            gSounds['score']:stop()
+            gSounds['score']:play()
+        end
+        end
+
+  end
+  ```
+
+Notice how the powerup is shown. One at a time with a locked brick. Not at all with the unlocked variant. Depending on chane and the destruction of the brick otherwise.

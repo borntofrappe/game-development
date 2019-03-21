@@ -37,7 +37,8 @@ colorPalette = {
   - width and height, matching the pixel value of the sprite to maintain the ratio
   - color, for the color of the brick (up to 4 variants)
   - tier, for the tier of the brick (5 variants + a single brick type)
-  - locked, (boolean)
+  - locked, (boolean determining the sprite)
+  - unlocked (boolean used to show the unlocked sprite after the locked one)
   - inPlay, whether or not the brick is to be rendered on the screen
   ! specify color and tier when creating an instance of the class
 
@@ -51,17 +52,17 @@ function Brick:init(x, y, color, tier, locked)
   self.y = y
   self.width = 32
   self.height = 16
-
   self.color = color
   self.tier = tier
   self.locked = locked
   self.unlocked = false
   self.inPlay = true
   -- POWERUP
-  -- 25% chance of there being a powerup
-  self.hasPowerup = math.random(4) == 1 and true or false
+  -- always add a powerup when the brick is locked
+  -- otherwise add it in 25% of the instanes
+  self.hasPowerup = self.locked and true or math.random(4) == 1 and true or false
   -- powerup included in the center of the brick
-  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2)
+  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2, self.locked)
 
 
   -- PARTICLE SYSTE;
@@ -99,58 +100,79 @@ function Brick:init(x, y, color, tier, locked)
 end
 
 --[[
-  in the hit function consider the color and tier of the brick
+  in the hit function consider the lo color and tier of the brick
   - reduce the color
   - reduce the tier
   - make the brick disappear
   play the sound brick-hit-1 when the brick needs to disappear
 ]]
 function Brick:hit()
-  --[[ set the colors of the particle system according to the brick's own color
-    arguments: quadruples of r, g, b, a values
-
-    the particle system interpolates from quadruple to quadruple (up to 8 groupings)
-    in the specific instance, it goes from semi transparent to completely transparent particles
-  ]]
-
-  self.particleSystem:setColors(
-    colorPalette[self.color]['r'],
-    colorPalette[self.color]['g'],
-    colorPalette[self.color]['b'],
-    -- slightly more opaque values for higher tiers
-    0.2 + 0.1 * self.tier,
-    colorPalette[self.color]['r'],
-    colorPalette[self.color]['g'],
-    colorPalette[self.color]['b'],
-    0
-  )
 
   -- play the hit sound, giving precedence to the last hit being recorded
   gSounds['brick-hit-1']:stop()
   gSounds['brick-hit-1']:play()
 
   -- if the brick is locked, avoid changing tier or color
-  if not self.locked then
-    -- not locked
-    --[[ play the animation provided by the particle system
-      argument:
-      - the number of particles being emitted
-    ]]
-    self.particleSystem:emit(80)
+  if self.locked then
+    -- if the powerup is not in play (by default and when the powerup goes past the bottom of the screeen), show it
+    if not self.powerup.inPlay then
+      self.powerup.inPlay = true
+    end
+  else
+    -- if unlocked, set the color for the particle system for the last possible value
+    if self.unlocked then
+      self.particleSystem:setColors(
+        colorPalette[#colorPalette]['r'],
+        colorPalette[#colorPalette]['g'],
+        colorPalette[#colorPalette]['b'],
+        0.5,
+        colorPalette[#colorPalette]['r'],
+        colorPalette[#colorPalette]['g'],
+        colorPalette[#colorPalette]['b'],
+        0
+      )
+      self.particleSystem:emit(80)
 
-    -- higher color, decrement the color
-    if self.color > 1 then
-      self.color = self.color - 1
-    -- color 1, check tier
+      -- destroy the brick by setting its flag to false
+      self.inPlay = false
+      -- play the appropriate sound
+      gSounds['score']:stop()
+      gSounds['score']:play()
+
+      -- for normal bricks, set the color of the particle system according to the pattern of the brick
     else
-      -- color 1 **and** higher tier, decrement the tier
-      if self.tier > 1 then
-        self.tier = self.tier - 1
-      -- color 1 **and** tier 1, make the brick disappear
+      self.particleSystem:setColors(
+        colorPalette[self.color]['r'],
+        colorPalette[self.color]['g'],
+        colorPalette[self.color]['b'],
+        -- slightly more opaque values for higher tiers
+        0.2 + 0.1 * self.tier,
+        colorPalette[self.color]['r'],
+        colorPalette[self.color]['g'],
+        colorPalette[self.color]['b'],
+        0
+      )
+
+      self.particleSystem:emit(80)
+
+      -- higher color, decrement the color
+      if self.color > 1 then
+        self.color = self.color - 1
+      -- color 1, check tier
       else
-        self.inPlay = false
-        gSounds['score']:stop()
-        gSounds['score']:play()
+        -- color 1 **and** higher tier, decrement the tier
+        if self.tier > 1 then
+          self.tier = self.tier - 1
+        -- color 1 **and** tier 1, make the brick disappear
+        else
+          self.inPlay = false
+          -- if the brick has a powerup, display it
+          if self.hasPowerup then
+            self.powerup.inPlay = true
+          end
+          gSounds['score']:stop()
+          gSounds['score']:play()
+        end
       end
     end
   end
@@ -158,28 +180,29 @@ function Brick:hit()
 end
 
 
--- in the :update(dt) function update the particle system and the powerup
--- ! update the power up but only if the brick is not in play **and** the brick has an actual power up
+-- in the :update(dt) function update the particle system and the
+-- the powerup is updated in its own class, conditional to its inPlay flag being set to true
 function Brick:update(dt)
   self.particleSystem:update(dt)
-  if not self.inPlay and self.hasPowerup then
+
+  if self.powerup.inPlay then
     self.powerup:update(dt)
   end
 end
 
 
 -- in the :render function, use love.graphics to draw the brick as identified from the color and tier
--- ! render the power up but only if the brick is not in play **and** the brick has an actual power up
+-- ! render the power up but only if its flag is set to true
 function Brick:render()
   if self.inPlay then
     -- depending on locked describe the pattern
     -- 22 or the pattern identified by the tier/color
     local pattern = self.locked and 22 or self.unlocked and 21 or self.tier + 4 * (self.color - 1)
     love.graphics.draw(gTextures['breakout'], gFrames['bricks'][pattern], self.x, self.y)
-  else
-    if self.hasPowerup then
-      self.powerup:render()
-    end
+  end
+
+  if self.powerup.inPlay then
+    self.powerup:render()
   end
 end
 
