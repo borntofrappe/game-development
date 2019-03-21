@@ -320,7 +320,7 @@ love.graphics.draw(gTextures['breakout'], gFrames['bricks'][self.tier + 4 * (sel
 
 With the now updated structure, the locked brick is successfully rendered on the screen. However, the interaction with the brick is far from complete.
 
-#### Update
+##### Update
 
 I decided to have the `locked` variable refer to a boolean. This makes for a more declarative solution, but also means that the specific pattern is included when drawing the shape on the screen.
 
@@ -333,7 +333,7 @@ if self.inPlay then
 end
 ```
 
-This also makes rather easier to implement the feature behind the locked brick. If the flag is set to true, do not destroy the item. Else go ahead. I also decided to change the tier and color for the locked brick, to have it immediately destroyed (otherwise the feature would be annoyingly long).
+This makes it rather easier to implement the feature behind the locked brick. If the flag is set to true, do not destroy the item. Else go ahead. I also decided to change the tier and color for the locked brick, to have it immediately destroyed (otherwise the feature would be annoyingly long).
 
 ```lua
 if lockedFlag then
@@ -358,3 +358,26 @@ end
 ```
 
 I also decided to include another boolean, in `self.unlocked`. This one to show the 21st sprite once the key powerup is picked up.
+
+#### Brick States
+
+It might be easier to understand how the feature is implemented by describing the possible states assumed by the instance(s) of the locked brick:
+
+- locked: the brick here is displayed through the sprite number 22. Hitting the brick does not result in any change in its pattern or the score of the game. Hitting the brick causes it to enter in the _waiting_ phase, in which the key powerup is spawned and plummets towards the paddle.
+
+- waiting: the brick does not change in terms of visuals, showing sprite number 22 still. If hit in this state, absolutely nothing ought to change. A powerup has been spawn already, and this serves as a precaution avoiding two keys for the same brick.
+
+- unlocked: the brick changes in appearance, to sprite number 21. This state is propped by the key powerup being picked up. While in this state, hitting the brick results in its being destroyed and incrementing the score notably.
+
+The different states are made a tad more complex considering how the stages are not entered linearly, one after another. Indeed, the states can be detailed as follows:
+
+```lua
+locked
+    brick gets hit --> waiting
+                        key is picked up --> unlocked
+                        key is not picked up --> locked
+```
+
+Meaning that the process repeats itself if the key is not picked up in time. It is essential to account for this occurrence by basically resetting the scene: the powerup is once more set behind the brick; hitting it results in the spawning of the same type of power.
+
+It might sound convoluted, but by updating `Brick.lua`, `PlayState.lua` alongside `Powerup.lua`, the feature can be implemented as described.
