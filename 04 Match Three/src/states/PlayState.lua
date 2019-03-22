@@ -14,13 +14,13 @@
 -- inherit from the BaseState class
 PlayState = Class{__includes = BaseState}
 
--- in the init() function initialize the variables for the game and the timer transitioning the state into view
+-- in the init() function initialize the variables for the game
 function PlayState:init()
   self.level = 1
   self.score = 0
   self.goal = 1000
   self.time = 60
-  self.board = Board((VIRTUAL_WIDTH - (VIRTUAL_WIDTH / 6 - VIRTUAL_WIDTH / 8) - (8*32)), (VIRTUAL_HEIGHT - (8 * 32)) / 2)
+  self.board = Board((VIRTUAL_WIDTH - (VIRTUAL_WIDTH / 6 - VIRTUAL_WIDTH / 8) - (8*32)), (VIRTUAL_HEIGHT - (8 * 32)) / 2, self.level)
 
   -- table describing the overlay used for the fadein transition
   -- describing the overlay in terms of its color
@@ -106,11 +106,16 @@ function PlayState:update(dt)
           -- add a second per match
           self.time = self.time + 1
 
-          -- add fifty points per tile
-          self.score = self.score + 50
+          --[[
+            increment the score
+            50 points by default
+            bonus of 25 based on the tile's variety
+          ]]
+          local bonus = (tile.variety - 1) * 25
+          self.score = self.score + 50 + bonus
 
           -- remove the matching tiles and update the board's appearance
-          self.board:removeMatches()
+          self.board:removeMatches(self.level)
 
           -- check if the score surpasses the goal
           if self.score >= self.goal then

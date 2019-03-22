@@ -4,15 +4,18 @@ Board = Class{}
 --[[
   in the :init function set up the board
   - offsetX, offsetY, identifying where to draw the baord
+  - level, determining the variant of the tile
   - tiles, a table of the different tiles making up the board (64 instances of the Tile class)
 
   - selectedTile, highlighted, highlightedTile to visually relate the selected and highlighted tile
 ]]
 
-function Board:init(offsetX, offsetY)
+function Board:init(offsetX, offsetY, level)
   self.offsetX = offsetX
   self.offsetY = offsetY
-  self.tiles = self:generateBoard()
+  self.level = level
+  -- immediately generate the board on the basis of the level
+  self.tiles = self:generateBoard(self.level)
 
   self.selectedTile = self.tiles[math.random(8)][math.random(8)]
   self.highlighted = false
@@ -116,7 +119,7 @@ end
 
 
 -- function generating an 8x8 table made up of 1 table for each row, itself made up of 1 table for each column
-function Board:generateBoard()
+function Board:generateBoard(level)
   -- create a table of tables themselves storing the different tiles
   tiles = {}
   -- 8 rows (which change in their y coordinate)
@@ -127,8 +130,18 @@ function Board:generateBoard()
     -- 8 columns (which change in their x coordinate)
     for x = 1, 8 do
       -- in the table created for the row include instances of the Tile class
-      -- specifying the necessary values
-      table.insert(tiles[y], Tile(x, y, self.offsetX, self.offsetY, math.random(18), math.random(6)))
+      -- color included from the left section of the texture (1st, 3rd, 5h set of tiles)
+      local color = (math.random(8) * 2) - 1
+      --[[
+        variety included on the basis of the level and a bit of randomness
+        starting with variety 1 for level 1 and capping the variety at 8 for later levels
+        math.min(math.random(level), 8)
+
+        math.random(positive integer) gives a random integer up to the value in parens
+        math.random(1) gives always 1 for instance
+      ]]
+      local variety = math.min(math.random(level), 8)
+      table.insert(tiles[y], Tile(x, y, self.offsetX, self.offsetY, color, variety))
     end
   end
 
@@ -293,7 +306,7 @@ end
 
 
 -- function removing matches from the grid
-function Board:removeMatches()
+function Board:removeMatches(level)
   if self:calculateMatches() then
     -- loop through the table of matches
     for k, match in pairs(self.matches) do
@@ -308,13 +321,13 @@ function Board:removeMatches()
     self.matches = nil
 
     -- call the function to update the board in light of the matches being removed
-    self:updateBoard()
+    self:updateBoard(level)
   end
 end
 
 
 -- function updating the appearance of the board
-function Board:updateBoard()
+function Board:updateBoard(level)
   -- for every column
   for x = 1, 8 do
     -- variables to identify a space and its position in the grid
@@ -391,7 +404,9 @@ function Board:updateBoard()
       -- if nil, it represents a space
       if tile == nil then
         -- create a new tile, much alike when making up the board in the first place
-        local tile = Tile(x, y, self.offsetX, self.offsetY, math.random(18), math.random(6))
+        local color = (math.random(8) * 2) - 1
+        local variety = math.min(math.random(level), 8)
+        local tile = Tile(x, y, self.offsetX, self.offsetY, color, variety)
         -- position the tile to its rightful place, but starting 32px above, to give the impression of a falling tile
         tile.y = -32
         -- include the tile in the table of tile

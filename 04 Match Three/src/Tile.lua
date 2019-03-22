@@ -26,6 +26,7 @@ end
 
 -- in the :render function render the tiles according to the initialized values
 function Tile:render()
+  love.graphics.setColor(1, 1, 1, 1)
   love.graphics.draw(gTextures['spritesheet'], self.tiles[self.color][self.variety], self.x, self.y)
 end
 
