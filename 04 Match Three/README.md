@@ -46,7 +46,7 @@ Small update: I decided to label the folders describing the founding concept wit
 
   - [x] _These should be worth more points, at your discretion_
 
-- [ ] _Create random shiny versions of blocks that will destroy an entire row on match, granting points for each block in the row_
+- [x] _Create random shiny versions of blocks that will destroy an entire row on match, granting points for each block in the row_
 
 - [ ] _Only allow swapping when it results in a match_
 
@@ -168,3 +168,85 @@ end
 ```
 
 Turns out the `Tile` class doesn't use `shape`, but `variant` to describe the possible colored tiles. In light of this, any reference to the local `shape` variable is updated to match.
+
+### Shiny Versions
+
+Shiny versions are included in the same snippet describing the different shapes portrayed by the tiles. Following a certain probability, at least an order of magnitude less than the existing odds, a flag is set up to describe a shiny tile.
+
+```lua
+local color = (math.random(8) * 2) - 1
+local variety = math.min(math.random(level), 8)
+local isShiny = math.random(20) == 2
+local tile = Tile(x, y, self.offsetX, self.offsetY, color, variety, isShiny)
+```
+
+The flag is then included in the `init` function.
+
+```lua
+function Tile:init(gridX, gridY, offsetX, offsetY, color, variety, shiny)
+  self.gridX = gridX
+  self.gridY = gridY
+  self.x = (gridX - 1) * 32 + offsetX
+  self.y = (gridY - 1) * 32 + offsetY
+  self.shiny = shiny -- new
+
+  self.color = color
+  self.variety = variety
+
+  self.tiles = self:arrange()
+end
+```
+
+Visually, it is finally used in the `render()` function to overlay a translucent rectangle on top of the tile in question.
+
+```lua
+function Tile:render()
+
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.draw(gTextures['spritesheet'], self.tiles[self.color][self.variety], self.x, self.y)
+
+
+  -- if shiny superimpose a translucent white overlay atop a slightly more opaque, but still white border
+  if self.shiny then
+    love.graphics.setColor(1, 1, 1, 0.1)
+    love.graphics.rectangle('fill', self.x, self.y, 32, 32, 8)
+
+    love.graphics.setLineWidth(4)
+    love.graphics.setColor(1, 1, 1, 0.3)
+    love.graphics.rectangle('line', self.x + 2, self.y + 2, 28, 28, 8)
+  end
+end
+```
+
+This covers displaying the shiny variant, with the mentioned rectangle and a slightly more opaque border (this is added to increase the contrast relative to normal tiles).
+
+In terms of gameplay, which is perhaps the trickies part of the feature, the flag needs to be however used to actually update the board. If a match is found and a shiny variant is present, the entire row in which the shiny variant finds itself should cleared.
+
+The idea, which is rather intelligent if I may add, is to have a function responsible for clearing the row. This function, instead of actually setting the values to `nil`, sets the color for every tile in the row to match.
+
+```lua
+function Board:clearRow(row, color)
+  -- loop through the board
+  for y = 1, 8 do
+    for x = 1, 8 do
+      -- for every tile in the row change the color to match the shiny variant
+      if y == row then
+        self.tiles[y][x].color = color
+      end
+    end
+  end
+end
+```
+
+This allows the `calculateMatches` to intervene, pick up the matches and clearing the board. All is necessary is the inclusion of the function in the play state, and logically following the removal of existing matches.
+
+```lua
+self.board:removeMatches(self.level)
+
+-- if shiny change the color of each tile in the row to match
+if tile.shiny then
+  self.board:clearRow(tile.gridY, tile.color)
+end
+```
+
+A better name would actually be `colorRow`. Indeed, the function is actually and indirectly clearing the row by applying the same hue and have the `calculateMatches` find the matches. In turn the matches are processed in the play state and removed through the `removeMatches` method.

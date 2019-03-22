@@ -117,6 +117,12 @@ function PlayState:update(dt)
           -- remove the matching tiles and update the board's appearance
           self.board:removeMatches(self.level)
 
+
+          -- if shiny change the color of each tile in the row to match
+          if tile.shiny then
+            self.board:colorRow(tile.gridY, tile.color)
+          end
+
           -- check if the score surpasses the goal
           if self.score >= self.goal then
             -- set isPlaying to false, to avoid interacting with the grid

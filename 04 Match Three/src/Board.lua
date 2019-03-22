@@ -141,7 +141,9 @@ function Board:generateBoard(level)
         math.random(1) gives always 1 for instance
       ]]
       local variety = math.min(math.random(level), 8)
-      table.insert(tiles[y], Tile(x, y, self.offsetX, self.offsetY, color, variety))
+      -- isShiny to determine the shiny variant
+      local isShiny = math.random(10) == 2
+      table.insert(tiles[y], Tile(x, y, self.offsetX, self.offsetY, color, variety, isShiny))
     end
   end
 
@@ -406,7 +408,8 @@ function Board:updateBoard(level)
         -- create a new tile, much alike when making up the board in the first place
         local color = (math.random(8) * 2) - 1
         local variety = math.min(math.random(level), 8)
-        local tile = Tile(x, y, self.offsetX, self.offsetY, color, variety)
+        local isShiny = math.random(20) == 2
+        local tile = Tile(x, y, self.offsetX, self.offsetY, color, variety, isShiny)
         -- position the tile to its rightful place, but starting 32px above, to give the impression of a falling tile
         tile.y = -32
         -- include the tile in the table of tile
@@ -418,6 +421,20 @@ function Board:updateBoard(level)
           })
         end)
 
+      end
+    end
+  end
+end
+
+-- function clearing the row in response of a shiny variant
+-- the row is cleared by setting the color of each tile to match, allowing the calculateMatches function to intervene
+function Board:colorRow(row, color)
+  -- loop through the board
+  for y = 1, 8 do
+    for x = 1, 8 do
+      -- for every tile in the row change the color to match the shiny variant
+      if y == row then
+        self.tiles[y][x].color = color
       end
     end
   end
