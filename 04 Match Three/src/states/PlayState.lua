@@ -99,12 +99,13 @@ function PlayState:update(dt)
     -- if matches is not an empty table add 50 points to the score for each tile being matched
     if matches then
       gSounds['match']:play()
-      -- add five seconds per match
-      self.time = self.time + #matches * 5
       -- loop through the table of matches
       for k, match in pairs(matches) do
         -- loop through the tiles of each match
         for j, tile in pairs(match) do
+          -- add a second per match
+          self.time = self.time + 1
+
           -- add fifty points per tile
           self.score = self.score + 50
 

@@ -40,18 +40,41 @@ Small update: I decided to label the folders describing the founding concept wit
 
 [Assignments from the lecturer](https://cs50.harvard.edu/games/2019/spring/assignments/3/):
 
-- [ ] _Implement time addition on matches, such that scoring a match extends the timer by 1 second per tile in a match_
+- [x] _Implement time addition on matches, such that scoring a match extends the timer by 1 second per tile in a match_
 
 - [ ] _Ensure Level 1 starts just with simple flat blocks (the first of each color in the sprite sheet), with later levels generating the blocks with patterns on them (like the triangle, cross, etc.)_
-    
-    - [ ] _These should be worth more points, at your discretion_
-    
+
+  - [ ] _These should be worth more points, at your discretion_
+
 - [ ] _Create random shiny versions of blocks that will destroy an entire row on match, granting points for each block in the row_
 
 - [ ] _Only allow swapping when it results in a match_
 
-    - [ ] _If there are no matches available to perform, reset the board_
-    
+  - [ ] _If there are no matches available to perform, reset the board_
+
 - [ ] _(Optional) Implement matching using the mouse_
 
-Luckily, the page referenced above describes the assignments in more detail. The fourth request seems to be the most challenging. 
+### Time Addition
+
+This point was already covered, but the code is nevertheless updated to suit the assignment specification. A match results in one second added for each tile.
+
+In `PlayState.lua`.
+
+```lua
+if matches then
+  gSounds['match']:play()
+  -- loop through the table of matches
+  for k, match in pairs(matches) do
+    -- loop through the tiles of each match
+    for j, tile in pairs(match) do
+      -- add a second per match
+      self.time = self.time + 1
+
+      -- add fifty points per tile
+      self.score = self.score + 50
+
+      -- continue adding new tiles
+    end
+  end
+end
+```
