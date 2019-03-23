@@ -48,9 +48,7 @@ Small update: I decided to label the folders describing the founding concept wit
 
 - [x] _Create random shiny versions of blocks that will destroy an entire row on match, granting points for each block in the row_
 
-- [ ] _Only allow swapping when it results in a match_
-
-  - [ ] _If there are no matches available to perform, reset the board_
+- [x] _Only allow swapping when it results in a match_
 
 - [ ] _(Optional) Implement matching using the mouse_
 
@@ -264,3 +262,83 @@ Fixing the issue is a simple matter of modifying the capping value, to 6.
 ```lua
 local variety = math.min(math.random(level), 6)
 ```
+
+### Swapping Matches
+
+This was anticipated as the trickiest part of the assignment. While the feature is rather challenging, the game is however equipped with a function which is bound to make things easier. Indeed the `calculateMatches()` function is made to return either a table of matches or `false`, if not match at all is found.
+
+To allow for a swap only when a match is found, the return value can be used in the logic of the `Board` class, and specifically in its `update(dt)` function. Here's the idea:
+
+- swap the tiles in the board;
+
+  ```lua
+  -- swap the tiles in the board
+  self.tiles[tile1.gridY][tile1.gridX] = tile2
+  self.tiles[tile2.gridY][tile2.gridX] = tempTile
+  ```
+
+- immediately check if the board has matches, through the `calculateMatches` function;
+
+  ```lua
+  if not self:calculateMatches() then
+  end
+  ```
+
+- if the function returns `false`, swap the tiles back. This change occurs in the table of tiles only, and visually it looks as if nothing has happened. As the swap never occured.
+
+  ```lua
+  if not self:calculateMatches() then
+    tempTile = self.tiles[tile1.gridY][tile1.gridX]
+    self.tiles[tile1.gridY][tile1.gridX] = self.tiles[tile2.gridY][tile2.gridX]
+    self.tiles[tile2.gridY][tile2.gridX] = tempTile
+  else
+    -- match
+  end
+  ```
+
+- if the function returns something different than `false` (and it does return a table of matches if such matches are found), proceed to visually swap the tiles. Retain the swapped structure in the board.
+
+  ```lua
+  if not self:calculateMatches() then
+    -- no match
+  else
+    -- match, proceed to visually update the UI
+    -- swap the tiles on the screen moving to the coordinate each tile needs to retain after the swap
+    Timer.tween(0.1, {
+      -- using the temporary values for the tile being modified
+      [tile2] = {x = tile1.x, y = tile1.y},
+      [tile1] = {x = tempX, y = tempY}
+    })
+    -- immediately updat gridX and gridY, as the two don't reflect on the UI
+    tile2.gridX = tile1.gridX
+    tile2.gridY = tile1.gridY
+    tile1.gridX = tempgridX
+    tile1.gridY = tempgridY
+  end
+  ```
+
+Small update: when the swap is implemented, and only then, the selected tile is modified, to refer to the destination tile.
+
+```lua
+if not self:calculateMatches() then
+  -- no match
+else
+  -- match, proceed to visually update the UI
+  -- swap the tiles on the screen moving to the coordinate each tile needs to retain after the swap
+  Timer.tween(0.1, {
+    -- using the temporary values for the tile being modified
+    [tile2] = {x = tile1.x, y = tile1.y},
+    [tile1] = {x = tempX, y = tempY}
+  })
+  -- immediately updat gridX and gridY, as the two don't reflect on the UI
+  tile2.gridX = tile1.gridX
+  tile2.gridY = tile1.gridY
+  tile1.gridX = tempgridX
+  tile1.gridY = tempgridY
+
+  -- change the selected tile to have the outline placed on the swapped, destination tile
+  self.selectedTile = tile2
+end
+```
+
+Having this line applied in both instances would result in a rather unintuitive visual when a match is not implemented and the selected tile changes.

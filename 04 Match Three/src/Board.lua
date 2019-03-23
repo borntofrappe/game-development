@@ -71,21 +71,29 @@ function Board:update(dt)
         self.tiles[tile1.gridY][tile1.gridX] = tile2
         self.tiles[tile2.gridY][tile2.gridX] = tempTile
 
-        -- swap the tiles on the screen moving to the coordinate each tile needs to retain after the swap
-        Timer.tween(0.1, {
-          -- using the temporary values for the tile being modified
-          [tile2] = {x = tile1.x, y = tile1.y},
-          [tile1] = {x = tempX, y = tempY}
-        })
-        -- immediately updat gridX and gridY, as the two don't reflect on the UI
-        tile2.gridX = tile1.gridX
-        tile2.gridY = tile1.gridY
-        tile1.gridX = tempgridX
-        tile1.gridY = tempgridY
+        -- check if the new table results in matches
+        if not self:calculateMatches() then
+          -- no matches, swap the tiles back
+          tempTile = self.tiles[tile1.gridY][tile1.gridX]
+          self.tiles[tile1.gridY][tile1.gridX] = self.tiles[tile2.gridY][tile2.gridX]
+          self.tiles[tile2.gridY][tile2.gridX] = tempTile
+        else
+          -- match, proceed to visually update the UI
+          -- swap the tiles on the screen moving to the coordinate each tile needs to retain after the swap
+          Timer.tween(0.1, {
+            -- using the temporary values for the tile being modified
+            [tile2] = {x = tile1.x, y = tile1.y},
+            [tile1] = {x = tempX, y = tempY}
+          })
+          -- immediately updat gridX and gridY, as the two don't reflect on the UI
+          tile2.gridX = tile1.gridX
+          tile2.gridY = tile1.gridY
+          tile1.gridX = tempgridX
+          tile1.gridY = tempgridY
 
-        -- change the selected tile to have the outline placed on the swapped, destination tile
-        self.selectedTile = tile2
-
+          -- change the selected tile to have the outline placed on the swapped, destination tile
+          self.selectedTile = tile2
+        end
 
       end
 
