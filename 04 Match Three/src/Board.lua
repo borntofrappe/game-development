@@ -140,7 +140,7 @@ function Board:generateBoard(level)
         math.random(positive integer) gives a random integer up to the value in parens
         math.random(1) gives always 1 for instance
       ]]
-      local variety = math.min(math.random(level), 8)
+      local variety = math.min(math.random(level), 6)
       -- isShiny to determine the shiny variant
       local isShiny = math.random(10) == 2
       table.insert(tiles[y], Tile(x, y, self.offsetX, self.offsetY, color, variety, isShiny))
@@ -407,7 +407,7 @@ function Board:updateBoard(level)
       if tile == nil then
         -- create a new tile, much alike when making up the board in the first place
         local color = (math.random(8) * 2) - 1
-        local variety = math.min(math.random(level), 8)
+        local variety = math.min(math.random(level), 6)
         local isShiny = math.random(20) == 2
         local tile = Tile(x, y, self.offsetX, self.offsetY, color, variety, isShiny)
         -- position the tile to its rightful place, but starting 32px above, to give the impression of a falling tile

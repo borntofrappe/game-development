@@ -250,3 +250,17 @@ end
 ```
 
 A better name would actually be `colorRow`. Indeed, the function is actually and indirectly clearing the row by applying the same hue and have the `calculateMatches` find the matches. In turn the matches are processed in the play state and removed through the `removeMatches` method.
+
+### Variants Update
+
+There are 6 variants, and not 8 in the spritesheet. This means the following line of code has the ability to break the game after level 6.
+
+```lua
+local variety = math.min(math.random(level), 8)
+```
+
+Fixing the issue is a simple matter of modifying the capping value, to 6.
+
+```lua
+local variety = math.min(math.random(level), 6)
+```
