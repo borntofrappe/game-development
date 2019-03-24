@@ -342,3 +342,60 @@ end
 ```
 
 Having this line applied in both instances would result in a rather unintuitive visual when a match is not implemented and the selected tile changes.
+
+### Drag and Swap
+
+To implement the last part of the assignment for Match 3, it is necessary to register player input through the mouse cursor. With Flappy bird the cursor was already considered to have the critter jump upwards, as an alternative to the space bar. With match 3 the interaction is a tad more complex, but relies on the same data.
+
+#### Mouse Pressed Refresher
+
+In Flappy Bird the cursor was considered as follows:
+
+- set up a table in which to keep track of the mouse's coordinates.
+
+  ```lua
+  function love.load()
+    love.mouse.coor = {
+      ['x'] = 0,
+      ['y'] = 0
+    }
+  end
+  ```
+
+- with the native function `love.mousepressed(x, y)`, update the coordinates of the table. Notice how the coordinates are included through the `push:toGame()` function, available from the push library.
+
+  ```lua
+  function love.mousepressed(x, y)
+    love.mouse.coor['x'], love.mouse.coor['y'] = push:toGame(x, y)
+  end
+  ```
+
+  The function is equipped to handle and return two values for the horizontal and vertical coordinate of the cursor, respectively.
+
+- in the `Bird` class, and given an overlap between the cursor and the bird, animate it to go upwards.
+
+  ```lua
+    -- check if the coordinates distilled in love.mouse.coor fall within the horizontal and vertical space occupied by the bird
+    -- add a bit of leeway to make the press fall in a general area surrounding the bird
+    if love.mouse.coor['x'] > self.x - 5 and love.mouse.coor['x'] < self.x + self.width + 5 then
+      if love.mouse.coor['y'] > self.y - 5 and love.mouse.coor['y'] < self.y + self.height + 5 then
+        -- play the matching audio
+        sounds['jump']:play()
+        self.dy = -7
+      end
+    end
+  ```
+
+This last point has very little to do with the drag feature, but completes the logic from tracking the cursor to using its coordinates. It also implements a collision test which needs to be reiterated for the tiles in the board.
+
+#### Drag and Swap
+
+With the explanation inclluded in the refresher, selecting a tile is a matter of keeping track of the cursor coordinates and checking an overlap between these values and the coordinates of the tile itself. However, the feature foreseen by the game is a tad more complex. Beside selecting a tile, it is indeed necessary to consider the mouse coordinates _continuously_. While the cursor is down on the screen, the coordinates of the cursor should be updated to eventually trace an overlap with _another_ tile and swap the two if they prove to be adjacent. Adjacent and resulting in a match, as per the assignment already completed, but that is a matter of gameplay which will come relevant later.
+
+To complete this feat, a few more functions are needed. Props to [this insightful tutorial](http://ebens.me/post/mouse-dragging-in-love2d/) for providing a rather clear guidance.
+
+- `mouse.getX()` and `mouse.getY()` allow to retrieve the mouse coordinates outside of a `love.mousepressed()` handler;
+
+- `love.mousepressed()` allows to retrieve an additional value besided the coordinates of the mouse: the part of the mouse being clicked. Through the code `1` it is possible to identify the primary mouse button, as per [the docs](https://love2d.org/wiki/love.mousepressed).
+
+With these new and revised functions I decided to create a separate project in which to study the drag and swap feature. Think of this as another _Prep_ folder, instrumental for the completion of the game.
