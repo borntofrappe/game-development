@@ -50,7 +50,7 @@ Small update: I decided to label the folders describing the founding concept wit
 
 - [x] _Only allow swapping when it results in a match_
 
-- [ ] _(Optional) Implement matching using the mouse_
+- [x] _(Optional) Implement matching using the mouse_
 
 ### Time Addition
 
