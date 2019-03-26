@@ -388,7 +388,7 @@ In Flappy Bird the cursor was considered as follows:
 
 This last point has very little to do with the drag feature, but completes the logic from tracking the cursor to using its coordinates. It also implements a collision test which needs to be reiterated for the tiles in the board.
 
-#### Drag and Swap
+#### Feature Study
 
 With the explanation inclluded in the refresher, selecting a tile is a matter of keeping track of the cursor coordinates and checking an overlap between these values and the coordinates of the tile itself. However, the feature foreseen by the game is a tad more complex. Beside selecting a tile, it is indeed necessary to consider the mouse coordinates _continuously_. While the cursor is down on the screen, the coordinates of the cursor should be updated to eventually trace an overlap with _another_ tile and swap the two if they prove to be adjacent. Adjacent and resulting in a match, as per the assignment already completed, but that is a matter of gameplay which will come relevant later.
 
@@ -399,3 +399,97 @@ To complete this feat, a few more functions are needed. Props to [this insightfu
 - `love.mousepressed()` allows to retrieve an additional value besided the coordinates of the mouse: the part of the mouse being clicked. Through the code `1` it is possible to identify the primary mouse button, as per [the docs](https://love2d.org/wiki/love.mousepressed).
 
 With these new and revised functions I decided to create a separate project in which to study the drag and swap feature. Think of this as another _Prep_ folder, instrumental for the completion of the game.
+
+Based on the efforts explained in the _prep_ folder, here's how the drag and swap feature is implemented in the game, married to the existing logic.
+
+#### main.lua
+
+The table referring to the cursor is added in `main.lua`, and updated through the mouse functions in the `update()` function of the same file.
+
+```lua
+function love.load()
+  -- previous globals
+
+  -- table describing the coordinates and variables behind the cursor and its drag and swap feature
+  cursor = {
+    x = 0,
+    y = 0,
+    isDown = false
+  }
+end
+```
+
+When the cursor is pressed, the boolean is switched to true.
+
+```lua
+function love.mousepressed(x, y, button)
+  -- ! switch to true if the mouse is pressed through the primary button
+  if button == 1 then
+    cursor.isDown = true
+  end
+end
+```
+
+When it is released, it is switched back to false.
+
+```lua
+function love.mousereleased(x, y)
+  cursor.isDown = false
+end
+
+```
+
+Finally, and in the actual `update(dt)` function, the `x` and `y` values of the table are actually updated, to match the coordinates of the mouse.
+
+```lua
+function love.update(dt)
+  if cursor.isDown then
+    cursor.x, cursor.y = push:toGame(love.mouse.getX(), love.mouse.getY())
+  end
+end
+```
+
+Notice the use of the function from the `push` library, to retrieve the coordinates in the virtualization.
+
+The game is now equipped to consider player input in the form of mouse coordinates. To actually follow through with the feature though, `PlayState.lua`, `Tile.lua` need to be updated.
+
+#### Tile.lua
+
+The file responsible for the `Tile` class is updated to incorporate a new value, in `self.isPressed`.
+
+Initialized to false, it is switched to true when the coordinates of the cursor overlap with the tiles.
+
+To detect the overlap, the class is equipped with an `update()` function of its own. Just remember to have the instances of the class call the update function in `Board`, or more generally `PlayState`.
+
+```lua
+function Tile:update(dt)
+  -- if not already selected
+  if not self.isPressed then
+    -- detect overlap with the cursor
+    if cursor.x > self.x and cursor.x < self.x + 32 then
+      if cursor.y > self.y and cursor.y < self.y + 32 then
+      -- switch to true
+        self.isPressed = true
+      end -- cursor.y end
+    end -- cursor.x end
+  end -- not isPressed end
+end
+```
+
+In the `Tile` class this boolean is not used, but it is relevant in the `Board` class, the one fabricating the tiles.
+
+#### Board.lua
+
+In the `Board` class, the feature is finally implemented leveraging the variables already referring to the selected and highlighted tiles.
+
+Here's the rundown:
+
+- when the cursor is down, update the tiles.
+
+- in addition to updating the tiles, consider the `isPressed` boolean on the tiles.
+
+- if a tile has such a boolean set to `true` and there's not already an highlighted tile, set the tile in question to be highlighted **and** selected. In addition, set `highlighted` to `true` tpo avoid repeating the assignment.
+
+- if a tile is highlighted and the pressed tile is now different from the selected one (or the highlighted, as the two match), proceed to swap the tiles (the one newly pressed and the one previously selected).
+
+The code does work, even if it is rather convoluted. The amount of code which is duplicated in the `Board` class is also and a little embarassing. Starting afresh, there might be a more performant way to have the swap between selected and highlighted tile implemented when pressing enter **and** when using a cursor. Given how this is however an optional part of the assignment, I'd say it has received more than its fair of attention.
