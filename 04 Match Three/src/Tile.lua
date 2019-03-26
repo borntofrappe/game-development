@@ -11,6 +11,8 @@ Tile = Class{}
   - shiny, dictating the peculiar tile highlighted through a small glow
 
   - tiles, in which to store the table of quads sorted per color and variety
+
+  - isPressed, for the drag and drop feature
 ]]
 
 function Tile:init(gridX, gridY, offsetX, offsetY, color, variety, shiny)
@@ -24,6 +26,22 @@ function Tile:init(gridX, gridY, offsetX, offsetY, color, variety, shiny)
   self.variety = variety
 
   self.tiles = self:arrange()
+
+  self.isPressed = false
+end
+
+-- in the update function check for an overlap with the cursor
+function Tile:update(dt)
+  -- if not already selected
+  if not self.isPressed then
+    -- detect overlap with the cursor
+    if cursor.x > self.x and cursor.x < self.x + 32 then
+      if cursor.y > self.y and cursor.y < self.y + 32 then
+      -- switch to true
+        self.isPressed = true
+      end -- cursor.y end
+    end -- cursor.x end
+  end -- not isPressed end
 end
 
 -- in the :render function render the tiles according to the initialized values

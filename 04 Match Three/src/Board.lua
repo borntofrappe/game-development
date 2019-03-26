@@ -27,6 +27,107 @@ end
 
 -- in the :update(dt) function consider the arrow and enter keys, to move the selected tile, highlight the selected tile and swap the highlighted tile
 function Board:update(dt)
+  -- DRAG AND SWAP FEATURE
+  -- if cursor is down
+  if cursor.isDown then
+    -- update the tiles
+    for y = 1, #self.tiles do
+      -- 8 columns
+      for x = 1, #self.tiles[y] do
+        -- store a reference to the tile as to save a few keystrokes
+        local tile = self.tiles[y][x]
+        -- update the tile
+        tile:update(dt)
+
+        -- if a tile has the boolean isPressed set to true
+        if tile.isPressed then
+          -- if a tile is not already highlighted, highlight it
+          if not self.highlighted then
+            -- highlight it
+            self.highlighted = true
+            -- assign also the pressed tile to the highlighted and selected tiles
+            self.highlightedTile = tile
+            self.selectedTile = tile
+          end
+
+          -- if a tile is highlighted AND the pressed and selected tiles differ (which occurs as the two are made to differ)
+          if self.highlighted and tile ~= self.selectedTile then
+            -- set isPressed to false on the tile selected previously
+            self.selectedTile.isPressed = false
+
+            -- assign the pressed tile to the selected one
+            self.selectedTile = tile
+
+            -- implement the swap
+            -- between selectedTile (updated) and highlightedTile (previous one)
+            local tile1 = self.selectedTile
+            local tile2 = self.highlightedTile
+
+            -- proceed to swap only when the selected and highlighted tiles prove to be adjacent
+            if math.abs((tile1.gridX - tile2.gridX) + (tile1.gridY - tile2.gridY)) == 1 then
+
+              -- create temporary variables in which to store one side's coordinates
+              local tempX, tempY = tile2.x, tile2.y
+              local tempgridX, tempgridY = tile2.gridX, tile2.gridY
+              -- create a temporary variable in which to store one side's tile
+              local tempTile = tile1
+
+              -- swap the tiles in the board
+              self.tiles[tile1.gridY][tile1.gridX] = tile2
+              self.tiles[tile2.gridY][tile2.gridX] = tempTile
+
+              -- check if the new table results in matches
+              if not self:calculateMatches() then
+                -- no matches, swap the tiles back
+                tempTile = self.tiles[tile1.gridY][tile1.gridX]
+                self.tiles[tile1.gridY][tile1.gridX] = self.tiles[tile2.gridY][tile2.gridX]
+                self.tiles[tile2.gridY][tile2.gridX] = tempTile
+              else
+                -- match, proceed to visually update the UI
+                -- swap the tiles on the screen moving to the coordinate each tile needs to retain after the swap
+                Timer.tween(0.1, {
+                  -- using the temporary values for the tile being modified
+                  [tile2] = {x = tile1.x, y = tile1.y},
+                  [tile1] = {x = tempX, y = tempY}
+                })
+                -- immediately updat gridX and gridY, as the two don't reflect on the UI
+                tile2.gridX = tile1.gridX
+                tile2.gridY = tile1.gridY
+                tile1.gridX = tempgridX
+                tile1.gridY = tempgridY
+
+                -- remove the isPressed boolean (again to have only one tile pressed at a time)
+                self.selectedTile.isPressed = false
+                -- change the selected tile to have the outline placed on the swapped, destination tile
+                self.selectedTile = tile2
+
+              end -- calculating mathces end
+            end -- adjacent tiles end
+
+            -- calculate matches
+            self:calculateMatches()
+
+
+            -- set highlighted to false, to have the process start with a new pressed tile
+            self.highlighted = false
+
+          end -- different tiles
+        end -- isPressed end
+      end -- x loop
+    end -- y loop
+  else
+
+    -- set the boolean depicting the pressed tiles back to false
+    for y = 1, #self.tiles do
+      for x = 1, #self.tiles[y] do
+        self.tiles[y][x].isPressed = false
+      end
+    end -- grid loop
+
+  end -- isDown end
+
+
+
   -- listen for a key press on the arrow keys, at which point update the reference of the selectedTile to the adjacent tile
   -- ! update the position in the [1-8] range, clamping the values to 1 and 8 respectively
   if love.keyboard.wasPressed('up') then
@@ -139,7 +240,7 @@ function Board:generateBoard(level)
     for x = 1, 8 do
       -- in the table created for the row include instances of the Tile class
       -- color included from the left section of the texture (1st, 3rd, 5h set of tiles)
-      local color = (math.random(8) * 2) - 1
+      local color = (math.random(7) * 2) - 1
       --[[
         variety included on the basis of the level and a bit of randomness
         starting with variety 1 for level 1 and capping the variety at 8 for later levels
@@ -414,7 +515,7 @@ function Board:updateBoard(level)
       -- if nil, it represents a space
       if tile == nil then
         -- create a new tile, much alike when making up the board in the first place
-        local color = (math.random(8) * 2) - 1
+        local color = (math.random(7) * 2) - 1
         local variety = math.min(math.random(level), 6)
         local isShiny = math.random(20) == 2
         local tile = Tile(x, y, self.offsetX, self.offsetY, color, variety, isShiny)

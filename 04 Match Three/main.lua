@@ -64,6 +64,13 @@ function love.load()
 
   -- table recording the different keys being pressed
   love.keyboard.keyPressed = {}
+
+  -- table describing the coordinates and variables behind the cursor and its drag and swap feature
+  cursor = {
+    x = 0,
+    y = 0,
+    isDown = false
+  }
 end
 
 -- RESIZE
@@ -84,6 +91,21 @@ function love.keyboard.wasPressed(key)
   return love.keyboard.keyPressed[key]
 end
 
+-- MOUSEPRESSED
+-- in the mousepressed function switch the isDown flag to true
+function love.mousepressed(x, y, button)
+  -- ! switch to true if the mouse is pressed through the primary button
+  if button == 1 then
+    cursor.isDown = true
+  end
+end
+
+-- MOUSERELEASED
+-- switch the isDown flag back to false
+function love.mousereleased(x, y)
+  cursor.isDown = false
+end
+
 -- UPDATE
 function love.update(dt)
   -- play the soundtrack in a loop
@@ -98,6 +120,12 @@ function love.update(dt)
 
   -- reset keyPressed to an empty table
   love.keyboard.keyPressed = {}
+
+  -- while the cursor is down update the x and y coordinates
+  -- ! use the values through the push library and its :toGame(x, y) method
+  if cursor.isDown then
+    cursor.x, cursor.y = push:toGame(love.mouse.getX(), love.mouse.getY())
+  end
 end
 
 -- DRAW
