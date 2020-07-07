@@ -1,19 +1,23 @@
 # Game Development
 
-## Purpose
+The goal of this repo starts out simple: follow [this introduction course](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) to learn a bit about game development.
 
-The purpose of this repo starts out simple: follow [this introduction course](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) to learn a bit about game development. 
+## Reasons
 
-## Why
+To learn:
 
-Reasons. Kidding aside and at the top of my head:
+- game development
 
-- to practice with a different coding environment. A different language in [**Lua**](https://www.lua.org/), a different engine in [**Love2D**](https://love2d.org/).
+- the programming language [**Lua**](https://www.lua.org/)
 
-- to learn a new skill;
+- the game engine [**Love2D**](https://love2d.org/)
 
-- to get acquainted with approaches and methodologies I can possibly incorporate in my web development 'master branch', so to speak;
+To entertain a productive endeavor, and who knows, maybe to hit publish on a finished game.
 
-- yes, to also entertain.
+## Resources
 
-I plan to document the progress heavily, incorporating any resource beside the cited playlist.
+- [GD50 playlist](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz)
+
+- [Lua](https://www.lua.org) and [its reference manual](https://www.lua.org/manual/5.4/)
+
+- [Love2D](https://love2d.org/) and [its wiki page](https://love2d.org/wiki/Main_Page)
