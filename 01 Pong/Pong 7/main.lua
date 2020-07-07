@@ -27,9 +27,6 @@ function love.load()
   -- filter to avoid blur
   love.graphics.setDefaultFilter('nearest', 'nearest')
 
-  -- set the title on the window
-  love.window.setTitle('Pong')
-
   -- based on the current os time, set the seed for the random number generator, for math.random
   math.randomseed(os.time())
 
@@ -110,50 +107,6 @@ function love.update(dt)
     player2.dy = PADDLE_SPEED
   else
     player2.dy = 0
-  end
-
-  --[[
-    if the game is ongoing,
-    1. check if the ball collides with either of the paddles, and change the direction accordingly
-    1. check the vertical coordinate of the ball, to have it bounce if it hits the top or bottom edge of the screen
-  ]]
-
-  if gameState == 'playing' then
-    -- if colliding flip the horizontal direction and update the horizontal movement with a new random angle (but always the same trajectory)
-    -- ! avoid overlaps by immediately seeting the horizontal coordinates pas the paddles
-    if ball:collides(player1) then
-      ball.dx = -ball.dx * 1.03
-      ball.x = player1.x + player1.width
-
-      if ball.dy < 0 then
-        ball.dy = -math.random(10, 150)
-      else
-        ball.dy = math.random(10, 150)
-      end
-
-    elseif ball:collides(player2) then
-      ball.dx = -ball.dx * 1.03
-      ball.x = player2.x - ball.width
-
-      if ball.dy < 0 then
-        ball.dy = -math.random(10, 150)
-      else
-        ball.dy = math.random(10, 150)
-      end
-    end -- end of if .. else if statement
-
-
-    -- when reaching the bottom edge immediately set the ball back to 0 and set the direction as opposite
-    if ball.y <= 0 then
-      ball.y = 0
-      ball.dy = -ball.dy
-    end
-
-    -- when reaching the top edge, immediately set the ball back to the height of the window minus the size of the ball and again set the direction as opposite
-    if ball.y >= VIRTUAL_HEIGHT - ball.width then
-      ball.y = VIRTUAL_HEIGHT - ball.width
-      ball.dy = -ball.dy
-    end
   end
 
 

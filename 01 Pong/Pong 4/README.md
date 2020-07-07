@@ -1,125 +1,113 @@
-# Pong 4
+# Pong 3
 
-Index:
+## Code
 
-- [Randomness](#randomness)
+This update sets out to make the game interactive, in so far as it allows to manouver the paddles vertically, and through the use of the keyboard. This using the `w` and `s` keys as well as the `up` and `down` keys, for the left and right paddle respectively.
 
-- [Clamping](#clamping)
+From the code:
 
-- [Game State](#game-state)
+- the application shows two strings of text, adding a new string for the score. This uses a larger font, and Love2D apparently requires a new declaration. Every font you need in the project needs to go through the following procedure:
 
-## Randomness
+  - create an instance of the font, and the font at a specified size;
 
-To avoid a predictable behavior, the project introduces randomness in the form or random integers and through the concept of seeds.
+    ```lua
+    newFont = love.graphics.newFont('path/name.ttf', 8)
+    otherFont = love.graphics.newFont('path/name.ttf', 32)
+    ```
 
-`math.randomseed()` provides a seed which is 'fed' to `math.random` functions to create random values. It accepts as argument a value which generates a seed, which is set to be the time currently being registered by the OS. This is an every changing value, costantly being updated on the basis of the internal clock. This allows to base the seed on a value which rarely if ever gets repeated.
+  - set the font **before** you need to actually use it. In the project for instance, the fonts are set before the `print` functions actually using them.
 
-Based on this random seed, `math.random` provides a random value. This function accept a variable number of arguments, as specified in the docs:
+    ```lua
+    love.graphics.setFont(newFont)
+    love.graphics.printf()
 
-- with no argument, it provides a random value in the [0-1] range;
+    love.graphics.setFont(otherFont)
+    love.graphics.printf()
+    ```
 
-- with one argument, it provides a random value in the [0, max] range, where max is exactly the processed argument;
+  In the project, one of the fonts is also and immediately set in the load function. I assume this is to give a default value for the entire application.
 
-- with two arguments, it provides a random value in the [min, max] range, where the two arguments make up the minimum and maximum.
+  What happens if you set a default value and change it only when needed? Well, apparently once the text is changed, it changes for the entire application. Just try and remove the first `setFont` method and `otherFont` will be applied to the first strin as well.
 
-In the actual project, the code makes use of `math.random` with one and two values. In the first instance, it accompanies the expression with a _ternary operator_, to assign a variable a value between to possibilities.
+  This is more of a personal note, but it fits with the subject at hand. The fonts are declared in the `load()` function, and they are later accessed in the `draw()` function. There doesn't seem to be any conflict with the scope of the variables. I wonder if this is more about the Love2D framework or the lua programming language.
 
-The horizontal direction is indeed determined to be either 100 or -100, based on randomness (the condition evaluates to true half of the times).
+  That aside, the score is now shown through two string values, which is reasonable as these need to show the score of the individual players. The `printf` function however doesn't use hard-coded text, but the value held a variable, which brings me to the next point.
 
-```lua
-ballDX = math.random(2) == 1 and 100 or -100
-```
+- the game begins to store certain values in variables, like the constant `PADDLE_SPEED`, the individual score values `player1Score`, `player2Score`, as well as the vertical position of the paddles, in `player1Y` an `player2Y`. These help structure the code and most importantly allow the program to be easily updated.
 
-The syntax above might look a bit more contrived than a JavaScript ternary operator.
+  I am still uncertain with regards to the scope though. The constant is declared outside of any function while the others are in the `load` function. I assume this is because the variables referring to the players are tihgtly connected to the paddles, and it makes sense to see them together.
 
-```js
-ballDX = Math.random() > 5 ? 100 : -100;
-```
+  In any case, variables are declared like so:
 
-But I guess it's just a matter of getting used to it.
+  ```lua
+  variableName = value
+  ```
 
-The ternary operator in lua can be summed up as follows:
+  They can be accessed directly using their name, and they are later updated like so:
 
-```lua
-variable = condition and ifTrue or ifFalse
-```
+  ```lua
+  variableName = newValue
+  ```
 
-The `and` and `or` keywords allow to specify the expression to be evaluated if the condition is true or false respectively.
+- to include the value of the variables as text, the project makes use of a `print` function, and includes the variables themselves through the `tostring` method.
 
-That's how the project used `math.random` with one argument. With two arguments, the project creates instead a random value in the [-50,50] range:
+  ```lua
+  love.graphics.print(
+    tostring(player1Score),
+    VIRTUAL_WIDTH * 3 / 8,
+    VIRTUAL_HEIGHT / 4
+  )
+  ```
 
-```lua
-ballDY = math.random(-50, 50)
-```
+  This function doesn't seem to accept the same number of arguments as `printf`, which means that more research on alignment is warranted.
 
-This for the vertical direction.
+  Immediately, I can safely use `printf` instead, and this works perfectly fine with the new variables and the desired alignment.
 
-Direction would actually be a misnomer on my part though. It is actually the value which is latter added to the coordinate of the ball to make it move across the screen. In this sense it is closer to the horizontal and vertical speed.
+  ```lua
+  love.graphics.printf(
+      tostring(player1Score),
+      0,
+      VIRTUAL_HEIGHT / 4,
+      VIRTUAL_WIDTH / 2,
+      'center'
+    )
 
-## Clamping
+  love.graphics.printf(
+    tostring(player2Score),
+    VIRTUAL_WIDTH / 2,
+    VIRTUAL_HEIGHT / 4,
+    VIRTUAL_WIDTH / 2,
+    'center'
+  )
+  ```
 
-An issue with the previous update concerned the movement of the paddles once said paddles would reach the upper and lower edge of the screen. Without additional consideration, the paddles can and indeed go past the boundaries of the window, which is something the game should not allow.
+  Just need a bit of adjustment as it relates to the second and fourth arguments (from where, centered with respect to what).
 
-To fix this problem, the code makes use of the `math.min` and `math.max` function. It is actually a clever use, so spelling it out ought to make it more memorable.
+- to move the paddles, the code leverages a third fundamental function of Love2D, in `love.update`. This was introduced earlier, but never actually implemented. It is a function running every frame, and a function which can be used to update the game as per the game loop. `load` sets up the scenes, `draw` paints the canvas, `update` changes the settings.
 
-Simply put, instead of checking the position of the paddles and avoiding any movement if it reaches the boundaries, the coordinate of the paddles is updated to be that specified by the movement only if that coordinate is within the prescribed limits. Otherwise, the `math` function clamps the coordinate to be 0 or, for the lower edge, the height of the window minus the height of the paddle (this subtraction to guarantee that the paddle is always and completely above the fold).
+  `love.update` can leverage the passage of time through an argument labeled `dt`. This refers to delta time and is likely how much time has passed in each frame. To maintain uniform speed in the paddles' movememnt, this value is used in conjunction with the constant `PADDLE_SPEED`. A variable which refers to the space traveled per frame (like meter per second, but here pixel per frame per second).
 
-```lua
--- when pressing w (or up for the second player) calmp the vertical coordinate to 0
-player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
-```
-
-## Game State
-
-As the game stands, the ball can be made moving without need for further input. It quickly moves outside of the window's scope and without detection of any collision, but those are issues for a later update.
-
-As it relatess to the concept of game state, the project introduces it with a variable determining whether the game is ongoing or not.
-
-This variable is initialied in the `load` function.
-
-```lua
-gameState = 'waiting'
-```
-
-It is then updated on the basis of a key event being registered on the _enter_ key.
-
-```lua
-if key == 'enter' then
-  if gameState == 'waiting' then
-    gameState = 'playing'
-  else
-    gameState = 'waiting'
+  ```lua
+  function love.update(dt)
+    -- following a key press on specific keys, update the vertical position of the paddles
+    if love.keyboard.isDown('w') then
+      player1Y = player1Y - PADDLE_SPEED * dt
+    end
   end
-end
-```
+  ```
 
-It is then and most importantly used in the `update` function, to move the ball only when the game state is set to the prescribed value of 'playing'.
+  Notice the use of the `love.keyboard.isDown` function, which allows to listen for a continuous key press and returns a boolean. Notice again the structure of the `if... then` conditional statement. Here, the code actually uses an `if... then` `elseif ...then` conditional, which is structured simply as follows:
 
-```lua
-if gameState == 'playing' then
-  ballX = ballX + ballDX * dt
-  ballY = ballY + ballDY * dt
-end
-```
+  ```lua
+  if condition then
+    -- do something
+  elseif anothercondition then
+    -- do something else
+  end
+  ```
 
-Such a variable can indeed regulate the state of the game, and allows to transition between different states. It also allows, with a simple conditional statement, to draw different elements on the screen, as in the `draw` function.
+  It is rather straightforward. Just remember to use the `end` keyword where appropriate. At the end of conditional statements and at the end of functions.
 
-```lua
-if gameState == 'waiting' then
-  love.graphics.printf(
-    'Press enter to play',
-    0,
-    VIRTUAL_HEIGHT / 16,
-    VIRTUAL_WIDTH,
-    'center'
-  )
-else
-  love.graphics.printf(
-    'Press enter to stop',
-    0,
-    VIRTUAL_HEIGHT / 16,
-    VIRTUAL_WIDTH,
-    'center'
-  )
-end
-```
+  Finally, notice how the position is updated according to the passage of time and the global variable describing the speed.
+
+  For the opposite direction and the other paddle, it is a simple matter of reacting to the selected key being pressed.

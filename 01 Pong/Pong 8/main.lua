@@ -49,6 +49,10 @@ function love.load()
     vsync = true
   })
 
+  -- initialize variables to keep track of the players scores
+  player1Score = 0
+  player2Score = 0
+
   -- create the paddles through the Paddle class
   player1 = Paddle(5, VIRTUAL_HEIGHT / 4, 5, 20)
   player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT * 3 / 4, 5, 20)
@@ -150,20 +154,7 @@ function love.update(dt)
       ball.y = VIRTUAL_HEIGHT - ball.width
       ball.dy = -ball.dy
     end
-
-    -- when passing past the edges of the window, update the score for the respective players
-    -- each time re-initialize the position of the ball and set the game state back to waiting
-    if ball.x <= 0 then
-      player2:score()
-      ball:reset()
-      gameState = 'waiting'
-    elseif ball.x >= VIRTUAL_WIDTH then
-      player1:score()
-      ball:reset()
-      gameState = 'waiting'
-    end
-
-  end -- end of 'playing' game state
+  end
 
 
   --[[ BALL ]] --
@@ -219,9 +210,8 @@ function love.draw()
   love.graphics.setFont(scoreFont)
 
   -- use printf instead of print, to align the scores in the two halves of the screen
-  -- use the score tracked in each paddle in the .points field
   love.graphics.printf(
-    tostring(player1.points),
+    tostring(player1Score),
     -- include the score(s) closer to the center of the screen than the outer edges
     VIRTUAL_WIDTH / 4,
     VIRTUAL_HEIGHT / 5,
@@ -230,7 +220,7 @@ function love.draw()
   )
 
   love.graphics.printf(
-    tostring(player2.points),
+    tostring(player2Score),
     VIRTUAL_WIDTH / 2,
     VIRTUAL_HEIGHT / 5,
     VIRTUAL_WIDTH / 4,

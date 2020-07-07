@@ -58,8 +58,6 @@ function love.load()
 
   -- create a variable to keep track of the serving player
   servingPlayer = 1
-  -- create a variable to keep track of the winning player
-  winningPlayer = 0
 
   -- initialize a variable to update the game's state
   gameState = 'waiting'
@@ -74,20 +72,17 @@ function love.keypressed(key)
     love.event.quit()
   --[[
     when pressing enter change the state according to the following logic
-    playing --> waiting
-    otherwise --> playing
-    ! if victory, set also the score back to 0
+    waiting or serving --> playing
+    otherwise --> waiting
   ]]
   elseif key == 'enter' or key == 'return' then
-    if gameState == 'playing' then
-      gameState = 'waiting'
-      ball:reset()
-    elseif gameState == 'victory' then
+    if gameState == 'waiting' or gameState == 'serving' then
       gameState = 'playing'
-      player1.points = 0
-      player2.points = 0
     else
-      gameState = 'playing'
+      gameState = 'waiting'
+      -- when stopping the game, set the ball back in the middle screen
+      -- through the ball:reset function
+      ball:reset()
     end -- end of if .. else statement
 
   end -- end of if .. elseif statement
@@ -153,36 +148,19 @@ function love.update(dt)
 
     -- scoring a point (ball goes past the left or right edge)
     -- when passing past the edges of the window, update the score for the respective player and re-center the ball to its original position
-    -- ! check if the scoring player has reached an arbitrary milestone, in which case set the game state to victory
-    -- otherwise update the state to serving
+    -- ! update the state to serving
     if ball.x < 0 then
       player2:score()
-      if player2.points >= 2 then
-        gameState = 'victory'
-        -- describe also the winning and serving player (for the following round)
-        winningPlayer = 2
-        servingPlayer = 1
-      else
-        ball:reset()
-        servingPlayer = 1
-        gameState = 'serving'
-      end
+      ball:reset()
+      servingPlayer = 1
+      gameState = 'serving'
     elseif ball.x > VIRTUAL_WIDTH then
       player1:score()
-      if player1.points >= 2 then
-        gameState = 'victory'
-        winningPlayer = 1
-        servingPlayer = 2
-      else
-        ball:reset()
-        servingPlayer = 2
-        gameState = 'serving'
-      end
+      ball:reset()
+      servingPlayer = 2
+      gameState = 'serving'
     end
 
-  -- if winning reset the position of the ball
-  elseif gameState == 'victory' then
-    ball:reset()
   end -- end of if..else if statement for the gameState
 
 
@@ -229,9 +207,9 @@ function love.draw()
   love.graphics.setFont(appFont)
 
   -- ! based on the state, show a different string value
-  if gameState == 'playing' then
+  if gameState == 'waiting' or gameState == 'serving' then
     love.graphics.printf(
-      'Press enter to stop',
+      'Press enter to play',
       0,
       VIRTUAL_HEIGHT / 24,
       VIRTUAL_WIDTH, -- centered in connection to the screen's width
@@ -239,7 +217,7 @@ function love.draw()
     )
   else
     love.graphics.printf(
-      'Press enter to play',
+      'Press enter to stop',
       0,
       VIRTUAL_HEIGHT / 24,
       VIRTUAL_WIDTH, -- centered in connection to the screen's width
@@ -280,17 +258,6 @@ function love.draw()
     VIRTUAL_WIDTH / 4,
     'center'
   )
-
-  -- using the font of the score, describe the winning side if a victory is being registered
-  if gameState == 'victory' then
-    love.graphics.printf(
-        'Winner: player ' .. tostring(winningPlayer),
-        0,
-        VIRTUAL_HEIGHT * 3 / 4 - 16,
-        VIRTUAL_WIDTH, -- centered in connection to the screen's width
-        'center'
-      )
-  end
 
   -- render the paddles through the :render function
   player1:render()

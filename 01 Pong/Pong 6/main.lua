@@ -187,18 +187,5 @@ function love.draw()
   -- render the ball through the :render function
   ball:render()
 
-  -- display the frame rate through the custom function
-  displayFPS()
-
   push:apply('end')
-end
-
-
--- create a function to add the frame rate in the top left corner
-function displayFPS()
-  -- set a font and color
-  love.graphics.setFont(appFont)
-  love.graphics.setColor(0, 1, 0, 1)
-  -- display the frame rate using Love2D native method
-  love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
 end

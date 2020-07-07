@@ -54,10 +54,8 @@ function love.load()
   player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT * 3 / 4, 5, 20)
 
   -- create the ball through Ball class
-  ball = Ball(VIRTUAL_WIDTH / 2 - 3, VIRTUAL_HEIGHT / 2 - 3, 6, 6)
+  ball = Ball(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 6, 6)
 
-  -- create a variable to keep track of the serving player
-  servingPlayer = 1
 
   -- initialize a variable to update the game's state
   gameState = 'waiting'
@@ -70,13 +68,9 @@ function love.keypressed(key)
   -- when pressing q close the program
   if key == 'q' then
     love.event.quit()
-  --[[
-    when pressing enter change the state according to the following logic
-    waiting or serving --> playing
-    otherwise --> waiting
-  ]]
+  -- when pressing enter toggle the game, toggling gameState between 'waiting' and 'playing'
   elseif key == 'enter' or key == 'return' then
-    if gameState == 'waiting' or gameState == 'serving' then
+    if gameState == 'waiting' then
       gameState = 'playing'
     else
       gameState = 'waiting'
@@ -89,81 +83,10 @@ function love.keypressed(key)
 end -- end of function
 
 
--- on update, react to the keys being pressed and the game state
+-- on update, react to a key being pressed on the selected values (ws for the left paddle, up and down for the right one)
+-- dt refers to the delta time, and is used to maintain uniform movement regardless of the game's frame rate
 function love.update(dt)
-  -- if serving modify the horizontal movement of the ball to direct it toward the serving player
-  if gameState == 'serving' then
-    if servingPlayer == 1 then
-      ball.dx = -math.random(140, 200)
-    else
-      ball.dx = math.random(140, 200)
-    end
-  --[[
-    if playing, update the game with the following logic
-    - update the position of the ball according to the ball:update() function
-    - check for a collision with the paddles
-    - check for a collision with the top and bottom edges of the window
-    - check for a point being scored
-  ]]
-  elseif gameState == 'playing' then
-    -- update the position of the ball
-    ball:update(dt)
-
-    -- collision with paddles
-    -- redirect the ball back and change its incline
-
-    -- collision player1
-    if ball:collides(player1) then
-      ball.dx = -ball.dx * 1.03
-      ball.x = player1.x + player1.width
-
-      if ball.dy < 0 then
-        ball.dy = -math.random(10, 150)
-      else
-        ball.dy = math.random(10, 150)
-      end
-
-    -- collision player2
-    elseif ball:collides(player2) then
-      ball.dx = -ball.dx * 1.03
-      ball.x = player2.x - ball.width
-
-      if ball.dy < 0 then
-        ball.dy = -math.random(10, 150)
-      else
-        ball.dy = math.random(10, 150)
-      end
-
-    end -- end of if .. else if statement for the collision with paddles
-
-    -- collision with top or bottom edge
-    -- when reaching one of the edges immediately set the ball back outside of the edges' scope and switch the direction
-    if ball.y <= 0 then
-      ball.y = 0
-      ball.dy = -ball.dy
-    elseif ball.y >= VIRTUAL_HEIGHT - ball.width then
-      ball.y = VIRTUAL_HEIGHT - ball.width
-      ball.dy = -ball.dy
-    end
-
-    -- scoring a point (ball goes past the left or right edge)
-    -- when passing past the edges of the window, update the score for the respective player and re-center the ball to its original position
-    -- ! update the state to serving
-    if ball.x < 0 then
-      player2:score()
-      ball:reset()
-      servingPlayer = 1
-      gameState = 'serving'
-    elseif ball.x > VIRTUAL_WIDTH then
-      player1:score()
-      ball:reset()
-      servingPlayer = 2
-      gameState = 'serving'
-    end
-
-  end -- end of if..else if statement for the gameState
-
-
+  --[[ PADDLES ]] --
   -- change the dy coordinate of the classes and later call the :update function to use this value and change the vertical coordinate
   -- ! dt is already accounted for in the :update function, therefore change dy according to the speed value only
   if love.keyboard.isDown('w') then
@@ -185,15 +108,82 @@ function love.update(dt)
     player2.dy = 0
   end
 
+  --[[
+    if the game is ongoing,
+    1. check if the ball collides with either of the paddles, and change the direction accordingly
+    1. check the vertical coordinate of the ball, to have it bounce if it hits the top or bottom edge of the screen
+  ]]
+
+  if gameState == 'playing' then
+    -- if colliding flip the horizontal direction and update the horizontal movement with a new random angle (but always the same trajectory)
+    -- ! avoid overlaps by immediately seeting the horizontal coordinates pas the paddles
+    if ball:collides(player1) then
+      ball.dx = -ball.dx * 1.03
+      ball.x = player1.x + player1.width
+
+      if ball.dy < 0 then
+        ball.dy = -math.random(10, 150)
+      else
+        ball.dy = math.random(10, 150)
+      end
+
+    elseif ball:collides(player2) then
+      ball.dx = -ball.dx * 1.03
+      ball.x = player2.x - ball.width
+
+      if ball.dy < 0 then
+        ball.dy = -math.random(10, 150)
+      else
+        ball.dy = math.random(10, 150)
+      end
+    end -- end of if .. else if statement
+
+
+    -- when reaching the bottom edge immediately set the ball back to 0 and set the direction as opposite
+    if ball.y <= 0 then
+      ball.y = 0
+      ball.dy = -ball.dy
+    end
+
+    -- when reaching the top edge, immediately set the ball back to the height of the window minus the size of the ball and again set the direction as opposite
+    if ball.y >= VIRTUAL_HEIGHT - ball.width then
+      ball.y = VIRTUAL_HEIGHT - ball.width
+      ball.dy = -ball.dy
+    end
+
+    -- when passing past the edges of the window, update the score for the respective players
+    -- each time re-initialize the position of the ball and set the game state back to waiting
+    if ball.x <= 0 then
+      player2:score()
+      ball:reset()
+      gameState = 'waiting'
+    elseif ball.x >= VIRTUAL_WIDTH then
+      player1:score()
+      ball:reset()
+      gameState = 'waiting'
+    end
+
+  end -- end of 'playing' game state
+
+
+  --[[ BALL ]] --
+  -- update the position of the ball
+  -- ! update the position only when the gameState is set to play
+  -- update the position through the :update function
+  if gameState == 'playing' then
+    ball:update(dt)
+  end
+
+
   -- call the :update function changing the vertical coordinate of the paddles
   -- ! remember to pass delta time as argument
   player1:update(dt)
   player2:update(dt)
 
-end -- end of update function
+end
 
 
--- on draw display the strings and the rectangles making up the game
+-- on draw print a string in the middle of the screen
 function love.draw()
   -- wrap any drawing logic in between the push:apply('start') and push:apply('end') functions
   push:apply('start')
@@ -202,16 +192,15 @@ function love.draw()
   love.graphics.clear(6/255, 17/255, 23/255, 1)
 
   -- include a simple string of text centered in the first half of the project's height
-  -- ! use the virtual dimensions, which are projected to the real ones through the push library
+  -- ! use the virtual dimensions, which are projected to the real ones through the push libraru
   -- ! set the font being used by the printf function before the function itself
   love.graphics.setFont(appFont)
-
   -- ! based on the state, show a different string value
-  if gameState == 'waiting' or gameState == 'serving' then
+  if gameState == 'waiting' then
     love.graphics.printf(
       'Press enter to play',
       0,
-      VIRTUAL_HEIGHT / 24,
+      VIRTUAL_HEIGHT / 16,
       VIRTUAL_WIDTH, -- centered in connection to the screen's width
       'center'
     )
@@ -219,22 +208,11 @@ function love.draw()
     love.graphics.printf(
       'Press enter to stop',
       0,
-      VIRTUAL_HEIGHT / 24,
+      VIRTUAL_HEIGHT / 16,
       VIRTUAL_WIDTH, -- centered in connection to the screen's width
       'center'
     )
   end
-
-  -- below the general statement, highlight the serving player, but only if the gameState is serving
-  if gameState == 'serving' then
-    love.graphics.printf(
-        'Now serving: player ' .. tostring(servingPlayer),
-        0,
-        VIRTUAL_HEIGHT / 12,
-        VIRTUAL_WIDTH, -- centered in connection to the screen's width
-        'center'
-      )
-    end
 
   -- show the score below the game text, with the other font
   -- include two string values, for the individual score of the players

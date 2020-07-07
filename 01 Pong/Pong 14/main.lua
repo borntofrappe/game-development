@@ -186,7 +186,7 @@ function love.update(dt)
       -- play the audio for a point being scored
       sounds['score']:play()
       player2:score()
-      if player2.points >= 2 then
+      if player2.points >= 10 then
         gameState = 'victory'
         -- play the sound file for a victorious outcome
         sounds['victory']:play()
@@ -202,7 +202,7 @@ function love.update(dt)
       -- play the audio for a point being scored
       sounds['score']:play()
       player1:score()
-      if player1.points >= 2 then
+      if player1.points >= 10 then
         gameState = 'victory'
         -- play the sound file for a victorious outcome
         sounds['victory']:play()

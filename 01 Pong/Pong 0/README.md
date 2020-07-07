@@ -1,66 +1,48 @@
-# Pong 0
+Here you run a `.lua` script in the love2d engine.
 
-- [Code](#code)
+You also learn about the game loop and the coordinate system.
 
-- [Video](#video)
+## Installing Love2D
 
-## Code
+It is first necessary to install the Love2D framework. From [the homepage itself](https://love2d.org/) the installer provides the quickest solution. Once installed, the main reference is [the wiki](https://love2d.org/wiki).
 
-- resolutions is set in the form of screen width and height. Two constant variables are declared in the global scope:
+## Running a program
 
-  ```lua
-  WINDOW_WIDTH = 1280
-  WINDOW_HEIGHT = 720
-  ```
+In the [getting started](https://love2d.org/wiki/Getting_Started) section, the wiki provides a few ways to run a love2d program. For proof of concept, here's how to print `Hello there` with the engine.
 
-Notice again the lack of semicolons. Notice also the lack of a type or any identifier for the variable.
+1. create a `main.lua` file
 
-- love works <!-- in mysterious ways --> through two main functions: `love.load()` and `love.draw()`.
+2. add the following three lines of code:
 
-  `love.load()` runs once, as the game starts out. It is here that you ought to set those variables and options which initialize the games.
+   ```lua
+   function love.draw()
+     love.graphics.print('Hello there', 400, 300)
+   end
+   ```
 
-  `love.draw()` runs after a love2d update, to literally draw something on th screen.
+3. drag **the folder** containing the `main.lua` file on top of the `Love2D` program, or a shortcut to said program
 
-- in the load function, the size of the screen is modified through the `setMode()` method. This alters the size of the window as follows:
+This is already enough to have Love2D open a window to show the arbitrary string.
 
-      ```lua
-      love.window.setMode(width, height, options)
-      ```
+## Theory
 
-  `options` relates to an object detailing additional settings on the window.
+### Game loop
 
-- in the draw function, text is printed on the screen through the `printf` method. It works as follows:
+A game is an infinite loop. In this loop, we continuously go through a series of steps
 
-      ```lua
-      love.graphics.printf(text, x, y, centerScope, centerKeyword)
-      ```
+- listen for input
 
-  `x` and `y` dictacte where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width if the screen). Finally `centerKeyword` is exactly that, a keyword like `center` to deetermine the actual position.
+- update the game according to the input
 
-- last, but perhaps most importantly, comments are included following two dashes: `--`. Multi line comments follow up the two dashes with two sets of square brackets `--[[ ]]`.
+- render whatever was updated
 
-## Video
+### 2D Coordinate System
 
-The three main functions are:
+Exactly like with SVG syntax, the coordinate system works top to bottom, left to right.
 
-- `love.load()`. Love2d will look in a main.lua file and run love.load(). This is akin to a startup function, where you ought to initialize the project.
+If you think of a 1x1 square, the following representation highlights this coordinate system
 
-- `love.update(dt)`. `dt` being delta time. Love2D calls this function on each frame, and you can use the argument to update the application according to the passage of time.
-
-- `love.draw()`. Drawing and rendering behavior is encapsulated in this function.
-
-Also important functions, but nested within the big three are:
-
-- `love.graphics.printf()`. Drawing physically to the screen.
-
-- `love.window.setMode()`. Setting up the window and a few parameters.
-
-Beside these elements from the love2D framework, and regarding more the programming language, tables in lua are the equivalent of objects in JavaScript, and follow the syntax:
-
-```lua
-{
-  property = value,
-  property = value,
-  property = value,
-}
+```text
+(0, 0) (1, 0)
+(0, 1) (1, 1)
 ```

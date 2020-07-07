@@ -1,50 +1,39 @@
-# Pong 11
+# Pong 10
 
-## Audio
+## Victory
 
-Including audio is a simple matter of initializing variables in the `load()` function and later access them where needed. Where needed, using an audio file is a matter of calling the `:play()` function on them.
+With this update the game is set to conclude itself as somebody reaches ten points. This is assured by a conditional statement, directly checking the score of either player, and it is hown with a string boldly and atop the scores themselves.
 
-Once more: in the `load()` function:
+It is important to note how the presence of a winning condition introduces a new state, for the victorious outcome of the game. The code therefore needs to account for changes to and from this state as well.
 
-```lua
- sounds = {
-      ['paddle_hit'] = love.audio.newSource('sounds/paddle_hit.wav', 'static'),
-      ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
-      ['wall_hit'] = love.audio.newSource('sounds/wall_hit.wav', 'static')
-  }
-```
+My solution <!-- might be updated as I go through the code with fresher eyes -->:
 
-The values for the sound files are here stored in a table (you can think of it as the counterpart in lua to JavaScript objects). Tables are structured as follows:
+- in the `love.keypressed()` function and when pressing the `enter` key, check for a winning state, and in this instance set the game back to `playing` and reset the points for both paddles. This means that when pressing enter on the winning state, a new game will begin posthaste;
 
-```lua
-tableName = { -- notice the curly brackets
-  ['propertyName'] = propertyValue, -- I call them property but they are perhaps better labeled as fields
-}
-```
+- in the `update()` function and when checking the different game states, account for the winning state by resetting the position of the ball. Additionally and most importantly, check for the score reaching an arbitrary amount, at which point, trigger the winning state.
 
-For audio files, the values are created through the `love.audio.newSource()` function, accepting the path and the type of the audio file. The type refers to the way the sound is imported in the application, and by setting it to `static` it means that the audio files are included upfront in the `load()` function.
+  ```lua
+  -- scoring a point
+  if player1.points >= 10 then
+    gameState = 'victory'
 
-```lua
-audioFile = love.audio.newSource(path, type)
-```
+  if player2.points >= 10 then
+    gameState = 'victory'
+  ```
 
-Once a table is created, you can access its values either through dot or bracket notation.
+  Use also the `servingPlayer` and a newly created variable in `winningPlayer` to identify both sides.
 
-```lua
-tableName.propertyName
-tableName['propertyName']
-```
+  ```lua
+  -- scoring a point
+  if player1.points >= 10 then
+    gameState = 'victory'
+    winningPlayer = 1
+    servingPlayer = 2
 
-And you can play the audio as follows:
+  if player2.points >= 10 then
+    gameState = 'victory'
+    winningPlayer = 2
+    servingPlayer = 1
+  ```
 
-```lua
-tableName['propertyName']:play()
-```
-
-Once you know how it is a matter of placing the audio files where needed:
-
-- when the ball hits a paddle;
-
-- when the ball hits a wall;
-
-- when a point is scored.
+- finally and in the `draw()` function, show the winning side once such a game state is made available. I chose to use the same font used for the score, and therefore included the `printf` function following the `setFont` function describing the score typeface.

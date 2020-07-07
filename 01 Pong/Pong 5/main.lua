@@ -1,13 +1,6 @@
 -- require the push library
 push = require 'Resources/push'
 
--- require the class library
-Class = require 'Resources/class'
-
--- require the Paddle and Ball classes
-require 'Paddle'
-require 'Ball'
-
 --[[
 global variables for the screen size
 actual and virtual
@@ -50,13 +43,18 @@ function love.load()
   player1Score = 0
   player2Score = 0
 
-  -- create the paddles through the Paddle class
-  player1 = Paddle(5, VIRTUAL_HEIGHT / 4, 5, 20)
-  player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT * 3 / 4, 5, 20)
+  -- initialize variables to keep track of the players vertical position
+  player1Y = VIRTUAL_HEIGHT / 4
+  player2Y = VIRTUAL_HEIGHT * 3 / 4
 
-  -- create the ball through Ball class
-  ball = Ball(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 6, 6)
+  -- initialize variables for the ball, it position and later its direction as it moves on the screen
+  -- -3 to offset for half the width/height of the rectangle
+  ballX = VIRTUAL_WIDTH / 2 - 3
+  ballY = VIRTUAL_HEIGHT / 2 - 3
 
+  -- random direction, horizontally left or right, vertical in a defined range
+  ballDX = math.random(2) == 1 and 100 or -100
+  ballDY = math.random(-50, 50)
 
   -- initialize a variable to update the game's state
   gameState = 'waiting'
@@ -76,53 +74,52 @@ function love.keypressed(key)
     else
       gameState = 'waiting'
       -- when stopping the game, set the ball back in the middle screen
-      -- through the ball:reset function
-      ball:reset()
+      ballX = VIRTUAL_WIDTH / 2 - 3
+      ballY = VIRTUAL_HEIGHT / 2 - 3
+      -- to avoid having the ball move in the same direction, set the DX and DY varibles to a new random value
+      ballDX = math.random(2) == 1 and 100 or -100
+      ballDY = math.random(-50, 50)
+
     end -- end of if .. else statement
 
   end -- end of if .. elseif statement
 end -- end of function
 
-
 -- on update, react to a key being pressed on the selected values (ws for the left paddle, up and down for the right one)
 -- dt refers to the delta time, and is used to maintain uniform movement regardless of the game's frame rate
 function love.update(dt)
   --[[ PADDLES ]] --
-  -- change the dy coordinate of the classes and later call the :update function to use this value and change the vertical coordinate
-  -- ! dt is already accounted for in the :update function, therefore change dy according to the speed value only
+  --[[
+    left paddle
+      w --> up --> subtract pixel values
+      s --> down --> add
+  ]]
+  -- ! use an if elseif conditional to either move the paddle up or down
+  -- ! to avoid values smaller than 0 or greater than the window's height, clamp the values to the specified [0, height] range
   if love.keyboard.isDown('w') then
-    player1.dy = -PADDLE_SPEED
+    -- going upwards, set the position to be the greater between 0 and the change introduced with the keys
+    player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
   elseif love.keyboard.isDown('s') then
-    player1.dy = PADDLE_SPEED
-  --! the update function is run at each frame, so you need to provide a default case for those instances in which neither key is being pressed
-  -- set dy back to 0, otherwise the :update() function would keep adding/removing values to the vertical coordinate
-  else
-    player1.dy = 0
+    -- going downward, set the position to be the less between the height of the window and the change introduced with the keys
+    -- ! height of the window to which you need to subtract the height of the paddle (otherwise the rectangle would clamp, just below the visible area)
+    player1Y = math.min(VIRTUAL_HEIGHT - 20, player1Y + PADDLE_SPEED * dt)
   end
 
   -- similar considerations for right paddle, but with different keys
   if love.keyboard.isDown('up') then
-    player2.dy = -PADDLE_SPEED
+    player2Y = math.max(0, player2Y - PADDLE_SPEED * dt)
   elseif love.keyboard.isDown('down') then
-    player2.dy = PADDLE_SPEED
-  else
-    player2.dy = 0
+    player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
   end
 
 
   --[[ BALL ]] --
   -- update the position of the ball
   -- ! update the position only when the gameState is set to play
-  -- update the position through the :update function
   if gameState == 'playing' then
-    ball:update(dt)
+    ballX = ballX + ballDX * dt
+    ballY = ballY + ballDY * dt
   end
-
-
-  -- call the :update function changing the vertical coordinate of the paddles
-  -- ! remember to pass delta time as argument
-  player1:update(dt)
-  player2:update(dt)
 
 end
 
@@ -133,7 +130,7 @@ function love.draw()
   push:apply('start')
 
   -- before any other visual, include a solid color as background
-  love.graphics.clear(6/255, 17/255, 23/255, 1)
+  love.graphics.clear(200/255, 100/255, 85/255, 1)
 
   -- include a simple string of text centered in the first half of the project's height
   -- ! use the virtual dimensions, which are projected to the real ones through the push libraru
@@ -180,12 +177,17 @@ function love.draw()
     'center'
   )
 
-  -- render the paddles through the :render function
-  player1:render()
-  player2:render()
+  -- include two rectangles for the paddles
+  -- with 5px of padding from the window's edges
+  -- using the vertical position dictated by the variables values
+  love.graphics.rectangle('fill', 5, player1Y, 5, 20)
 
-  -- render the ball through the :render function
-  ball:render()
+  love.graphics.rectangle('fill', VIRTUAL_WIDTH - 10, player2Y, 5, 20)
+
+  -- include a rectangle for the puck
+  -- a circle could be very well be drawn with the circle function, as follows
+  -- love.graphics.circle('fill', VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 4)
+  love.graphics.rectangle('fill', ballX, ballY, 6 , 6)
 
   push:apply('end')
 end

@@ -42,15 +42,6 @@ function love.load()
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
 
-  -- set the audio files to be used in the application
-  sounds = {
-    ['playing'] = love.audio.newSource('Resources/sounds/playing.wav', 'static'),
-    ['paddle_hit'] = love.audio.newSource('Resources/sounds/paddle_hit.wav', 'static'),
-    ['wall_hit'] = love.audio.newSource('Resources/sounds/wall_hit.wav', 'static'),
-    ['score'] = love.audio.newSource('Resources/sounds/score.wav', 'static'),
-    ['victory'] = love.audio.newSource('Resources/sounds/victory.wav', 'static')
-  }
-
   -- push:setupScreen works similarly to setMode, but with two additional arguments in the virtual dimensions
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
     fullscreen = false,
@@ -95,12 +86,8 @@ function love.keypressed(key)
       gameState = 'playing'
       player1.points = 0
       player2.points = 0
-      -- play the sound for the ball leaving the center of the screem
-      sounds['playing']:play()
     else
       gameState = 'playing'
-      -- play the sound for the ball leaving the center of the screem
-      sounds['playing']:play()
     end -- end of if .. else statement
 
   end -- end of if .. elseif statement
@@ -132,9 +119,7 @@ function love.update(dt)
 
     -- collision player1
     if ball:collides(player1) then
-      -- play the audio of the ball hitting a paddle
-      sounds['paddle_hit']:play()
-      ball.dx = -ball.dx * 1.1
+      ball.dx = -ball.dx * 1.03
       ball.x = player1.x + player1.width
 
       if ball.dy < 0 then
@@ -145,9 +130,7 @@ function love.update(dt)
 
     -- collision player2
     elseif ball:collides(player2) then
-      -- play the audio of the ball hitting a paddle
-      sounds['paddle_hit']:play()
-      ball.dx = -ball.dx * 1.1
+      ball.dx = -ball.dx * 1.03
       ball.x = player2.x - ball.width
 
       if ball.dy < 0 then
@@ -161,13 +144,9 @@ function love.update(dt)
     -- collision with top or bottom edge
     -- when reaching one of the edges immediately set the ball back outside of the edges' scope and switch the direction
     if ball.y <= 0 then
-      -- play the audio of the ball hitting a wall
-      sounds['wall_hit']:play()
       ball.y = 0
       ball.dy = -ball.dy
     elseif ball.y >= VIRTUAL_HEIGHT - ball.width then
-      -- play the audio of the ball hitting a wall
-      sounds['wall_hit']:play()
       ball.y = VIRTUAL_HEIGHT - ball.width
       ball.dy = -ball.dy
     end
@@ -177,13 +156,9 @@ function love.update(dt)
     -- ! check if the scoring player has reached an arbitrary milestone, in which case set the game state to victory
     -- otherwise update the state to serving
     if ball.x < 0 then
-      -- play the audio for a point being scored
-      sounds['score']:play()
       player2:score()
       if player2.points >= 2 then
         gameState = 'victory'
-        -- play the sound file for a victorious outcome
-        sounds['victory']:play()
         -- describe also the winning and serving player (for the following round)
         winningPlayer = 2
         servingPlayer = 1
@@ -193,13 +168,9 @@ function love.update(dt)
         gameState = 'serving'
       end
     elseif ball.x > VIRTUAL_WIDTH then
-      -- play the audio for a point being scored
-      sounds['score']:play()
       player1:score()
       if player1.points >= 2 then
         gameState = 'victory'
-        -- play the sound file for a victorious outcome
-        sounds['victory']:play()
         winningPlayer = 1
         servingPlayer = 2
       else

@@ -1,113 +1,47 @@
-# Pong 3
+# Pong 2
 
 ## Code
 
-This update sets out to make the game interactive, in so far as it allows to manouver the paddles vertically, and through the use of the keyboard. This using the `w` and `s` keys as well as the `up` and `down` keys, for the left and right paddle respectively.
+The new update to the project includes a custom font in the application run in Love2D. Such a font is included through a local `ttf` file and as follows:
 
-From the code:
+- in the `load()` function include the font through the `love.graphics.newFont()` function, specifying the font and the size (as explained in the [docs](https://love2d.org/wiki/love.graphics.newFont)).
 
-- the application shows two strings of text, adding a new string for the score. This uses a larger font, and Love2D apparently requires a new declaration. Every font you need in the project needs to go through the following procedure:
-
-  - create an instance of the font, and the font at a specified size;
-
-    ```lua
-    newFont = love.graphics.newFont('path/name.ttf', 8)
-    otherFont = love.graphics.newFont('path/name.ttf', 32)
-    ```
-
-  - set the font **before** you need to actually use it. In the project for instance, the fonts are set before the `print` functions actually using them.
-
-    ```lua
-    love.graphics.setFont(newFont)
-    love.graphics.printf()
-
-    love.graphics.setFont(otherFont)
-    love.graphics.printf()
-    ```
-
-  In the project, one of the fonts is also and immediately set in the load function. I assume this is to give a default value for the entire application.
-
-  What happens if you set a default value and change it only when needed? Well, apparently once the text is changed, it changes for the entire application. Just try and remove the first `setFont` method and `otherFont` will be applied to the first strin as well.
-
-  This is more of a personal note, but it fits with the subject at hand. The fonts are declared in the `load()` function, and they are later accessed in the `draw()` function. There doesn't seem to be any conflict with the scope of the variables. I wonder if this is more about the Love2D framework or the lua programming language.
-
-  That aside, the score is now shown through two string values, which is reasonable as these need to show the score of the individual players. The `printf` function however doesn't use hard-coded text, but the value held a variable, which brings me to the next point.
-
-- the game begins to store certain values in variables, like the constant `PADDLE_SPEED`, the individual score values `player1Score`, `player2Score`, as well as the vertical position of the paddles, in `player1Y` an `player2Y`. These help structure the code and most importantly allow the program to be easily updated.
-
-  I am still uncertain with regards to the scope though. The constant is declared outside of any function while the others are in the `load` function. I assume this is because the variables referring to the players are tihgtly connected to the paddles, and it makes sense to see them together.
-
-  In any case, variables are declared like so:
+  Assuming it resides in the same folder:
 
   ```lua
-  variableName = value
+  newFont = love.graphics.newFont('font.ttf', 8)
   ```
 
-  They can be accessed directly using their name, and they are later updated like so:
+- once included, set the font through the `setFont` method, available on the same object and accepting the reference to the newly minted font. This again in the `load` function.
 
   ```lua
-  variableName = newValue
+  love.graphics.setFont(newFont)
   ```
 
-- to include the value of the variables as text, the project makes use of a `print` function, and includes the variables themselves through the `tostring` method.
+- in the `draw()` function, include the text exactly as before. The end result is the font, set in the `load` function, is given to any text dispayed on the screen.
+
+Also in the same file, and specifically in the `draw` function, the snippet provides a few visuals through the `love.graphics` object.
+
+This object is used to:
+
+- create a solid background, through the `clear()` function;
+
+  This function can detail a color through an `rgba` code, provided with comma separated values.
 
   ```lua
-  love.graphics.print(
-    tostring(player1Score),
-    VIRTUAL_WIDTH * 3 / 8,
-    VIRTUAL_HEIGHT / 4
-  )
+  love.graphics.clear(r, g, b, a)
   ```
 
-  This function doesn't seem to accept the same number of arguments as `printf`, which means that more research on alignment is warranted.
+  **Important**: `r`, `g`, `b` and `a` need to be a value in the [0-1] range and **not** in the [0-255] range one would reasonably assume.
 
-  Immediately, I can safely use `printf` instead, and this works perfectly fine with the new variables and the desired alignment.
+- draw rectangles for the paddles and the 'puck' so to speak, through the `rectangle()` function.
+
+  This function accepts as argument a keyword detailing the look of the shape and the coordinates/sizes of the shape itself. Following the coordinate system described before, it details the rectangle starting with the top left corner and drawing it left to right, top to bottom.
 
   ```lua
-  love.graphics.printf(
-      tostring(player1Score),
-      0,
-      VIRTUAL_HEIGHT / 4,
-      VIRTUAL_WIDTH / 2,
-      'center'
-    )
-
-  love.graphics.printf(
-    tostring(player2Score),
-    VIRTUAL_WIDTH / 2,
-    VIRTUAL_HEIGHT / 4,
-    VIRTUAL_WIDTH / 2,
-    'center'
-  )
+  love.graphics.rectangle(mode, x, y, width, height)
   ```
 
-  Just need a bit of adjustment as it relates to the second and fourth arguments (from where, centered with respect to what).
+  _mode_ is simply a filler word which actually translates to one of two values: `fill` or `line`, to respectively draw a filled shape or just the outline.
 
-- to move the paddles, the code leverages a third fundamental function of Love2D, in `love.update`. This was introduced earlier, but never actually implemented. It is a function running every frame, and a function which can be used to update the game as per the game loop. `load` sets up the scenes, `draw` paints the canvas, `update` changes the settings.
-
-  `love.update` can leverage the passage of time through an argument labeled `dt`. This refers to delta time and is likely how much time has passed in each frame. To maintain uniform speed in the paddles' movememnt, this value is used in conjunction with the constant `PADDLE_SPEED`. A variable which refers to the space traveled per frame (like meter per second, but here pixel per frame per second).
-
-  ```lua
-  function love.update(dt)
-    -- following a key press on specific keys, update the vertical position of the paddles
-    if love.keyboard.isDown('w') then
-      player1Y = player1Y - PADDLE_SPEED * dt
-    end
-  end
-  ```
-
-  Notice the use of the `love.keyboard.isDown` function, which allows to listen for a continuous key press and returns a boolean. Notice again the structure of the `if... then` conditional statement. Here, the code actually uses an `if... then` `elseif ...then` conditional, which is structured simply as follows:
-
-  ```lua
-  if condition then
-    -- do something
-  elseif anothercondition then
-    -- do something else
-  end
-  ```
-
-  It is rather straightforward. Just remember to use the `end` keyword where appropriate. At the end of conditional statements and at the end of functions.
-
-  Finally, notice how the position is updated according to the passage of time and the global variable describing the speed.
-
-  For the opposite direction and the other paddle, it is a simple matter of reacting to the selected key being pressed.
+These are included, as the `printf` statement, in between the virtual resolution set up with the `push` library.

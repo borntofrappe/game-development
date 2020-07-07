@@ -1,100 +1,125 @@
-# Pong 5
+# Pong 4
 
-## Class
+Index:
 
-The project restructures the existing code through _classes_. These are data structures included to more easily manage the elements of the game, namely the paddles and the ball. You can think of a class as an independent entity, with its own variables and functions.
+- [Randomness](#randomness)
 
-As classes are not a concept native to lua nor love2D, the helper library [provided in class.lua](https://github.com/vrld/hump/blob/master/class.lua) allows to include the construct.
+- [Clamping](#clamping)
 
-This library is used not as much in `main.lua`, but in `Paddle.lua` and `Ball.lua`. These are separate files required atop the code managing the Love2D functions and which actually describe the different classes.
+- [Game State](#game-state)
 
-Remember: Love2D reads the `main.lua` file. Librarie and other lua files can be referenced from this main feature.
+## Randomness
 
-Moving on with classes, they work as follows:
+To avoid a predictable behavior, the project introduces randomness in the form or random integers and through the concept of seeds.
 
-- create a class through the `Class{}` keyword. By convention these are capitalized.
+`math.randomseed()` provides a seed which is 'fed' to `math.random` functions to create random values. It accepts as argument a value which generates a seed, which is set to be the time currently being registered by the OS. This is an every changing value, costantly being updated on the basis of the internal clock. This allows to base the seed on a value which rarely if ever gets repeated.
 
-  ```lua
-  Paddle = Class{}
-  ```
+Based on this random seed, `math.random` provides a random value. This function accept a variable number of arguments, as specified in the docs:
 
-  A class can have variables and functions, but starts out with an `init()` function.
+- with no argument, it provides a random value in the [0-1] range;
 
-- detail a function which runs whenever an instance of the class is created. An initialization function which describes the variables the class ought to hold.
+- with one argument, it provides a random value in the [0, max] range, where max is exactly the processed argument;
 
-  ```lua
-  function Paddle:init(x, y, width, height)
-    self.x = x
-    self.y = y
-    self.width = width
-    self.height = height
-    self.dy = 0
+- with two arguments, it provides a random value in the [min, max] range, where the two arguments make up the minimum and maximum.
+
+In the actual project, the code makes use of `math.random` with one and two values. In the first instance, it accompanies the expression with a _ternary operator_, to assign a variable a value between to possibilities.
+
+The horizontal direction is indeed determined to be either 100 or -100, based on randomness (the condition evaluates to true half of the times).
+
+```lua
+ballDX = math.random(2) == 1 and 100 or -100
+```
+
+The syntax above might look a bit more contrived than a JavaScript ternary operator.
+
+```js
+ballDX = Math.random() > 5 ? 100 : -100;
+```
+
+But I guess it's just a matter of getting used to it.
+
+The ternary operator in lua can be summed up as follows:
+
+```lua
+variable = condition and ifTrue or ifFalse
+```
+
+The `and` and `or` keywords allow to specify the expression to be evaluated if the condition is true or false respectively.
+
+That's how the project used `math.random` with one argument. With two arguments, the project creates instead a random value in the [-50,50] range:
+
+```lua
+ballDY = math.random(-50, 50)
+```
+
+This for the vertical direction.
+
+Direction would actually be a misnomer on my part though. It is actually the value which is latter added to the coordinate of the ball to make it move across the screen. In this sense it is closer to the horizontal and vertical speed.
+
+## Clamping
+
+An issue with the previous update concerned the movement of the paddles once said paddles would reach the upper and lower edge of the screen. Without additional consideration, the paddles can and indeed go past the boundaries of the window, which is something the game should not allow.
+
+To fix this problem, the code makes use of the `math.min` and `math.max` function. It is actually a clever use, so spelling it out ought to make it more memorable.
+
+Simply put, instead of checking the position of the paddles and avoiding any movement if it reaches the boundaries, the coordinate of the paddles is updated to be that specified by the movement only if that coordinate is within the prescribed limits. Otherwise, the `math` function clamps the coordinate to be 0 or, for the lower edge, the height of the window minus the height of the paddle (this subtraction to guarantee that the paddle is always and completely above the fold).
+
+```lua
+-- when pressing w (or up for the second player) calmp the vertical coordinate to 0
+player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
+```
+
+## Game State
+
+As the game stands, the ball can be made moving without need for further input. It quickly moves outside of the window's scope and without detection of any collision, but those are issues for a later update.
+
+As it relatess to the concept of game state, the project introduces it with a variable determining whether the game is ongoing or not.
+
+This variable is initialied in the `load` function.
+
+```lua
+gameState = 'waiting'
+```
+
+It is then updated on the basis of a key event being registered on the _enter_ key.
+
+```lua
+if key == 'enter' then
+  if gameState == 'waiting' then
+    gameState = 'playing'
+  else
+    gameState = 'waiting'
   end
-  ```
+end
+```
 
-  Here, the class is initialized with four variables, describing the paddles coordinates and sizes. It also includes a `dy` variable, initialized to 0, which can be presumed to describe the vertical movement across the y axis.
+It is then and most importantly used in the `update` function, to move the ball only when the game state is set to the prescribed value of 'playing'.
 
-  Whenever creating an instance of the class, be sure to include the arguments described in the `init` function. Indeed in the `main.lua` function, the paddles are created as follows:
+```lua
+if gameState == 'playing' then
+  ballX = ballX + ballDX * dt
+  ballY = ballY + ballDY * dt
+end
+```
 
-  ```lua
-  player1 = Paddle(10, 30, 5, 20)
-  ```
+Such a variable can indeed regulate the state of the game, and allows to transition between different states. It also allows, with a simple conditional statement, to draw different elements on the screen, as in the `draw` function.
 
-  They are later updated using a syntax similar to dot notation in JavaScript. In the update function for instance:
-
-  ```lua
-  player1.dy = -PADDLE_SPEED
-  ```
-
-- beside the initialization function, declare all the methods connected to the class.
-
-  In the code, the `Paddle` class is equipped with two functions: `update(dt)` and `render()`.
-
-  They are called in `main.lua` as follows:
-
-  ```lua
-  player1:render()
-  ```
-
-  Using the colon roughly explained in Pong 0. Looking into the functions themselves, these describe the behavior previously included in the main file.
-
-  - `update(dt)` allows to clamp the paddles to the boundaries of the window:
-
-    ```lua
-    function Paddle:update(dt)
-      if self.dy < 0 then
-        self.y = math.max(0, self.y + self.dy * dt)
-      else
-        self.y = math.min(VIRTUAL_HEIGHT - self.y, self.y + self.dy * dt)
-      end
-    end
-    ```
-
-    Notice how the function is itself created following a `:` colon, how it accepts an argument which mirrors the delta time in the update function and how the function itself references the values of the class through the `self` keyword.
-
-    This allows to later call the function in `love.update`, pass in as argument delta time and have the function manage the clamping of the paddles.
-
-    ```lua
-    function love.update(dt)
-      -- change the dy value of the paddles according to the key being pressed
-
-      -- clamp the paddles to the windows edges
-      player1:update(dt)
-    end
-    ```
-
-    The idea is to update the vertical coordinate only on the basis of the `dy` value, and only through the update function.
-
-  - `render()` on the other hand is much shorter and literally renders the paddle on the screen through the `love.graphics.rectangle()` function. This once more using the variables of the class instance, through the `self` keyword.
-
-And this describes how classes, specifically for the paddles, work. For the `Ball` class, the code is rather similar:
-
-- initialize the ball and the variables previously included each on their own. In the `init` function make sure to add `dx` and `dy` using `math.random`.
-
-- describe a `reset()` functions which exactly repositions the ball in the center of the screen and sets new random values for the horizontal and vertical speed.
-
-- include a `update(dt)` function, which similarly to the paddles' counterpart updates the coordinates on the basis of the delta values (in this instance both horizontally and vertically);
-
-- add a `render` function which exactly reepats the structrue of the paddles' one.
-
-All together it may look like a lot, but it is rather understandable.
+```lua
+if gameState == 'waiting' then
+  love.graphics.printf(
+    'Press enter to play',
+    0,
+    VIRTUAL_HEIGHT / 16,
+    VIRTUAL_WIDTH,
+    'center'
+  )
+else
+  love.graphics.printf(
+    'Press enter to stop',
+    0,
+    VIRTUAL_HEIGHT / 16,
+    VIRTUAL_WIDTH,
+    'center'
+  )
+end
+```

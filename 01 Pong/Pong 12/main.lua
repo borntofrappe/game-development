@@ -54,8 +54,7 @@ function love.load()
   -- push:setupScreen works similarly to setMode, but with two additional arguments in the virtual dimensions
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
     fullscreen = false,
-    -- set resizable to true
-    resizable = true,
+    resizable = false,
     vsync = true
   })
 
@@ -74,11 +73,6 @@ function love.load()
   -- initialize a variable to update the game's state
   gameState = 'waiting'
 
-end
-
--- function updating the size of the push projection as the window gets resized
-function love.resize(width, height)
-  push:resize(width, height)
 end
 
 -- function responding to a key being pressed
