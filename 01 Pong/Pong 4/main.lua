@@ -1,5 +1,5 @@
 -- require the push library
-push = require 'Resources/push'
+push = require 'push'
 
 --[[
 global variables for the screen size
@@ -12,7 +12,7 @@ WINDOW_HEIGHT = 608
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
--- global variable for the paddles' speed
+-- constant for the paddles' speed
 PADDLE_SPEED = 200
 
 -- on load set the size of the window, using the push library to apply the desired resolution
@@ -21,10 +21,10 @@ function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
 
   -- create a new font through the local ttf file
-  appFont = love.graphics.newFont('Resources/font.ttf', 8)
+  appFont = love.graphics.newFont('font.ttf', 8)
 
   -- create another instance of the font for the score, larger in size
-  scoreFont = love.graphics.newFont('Resources/font.ttf', 32)
+  scoreFont = love.graphics.newFont('font.ttf', 32)
 
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
@@ -48,8 +48,7 @@ end
 -- function responding to a key being pressed
 -- accepting as argument the key being pressed
 function love.keypressed(key)
-  -- when pressing q close the program
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   end
 end
@@ -105,18 +104,19 @@ function love.draw()
   -- use printf instead of print, to align the scores in the two halves of the screen
   love.graphics.printf(
     tostring(player1Score),
-    -- include the score(s) closer to the center of the screen than the outer edges
-    VIRTUAL_WIDTH / 4,
-    VIRTUAL_HEIGHT / 5,
-    VIRTUAL_WIDTH / 4,
+    -- centered in the first half
+    0,
+    VIRTUAL_HEIGHT / 8,
+    VIRTUAL_WIDTH / 2,
     'center'
   )
 
   love.graphics.printf(
     tostring(player2Score),
+    -- centered in the second half
     VIRTUAL_WIDTH / 2,
-    VIRTUAL_HEIGHT / 5,
-    VIRTUAL_WIDTH / 4,
+    VIRTUAL_HEIGHT / 8,
+    VIRTUAL_WIDTH / 2,
     'center'
   )
 
@@ -129,8 +129,6 @@ function love.draw()
   love.graphics.rectangle('fill', VIRTUAL_WIDTH - 10, player2Y, 5, 20)
 
   -- include a rectangle for the puck
-  -- a circle could be very well be drawn with the circle function, as follows
-  -- love.graphics.circle('fill', VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 4)
   love.graphics.rectangle('fill', VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 5, 5)
 
   push:apply('end')

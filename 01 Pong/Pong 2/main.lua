@@ -1,13 +1,13 @@
 -- require the push library
-push = require 'Resources/push'
+push = require 'push'
 
 --[[
 global variables for the screen size
 actual and virtual
 the virtual measures refer to the resolution of the screen and are used by the push library to 'project' so to speak the pixelated look to the regular sizes
 ]]
-WINDOW_WIDTH = 864
-WINDOW_HEIGHT = 486
+WINDOW_WIDTH = 1080
+WINDOW_HEIGHT = 608
 
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
@@ -26,10 +26,9 @@ function love.load()
 end
 
 -- function responding to a key being pressed
--- accepting as argument the key being pressed
+-- receiving as argument the key being pressed
 function love.keypressed(key)
-  -- when pressing q close the program
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   end
 end

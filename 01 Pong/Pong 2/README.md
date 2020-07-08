@@ -1,98 +1,65 @@
-# Pong 1
+Here you render the visuals in a pixellated fashion.
+
+**requires push.lua**
 
 ## Code
 
-This is a note more about lua than the working code, but I think it provides a glimpse into the programming language and it can ultimately improve my understanding of the code.
+### push
 
-In lua, you create functions like so:
+The code makes use of a library called `push`. It is available on github [right here](https://github.com/Ulydev/push), and it allows to achieve a resolution based on the actual/virtual dimensions defined atop the script.
 
-```lua
-function something()
-  -- do something
-  -- just remember to indent
-end
-```
+Here's how to update the resolution
 
-And call them later like so:
-
-```lua
-something()
-```
-
-In the code for **Pong 1** however, you might have noticed a `:` colon. The syntax is connected to object oriented programming and the concept of `self`. Here's the gist:
-
-- tables (lua's counterpart to objects) can have their own operations (functions);
-
-- the operations described in the table can reference the table itself through the `self` keyword (much alike `this` in JavaScript);
-
-- to later use these functions you include a colon after the tables' name.
-
-From the docs this pattern can be highlighted as follows:
-
-```lua
--- create an 'Account' table
-Account = {
-  balance = 0
-}
--- in this table, detail a 'withdraw' function, which references the table's property through the 'self' keyword
-function Account:withdraw (value)
-  self.balance = self.balance - value
-end
-
--- create an instance of the account
-accountJimmy = Account
---[[
-  accountJimmy is now a table with balance = 0
-  AND most importantly,
-  a table with the withdraw method available following a colon
-]]
-accountJimmy:withdraw(100) -- accountJimmy.balance = -100
-```
-
-Again, this has more to do with the lua language and is definitely a topic which needs to be revisited.
-
-Putting this general note aside, the code makes use of a library called **push**, on github [right here](https://github.com/Ulydev/push), to provide a pixelated, retro-looking resolution. Here's how to use it:
-
-- require it atop the `main.lua` file
+- require the `push` library
 
   ```lua
   push = require 'push'
   ```
 
-  Here a reference to the library is stored in the `push` variable.
+- define two sets of variables for the actual/virtual dimensions
 
-- use a filter to avoid blur.
+  ```lua
+  WINDOW_WIDTH = 864
+  WINDOW_HEIGHT = 486
+
+  VIRTUAL_WIDTH = 432
+  VIRTUAL_HEIGHT = 243
+  ```
+
+  `push` works by "projecting" the image comparing the actual versus virtual measures
+
+- in the `load` function, add a line to set up a filter
 
   ```lua
   love.graphics.setDefaultFilter('nearest', 'nearest')
   ```
 
-- set up the 'virtual resolution', using the `push:setupScreen` function instead of`setMode`. They work similarly though, with the former simply detailing two additional arguments in the virtual width and height.
+  This is used to avoid blur
+
+- always in the `load` function, set up the resolution using `push:setupScreen`:
 
   ```lua
   push:setupScreen(virtualWidth, virtualHeight, width, height, options)
   ```
 
-- in the draw function, whenever displaying something on the screen, wrap the functions in between `push:apply('start')` and `push:apply('end')`.
+  The function is used instead of`setMode`, and except for the two additional arguments describing the virtual dimensions (`virtualWidth` and `virtualHeight`), the two work in the same fashion
 
-The code is available in `.lua`, but for the main branch, so to speak, I might decide to revert to normal resolution values. Not a fan of this resolution.
+  The colon operator `:` allows to use the `setupScreen` function from the `push` module
 
-One last concept to draw from the codebase: the `keypressed` function. This ia a function available on the `love` object and intuitively allows to react to a key being pressed. It accepts as argument the key being pressed and, in the instance of the code, it terminates the program when identifying a particular key.
+- in the `draw` function, draw/render the shapes in between `push:apply('start')` and `push:apply('end')`.
+
+### keypress
+
+In `draw`, the code introduces `love.keypressed`. This function allows to react to a key being pressed. It receives as argument the key being pressed and, in the instance of the code, terminates the program when identifying a particular key.
 
 ```lua
--- when a press is registered for the q letter terminate the program
 function love.keypressed(key)
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   end
 end
 ```
 
-`love.event.quit()` is evidently the reference to the function available on the `love` object to terminate the running application.
+In this instance pressing the character `esc` is used as a signal to quite the window.
 
-This particular snippet also shows how to use a conditional statement in `if ... then`. It works again through indentation. Again, it ends with the `end` keyword. It checks for a condition with two equal signs.
-
-```text
-if condition then
-  do something
-```
+Refer to [KeyConstant](https://love2d.org/wiki/KeyConstant) for a list of the possible keys.

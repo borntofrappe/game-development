@@ -1,8 +1,8 @@
 --[[
 global variables for the screen size
 ]]
-WINDOW_WIDTH = 640
-WINDOW_HEIGHT = 360
+WINDOW_WIDTH = 1080
+WINDOW_HEIGHT = 608
 
 -- on load set the size of the window
 function love.load()

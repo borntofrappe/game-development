@@ -1,5 +1,5 @@
 -- require the push library
-push = require 'Resources/push'
+push = require 'push'
 
 --[[
 global variables for the screen size
@@ -18,7 +18,7 @@ function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
 
   -- create a new font through the local ttf file
-  newFont = love.graphics.newFont('Resources/font.ttf', 8)
+  newFont = love.graphics.newFont('font.ttf', 8)
   -- set the font to be used in the application
   love.graphics.setFont(newFont)
 
@@ -31,10 +31,9 @@ function love.load()
 end
 
 -- function responding to a key being pressed
--- accepting as argument the key being pressed
+-- receiving as argument the key being pressed
 function love.keypressed(key)
-  -- when pressing q close the program
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   end
 end
@@ -45,7 +44,7 @@ function love.draw()
   push:apply('start')
 
   -- before any other visual, include a solid color as background
-  love.graphics.clear(0.5, 0, 0.7, 1)
+  love.graphics.clear(0.1, 0.1, 0.2, 1)
 
   -- include a simple string of text centered in the first half of the project's height
   -- ! use the virtual dimensions, which are projected to the real ones through the push libraru

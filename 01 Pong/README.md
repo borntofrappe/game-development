@@ -1,10 +1,10 @@
-The [first video](https://youtu.be/jZqYXSmgDuM) in the playlist behind this repository introduces the lua programming language and the love2d environment with the video game Pong in mind.
+The [first video](https://youtu.be/jZqYXSmgDuM) introduces the lua programming language and the love2d environment by creating the game Pong.
 
 The project is organized as follows:
 
 - in this folder you find the `README.md` introducing the project and the `.lua` files describing the final game
 
-- in the `Resources` folder you find the libraries, fonts and sound files used throughout the project
+- in the **res** folder you find the libraries, fonts and sound files used throughout the project
 
 - in each separate folder you find the game developed one feature at a time. In the `README.md` file(s), I annotate how the code changes, and the lessons I learn catching up with the video.
 <!--
@@ -32,3 +32,11 @@ One small note: I also updated the description of the serving of winner player, 
 Finally, I decided to update the code as to allow for increasing difficulty and also variable behavior on the computer side. I added `startingX` to describe where the AI will consider the ball, instead of always using the half of the screen's width. `startingX` begins randomly, between the center and three fourths of the screen, and is updated again at random whenever the ball hits the paddle of the player. It is a minor addition, which could be expanded to consider the passing of time, or the speed of the ball, but already a change which quite improves the gameplay.
 
 -->
+
+## Resources
+
+- [Pong with Lua](https://youtu.be/jZqYXSmgDuM)
+
+- [push library](https://github.com/Ulydev/push)
+
+- [Project assignment](https://docs.cs50.net/ocw/games/assignments/0/assignment0.html)
