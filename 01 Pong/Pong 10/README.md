@@ -1,37 +1,82 @@
-# Pong 9
+Here you describe a serving player, and a serving state.
 
-Index:
-
-- [Serving](#serving)
-  - [Variable](#variable)
-  - [State](#state)
+**requires push.lua, font.ttf, class.lua**
 
 ## Serving
 
-Once a point has been scored, the game directs the ball toward the player which has suffered the loss. To allow for such a feature, the application introduces a new game state in `serving`, which complements the game's logic with `playing` and `waiting`. The interplay between the three can be highlighted for clarity as follows:
+Once a point is scored, the idea is to redirect the ball toward the player which has suffered the loss. To allow for such a feature, the application introduces a new state in `serving`, which complements the game's logic with `playing` and `waiting`
 
-- by default: waiting
+To summarize the state in `main.lua`:
 
-- by pressing enter:
+- start in the `waiting` state
 
-  - if playing --> waiting
-  - if waiting --> playing
-  - if serving --> playing
+  ```lua
+  function love.load()
+    gameState = 'waiting'
+  end
+  ```
 
-- by scoring a point: serving.
+- when pressing enter, move between `waiting` and `playing`
 
-Conditional statements need to consider the relationship between states.
+  ```lua
+  function love.keypressed(key)
+    if key == 'enter' or key == 'return' then
+      if gameState == 'waiting' then
+        gameState = 'playing'
+      else
+        gameState = 'waiting'
+      end
+    end
+  end
+  ```
 
-### Variable
+- when scoring a point, move to the `serving` state
 
-With regards to the `servingPlayer` variable, this is created in the `load` function
+  ```lua
+  if ball.x < 0 then
+    -- update score
+    gameState = 'serving'
+  elseif ball.x > VIRTUAL_WIDTH then
+    -- update score
+    gameState = 'serving'
+  end
+  ```
+
+- when in the `serving` state, allow to move to `playing` by once again pressing enter. This is achieved by updating the conditional already covering the `waiting` state
+
+  ```lua
+  if gameState == 'waiting' or gameState == 'serving' then
+    gameState = 'playing'
+  else
+    gameState = 'waiting'
+  end
+  ```
+
+## servingPlayer
+
+To keep track of the serving player, the game introduces the `servingPlayer` variable
 
 ```lua
--- create a variable to keep track of the serving player
-servingPlayer = 1
+function love.load()
+  servingPlayer = 1
+end
 ```
 
-In the `update()` function, it is used to identify the serving player in the serving state. It is also used to determine the horizontal movement of the player, with a random speed and toward the player suffering a loss:
+When a point is scored, update the variable to consider the side suffering a loss
+
+```lua
+if ball.x < 0 then
+  -- update score
+  servingPlayer = 1
+  gameState = 'serving'
+elseif ball.x > VIRTUAL_WIDTH then
+  -- update score
+  servingPlayer = 2
+  gameState = 'serving'
+end
+```
+
+In the `update()` function then, update the code to identify the serving player when the `serving` state is reached. Based on this checkup, change the direction of the ball, with a random value toward the player suffering a loss:
 
 ```lua
 -- if serving, set the ball to move toward the serving player
@@ -44,35 +89,16 @@ if gameState == 'serving' then
 end
 ```
 
-And finally it is used in the `draw()` function to conditinally display on the screen the player currently serving.
-
-### State
-
-The state of the game, as mentioned, can be one of three values:
-
-- waiting,
-- serving,
-- playing.
-
-The three are implemented as described above with the following logic:
-
-- in the `load()` function, the state is initialized to `waiting`;
-
-- following a press on the `enter` key, the state is updated to either playing or waiting:
+`love.draw()` is finally updated to show the serving player.
 
 ```lua
-function love.keypressed(key)
-  if key == 'enter' or key == 'return' then
-    -- if waiting or serving, set the state to playing
-    if gameState == 'waiting' or gameState == 'serving' then
-      gameState = 'playing'
-    -- otherwise (the game is ongoing) set the state to waiting
-    else
-      gameState = 'waiting'
-    end
-
-  end
+if gameState == 'serving' then
+  love.graphics.printf(
+      'Now serving: player ' .. tostring(servingPlayer),
+      0,
+      VIRTUAL_HEIGHT / 12,
+      VIRTUAL_WIDTH,
+      'center'
+    )
 end
 ```
-
-- in the `update()` function, the state is finally updated as a point is scored, to `serving`.

@@ -1,8 +1,8 @@
 -- require the push library
-push = require 'Resources/push'
+push = require 'push'
 
 -- require the class library
-Class = require 'Resources/class'
+Class = require 'class'
 
 -- require the Paddle and Ball classes
 require 'Paddle'
@@ -34,10 +34,10 @@ function love.load()
   math.randomseed(os.time())
 
   -- create a new font through the local ttf file
-  appFont = love.graphics.newFont('Resources/font.ttf', 8)
+  appFont = love.graphics.newFont('font.ttf', 8)
 
   -- create another instance of the font for the score, larger in size
-  scoreFont = love.graphics.newFont('Resources/font.ttf', 32)
+  scoreFont = love.graphics.newFont('font.ttf', 32)
 
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
@@ -69,8 +69,7 @@ end
 -- function responding to a key being pressed
 -- accepting as argument the key being pressed
 function love.keypressed(key)
-  -- when pressing q close the program
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   --[[
     when pressing enter change the state according to the following logic
@@ -157,7 +156,7 @@ function love.update(dt)
     -- otherwise update the state to serving
     if ball.x < 0 then
       player2:score()
-      if player2.points >= 2 then
+      if player2.points >= 5 then
         gameState = 'victory'
         -- describe also the winning and serving player (for the following round)
         winningPlayer = 2
@@ -169,7 +168,7 @@ function love.update(dt)
       end
     elseif ball.x > VIRTUAL_WIDTH then
       player1:score()
-      if player1.points >= 2 then
+      if player1.points >= 5 then
         gameState = 'victory'
         winningPlayer = 1
         servingPlayer = 2

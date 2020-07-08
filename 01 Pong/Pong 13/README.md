@@ -1,10 +1,20 @@
-# Pong 12
+Here you allow to resize the window.
+
+**requires a res folder with push.lua, font.ttf, class.lua and the sounds folder**
 
 ## Resize
 
-This looks like a minor update, so I'll be short: in the options detailed when setting up the screen (both through `setMode` and later through the `push` library and `push:setupScreen()`), the window was set with a fixed width and height. `resizable` was indeed set to `false`.
+In the options detailed when setting up the screen (both through `setMode` and later through the `push` library and `push:setupScreen()`), the window was set with a fixed width and height. `resizable` was also set to `false`.
 
-This update tries to introduce the possibility of resiing the window. Immediately, by switching that flag to true and later by updating the 'projection' made by the `push` library when the window itself is resized.
+```lua
+push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
+    fullscreen = false,
+    resizable = true,
+    vsync = true
+  })
+```
+
+Setting the flag to `true` allows to resize the window, but it is necessary to update the projection whenever the size changes.
 
 `love.resize` is here the function which is overriden to detail the desired behavior. `push.resize()` is then the function which takes the new width and height and resizes the projection.
 

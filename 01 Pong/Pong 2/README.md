@@ -2,9 +2,7 @@ Here you render the visuals in a pixellated fashion.
 
 **requires push.lua**
 
-## Code
-
-### push
+## push
 
 The code makes use of a library called `push`. It is available on github [right here](https://github.com/Ulydev/push), and it allows to achieve a resolution based on the actual/virtual dimensions defined atop the script.
 
@@ -48,7 +46,7 @@ Here's how to update the resolution
 
 - in the `draw` function, draw/render the shapes in between `push:apply('start')` and `push:apply('end')`.
 
-### keypress
+## keypress
 
 In `draw`, the code introduces `love.keypressed`. This function allows to react to a key being pressed. It receives as argument the key being pressed and, in the instance of the code, terminates the program when identifying a particular key.
 

@@ -2,9 +2,7 @@ Here you draw the score and move the paddles following user input.
 
 **requires push.lua and font.ttf**
 
-## Code
-
-### Fonts
+## Fonts
 
 The code renders two strings of text using a larger font.
 
@@ -31,7 +29,7 @@ For every font family, for every font size, you need to repeat the process descr
 
 In the project, one of the fonts is also and immediately set in the load function. This to give a default value for the entire application.
 
-### Score
+## Score
 
 To render the score, the `printf` function doesn't use hard-coded strings, but two variables referring to integer values.
 
@@ -53,7 +51,7 @@ love.graphics.printf(
 
 `tostring()` coerces the number to a string value. However, there is no error when printing an integer.
 
-### Variables
+## Variables
 
 The code initializes variables at the top of the script, but also in the `love.load` function.
 
@@ -91,7 +89,7 @@ VIRTUAL_HEIGHT = 243
 PADDLE_SPEED = 200
 ```
 
-### User input
+## User input
 
 To move the paddles, the code leverages the core function `love.update(dt)`. As mentioned in a previous section, this function runs at every frame, and can be used to update the game as per the game loop.
 
@@ -166,7 +164,7 @@ In the project at hand:
 | 2      | arrow up   | up       |
 | 2      | arrow down | down     |
 
-### Aside
+## Aside
 
 Instead of `printf`, the project originally used the `print` function.
 

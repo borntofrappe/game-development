@@ -24,11 +24,11 @@ PADDLE_SPEED = 200
 
 -- on load set the size of the window, using the push library to apply the desired resolution
 function love.load()
-  -- filter to avoid blur
-  love.graphics.setDefaultFilter('nearest', 'nearest')
-
   -- set the title on the window
   love.window.setTitle('Pong')
+
+  -- filter to avoid blur
+  love.graphics.setDefaultFilter('nearest', 'nearest')
 
   -- based on the current os time, set the seed for the random number generator, for math.random
   math.randomseed(os.time())
@@ -69,8 +69,7 @@ end
 -- function responding to a key being pressed
 -- accepting as argument the key being pressed
 function love.keypressed(key)
-  -- when pressing q close the program
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   -- when pressing enter toggle the game, toggling gameState between 'waiting' and 'playing'
   elseif key == 'enter' or key == 'return' then

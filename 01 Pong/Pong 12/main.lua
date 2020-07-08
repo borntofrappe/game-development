@@ -1,8 +1,8 @@
 -- require the push library
-push = require 'Resources/push'
+push = require 'res/push'
 
 -- require the class library
-Class = require 'Resources/class'
+Class = require 'res/class'
 
 -- require the Paddle and Ball classes
 require 'Paddle'
@@ -34,21 +34,21 @@ function love.load()
   math.randomseed(os.time())
 
   -- create a new font through the local ttf file
-  appFont = love.graphics.newFont('Resources/font.ttf', 8)
+  appFont = love.graphics.newFont('res/font.ttf', 8)
 
   -- create another instance of the font for the score, larger in size
-  scoreFont = love.graphics.newFont('Resources/font.ttf', 32)
+  scoreFont = love.graphics.newFont('res/font.ttf', 32)
 
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
 
   -- set the audio files to be used in the application
   sounds = {
-    ['playing'] = love.audio.newSource('Resources/sounds/playing.wav', 'static'),
-    ['paddle_hit'] = love.audio.newSource('Resources/sounds/paddle_hit.wav', 'static'),
-    ['wall_hit'] = love.audio.newSource('Resources/sounds/wall_hit.wav', 'static'),
-    ['score'] = love.audio.newSource('Resources/sounds/score.wav', 'static'),
-    ['victory'] = love.audio.newSource('Resources/sounds/victory.wav', 'static')
+    ['playing'] = love.audio.newSource('res/sounds/playing.wav', 'static'),
+    ['paddle_hit'] = love.audio.newSource('res/sounds/paddle_hit.wav', 'static'),
+    ['wall_hit'] = love.audio.newSource('res/sounds/wall_hit.wav', 'static'),
+    ['score'] = love.audio.newSource('res/sounds/score.wav', 'static'),
+    ['victory'] = love.audio.newSource('res/sounds/victory.wav', 'static')
   }
 
   -- push:setupScreen works similarly to setMode, but with two additional arguments in the virtual dimensions
@@ -78,8 +78,7 @@ end
 -- function responding to a key being pressed
 -- accepting as argument the key being pressed
 function love.keypressed(key)
-  -- when pressing q close the program
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   --[[
     when pressing enter change the state according to the following logic
@@ -180,7 +179,7 @@ function love.update(dt)
       -- play the audio for a point being scored
       sounds['score']:play()
       player2:score()
-      if player2.points >= 2 then
+      if player2.points >= 5 then
         gameState = 'victory'
         -- play the sound file for a victorious outcome
         sounds['victory']:play()
@@ -196,7 +195,7 @@ function love.update(dt)
       -- play the audio for a point being scored
       sounds['score']:play()
       player1:score()
-      if player1.points >= 2 then
+      if player1.points >= 5 then
         gameState = 'victory'
         -- play the sound file for a victorious outcome
         sounds['victory']:play()

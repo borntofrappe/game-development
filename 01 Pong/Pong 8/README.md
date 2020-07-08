@@ -2,23 +2,43 @@ Here you detect collision between the ball and the paddles.
 
 **requires push.lua, font.ttf, class.lua**
 
-Pong 7 focuses on detecting collision between the paddles and the ball, but also adds a title to the page. This is a minor tweak, but it is allowed by the `setTitle()` function, available on the `love.window` module.
+## Title
 
-As regards the collision detection, this is included in the `love.update(dt)` function, before the ball/paddle have a chance to move. Furthermore, it is included through the `Ball` class, and specifically a `:collides()` function, to which a paddle is passed as argument.
+In a minor change, the script updates the title of the game window
 
-I'll review the function later, but assuming it returns a boolean, it is possible to establish how it works in the context of the `main.lua` file.
+```lua
+function love.load()
+  love.window.setTitle('Pong')
+end
+```
 
 ## Collision
 
-If the game is ongoing, the `update` function checks if the ball collides, with the first or second paddle.
+Collision detection is included in the `love.update(dt)` function, before the ball/paddle have a chance to move.
 
-The logic can be summarised as follows (given a collision):
+It is included with a method on the `Ball` class, which receives as its only argument an instance of the paddle class.
+
+```lua
+function love.update(dt)
+  if ball:collides(player1) then
+
+  elseif ball:collides(player2) then
+
+  end
+end
+```
+
+The method will be examined in a future section, but assume for the time being that it returns a boolean detailing whether or not collision is detected.
+
+Given a collision, the ball is updated in its `dx` and `dy` values:
 
 - change the horizontal direction and slightly increase the speed:
 
   ```lua
   ball.dx = -ball.dx * 1.03
   ```
+
+  This to ensure that the game increases in its difficulty
 
 - change the horizontal coordinate to avoid an immediate overlap between paddle and ball.
 
@@ -34,9 +54,9 @@ The logic can be summarised as follows (given a collision):
   ball.x = player2.x - ball.width
   ```
 
-  The coordinates are incremented/ decremented considering how shapes are drawn from the top left corner, lef to right (and top to bottom).
+  The coordinates are incremented/ decremented considering how shapes are drawn from the top left corner
 
-- change the vertical direction, but keep the same trajectory (never going in the opposite direction from which the ball came). This is guaranteed by including a random value which is always negative if `dy` is already negative, or accordingly otherwise.
+- change the vertical direction, but keep the same trajectory. This is guaranteed by including a random value which is always negative if `dy` is already negative, or accordingly otherwise.
 
   ```lua
   if ball.dy < 0 then
@@ -66,11 +86,11 @@ if ball.y >= VIRTUAL_HEIGHT - ball.width then
   ball.dy = -ball.dy
 ```
 
-## Ball Collision
+## collide
 
-In the `Ball.lua` file, the `:collide` function takes as argument a paddle and checks the position of the ball in connection to the coordinate of this object. It then checks through a series of conditional whether the ball and the paddle are **not** overlapping, returning `true` otherwise.
+The `:collide` function takes as argument a paddle and checks the position of the ball in connection to the coordinate of this object. It then checks through a series of conditional whether the ball and the paddle are **not** overlapping, returning `true` otherwise.
 
-An overlap, actually the lack of an overlap is assed by checking the position of the edges of the two shapes with the following considerations:
+An overlap, actually the lack of an overlap is assessed by checking the position of the edges of the two shapes with the following considerations:
 
 - if the horizontal coordinate of the right edge of one shape is less than the one of the left edge of the other shape;
 

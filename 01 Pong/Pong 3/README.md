@@ -2,9 +2,7 @@ Here you set up a custom font and draw a few shapes.
 
 **requires push.lua and font.ttf**
 
-## Code
-
-### Font
+## Font
 
 The font is included through a local `.ttf` file and as follows:
 
@@ -23,7 +21,7 @@ The font is included through a local `.ttf` file and as follows:
 
 - in the `draw()` function, include the text exactly as before. The end result is that the font set in the `load` function is used for any dispayed on the screen
 
-### Colors and shapes
+## Colors and shapes
 
 In the `draw` function, the code updates the window in its color and the shapes being rendered. Similarly to the text, these changes leverage the `love.graphics` object.
 

@@ -1,8 +1,8 @@
 -- require the push library
-push = require 'Resources/push'
+push = require 'push'
 
 -- require the class library
-Class = require 'Resources/class'
+Class = require 'class'
 
 -- require the Paddle and Ball classes
 require 'Paddle'
@@ -34,10 +34,10 @@ function love.load()
   math.randomseed(os.time())
 
   -- create a new font through the local ttf file
-  appFont = love.graphics.newFont('Resources/font.ttf', 8)
+  appFont = love.graphics.newFont('font.ttf', 8)
 
   -- create another instance of the font for the score, larger in size
-  scoreFont = love.graphics.newFont('Resources/font.ttf', 32)
+  scoreFont = love.graphics.newFont('font.ttf', 32)
 
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
@@ -68,7 +68,7 @@ end
 -- accepting as argument the key being pressed
 function love.keypressed(key)
   -- when pressing q close the program
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   --[[
     when pressing enter change the state according to the following logic
@@ -234,7 +234,7 @@ function love.draw()
         VIRTUAL_WIDTH, -- centered in connection to the screen's width
         'center'
       )
-    end
+  end
 
   -- show the score below the game text, with the other font
   -- include two string values, for the individual score of the players
