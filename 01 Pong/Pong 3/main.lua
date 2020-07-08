@@ -44,7 +44,7 @@ function love.draw()
   push:apply('start')
 
   -- before any other visual, include a solid color as background
-  love.graphics.clear(0.1, 0.1, 0.2, 1)
+  love.graphics.clear(6/255, 17/255, 23/255, 1)
 
   -- include a simple string of text centered in the first half of the project's height
   -- ! use the virtual dimensions, which are projected to the real ones through the push libraru

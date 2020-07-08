@@ -1,108 +1,159 @@
-# Pong 4
+Here you clamp the paddles to the window's height and move the puck at random.
 
-Index:
+You also introduce the concept of _game state_.
 
-- [Randomness](#randomness)
-
-- [Clamping](#clamping)
-
-- [Game State](#game-state)
-
-## Randomness
-
-To avoid a predictable behavior, the project introduces randomness in the form or random integers and through the concept of seeds.
-
-`math.randomseed()` provides a seed which is 'fed' to `math.random` functions to create random values. It accepts as argument a value which generates a seed, which is set to be the time currently being registered by the OS. This is an every changing value, costantly being updated on the basis of the internal clock. This allows to base the seed on a value which rarely if ever gets repeated.
-
-Based on this random seed, `math.random` provides a random value. This function accept a variable number of arguments, as specified in the docs:
-
-- with no argument, it provides a random value in the [0-1] range;
-
-- with one argument, it provides a random value in the [0, max] range, where max is exactly the processed argument;
-
-- with two arguments, it provides a random value in the [min, max] range, where the two arguments make up the minimum and maximum.
-
-In the actual project, the code makes use of `math.random` with one and two values. In the first instance, it accompanies the expression with a _ternary operator_, to assign a variable a value between to possibilities.
-
-The horizontal direction is indeed determined to be either 100 or -100, based on randomness (the condition evaluates to true half of the times).
-
-```lua
-ballDX = math.random(2) == 1 and 100 or -100
-```
-
-The syntax above might look a bit more contrived than a JavaScript ternary operator.
-
-```js
-ballDX = Math.random() > 5 ? 100 : -100;
-```
-
-But I guess it's just a matter of getting used to it.
-
-The ternary operator in lua can be summed up as follows:
-
-```lua
-variable = condition and ifTrue or ifFalse
-```
-
-The `and` and `or` keywords allow to specify the expression to be evaluated if the condition is true or false respectively.
-
-That's how the project used `math.random` with one argument. With two arguments, the project creates instead a random value in the [-50,50] range:
-
-```lua
-ballDY = math.random(-50, 50)
-```
-
-This for the vertical direction.
-
-Direction would actually be a misnomer on my part though. It is actually the value which is latter added to the coordinate of the ball to make it move across the screen. In this sense it is closer to the horizontal and vertical speed.
+**requires push.lua and font.ttf**
 
 ## Clamping
 
-An issue with the previous update concerned the movement of the paddles once said paddles would reach the upper and lower edge of the screen. Without additional consideration, the paddles can and indeed go past the boundaries of the window, which is something the game should not allow.
+Once the paddles are allowed to move following user input, you need to make sure their position doesn't exceed the boundaries of the window.
 
-To fix this problem, the code makes use of the `math.min` and `math.max` function. It is actually a clever use, so spelling it out ought to make it more memorable.
-
-Simply put, instead of checking the position of the paddles and avoiding any movement if it reaches the boundaries, the coordinate of the paddles is updated to be that specified by the movement only if that coordinate is within the prescribed limits. Otherwise, the `math` function clamps the coordinate to be 0 or, for the lower edge, the height of the window minus the height of the paddle (this subtraction to guarantee that the paddle is always and completely above the fold).
+Lua provides `math.min` and `math.max` to clmap values to a lower and upper threshold. The idea is to assign to the coordinate the value following user interaction, or the threshold. For instance, to clamp the northbound paddle for `player1`, as the paddle reaches the top of the window (`y = 0`), assign a value of `0` to avoid having the paddle above the window (`y < 0`)
 
 ```lua
--- when pressing w (or up for the second player) calmp the vertical coordinate to 0
-player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
-```
-
-## Game State
-
-As the game stands, the ball can be made moving without need for further input. It quickly moves outside of the window's scope and without detection of any collision, but those are issues for a later update.
-
-As it relatess to the concept of game state, the project introduces it with a variable determining whether the game is ongoing or not.
-
-This variable is initialied in the `load` function.
-
-```lua
-gameState = 'waiting'
-```
-
-It is then updated on the basis of a key event being registered on the _enter_ key.
-
-```lua
-if key == 'enter' then
-  if gameState == 'waiting' then
-    gameState = 'playing'
-  else
-    gameState = 'waiting'
-  end
+if love.keyboard.isDown('w') then
+  player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
 end
 ```
 
-It is then and most importantly used in the `update` function, to move the ball only when the game state is set to the prescribed value of 'playing'.
+For the opposite direction, `math.min` allows instead to clamp the position to the height of the window. More specifically the height of the window minus the height of the paddle, since the coordinate describes the top left corner of the paddle.
 
 ```lua
-if gameState == 'playing' then
+if love.keyboard.isDown('s') then
+  player1Y = math.min(VIRTUAL_HEIGHT - 20, player1Y + PADDLE_SPEED * dt)
+end
+```
+
+`20` is here the height of the paddle, and ultimately a value which is better stored in a variable to avoid repeating a hard-coded number.
+
+## Randomness
+
+To avoid a predictable behavior, the code introduces randomness in the form or random integers and through the concept of seeds.
+
+`math.random()` works with a variable number of arguments:
+
+- without arguments, it returns a random float in the `[0, 1)` range
+
+- with one positive integer `i`, it returns a random integer in the `[1, i]` range
+
+- with twp positive integer `i` and `j`, it returns a random integer in the `[i, j]` range
+
+`math.random()` produces a random number. However, the output is not completely random. It is based on a seed, a fixed value which means the function ultimately produces the same sequence of numbers. `math.randomseed()` is used to change this seed. By using a different seed every time, the script ensures that this sequence changes, and one way of describing a different seed is through the current time from the `os` module.
+
+```lua
+math.randomseed(os.time())
+```
+
+With this preface, the code makes use of `math.random` in a few instances.
+
+1. assign one of two values to a variable.
+
+   To move the ball either left or right, `math.random(2)` is equated to 1, and since it can only be `1` or `2`, `ballDX` is assigned one or the other value.
+
+   ```lua
+   ballDX = math.random(2) == 1 and 100 or -100
+   ```
+
+   The `and` and `or` keywords allow to specify the expression to be evaluated if the condition is true or false respectively.
+
+2. assign a random value to a variable.
+
+   This is perhaps the most conventional use case, but for the change in the vertical coordinate, the ball is assigned an integer in the `[-50, 50]` range
+
+   ```lua
+   ballDY = math.random(-50, 50)
+   ```
+
+## Ball movement
+
+The script moves the ball by changing its `x` and `y` coordinate.
+
+Initially, these variables describe the center of the window
+
+```lua
+function love.load()
+
+  ballX = VIRTUAL_WIDTH / 2 - 3
+  ballY = VIRTUAL_HEIGHT / 2 - 3
+end
+```
+
+`-3` to offset for the size of the ball, `6`
+
+```lua
+function love.draw()
+  love.graphics.rectangle('fill', ballX, ballY, 6 , 6)
+end
+```
+
+In the `update(dt)` function then, the code considers the two previous random variables to modify the position of the ball, and ultimately where the ball is drawn.
+
+```lua
+function love.update(dt)
   ballX = ballX + ballDX * dt
   ballY = ballY + ballDY * dt
 end
 ```
 
-Such a variable can indeed regulate the state of the game, and allows to transition between different states. It also allows, with a simple conditional statement, to draw different elements on the screen, as in the `draw` function.
+## Game state
+
+The project introduces the concept of game state through a single variable.
+
+```lua
+gameState = 'waiting'
+```
+
+Initialized in the `load()` function, it describes different behaviors for the game. For instance, the movement of paddles, the movement of the ball can be conditioned to the string describing a value of `playing`.
+
+```lua
+if gameState == 'playing' then
+  if love.keyboard.isDown('w') then
+    player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
+  end
+end
+```
+
+In the `keypressed` function, the string is toggled between one of two values
+
+```lua
+function love.keypressed(key)
+  if key == 'enter' or key == 'return' then
+    if gameState == 'waiting' then
+      gameState = 'playing'
+    else
+      gameState = 'waiting'
+    end
+  end
+end
+```
+
+The variable is then used:
+
+- in the `update` function to move the ball conditional to the string being `playing`
+
+```lua
+function update(dt)
+  if gameState == 'playing' then
+    ballX = ballX + ballDX * dt
+    ballY = ballY + ballDY * dt
+  end
+end
+```
+
+- back in the `keypressed` function to re-initialize the ball as the string is toggled back to `waiting`
+
+```lua
+else
+    gameState = 'waiting'
+
+    ballX = VIRTUAL_WIDTH / 2 - 3
+    ballY = VIRTUAL_HEIGHT / 2 - 3
+    ballDX = math.random(2) == 1 and 100 or -100
+    ballDY = math.random(-50, 50)
+end
+```
+
+- in the `draw` function to render the string "Press enter to play" or "Press enter to stop" in the two different versions
 
 ```lua
 if gameState == 'waiting' then

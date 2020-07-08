@@ -6,7 +6,8 @@ The project is organized as follows:
 
 - in the **res** folder you find the libraries, fonts and sound files used throughout the project
 
-- in each separate folder you find the game developed one feature at a time. In the `README.md` file(s), I annotate how the code changes, and the lessons I learn catching up with the video.
+- in each separate folder you find the game developed one feature at a time. In the `README.md` file(s), I annotate how the code changes, and the lessons I learn catching up with the video. Pay attention: the folders do not include the resources from the **res** folder, so running the scripts without first adding the necessary files won't work.
+
 <!--
 
 ### Pong n

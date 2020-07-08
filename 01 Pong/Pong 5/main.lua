@@ -1,5 +1,5 @@
 -- require the push library
-push = require 'Resources/push'
+push = require 'push'
 
 --[[
 global variables for the screen size
@@ -24,10 +24,10 @@ function love.load()
   math.randomseed(os.time())
 
   -- create a new font through the local ttf file
-  appFont = love.graphics.newFont('Resources/font.ttf', 8)
+  appFont = love.graphics.newFont('font.ttf', 8)
 
   -- create another instance of the font for the score, larger in size
-  scoreFont = love.graphics.newFont('Resources/font.ttf', 32)
+  scoreFont = love.graphics.newFont('font.ttf', 32)
 
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
@@ -64,8 +64,7 @@ end
 -- function responding to a key being pressed
 -- accepting as argument the key being pressed
 function love.keypressed(key)
-  -- when pressing q close the program
-  if key == 'q' then
+  if key == 'escape' then
     love.event.quit()
   -- when pressing enter toggle the game, toggling gameState between 'waiting' and 'playing'
   elseif key == 'enter' or key == 'return' then
@@ -130,7 +129,7 @@ function love.draw()
   push:apply('start')
 
   -- before any other visual, include a solid color as background
-  love.graphics.clear(200/255, 100/255, 85/255, 1)
+  love.graphics.clear(6/255, 17/255, 23/255, 1)
 
   -- include a simple string of text centered in the first half of the project's height
   -- ! use the virtual dimensions, which are projected to the real ones through the push libraru

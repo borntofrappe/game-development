@@ -1,19 +1,26 @@
-# Pong 6
+Here you display how fast the game runs.
+
+**requires push.lua, font.ttf, class.lua**
 
 ## Code
 
-The seventh installment of updates focuses on the frames per second in which the game runs. The game is set to show this performance metric using the Love2D native function `love.timer.getFPS()`, so the update is rather minor, but it does show how it is possible to create a function for any feature, and posit even later in the codebase.
+Love2D offers a `love.timer.getFPS()` to display the frames per seconds at which the game runs.
 
-It also shows how to concatenate strings, which really makes me want to reach for template literals.
+Instead of using `getFPS` directly in `love.draw` however, the lecturer separates the utility in a function. This is out of convenience, to encapsulate the functionality and have the code in `love.draw` be more declarative.
+
+```lua
+function love.draw()
+  displayFPS()
+end
+```
+
+In `displayFPS`, the frames per second are drawn in the top left corner and using the default font.
 
 ```lua
 function displayFPS()
-  -- detail the frame per second in the top left corner
-  love.graphics.print('FPS : ' .. tostring(love.timer.getFPS()), 10, 10)
+  love.graphics.setFont(appFont)
+  love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
+end
 ```
 
-The two consecutive dots `..` seem to function just like a plus sign `+` in JavaScript.
-
-Finally, the snippet also shows how to color text, through the `setColor()` function available on the `love.graphics` module.
-
-I don't think this is intentional, but the code is also updated in the `Ball.lua` file. Here, a new function `:collides` accepts as argument a paddle and considers when the ball overlaps said paddle. There is no mention of this function in the `main.lua` file, but it might be helpful to consider the logic behind it.
+For the color, the default value is updated using `love.graphics.setColor` describing a green hue.

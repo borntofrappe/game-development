@@ -1,14 +1,26 @@
-# Pong 5
+Here you refactor the codebase to use classes.
+
+**requires push.lua, font.ttf, class.lua**
 
 ## Class
 
-The project restructures the existing code through _classes_. These are data structures included to more easily manage the elements of the game, namely the paddles and the ball. You can think of a class as an independent entity, with its own variables and functions.
+The project restructures the existing code through _classes_. You can think of a class as an independent entity, with its own variables and functions; consider for instance `Ball` and `Paddle`.
 
-As classes are not a concept native to lua nor love2D, the helper library [provided in class.lua](https://github.com/vrld/hump/blob/master/class.lua) allows to include the construct.
+Classes are not a concept native to lua, nor love2D, and the course introduces here the helper library [class.lua](https://github.com/vrld/hump/blob/master/class.lua) to include the construct.
 
 This library is used not as much in `main.lua`, but in `Paddle.lua` and `Ball.lua`. These are separate files required atop the code managing the Love2D functions and which actually describe the different classes.
 
-Remember: Love2D reads the `main.lua` file. Librarie and other lua files can be referenced from this main feature.
+Remember: Love2D reads the `main.lua` file. Libraries and other lua files can be referenced from this main script.
+
+```lua
+push = require 'push'
+Class = require 'class'
+
+require 'Paddle'
+require 'Ball'
+```
+
+## Paddles
 
 Moving on with classes, they work as follows:
 
@@ -18,9 +30,9 @@ Moving on with classes, they work as follows:
   Paddle = Class{}
   ```
 
-  A class can have variables and functions, but starts out with an `init()` function.
+  A class can have variables and functions (methods), but starts out with an `init()` function.
 
-- detail a function which runs whenever an instance of the class is created. An initialization function which describes the variables the class ought to hold.
+- detail what happens whenever an instance of the class is created through the `init` function
 
   ```lua
   function Paddle:init(x, y, width, height)
@@ -32,9 +44,9 @@ Moving on with classes, they work as follows:
   end
   ```
 
-  Here, the class is initialized with four variables, describing the paddles coordinates and sizes. It also includes a `dy` variable, initialized to 0, which can be presumed to describe the vertical movement across the y axis.
+  Here, the class is initialized with four variables, describing the paddles coordinates and sizes. It also includes a `dy` variable, to later describe the vertical movement across the y axis.
 
-  Whenever creating an instance of the class, be sure to include the arguments described in the `init` function. Indeed in the `main.lua` function, the paddles are created as follows:
+  Whenever creating an instance of the class, be sure to include the arguments described in the `init` function. In `main.lua` for instance, the paddles are created in the `love.load` function as follows:
 
   ```lua
   player1 = Paddle(10, 30, 5, 20)
@@ -50,51 +62,101 @@ Moving on with classes, they work as follows:
 
   In the code, the `Paddle` class is equipped with two functions: `update(dt)` and `render()`.
 
-  They are called in `main.lua` as follows:
+  - `render` to draw the paddle through love2d and its rectangle function
 
   ```lua
-  player1:render()
+  function Paddle:render()
+    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+  end
   ```
 
-  Using the colon roughly explained in Pong 0. Looking into the functions themselves, these describe the behavior previously included in the main file.
+  - `update(dt)` to move the paddle according to its position, `dy` variable and the boundaries of the window
 
-  - `update(dt)` allows to clamp the paddles to the boundaries of the window:
-
-    ```lua
-    function Paddle:update(dt)
-      if self.dy < 0 then
-        self.y = math.max(0, self.y + self.dy * dt)
-      else
-        self.y = math.min(VIRTUAL_HEIGHT - self.y, self.y + self.dy * dt)
-      end
+  ```lua
+  function Paddle:update(dt)
+    if self.dy < 0 then
+      self.y = math.max(0, self.y + self.dy * dt)
+    else
+      self.y = math.min(VIRTUAL_HEIGHT - self.y, self.y + self.dy * dt)
     end
-    ```
+  end
+  ```
 
-    Notice how the function is itself created following a `:` colon, how it accepts an argument which mirrors the delta time in the update function and how the function itself references the values of the class through the `self` keyword.
+  You are effectively moving the code from `main.lua` to `Paddle.lua`, but in so far ensuring an independent entity. If you need to change the way the paddle behaves, you do so in `Paddle.lua`. In `main.lua`, you call the functions to update the and render the shape without worrying about the implementation
 
-    This allows to later call the function in `love.update`, pass in as argument delta time and have the function manage the clamping of the paddles.
+  ```lua
+  function love.update(dt)
+    player1:update(dt)
+  end
 
-    ```lua
-    function love.update(dt)
-      -- change the dy value of the paddles according to the key being pressed
+  function love.draw()
+    player1:render()
+  end
+  ```
 
-      -- clamp the paddles to the windows edges
-      player1:update(dt)
-    end
-    ```
+  This allows to later call the function in `love.update`, pass in as argument delta time and have the function manage the clamping of the paddles.
 
-    The idea is to update the vertical coordinate only on the basis of the `dy` value, and only through the update function.
+  ```lua
+  function love.update(dt)
+    -- change the dy value of the paddles according to the key being pressed
 
-  - `render()` on the other hand is much shorter and literally renders the paddle on the screen through the `love.graphics.rectangle()` function. This once more using the variables of the class instance, through the `self` keyword.
+    -- clamp the paddles to the windows edges
+    player1:update(dt)
+  end
+  ```
 
-And this describes how classes, specifically for the paddles, work. For the `Ball` class, the code is rather similar:
+## Ball
 
-- initialize the ball and the variables previously included each on their own. In the `init` function make sure to add `dx` and `dy` using `math.random`.
+For the `Ball` class, the code repeats much of the instructions specified for the paddles:
 
-- describe a `reset()` functions which exactly repositions the ball in the center of the screen and sets new random values for the horizontal and vertical speed.
+- initialize the ball with the variables describing its position and movement. The only difference is here that the ball moves in both the `x` and `y` dimensions, and that it uses `math.random` for both `dx` and `dy`
 
-- include a `update(dt)` function, which similarly to the paddles' counterpart updates the coordinates on the basis of the delta values (in this instance both horizontally and vertically);
+```lua
+function Ball:init(x, y, width, height)
+  self.x = x
+  self.y = y
+  self.width = width
+  self.height = height
+  self.dx = math.random(2) == 1 and 100 or -100
+  self.dy = math.random(-50, 50)
+end
+```
 
-- add a `render` function which exactly reepats the structrue of the paddles' one.
+- update the ball using delta time, `dt`
 
-All together it may look like a lot, but it is rather understandable.
+  ```lua
+  function Ball:update(dt)
+    self.x = self.x + self.dx * dt
+    self.y = self.y + self.dy * dt
+  end
+  ```
+
+- draw the ball using the `rectangle` function
+
+```lua
+function Ball:render()
+  love.graphics.rectangle('fill', self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
+end
+```
+
+Finally, and differently from the paddle class, add a `reset()` method to reposition the ball in the center of the screen.
+
+```lua
+function Ball:reset()
+  self.x = VIRTUAL_WIDTH / 2 - self.width / 2
+  self.y = VIRTUAL_HEIGHT / 2 - self.height / 2
+  self.dx = math.random(2) == 1 and 100 or -100
+  self.dy = math.random(-50, 50)
+end
+```
+
+Once more, this allows `main.lua` to reposition the ball with a cleaner syntax
+
+```lua
+if gameState == 'waiting'
+  gameState = 'playing'
+else
+  gameState = 'waiting'
+  ball:reset()
+end
+```
