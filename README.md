@@ -2,6 +2,8 @@
 
 The goal of this repo starts out simple: follow [this introduction course](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) to learn a bit about game development.
 
+In the **Games** folder, I reconsider the projects to practice with both lua and love2d in a less guided fashion.
+
 ## Reasons
 
 To learn:
