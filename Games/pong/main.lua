@@ -16,8 +16,10 @@ function love.load()
     
     math.randomseed(os.time())
 
-    font = love.graphics.newFont('res/Righteous-Regular.ttf', 24)
-    love.graphics.setFont(font)
+    appFont = love.graphics.newFont('res/Righteous-Regular.ttf', 14)
+    scoreFont = love.graphics.newFont('res/Righteous-Regular.ttf', 24)
+    titleFont = love.graphics.newFont('res/Righteous-Regular.ttf', 32)
+    love.graphics.setFont(appFont)
 
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, SETTINGS)
 
@@ -25,12 +27,28 @@ function love.load()
     player2 = Paddle:init(WINDOW_WIDTH / 2, 0, 30, false)
 
     ball = Ball:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 8)
+
+
+    gameState = 'waiting'
 end
 
 
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
+    end
+
+    if key == 'enter' or key == 'return' then
+        if gameState == 'waiting' then
+            gameState = 'playing'
+        elseif gameState == 'gameover' then
+            gameState = 'waiting'
+            ball:reset()
+            player1:score(0)
+            player2:score(0)
+        elseif gameState == 'playing' then
+            gameState = 'waiting'
+        end
     end
 end
 
@@ -51,26 +69,37 @@ function love.update(dt)
         player2.dx = 0
     end
 
-
-    if ball:collides(player1) then
-        ball:bounce(player1)
-        
-    elseif ball:collides(player2) then
-        ball:bounce(player2)
-    end
-
-    if ball.y < 0 then
-        player1:score()
-        ball:reset()
-    elseif ball.y > WINDOW_HEIGHT then
-        player2:score()
-        ball:reset()
-    end
-
     player1:update(dt)
     player2:update(dt)
 
-    ball:update(dt)
+    if gameState == 'playing' then
+        if ball:collides(player1) then
+            ball:bounce(player1)
+            
+        elseif ball:collides(player2) then
+            ball:bounce(player2)
+        end
+    
+        if ball.y < 0 then
+            player1:score()
+            if player1.points >= 2 then 
+                gameState = 'gameover'
+            else
+                gameState = 'waiting'
+                ball:reset()
+            end
+        elseif ball.y > WINDOW_HEIGHT then
+            player2:score()
+            if player2.points >= 2 then 
+                gameState = 'gameover'
+            else
+                gameState = 'waiting'
+                ball:reset()
+            end
+        end
+    
+        ball:update(dt)
+    end
 end
 
 function love.draw()
@@ -87,6 +116,7 @@ function love.draw()
     love.graphics.circle('line', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 42) 
     
     --score
+    love.graphics.setFont(scoreFont)
     love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
     love.graphics.rotate(math.pi)
     love.graphics.printf(player2.points, 0, 5, WINDOW_WIDTH / 2 - 8, 'right')
@@ -100,5 +130,33 @@ function love.draw()
     -- paddles
     player1:render()
     player2:render()
+
+
+    if gameState == 'waiting' then
+        love.graphics.setFont(appFont)
+        instruction = 'Press enter'
+
+        love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        for i = 1, 2 do
+            love.graphics.rotate(math.pi)
+            for i = 1, #instruction do
+                letter = instruction:sub(i, i):upper()
+                love.graphics.printf(letter, WINDOW_WIDTH / 2 - 24, WINDOW_HEIGHT / 2 - 24 - 14 * #instruction + 14 * i, 14, 'center')
+            end
+        end
+    end
+
+    if gameState == 'gameover' then
+        love.graphics.setFont(titleFont)
+
+        winningSide = player1.points > player2.points and 1 or 2
+        love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        for i = 1, 2 do
+            love.graphics.rotate(math.pi)
+            title = winningSide == i and 'Too bad..' or 'Congrats!'
+            love.graphics.printf(title:upper(), -WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, WINDOW_WIDTH, 'center')
+        end
+
+    end
 
 end

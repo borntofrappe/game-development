@@ -8,7 +8,7 @@ function Ball:init(x, y, r)
     ball.r = r
 
     ball.dx = math.random(-200, 200)
-    ball.dy = math.random(2) == 1 and 150 or -150
+    ball.dy = math.random(2) == 1 and 200 or -200
 
     self.__index = self
     setmetatable(ball, self)
@@ -54,7 +54,7 @@ function Ball:reset()
     ball.y = WINDOW_HEIGHT / 2
 
     ball.dx = math.random(-200, 200)
-    ball.dy = math.random(2) == 1 and 100 or -100
+    ball.dy = math.random(2) == 1 and 200 or -200
 end
 
 function Ball:render()

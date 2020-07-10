@@ -27,8 +27,9 @@ function Paddle:update(dt)
     end
 end
 
-function Paddle:score()
-    self.points = self.points + 1
+
+function Paddle:score(score)
+    self.points = score and score or self.points + 1
 end
 
 
