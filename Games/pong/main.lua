@@ -10,37 +10,46 @@ SETTINGS = {
 }
 
 PADDLE_SPEED = 250
+COUNTDOWN_TIME = 0.5
 
 function love.load()
     love.window.setTitle('Pong')
     
     math.randomseed(os.time())
 
-    appFont = love.graphics.newFont('res/Righteous-Regular.ttf', 14)
     scoreFont = love.graphics.newFont('res/Righteous-Regular.ttf', 24)
     titleFont = love.graphics.newFont('res/Righteous-Regular.ttf', 32)
-    love.graphics.setFont(appFont)
 
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, SETTINGS)
 
-    player1 = Paddle:init(0, WINDOW_HEIGHT / 2, 30)
-    player2 = Paddle:init(0, WINDOW_HEIGHT / 2, 30)
+    player1 = Paddle:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT, 28, true)
+    player2 = Paddle:init(WINDOW_WIDTH / 2, 0, 28, false)
 
-    players = {}
-    players[1] = {
-        player = player1,
-        right = "right",
-        left = "left"
-    }
-    players[2] = {
-        player = player2,
-        right = "a",
-        left = "d"
+    players = { 
+        {
+            player = player1,
+            right = "right",
+            left = "left"
+        }, 
+        {
+            player = player2,
+            right = "d",
+            left = "a"
+        }
     }
 
-    ball = Ball:init(0, 0, 8)
+    ball = Ball:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 8)
 
     gameState = 'waiting'
+
+    timer = 0
+    count = 3
+
+    sounds = {
+        ['bounce'] = love.audio.newSource('res/sounds/bounce.wav', 'static'),
+        ['point'] = love.audio.newSource('res/sounds/point.wav', 'static'),
+        ['countdown'] = love.audio.newSource('res/sounds/countdown.wav', 'static'),
+    }
 end
 
 
@@ -51,7 +60,8 @@ function love.keypressed(key)
 
     if key == 'enter' or key == 'return' then
         if gameState == 'waiting' then
-            gameState = 'playing'
+            sounds["countdown"]:play()
+            gameState = 'serving'
         elseif gameState == 'gameover' then
             gameState = 'waiting'
             ball:reset()
@@ -66,6 +76,19 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
+    if gameState == 'serving' then
+        timer = timer + dt
+        if timer > COUNTDOWN_TIME then
+            sounds["countdown"]:play()
+            timer = timer % COUNTDOWN_TIME
+            count = count - 1
+        end
+        if count == 0 then
+            gameState = 'playing'
+            timer = 0
+            count = 3
+        end
+    end
     for i, player in ipairs(players) do
         if love.keyboard.isDown(player.right) then
             player.player.dx = PADDLE_SPEED
@@ -82,39 +105,40 @@ function love.update(dt)
         ball:update(dt)
 
         for i, player in ipairs(players) do
-            if ball:collides(player.player, i == 1) then
+            if ball:collides(player.player) then
                 ball:bounce(player.player)
+                sounds["bounce"]:play()
             end
  
             if i == 1 then
-                if ball.y < -WINDOW_HEIGHT / 2 then
+                if ball.y < 0 then
+                    sounds["point"]:play()
                     player.player:score()
                     if player.player.points >= 10 then
                         player.player.hasWon = true
                         gameState = 'gameover'
                     else
                         gameState = 'waiting'
-                        ball:reset(i)    
+                        ball:reset('bottom')    
                     end
-                    break
                 end
 
             else
-                if ball.y > WINDOW_HEIGHT / 2 then
+                if ball.y > WINDOW_HEIGHT then
+                    sounds["point"]:play()
                     player.player:score()
                     if player.player.points >= 10 then
                         player.player.hasWon = true
                         gameState = 'gameover'
                     else
                         gameState = 'waiting'
-                        ball:reset(i)    
+                        ball:reset('top')    
                     end
-                    break
                 end
-
             end
 
-        end    
+        end 
+
     end
 end
 
@@ -137,40 +161,29 @@ function love.draw()
         love.graphics.setColor(1, 1, 1, 1)
     end
 
-    love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-
-    love.graphics.setFont(scoreFont)
-    for i, player in ipairs(players) do
-        love.graphics.printf(player.player.points, 0, 5, WINDOW_WIDTH / 2 - 8, 'right')
-        player.player:render()
-        love.graphics.rotate(math.pi)
-    end
-
-    -- ball
     ball:render()
 
-    if gameState == 'waiting' then
-        love.graphics.setFont(appFont)
-        instruction = 'Press enter'
-        for _, player in ipairs(players) do
-            for i = 1, #instruction do
-                letter = instruction:sub(i, i):upper()
-                love.graphics.printf(letter, WINDOW_WIDTH / 2 - 24, WINDOW_HEIGHT / 2 - 24 - 14 * #instruction + 14 * i, 14, 'center')
-            end
-            love.graphics.rotate(math.pi)
-        end
-
+    for i, player in ipairs(players) do
+        player.player:render()
     end
 
-    if gameState == 'gameover' then
-        love.graphics.setFont(titleFont)
+    love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+    for i, player in ipairs(players) do
+        love.graphics.setFont(scoreFont)
+        love.graphics.printf(player.player.points, 0, 5, WINDOW_WIDTH / 2 - 8, 'right')
 
-        winningSide = player1.points > player2.points and 1 or 2
-        for i, player in ipairs(players) do
-            title = player.player.hasWon and 'Congrats' or 'Too bad..'
+        if gameState == 'waiting' then
+            love.graphics.setFont(titleFont)
+            title = 'Press enter'
             love.graphics.printf(title:upper(), -WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, WINDOW_WIDTH, 'center')
-            love.graphics.rotate(math.pi)
+        elseif gameState == 'serving' then
+            love.graphics.setFont(titleFont)
+            love.graphics.printf(count, -WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, WINDOW_WIDTH, 'center')
+        elseif gameState == 'gameover' then
+            love.graphics.setFont(titleFont)
+            title = player.player.hasWon and 'Congrats!' or 'Too bad..'
+            love.graphics.printf(title:upper(), -WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, WINDOW_WIDTH, 'center')
         end
+        love.graphics.rotate(math.pi)
     end
-
 end

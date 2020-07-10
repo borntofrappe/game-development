@@ -117,3 +117,92 @@ end
 ```
 
 As you then call `ball:render()`, Lua will look into the table `ball`, but it won't find any `render` function. It will then look into the metatable `Ball`, and find the necessary instructions.
+
+## Loop through a table
+
+The players are initialized in the `load` function, and then stored in a table.
+
+```lua
+player1 = Paddle:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT, 28, true)
+player2 = Paddle:init(WINDOW_WIDTH / 2, 0, 28, false)
+
+players = {
+    {
+        player = player1,
+        right = "right",
+        left = "left"
+    },
+    {
+        player = player2,
+        right = "d",
+        left = "a"
+    }
+}
+```
+
+The idea is to then loop through this table to update/render both paddles with a more concise syntax. I'm still experimenting with Lua and data structures, so this approach might change.
+
+To loop through the table, use the following syntax:
+
+```lua
+for i, player in ipairs(players) do
+
+end
+```
+
+`i` refers to a counter variable, while `player` describes the nested tables.
+
+One note regarding `ipairs`: you can use `pairs` and the code would still work.
+
+```lua
+for i, player in pairs(players) do
+
+end
+```
+
+The difference emerges when the table has keys. In this instance, it is necessary to use `pairs`
+
+```lua
+table = {
+    name = 'timothy',
+    age = 28,
+    gender = 'M'
+}
+
+for k, v in pairs(table) do
+    print(k, v)
+end
+--[[
+name	timothy
+age	28
+gender	M
+]]
+```
+
+When the table doesn't have keys, `pairs` uses the index, which explains why the two are equivalent in the project at hand.
+
+```lua
+table = {
+    'timothy',
+    28,
+    'M'
+}
+
+for k, v in pairs(table) do
+    print(k, v)
+end
+--[[
+1	timothy
+2	28
+3	M
+]]
+
+for k, v in ipairs(table) do
+    print(k, v)
+end
+--[[
+1	timothy
+2	28
+3	M
+]]
+```
