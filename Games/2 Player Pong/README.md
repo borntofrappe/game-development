@@ -34,30 +34,13 @@ love.graphics.circle('fill', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 42)
 love.graphics.setColor(1, 1, 1, 1)
 ```
 
-<!--
-## Lessons learned
+### Update 1 – class
 
-### Drawing functions
+Without adding any functionality, the update refactors the code to have two additional files: `Ball.lua` and `Paddle.lua`. The goal is to draw the elements using object-oriented programming, and without using the `class.lua` script introduced in the course.
 
-Functions like `setColor`, `translate` and `rotate` affect every graphic which follows. Consider the semicircles showing the serving side. Setting the color with a lower alpha channel affects every shape, and it is necessary to set a new value, or reset the previous one after the shapes are drawn.
+I'll describe the logic for the `Ball`, but the same structure is repeated for the paddles, except for minor modifications. Refer to [programming with lua](https://www.lua.org/pil/contents.html) and the [object-oriented programming section](https://www.lua.org/pil/16.html) for more information.
 
-```lua
-love.graphics.setColor(1, 1, 1, 0.05)
--- arc1
-love.graphics.setColor(1, 1, 1, 0.2)
--- arc2
-
--- other shapes
-love.graphics.setColor(1, 1, 1, 1)
-```
-
-### OOP with Lua
-
-In the playlist, the lecturer introduces a utility to work with classes. Lua does not provide class as a native construct, but it can implement a similar structure by working on the single data structure it provides: tables.
-
-The concept is explained in increments in the [object oriented programming section](https://www.lua.org/pil/16.html) of [programming with lua](https://www.lua.org/pil/contents.html), and the step by step tutorial is more than recommended.
-
-That being said, here's how I rationalize the concept for the project at hand. I'll consider `Ball.lua` as a reference, but the same consideration holds true for `Paddle.lua` as well.
+In lua you don't have a concept of classes, or objects. That being said, you can create a similar construct with the only data structure it provides: tables. Tables and metatables to be precise.
 
 Begin by initializing a table.
 
@@ -65,48 +48,32 @@ Begin by initializing a table.
 Ball = {}
 ```
 
-In a function, labeled here `:init` out of convenience, describe the characteristics of the table.
+In a function, labeled `:init` out of convenience, describe the characteristics of the table.
 
 ```lua
-function Paddle:init(x, y, r)
+function Ball:init(cx, cy, r)
 
 end
 ```
 
-`x` and `y` detail the coordinates for the center of the circle, while `r` its radius. The idea is to ultimately repeat the syntax introduced with classes:
+This function returns a table with a set of key value pairs.
 
 ```lua
-ball = Ball:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 8)
-```
-
-To get to this point however, `Paddle:init` requires a few more instructions than just setting the values through the `self.variable` syntax.
-
-In the `init` function, initialize another table. Consider this a template.
-
-```lua
-function Ball:init(x, y, r)
+function Ball:init(cx, cy, r)
     ball = {}
 
-end
-```
-
-Include the values passed in the `:init` function in the table itself.
-
-```lua
-function Ball:init(x, y, r)
-    ball = {}
-
-    ball.x = x
-    ball.y = y
+    ball.cx = cx
+    ball.cy = cy
     ball.r = r
 
+    return ball
 end
 ```
 
-This is the tricky portion. Add the following lines of code:
+Before returning the table however, the function specifies the following lines of code:
 
 ```lua
-function Ball:init(x, y, r)
+function Ball:init(cx, cy, r)
     -- set up table
 
     self.__index = self
@@ -116,132 +83,38 @@ function Ball:init(x, y, r)
 end
 ```
 
-I'll point you once more toward [the docs](https://www.lua.org/pil/2.5.html), but the idea is to specify a metatable, that is a reference, a connection to a table.
-
-Say you create an instance of the ball:
+What happens here is that, as you later initialize the table:
 
 ```lua
 ball = Ball:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 8)
 ```
 
-When retrieving a value from the table, Lua will look into the table and try to provide an answer.
+You get back a table with the specified key-value pairs. If you try to access one of its keys, lua will look at the table to try and find a match.
 
 ```lua
-ball.x -- WINDOW_WIDTH / 2
+ball.dx -- WINDOW_WIDTH / 2
 ```
 
-If it doesn't find a match, it should return `nil`
+If it doesn't find a match, and instead of immediately returning `nil`, lua then looks for the key in the metatable `Ball`.
 
 ```lua
-ball.dx -- nil
+ball.dx
+--[[
+  1. ball.dx nil
+  2. Ball.dx nil
+
+  return nil
+--]]
 ```
 
-However, if you set a metatable as with the previous snippet, Lua will look in the metatable before returning `nil`. Effectively, the following lines of code:
+With this in mind, you can see how `ball` works similarly to an instance, an object of the class `Ball`. It is just a different mental model, where you have a table reference a "parent", "master" table if need be.
 
-```lua
-self.__index = self
-setmetatable(ball, self)
-```
-
-Ensure that the instance of the `Ball` table picks up every attribute, every function set up specified for `Ball` itself. Almost as if you were creating an object of the `Ball` class.
-
-Once you add a function to render the ball for instance (notice how the function uses `Ball`).
+Conveniently, you can assign to the table attributes and functions alike. For the `:render` function for instance, you can make sure each "instance" has access to the render logic by specifying the function on the metatable.
 
 ```lua
 function Ball:render()
-    love.graphics.circle('fill', self.x, self.y, self.r)
+    love.graphics.circle('fill', self.cx, self.cy, self.r)
 end
 ```
 
-As you then call `ball:render()`, Lua will look into the table `ball`, but it won't find any `render` function. It will then look into the metatable `Ball`, and find the necessary instructions.
-
-## Loop through a table
-
-The players are initialized in the `load` function, and then stored in a table.
-
-```lua
-player1 = Paddle:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT, 28, true)
-player2 = Paddle:init(WINDOW_WIDTH / 2, 0, 28, false)
-
-players = {
-    {
-        player = player1,
-        right = "right",
-        left = "left"
-    },
-    {
-        player = player2,
-        right = "d",
-        left = "a"
-    }
-}
-```
-
-The idea is to then loop through this table to update/render both paddles with a more concise syntax. I'm still experimenting with Lua and data structures, so this approach might change.
-
-To loop through the table, use the following syntax:
-
-```lua
-for i, player in ipairs(players) do
-
-end
-```
-
-`i` refers to a counter variable, while `player` describes the nested tables.
-
-One note regarding `ipairs`: you can use `pairs` and the code would still work.
-
-```lua
-for i, player in pairs(players) do
-
-end
-```
-
-The difference emerges when the table has keys. In this instance, it is necessary to use `pairs`
-
-```lua
-table = {
-    name = 'timothy',
-    age = 28,
-    gender = 'M'
-}
-
-for k, v in pairs(table) do
-    print(k, v)
-end
---[[
-name	timothy
-age	28
-gender	M
-]]
-```
-
-When the table doesn't have keys, `pairs` uses the index, which explains why the two are equivalent in the project at hand.
-
-```lua
-table = {
-    'timothy',
-    28,
-    'M'
-}
-
-for k, v in pairs(table) do
-    print(k, v)
-end
---[[
-1	timothy
-2	28
-3	M
-]]
-
-for k, v in ipairs(table) do
-    print(k, v)
-end
---[[
-1	timothy
-2	28
-3	M
-]]
-```
-
--->
+Once the instance variable then calls `ball:render()`, you are effectively using the logic of `Ball:render`, with the `cx`, `cy` and `r` values of `ball`.
