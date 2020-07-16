@@ -1,3 +1,40 @@
+A game of pong ultimately meant to replicate a mobile interface and touch-based input.
+
+The paddles are created as semicircles and positioned at either end of the screen. The movement occurs by touching the left or right half of each respective panel.
+
+## Development
+
+Following the structure described in the course, the game is developed in increments.
+
+### Update 0 – drawing
+
+In the first update the goal is to draw the elements of the game. There are essentially three drawing functions in the `love.draw()` method:
+
+- `love.graphics.circle(style, cx, cy, r)`
+
+- `love.graphics.line(x0, y0, x1, y1, ..., xn, yn)`
+
+- `love.graphics.arc(style, cx, cy, r, startAngle, endAngle)`
+
+For the arc, the start and end angles are specified in radians. Use the `math` module to consider the value of PI, so to draw the two different semicircles.
+
+With regards to other functions:
+
+- `love.graphics.clear(color)` describes the background
+
+- `love.graphics.setLineWidth(width)` changes the width of the stroke
+
+- `love.graphics.setColor(color)` sets the color
+
+The color is specified with a list of 4 values: `red, green, blue, alpha)`. Once set with the `setColor` function, it is applied to every drawing function which follows. This explains the repetition of the function, for instance to have the circle at the center of the screen semi-transparent, without compromising the opacity of the other elements.
+
+```lua
+love.graphics.setColor(1, 1, 1, 0.15)
+love.graphics.circle('fill', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 42)
+love.graphics.setColor(1, 1, 1, 1)
+```
+
+<!--
 ## Lessons learned
 
 ### Drawing functions
@@ -206,3 +243,5 @@ end
 3	M
 ]]
 ```
+
+-->
