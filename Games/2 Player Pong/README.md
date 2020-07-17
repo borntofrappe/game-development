@@ -185,3 +185,53 @@ function love.update(dt)
     player2:update(dt)
 end
 ```
+
+### Update 4 – ball collision
+
+In the simplest imlementation, the `Ball:collides()` function takes as argument a paddle, and returns a boolean using Pythagora's theorem.
+
+```lua
+function Ball:collides(paddle)
+    return ((self.cx - paddle.cx) ^ 2 + (self.cy - paddle.cy) ^ 2) ^ 0.5 < paddle.r + self.r
+end
+```
+
+In `main.lua`, you can then have the ball bounce by modifying the `dy` attribute.
+
+```lua
+if ball:collides(player1) then
+    ball.dy = ball.dy * -1
+end
+```
+
+A few issues with this approach:
+
+- it's possible that the ball detects multiple collisions with a single paddle. In this scenario, the ball bounces, only to hit the paddle again and bouncing once more.
+
+  To fix this issue, you can actually use `dy` itself, and allow a bounce only if the ball is moving toward the paddle.
+
+  ```lua
+  if ball:collides(player1) and ball.dy < 0 then
+      ball.dy = ball.dy * -1
+  end
+  ```
+
+  No need to push the ball outside of the paddle's reach.
+
+- the ball bounces always by flipping the `y` direction. It does not consider _how_ the collision happens, or more precisely _where_ the collision happens.
+
+  In a rather simplified approach, the logic is tweaked to have the ball bounce according to the position of the ball vis-a-vis the position of the paddle.
+
+  ```lua
+  if ball.cx > player1.cx then
+      ball.dx = math.random(50, 150)
+  else
+      ball.dx = math.random(50, 150) * -1
+  end
+  ```
+
+  In a more refined version, the incline should be measured not only in terms of position, but also angle.
+
+#### Circles
+
+The paddles are drawn as semi-circles and using the `arc` function. Considering their placement, however, this is unnecessary. Since the shape is cropped by the window, it's possible to use the `circle()` function, save a few keystrokes and have the same visual persist.
