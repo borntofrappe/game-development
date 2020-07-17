@@ -338,6 +338,26 @@ Update the game in terms of:
 
 - sound, using a series of `.wav` files created with [bfxr](https://www.bfxr.net/)
 
-<!--
+### Update 7 – points
 
-### Update 7 – points -->
+Instead of keeping track of the number of points and establish a victory when one of the two players reaches an arbitrary number, the idea is to play with the size and speed of the two paddles. With each point, the paddle becomes smaller and slower. First player reaching 0 wins.
+
+This requires a few changes to the existing codebase:
+
+- move the variable describing the speed to the paddle in the paddle file, as an attribute of the `Paddle` table
+
+- add an attribute to keep track of the points for each player
+
+- add two attributes to describe how much the radius and the speed should change with each point
+
+In `main.lua`, it is also necessary to modify the way a point is detected. Previously, it made no difference whether the ball exceeded the window at the top or at the bottom edge. Given the fact that each player keeps track of its points, it is now necessary to split the two.
+
+```lua
+if ball.cy < ball.r then
+    -- player 2 scores
+elseif ball.cy > WINDOW_HEIGHT - ball.r then
+    -- player 1 scores
+end
+```
+
+Since a player can win, it is also necessary to add anther state: `victory`. In this state, only the losing player is shown, while the winning side display a message celebrating the victory.

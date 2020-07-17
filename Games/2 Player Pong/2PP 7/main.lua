@@ -32,7 +32,7 @@ function love.load()
         ['wall_hit'] = love.audio.newSource('res/sounds/wall_hit.wav', 'static')
     }
 
-    love.window.setTitle('2 Player Pong')
+    love.window.setTitle('2 Player Pong – points')
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, SETTINGS)
 
     ball = Ball:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 8)
