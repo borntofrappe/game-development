@@ -19,7 +19,20 @@ function love.load()
     countdown = 3
     timer = 0
 
-    love.window.setTitle('2 Player Pong – state')
+    font = love.graphics.newFont('res/font.ttf', 22)
+    font_large = love.graphics.newFont('res/font.ttf', 30)
+
+    love.graphics.setFont(font)
+
+    sounds = {
+        ['countdown'] = love.audio.newSource('res/sounds/countdown.wav', 'static'),
+        ['paddle_hit'] = love.audio.newSource('res/sounds/paddle_hit.wav', 'static'),
+        ['point'] = love.audio.newSource('res/sounds/point.wav', 'static'),
+        ['select'] = love.audio.newSource('res/sounds/select.wav', 'static'),
+        ['wall_hit'] = love.audio.newSource('res/sounds/wall_hit.wav', 'static')
+    }
+
+    love.window.setTitle('2 Player Pong – font and audio')
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, SETTINGS)
 
     ball = Ball:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 8)
@@ -38,12 +51,14 @@ function love.mousepressed(x, y, button)
     if gameState == 'waiting' then
         if y < WINDOW_HEIGHT / 2 and not player1.is_ready then
             player1.is_ready = true
+            sounds['select']:play()
             if player2.is_ready then
                 gameState = 'serving'
             end
         end
         if y > WINDOW_HEIGHT / 2 and not player2.is_ready then
             player2.is_ready = true
+            sounds['select']:play()
             if player1.is_ready then
                 gameState = 'serving'
             end
@@ -77,6 +92,7 @@ function love.update(dt)
     if gameState == 'serving' then
         timer = timer + dt
         if timer > COUNTDOWN_TIME then
+            sounds['countdown']:play()
             timer = timer % COUNTDOWN_TIME
             countdown = countdown - 1
         end
@@ -93,6 +109,7 @@ function love.update(dt)
         player2:update(dt)
 
         if ball:collides(player1) and ball.dy < 0 then
+            sounds['paddle_hit']:play()
             ball.dy = ball.dy * -1.1
             if ball.cx > player1.cx then
                 ball.dx = math.random(50, 150)
@@ -100,6 +117,7 @@ function love.update(dt)
                 ball.dx = math.random(50, 150) * -1
             end
         elseif ball:collides(player2) and ball.dy > 0 then
+            sounds['paddle_hit']:play()
             ball.dy = ball.dy * -1.1
             if ball.cx > player2.cx then
                 ball.dx = math.random(50, 150)
@@ -109,6 +127,7 @@ function love.update(dt)
         end
 
         if ball.cy < ball.r or ball.cy > WINDOW_HEIGHT - ball.r then
+            sounds['point']:play()
             gameState = 'waiting'
             ball:reset()
             player1:reset()
@@ -120,6 +139,8 @@ end
 
 
 function love.draw()
+    love.graphics.setFont(font)
+
     love.graphics.clear(0, 0, 0, 1)
     love.graphics.setColor(1, 1, 1, 1)
 
@@ -132,8 +153,6 @@ function love.draw()
     love.graphics.circle('fill', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 42)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.circle('line', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 42)
-
-    
     
     -- ball
     ball:render()
@@ -141,7 +160,6 @@ function love.draw()
     -- paddles
     player1:render()
     player2:render()
-
 
     if gameState == 'waiting' then
         love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
@@ -163,14 +181,17 @@ function love.draw()
     elseif gameState == 'serving' then
         love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
         love.graphics.rotate(math.pi)
+        love.graphics.setFont(font)
         love.graphics.printf("Ready", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
-        love.graphics.printf(countdown, -WINDOW_WIDTH / 2, 20, WINDOW_WIDTH, 'center')
+        love.graphics.setFont(font_large)
+        love.graphics.printf(countdown, -WINDOW_WIDTH / 2, 24, WINDOW_WIDTH, 'center')
 
         love.graphics.rotate(math.pi)
         love.graphics.translate(0, WINDOW_HEIGHT / 2)
+        love.graphics.setFont(font)
         love.graphics.printf("Ready", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
-        love.graphics.printf(countdown, -WINDOW_WIDTH / 2, 20, WINDOW_WIDTH, 'center')
+        
+        love.graphics.setFont(font_large)
+        love.graphics.printf(countdown, -WINDOW_WIDTH / 2, 24, WINDOW_WIDTH, 'center')
     end
-
-
 end

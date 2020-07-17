@@ -262,7 +262,7 @@ To signal that the players are ready, the paddles specify an additional attribut
 function Paddle:init(cx, cy, r)
     -- previous attributes
 
-    paddle.isReady = false
+    paddle.is_ready = false
 end
 ```
 
@@ -330,6 +330,14 @@ end
 
 This way you can speed up/slow down the countdown by using a value less than/more than 1.
 
-<!-- ### Update 6 – fonts and sound
+### Update 6 – fonts and sound
+
+Update the game in terms of:
+
+- font, using [Audiowide](https://fonts.google.com/specimen/Audiowide)
+
+- sound, using a series of `.wav` files created with [bfxr](https://www.bfxr.net/)
+
+<!--
 
 ### Update 7 – points -->
