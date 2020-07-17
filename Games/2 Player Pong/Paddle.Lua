@@ -1,6 +1,5 @@
 Paddle = {}
 
-
 function Paddle:init(cx, cy)
     paddle = {}
 
@@ -23,10 +22,31 @@ function Paddle:init(cx, cy)
     return paddle
 end
 
-function Paddle:render()
-    love.graphics.circle('fill', self.cx, self.cy, self.r)
+function Paddle:reset(dt)
+    self.r = 35
+    self.points = 5
+    self:wait()
 end
 
+function Paddle:ready()
+    sounds['select']:play()
+    self.is_ready = true
+end
+
+function Paddle:wait()
+    self.is_ready = false
+end
+
+function Paddle:score()
+    self.points = self.points - 1
+    self.r = self.r - self.dr
+    self.speed = self.speed - self.dspeed
+end
+
+function Paddle:win()
+    sounds['victory']:play()
+    self.r = 0
+end
 
 function Paddle:update(dt)
     if self.dx > 0 then
@@ -36,12 +56,6 @@ function Paddle:update(dt)
     end
 end
 
-function Paddle:reset(dt)
-    self.r = 35
-    self.points = 5
-    self:wait()
-end
-
-function Paddle:wait()
-    self.is_ready = false
+function Paddle:render()
+    love.graphics.circle('fill', self.cx, self.cy, self.r)
 end

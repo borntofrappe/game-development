@@ -167,16 +167,7 @@ function love.update(dt)
             end
 
 
-        end
-
-        if ball.cy < ball.r or ball.cy > WINDOW_HEIGHT - ball.r then
-            sounds['point']:play()
-            gameState = 'waiting'
-            ball:reset()
-            player1:wait()
-            player2:wait()
-        end
-    
+        end    
     end
 end
 

@@ -17,10 +17,6 @@ function Ball:init(cx, cy, r)
     return ball
 end
 
-function Ball:render()
-    love.graphics.circle('fill', self.cx, self.cy, self.r)
-end
-
 function Ball:reset()
     self.cx = WINDOW_WIDTH / 2
     self.cy = WINDOW_HEIGHT / 2
@@ -28,6 +24,10 @@ function Ball:reset()
     self.dx = math.random(-150, 150)
     dy = math.random(100, 200)
     self.dy = math.random(2) == 1 and dy or dy * -1
+end
+
+function Ball:collides(paddle)
+    return ((self.cx - paddle.cx) ^ 2 + (self.cy - paddle.cy) ^ 2) ^ 0.5 < paddle.r + self.r
 end
 
 function Ball:update(dt)
@@ -40,6 +40,6 @@ function Ball:update(dt)
     self.cy = self.cy + self.dy * dt
 end
 
-function Ball:collides(paddle)
-    return ((self.cx - paddle.cx) ^ 2 + (self.cy - paddle.cy) ^ 2) ^ 0.5 < paddle.r + self.r
+function Ball:render()
+    love.graphics.circle('fill', self.cx, self.cy, self.r)
 end

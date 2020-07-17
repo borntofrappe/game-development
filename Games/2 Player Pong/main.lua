@@ -40,7 +40,6 @@ function love.load()
     player2 = Paddle:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT)
 end
 
-
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
@@ -54,20 +53,17 @@ function love.mousepressed(x, y, button)
         player2:reset()
     elseif gameState == 'waiting' then
         if y < WINDOW_HEIGHT / 2 and not player1.is_ready then
-            player1.is_ready = true
-            sounds['select']:play()
+            player1:ready()
             if player2.is_ready then
                 gameState = 'serving'
             end
         end
         if y > WINDOW_HEIGHT / 2 and not player2.is_ready then
-            player2.is_ready = true
-            sounds['select']:play()
+            player2:ready()
             if player1.is_ready then
                 gameState = 'serving'
             end
         end
-
     elseif gameState == 'playing' then
         if y < WINDOW_HEIGHT / 2 then
             if x > WINDOW_WIDTH / 2 then
@@ -133,13 +129,10 @@ function love.update(dt)
         if ball.cy < ball.r then
             ball:reset()
 
-            player2.points = player2.points - 1
-            player2.r = player2.r - player2.dr
-            player2.speed = player2.speed - player2.dspeed
+            player2:score()
 
             if player2.points == 0 then
-                sounds['victory']:play()
-                player2.r = 0
+                player2:win()
                 gameState = 'victory'
             else
                 sounds['point']:play()
@@ -151,13 +144,10 @@ function love.update(dt)
         elseif ball.cy > WINDOW_HEIGHT - ball.r then
             ball:reset()
             
-            player1.points = player1.points - 1
-            player1.r = player1.r - player1.dr
-            player1.speed = player1.speed - player1.dspeed
+            player1:score()
 
             if player1.points == 0 then
-                sounds['victory']:play()
-                player1.r = 0
+                player1:win()
                 gameState = 'victory'
             else
                 sounds['point']:play()
@@ -165,21 +155,9 @@ function love.update(dt)
                 player2:wait()
                 gameState = 'waiting'
             end
-
-
         end
-
-        if ball.cy < ball.r or ball.cy > WINDOW_HEIGHT - ball.r then
-            sounds['point']:play()
-            gameState = 'waiting'
-            ball:reset()
-            player1:wait()
-            player2:wait()
-        end
-    
     end
 end
-
 
 function love.draw()
     love.graphics.setFont(font)
@@ -210,7 +188,7 @@ function love.draw()
         if player1.is_ready then 
             love.graphics.printf("Ready", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
         else
-            love.graphics.printf("Press to start", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
+            love.graphics.printf("Tap to start", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
         end
 
         love.graphics.rotate(math.pi)
@@ -218,7 +196,7 @@ function love.draw()
         if player2.is_ready then 
             love.graphics.printf("Ready", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
         else
-            love.graphics.printf("Press to start", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
+            love.graphics.printf("Tap to start", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
         end
 
     elseif gameState == 'serving' then
@@ -257,6 +235,5 @@ function love.draw()
             love.graphics.setFont(font)
             love.graphics.printf("Too bad..", -WINDOW_WIDTH / 2, 0, WINDOW_WIDTH, 'center')
         end
-
     end
 end
