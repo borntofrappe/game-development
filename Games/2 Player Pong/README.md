@@ -101,7 +101,7 @@ end
 
 From this starting point, any attribute, any function included in the `Ball` table is made available to `ball`, the table returned by the `:init` function.
 
-### Update 3 – paddle movement
+### Update 2 – paddle movement
 
 In `main.lua`, you can move the paddles using keys, similarly to the game developed in the course. This using the `love.keyboard.isDown` function, as highlighted in the following snippet for one of the two paddles:
 
@@ -235,3 +235,101 @@ A few issues with this approach:
 #### Circles
 
 The paddles are drawn as semi-circles and using the `arc` function. Considering their placement, however, this is unnecessary. Since the shape is cropped by the window, it's possible to use the `circle()` function, save a few keystrokes and have the same visual persist.
+
+### Update 5 – state
+
+Following the example given in the course, state is considered with a string variable, initialized in the `love.load()` function.
+
+```lua
+function love.load()
+    gameState = 'waiting'
+end
+```
+
+This variable stores one of three values: waiting, serving or playing. The interplay between the three is explained as follows:
+
+- begin with a value of `waiting`
+
+- when both players are ready to play, move from waiting to `serving`
+
+- at the end of a countdown, move from `serving` to `playing`
+
+- when the ball crosses the top/bottom of the window, return to `waiting`
+
+To signal that the players are ready, the paddles specify an additional attribute.
+
+```lua
+function Paddle:init(cx, cy, r)
+    -- previous attributes
+
+    paddle.isReady = false
+end
+```
+
+When a press is registered on the corresponding half then, the boolean is flipped to `true`.
+
+To count down from an arbitrary number, two additional variables are included in `love.load()`: `timer` and `countdown`
+
+```lua
+function love.load()
+    countdown = 3
+    timer = 0
+end
+```
+
+In `love.update(dt)` then, `timer` is incremented with the value of `dt`, and every time it crosses a second, it reduces `countdown` by 1.
+
+```lua
+function love.update(dt)
+    if gameState == 'serving' then
+        timer = timer + dt
+        if timer > 1 then
+            timer = 0
+            countdown = countdown - 1
+        end
+    end
+end
+```
+
+When `countdown` reaches zero finally, the state is switched automatically to `playing`, while the variable are reset to their initial value.
+
+```lua
+function love.update(dt)
+    if gameState == 'serving' then
+        timer = timer + dt
+        if timer > 1 then
+            timer = 0
+            countdown = countdown - 1
+        end
+
+        if countdown == 0 then
+            gameState = 'playing'
+            timer = 0
+            countdown = 3
+        end
+    end
+end
+```
+
+One refinement which comes from a later lecture in the course: instead of resetting timer to zero once it crosses the arbitrary threshold, use the remainder operator.
+
+```lua
+timer = timer % 1
+```
+
+In this manner you consider the excess at the next iteration.
+
+Instead of using a hard-coded value, also prefer to specify a variable for the threshold.
+
+```lua
+if timer > COUNTDOWN_TIME then
+    timer = 0
+    countdown = countdown - COUNTDOWN_TIME
+end
+```
+
+This way you can speed up/slow down the countdown by using a value less than/more than 1.
+
+<!-- ### Update 6 – fonts and sound
+
+### Update 7 – points -->
