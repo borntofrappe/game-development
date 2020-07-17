@@ -161,3 +161,27 @@ function love.mousereleased()
     player2.dx = 0
 end
 ```
+
+### Update 3 – ball movement
+
+To move the ball, the code repeats much of the logic introduced in the introductory course: add `dx` and `dy` attribute to `Ball.lua`, add `Ball:update(dt)` to move the entity according to the passage of time.
+
+The two new attributes use random values with `math.random()`, which means it is also necessary to have `love.load()` specify a different seed every time the game is launched. Otherwise `math.random()` provides the same sequence of numbers.
+
+```lua
+function love.load()
+    math.randomseed(os.time())
+
+end
+```
+
+Once the `Ball:update(dt)` function is implemented, be sure to have the instance variable `ball` updated in the function run on every frame by love2d.
+
+```lua
+function love.update(dt)
+    ball:update(dt)
+
+    player1:update(dt)
+    player2:update(dt)
+end
+```
