@@ -42,39 +42,55 @@ I'll describe the logic for the `Ball`, but the same structure is repeated for t
 
 In lua you don't have a concept of classes, or objects. That being said, you can create a similar construct with the only data structure it provides: tables. Tables and metatables to be precise.
 
-Begin by initializing a table.
+A table is a data structure of key value pairs.
+
+```lua
+hero = {}
+
+hero.name = 'timothy'
+hero.age = 28
+```
+
+A metatable is a table to which you reference, to which you link from another table.
+
+```lua
+Character = {}
+Character.hp = 10
+
+Character.__index = hero
+setmetatable(Character, hero)
+```
+
+If you run the previous two snippet, for instance on [lua's own website](https://www.lua.org/demo.html), you have a situation in which `hero` has access to three keys: `name` and `age`, as expected, but also `hp`
+
+```lua
+print(hero.name) -- 'timothy'
+print(hero.hp) -- 10
+```
+
+This because lua effectively goes through the following:
+
+- look for the `hero` table
+
+- look for the `hp` key, which is not available
+
+- look for the `hp` key in the table it points to, `Character`
+
+- return `Character.hp`
+
+In this fashion you can replicate the construct of a class, like `Character`, and objects, instances of the class, like `hero`.
+
+The code in `Ball.lua` and `Paddle.lua` is more complex, but it fundamentally repeats the logic described in this section. The only difference is that the process of creating the "instance" tables, so to speak, is automated in a `:init` function.
 
 ```lua
 Ball = {}
-```
 
-In a function, labeled `:init` out of convenience, describe the characteristics of the table.
-
-```lua
-function Ball:init(cx, cy, r)
-
-end
-```
-
-This function returns a table with a set of key value pairs.
-
-```lua
 function Ball:init(cx, cy, r)
     ball = {}
 
     ball.cx = cx
     ball.cy = cy
     ball.r = r
-
-    return ball
-end
-```
-
-Before returning the table however, the function specifies the following lines of code:
-
-```lua
-function Ball:init(cx, cy, r)
-    -- set up table
 
     self.__index = self
     setmetatable(ball, self)
@@ -83,38 +99,65 @@ function Ball:init(cx, cy, r)
 end
 ```
 
-What happens here is that, as you later initialize the table:
+From this starting point, any attribute, any function included in the `Ball` table is made available to `ball`, the table returned by the `:init` function.
+
+### Update 3 – paddle movement
+
+In `main.lua`, you can move the paddles using keys, similarly to the game developed in the course. This using the `love.keyboard.isDown` function, as highlighted in the following snippet for one of the two paddles:
 
 ```lua
-ball = Ball:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 8)
-```
-
-You get back a table with the specified key-value pairs. If you try to access one of its keys, lua will look at the table to try and find a match.
-
-```lua
-ball.dx -- WINDOW_WIDTH / 2
-```
-
-If it doesn't find a match, and instead of immediately returning `nil`, lua then looks for the key in the metatable `Ball`.
-
-```lua
-ball.dx
---[[
-  1. ball.dx nil
-  2. Ball.dx nil
-
-  return nil
---]]
-```
-
-With this in mind, you can see how `ball` works similarly to an instance, an object of the class `Ball`. It is just a different mental model, where you have a table reference a "parent", "master" table if need be.
-
-Conveniently, you can assign to the table attributes and functions alike. For the `:render` function for instance, you can make sure each "instance" has access to the render logic by specifying the function on the metatable.
-
-```lua
-function Ball:render()
-    love.graphics.circle('fill', self.cx, self.cy, self.r)
+function love.update(dt)
+    if love.keyboard.isDown('left') then
+        player1.dx = PADDLE_SPEED * -1
+    elseif love.keyboard.isDown('right') then
+        player1.dx = PADDLE_SPEED
+    else
+        player1.dx = 0
+    end
 end
 ```
 
-Once the instance variable then calls `ball:render()`, you are effectively using the logic of `Ball:render`, with the `cx`, `cy` and `r` values of `ball`.
+However, in this particular game, the goal is to move the paddles by pressing the screen on the left or right side of each half. To consider a press of the mouse, love2d provides `love.mousepressed()`; this function is fired as the mouse clicks on the screen, and describes a series of informative values like the coordinates of the point being pressed.
+
+```lua
+function love.mousepressed(x, y)
+
+end
+```
+
+With this in mind, moving the paddle is a matter of using if statements to consider the half which describes the player, and the half which describes the direction. For instance and for one of the two paddles (the one in the top half)
+
+```lua
+if y < WINDOW_HEIGHT / 2 then
+    if x > WINDOW_WIDTH / 2 then
+        player1.dx = PADDLE_SPEED
+    else
+        player1.dx = -PADDLE_SPEED
+    end
+end
+```
+
+Now, you can include the logic for the second paddle in an `else` statement, considering the fact that the press is either on the top or bottom half.
+
+```lua
+if y < WINDOW_HEIGHT / 2 then
+    -- player1 logic
+else
+    if x > WINDOW_WIDTH / 2 then
+        player2.dx = PADDLE_SPEED
+    else
+        player2.dx = -PADDLE_SPEED
+    end
+end
+```
+
+#### mouse v touch
+
+love2d provides [touch functions](https://love2d.org/wiki/love.touch), which means that more research is warranted to actually support mobile devices.
+
+```lua
+function love.mousereleased()
+    player1.dx = 0
+    player2.dx = 0
+end
+```
