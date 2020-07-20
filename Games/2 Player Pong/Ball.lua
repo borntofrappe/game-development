@@ -7,8 +7,8 @@ function Ball:init(cx, cy, r)
     ball.cy = cy
     ball.r = r
 
-    ball.dx = math.random(-150, 150)
-    dy = math.random(100, 200)
+    ball.dx = math.random(-200, 200)
+    dy = math.random(200, 250)
     ball.dy = math.random(2) == 1 and dy or dy * -1
 
     self.__index = self
@@ -21,8 +21,8 @@ function Ball:reset()
     self.cx = WINDOW_WIDTH / 2
     self.cy = WINDOW_HEIGHT / 2
 
-    self.dx = math.random(-150, 150)
-    dy = math.random(100, 200)
+    self.dx = math.random(-200, 200)
+    dy = math.random(200, 250)
     self.dy = math.random(2) == 1 and dy or dy * -1
 end
 

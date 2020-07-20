@@ -6,13 +6,13 @@ function Paddle:init(cx, cy)
     paddle.cx = cx
     paddle.cy = cy
     paddle.r = 40
-    paddle.speed = 300
+    paddle.speed = 350
 
     paddle.points = 5
     
     paddle.dx = 0
-    paddle.dr = 5
-    paddle.dspeed = 20
+    paddle.dr = 8
+    paddle.dspeed = 25
 
     paddle.is_ready = false
 

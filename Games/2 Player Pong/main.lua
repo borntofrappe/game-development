@@ -162,17 +162,17 @@ end
 function love.draw()
     love.graphics.setFont(font)
 
-    love.graphics.clear(0, 0, 0, 1)
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.clear(242 / 255, 241 / 255, 232 / 255, 1)
+    love.graphics.setColor(33 / 255, 38 / 255, 36 / 255, 1)
 
     -- environment
     love.graphics.setLineWidth(8)
     love.graphics.line(0, 0, WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, WINDOW_HEIGHT, 0, 0) 
     love.graphics.setLineWidth(2)
     love.graphics.line(0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, WINDOW_HEIGHT / 2) 
-    love.graphics.setColor(1, 1, 1, 0.15)
+    love.graphics.setColor(33 / 255, 38 / 255, 36 / 255, 0.15)
     love.graphics.circle('fill', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 42)
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(33 / 255, 38 / 255, 36 / 255, 1)
     love.graphics.circle('line', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 42)
     
     -- ball
