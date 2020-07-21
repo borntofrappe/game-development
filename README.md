@@ -1,22 +1,16 @@
-# Game Development
-
-The goal of this repo starts out simple: follow [this introduction course](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) to learn a bit about game development.
+The goal of this repo starts out simple: follow [this introduction course](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) to learn about game development.
 
 In the numbered folders, I follow the course to recreate the presented games.
 
-In the **Games** folder, I continue to practice by creating either a variant of the proposed games, or new games altogether.
+In the _Games_ folder, I repeat the concepts by creating either a variant of the proposed games, or new games altogether.
 
-## Reasons
+## Topics
 
-To learn:
-
-- game development
+- 2D game development
 
 - the programming language [**Lua**](https://www.lua.org/)
 
 - the game engine [**Love2D**](https://love2d.org/)
-
-To entertain a productive endeavor, and who knows, maybe to hit publish on a finished game.
 
 ## Resources
 

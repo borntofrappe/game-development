@@ -2,11 +2,11 @@ The first video introduces the lua programming language and the love2d environme
 
 The project is organized as follows:
 
-- in each folder **Pong \*** you find the game developed one feature at a time. In the `README.md` file(s), I annotate how the code changes, and the lessons I learn catching up with the video. Pay attention: the folders do not include the resources from the **res** folder, so running the scripts without first adding the necessary files won't work
+- in each folder _Pong \*_ you find the game developed one feature at a time. In each _README.md_ file(s), I annotate how the code changes, and the lessons I learnt catching up with the video. Pay attention: the folders do not include the resources from the _res_ folder, so running the scripts without first adding the necessary files won't work
 
-- in **Pong – Final** you find the final version of the game
+- in _Pong – Final_ you find the final version of the game
 
-- in **Pong – Assignment** you find the game with the changes required by the assignment
+- in _Pong – Assignment_ you find the game with the changes required by the assignment
 
 ## Resources
 
