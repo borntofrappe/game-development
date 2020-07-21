@@ -48,6 +48,7 @@ end
 
 function love.mousepressed(x, y, button)
     if gameState == 'victory' then
+        sounds['select']:play()
         gameState = 'waiting'
         player1:reset()
         player2:reset()
