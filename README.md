@@ -12,6 +12,14 @@ In the _Games_ folder, I repeat the concepts by creating either a variant of the
 
 - the game engine [**Love2D**](https://love2d.org/)
 
+## Project structure
+
+- _Game \*_ folders develop the games one feature at a time. Each _README.md_ file describes how the code changes, and the lessons learned throughout.
+
+- _Game — Final_ summaries the game at the end of the course
+
+- _Game — Assignment_ adds the features requested for the game's assignment
+
 ## Resources
 
 - [GD50 playlist](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz)
