@@ -21,17 +21,6 @@ function PauseState:update(dt)
             y = self.y
         })
     end
-
-    if love.mouse.waspressed then
-        gStateMachine:change('play', {
-            bird = self.bird,
-            pipePairs = self.pipePairs,
-            timer = self.timer,
-            interval = self.interval,
-            score = self.score,
-            y = self.y
-        })
-    end
 end
 
 function PauseState:render()

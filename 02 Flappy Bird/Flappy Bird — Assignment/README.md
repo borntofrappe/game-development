@@ -2,11 +2,11 @@
 
 Following [the goals from the assignment](https://docs.cs50.net/ocw/games/assignments/1/assignment1.html):
 
-- randomize the gap between pipes
+- [x] randomize the gap between pipes
 
-- randomize the interval at which pairs of pipes spawn
+- [x] randomize the interval at which pairs of pipes spawn
 
-- when a player enters the ScoreState, award them a “medal” via an image displayed along with the score. Choose 3 different ones, as well as the minimum score needed for each one
+- [x] when a player enters the ScoreState, award them a “medal” via an image displayed along with the score. Choose 3 different ones, as well as the minimum score needed for each one
 
 - implement a pause feature, such that the user can simply press “P” (or some other key) and pause the state of the game. When pausing the game, a simple sound effect should play. At the same time, the music should pause, and once the user presses P again, the gameplay and the music should resume just as they were. Display a pause icon in the middle of the screen, so as to make it clear the game is paused
 
@@ -48,6 +48,74 @@ end
 ```
 
 Keep in mind that in lua, using `math.random` with two integers has the effect of providing a random number in the range, extremes included.
+
+## Medal(s)
+
+Upon entering the score state, the game displays up to three medals. The medals are awarded by crossing arbitrary thresholds: 5, 10 and 15 points. In the _res/graphics_ folder you find the different assets.
+
+In `ScoreState.lua`, these are included as follows:
+
+- initialize the images in the `init` function
+
+  ```lua
+  function ScoreState:init()
+      self.medals = {
+          { points = 5, image = love.graphics.newImage('res/graphics/medal-points-5.png') },
+          { points = 10, image = love.graphics.newImage('res/graphics/medal-points-10.png') },
+          { points = 15, image = love.graphics.newImage('res/graphics/medal-points-15.png') }
+      }
+  end
+  ```
+
+  Since tables are not sorted, sort according to the number of points behind each image.
+
+  ```lua
+  function ScoreState:init()
+      medals = {
+          { points = 5, image = love.graphics.newImage('res/graphics/medal-points-5.png') },
+          { points = 10, image = love.graphics.newImage('res/graphics/medal-points-10.png') },
+          { points = 15, image = love.graphics.newImage('res/graphics/medal-points-15.png') }
+      }
+
+      table.sort(medals, function(a, b) return a.points < b.points end)
+      self.medals = medals
+  end
+  ```
+
+  This ensures the table is now in ascending order of points.
+
+- include only the images required by the score in the `enter` function
+
+  ```lua
+  function ScoreState:enter(params)
+      self.score = params.score
+
+      medals = {}
+      for k, medal in pairs(self.medals) do
+          if self.score >= medal.points then
+              table.insert(medals, medal.image)
+          end
+      end
+
+      self.medals = medals
+  end
+  ```
+
+`self.medals` is overwritten so that it includes only the images for the necessary points.
+
+- render the medals in `self.medals`, using the index in the table and the length of the table itself to have the images separated from the center.
+
+  ```lua
+  for i, medal in ipairs(self.medals) do
+      love.graphics.draw(medal, VIRTUAL_WIDTH / 2 - 12 - 28 * (#self.medals - 1) + 56 * (i - 1), VIRTUAL_HEIGHT / 1.5)
+  end
+  ```
+
+  Keep in mind that in lua:
+
+  - ipairs allows to retrieve the index
+
+  - the index starts at `1`
 
 ## PauseState
 

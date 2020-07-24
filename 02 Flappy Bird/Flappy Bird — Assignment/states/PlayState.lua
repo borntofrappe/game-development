@@ -5,7 +5,7 @@ function PlayState:init()
     self.pipePairs = {}
     self.timer = 0
     self.interval = 4
-    self.score = 0
+    self.score = 10
 
     self.y = math.random(THRESHOLD_UPPER, THRESHOLD_LOWER)
 end
