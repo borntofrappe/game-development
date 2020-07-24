@@ -19,7 +19,7 @@ function ScoreState:render()
     love.graphics.printf(
         'Score: ' .. self.score,
         0,
-        VIRTUAL_HEIGHT / 3,
+        VIRTUAL_HEIGHT / 2 - 48,
         VIRTUAL_WIDTH,
         'center'
     )
@@ -28,7 +28,7 @@ function ScoreState:render()
     love.graphics.printf(
         'Press enter to play once more',
         0,
-        VIRTUAL_HEIGHT / 2,
+        VIRTUAL_HEIGHT / 2 + 8,
         VIRTUAL_WIDTH,
         'center'
     )

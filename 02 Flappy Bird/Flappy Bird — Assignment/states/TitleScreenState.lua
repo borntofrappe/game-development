@@ -13,9 +13,9 @@ end
 function TitleScreenState:render()
     love.graphics.setFont(font_big)
     love.graphics.printf(
-        'Flappy Bird',
+        'Floating Fish',
         0,
-        VIRTUAL_HEIGHT / 3,
+        VIRTUAL_HEIGHT / 2 - 48,
         VIRTUAL_WIDTH,
         'center'
     )
@@ -24,7 +24,7 @@ function TitleScreenState:render()
     love.graphics.printf(
         'Press enter to play',
         0,
-        VIRTUAL_HEIGHT / 2,
+        VIRTUAL_HEIGHT / 2 + 8,
         VIRTUAL_WIDTH,
         'center'
     )

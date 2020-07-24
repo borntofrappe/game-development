@@ -10,11 +10,23 @@ function PlayState:init()
     self.y = math.random(THRESHOLD_UPPER, THRESHOLD_LOWER)
 end
 
+function PlayState:enter(params)
+    if params then
+        sounds['soundtrack']:play()
+        self.bird = params.bird
+        self.pipePairs = params.pipePairs
+        self.timer = params.timer
+        self.interval = params.interval
+        self.score = params.score
+        self.y = params.y
+    end
+end
+
 function PlayState:update(dt)
     self.timer = self.timer + dt
     if self.timer > self.interval then
         self.timer = self.timer % self.interval
-        self.interval = math.random(2, 5)
+        self.interval = math.random(3, 5)
 
         table.insert(self.pipePairs, PipePair(self.y))
         following_y = self.y + math.random(Y_CHANGE, Y_CHANGE * -1)
@@ -50,6 +62,18 @@ function PlayState:update(dt)
         sounds['lose']:play()
         gStateMachine:change('score', {
             score = self.score
+        })
+    end
+
+    if love.keyboard.waspressed('p') or love.keyboard.waspressed('P') then
+        sounds['pause']:play()
+        gStateMachine:change('pause', {
+            bird = self.bird,
+            pipePairs = self.pipePairs,
+            timer = self.timer,
+            interval = self.interval,
+            score = self.score,
+            y = self.y
         })
     end
 end

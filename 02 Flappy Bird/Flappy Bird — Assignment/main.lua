@@ -11,6 +11,7 @@ require 'states/BaseState'
 require 'states/TitleScreenState'
 require 'states/CountdownState'
 require 'states/PlayState'
+require 'states/PauseState'
 require 'states/ScoreState'
 
 WINDOW_WIDTH = 1280
@@ -56,6 +57,7 @@ function love.load()
         ['title'] = function() return TitleScreenState() end,
         ['countdown'] = function() return CountdownState() end,
         ['play'] = function() return PlayState() end,
+        ['pause'] = function() return PauseState() end,
         ['score'] = function() return ScoreState() end
     })
 
@@ -66,6 +68,7 @@ function love.load()
         ['hit'] = love.audio.newSource('res/sounds/hit.wav', 'static'),
         ['jump'] = love.audio.newSource('res/sounds/jump.wav', 'static'),
         ['lose'] = love.audio.newSource('res/sounds/lose.wav', 'static'),
+        ['pause'] = love.audio.newSource('res/sounds/pause.wav', 'static'),
         ['score'] = love.audio.newSource('res/sounds/score.wav', 'static'),
         ['soundtrack'] = love.audio.newSource('res/sounds/soundtrack.wav', 'static')
     }

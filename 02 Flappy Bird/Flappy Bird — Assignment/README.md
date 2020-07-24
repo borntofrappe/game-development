@@ -48,3 +48,92 @@ end
 ```
 
 Keep in mind that in lua, using `math.random` with two integers has the effect of providing a random number in the range, extremes included.
+
+## PauseState
+
+By pressing `p`, the game moves to te pause state.
+
+```lua
+function PlayState:update(dt)
+    if love.keyboard.waspressed('p') or love.keyboard.waspressed('P') then
+        gStateMachine:change('pause')
+    end
+end
+```
+
+To resume playing from the same point however, it is necessary to also pass the values of the play state.
+
+```lua
+gStateMachine:change('pause', {
+    bird = self.bird,
+    pipePairs = self.pipePairs,
+    timer = self.timer,
+    interval = self.interval,
+    score = self.score,
+    y = self.y
+})
+```
+
+With this in mind the `PlayState` picks up the values in the `enter` function.
+
+```lua
+function PauseState:enter(params)
+    self.bird = params.bird
+    self.pipePairs = params.pipePairs
+    self.timer = params.timer
+    self.interval = params.interval
+    self.score = params.score
+    self.y = params.y
+end
+```
+
+Keep in mind that the values need to be passed back to the play state.
+
+```lua
+function PauseState:update(dt)
+    if love.keyboard.waspressed('p') or love.keyboard.waspressed('p') then
+        gStateMachine:change('play', {
+            bird = self.bird,
+            -- include other values
+        })
+    end
+end
+```
+
+And to this end, you need to update the play state so that it includes the parameters, if available.
+
+```lua
+function PlayState:enter(params)
+    if params then
+        self.bird = params.bird
+        -- include other parameters
+    end
+end
+```
+
+### Sound
+
+love2d removes `love.audio.resume()` in version 11.0. As instructed in [the docs](https://love2d.org/wiki/11.0), using `love.audio.play()` after `love.audio.pause()` is enough to have the audio pick up from where it left.
+
+Pause the soundtrack in the pause state.
+
+```lua
+function PauseState:enter(params)
+    sounds['soundtrack']:pause()
+end
+```
+
+Resume in the play state when setting the parameters.
+
+```lua
+function PlayState:enter(params)
+    if params then
+        sounds['soundtrack']:play()
+        -- set parameters
+    end
+end
+```
+
+### Pause
+
+In addition to the previous audio files, the assignment includes `pause.wav`, to signal when the game moves to the pause state.
