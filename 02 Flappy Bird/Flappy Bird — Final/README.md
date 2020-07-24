@@ -1,4 +1,6 @@
-Changes:
+# Flappy Bird — Final
+
+With respect to the last update, the final version of the game includes the following changes:
 
 - uses the poorly designed sprite of a fish
 
