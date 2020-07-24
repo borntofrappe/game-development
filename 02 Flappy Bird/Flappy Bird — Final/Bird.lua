@@ -1,10 +1,11 @@
 Bird = Class{}
 
-GRAVITY = 5
+GRAVITY = 7
+JUMP = -3
 MERCY = 5
 
 function Bird:init()
-    self.image = love.graphics.newImage('res/graphics/bird.png')
+    self.image = love.graphics.newImage('res/graphics/fish.png')
     self.width = self.image:getWidth()
     self.height = self.image:getHeight()
 
@@ -32,16 +33,13 @@ function Bird:update(dt)
 
     if love.keyboard.waspressed('space') then
         sounds['jump']:play()
-        self.dy = -2
+        self.dy = JUMP
     end
 
-    if love.mouse.coor['x'] > self.x - MERCY and love.mouse.coor['x'] < self.x + self.width + MERCY then
-        if love.mouse.coor['y'] > self.y - MERCY and love.mouse.coor['y'] < self.y + self.height + MERCY then
-            sounds['jump']:play()
-            self.dy = -2
-        end
+    if love.mouse.waspressed then
+        sounds['jump']:play()
+        self.dy = JUMP
     end
-
 end
 
 function Bird:render()

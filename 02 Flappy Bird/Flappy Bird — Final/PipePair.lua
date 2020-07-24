@@ -3,7 +3,7 @@ require 'Pipe'
 PipePair = Class{}
 
 local GAP_HEIGHT = 80
-local PAIR_SCROLL = -40
+local PAIR_SCROLL = -50
 local PIPE_WIDTH = Pipe().width
 local PIPE_HEIGHT = Pipe().height
 

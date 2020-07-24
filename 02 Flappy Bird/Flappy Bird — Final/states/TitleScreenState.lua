@@ -4,6 +4,10 @@ function TitleScreenState:update(dt)
     if love.keyboard.waspressed('enter') or love.keyboard.waspressed('return') then
         gStateMachine:change('countdown')
     end
+    
+    if love.mouse.waspressed then
+        gStateMachine:change('countdown')
+    end
 end
 
 function TitleScreenState:render()

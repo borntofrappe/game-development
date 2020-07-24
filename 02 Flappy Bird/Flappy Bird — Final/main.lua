@@ -29,6 +29,9 @@ BACKGROUND_OFFSET_SPEED = 10
 GROUND_OFFSET_SPEED = 30
 BACKGROUND_LOOPING_POINT = 512
 GROUND_LOOPING_POINT = 512
+THRESHOLD_UPPER = VIRTUAL_HEIGHT / 5
+THRESHOLD_LOWER = VIRTUAL_HEIGHT / 5 * 4 - 16
+Y_CHANGE = 50
 
 local background = love.graphics.newImage('res/graphics/background.png')
 local ground = love.graphics.newImage('res/graphics/ground.png')
@@ -47,10 +50,7 @@ function love.load()
     ground_offset = 0
 
     love.keyboard.key_pressed = {}
-    love.mouse.coor = {
-        ['x'] = 0,
-        ['y'] = 0
-    }
+    love.mouse.waspressed = false
 
     gStateMachine = StateMachine({
         ['title'] = function() return TitleScreenState() end,
@@ -93,8 +93,8 @@ function love.keyboard.waspressed(key)
     return love.keyboard.key_pressed[key]
 end
 
-function love.mousepressed(x, y)
-    love.mouse.coor['x'], love.mouse.coor['y'] = push:toGame(x, y)
+function love.mousepressed()
+    love.mouse.waspressed = true
 end
 
 function love.update(dt)
@@ -105,7 +105,7 @@ function love.update(dt)
     gStateMachine:update(dt)
     
     love.keyboard.key_pressed = {}
-    love.mouse.coor['x'], love.mouse.coor['y'] = 0, 0
+    love.mouse.waspressed = false
 end
 
 function love.draw()

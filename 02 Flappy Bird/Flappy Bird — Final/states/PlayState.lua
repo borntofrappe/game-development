@@ -7,7 +7,7 @@ function PlayState:init()
     self.interval = 4
     self.score = 0
 
-    self.y = math.random(VIRTUAL_HEIGHT / 7, VIRTUAL_HEIGHT / 7 * 6)
+    self.y = math.random(THRESHOLD_UPPER, THRESHOLD_LOWER)
 end
 
 function PlayState:update(dt)
@@ -16,8 +16,8 @@ function PlayState:update(dt)
         self.timer = self.timer % self.interval
 
         table.insert(self.pipePairs, PipePair(self.y))
-        following_y = self.y + math.random(50, -50)
-        self.y = math.min(math.max(0, following_y), VIRTUAL_HEIGHT)        
+        following_y = self.y + math.random(Y_CHANGE, Y_CHANGE * -1)
+        self.y = math.min(math.max(THRESHOLD_UPPER, following_y), THRESHOLD_LOWER)        
     end
 
     self.bird:update(dt)
