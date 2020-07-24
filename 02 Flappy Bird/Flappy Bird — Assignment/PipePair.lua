@@ -2,7 +2,6 @@ require 'Pipe'
 
 PipePair = Class{}
 
-local GAP_HEIGHT = 80
 local PAIR_SCROLL = -50
 local PIPE_WIDTH = Pipe().width
 local PIPE_HEIGHT = Pipe().height
@@ -12,8 +11,9 @@ function PipePair:init(y)
     self.x = VIRTUAL_WIDTH
     self.y = y
     self.width = PIPE_WIDTH
+    self.gap = math.random(70, 90)
     self.pipes = {
-        upper = Pipe(self.x, self.y - GAP_HEIGHT - PIPE_HEIGHT, 'top'),
+        upper = Pipe(self.x, self.y - self.gap - PIPE_HEIGHT, 'top'),
         lower = Pipe(self.x, self.y, 'bottom')
     }
 

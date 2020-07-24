@@ -29,9 +29,9 @@ BACKGROUND_OFFSET_SPEED = 10
 GROUND_OFFSET_SPEED = 30
 BACKGROUND_LOOPING_POINT = 512
 GROUND_LOOPING_POINT = 512
-THRESHOLD_UPPER = VIRTUAL_HEIGHT / 5
-THRESHOLD_LOWER = VIRTUAL_HEIGHT / 5 * 4 - 16
-Y_CHANGE = 50
+THRESHOLD_UPPER = 100
+THRESHOLD_LOWER = VIRTUAL_HEIGHT - 16
+Y_CHANGE = 60
 
 local background = love.graphics.newImage('res/graphics/background.png')
 local ground = love.graphics.newImage('res/graphics/ground.png')

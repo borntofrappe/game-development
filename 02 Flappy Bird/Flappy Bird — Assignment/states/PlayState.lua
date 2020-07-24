@@ -14,6 +14,7 @@ function PlayState:update(dt)
     self.timer = self.timer + dt
     if self.timer > self.interval then
         self.timer = self.timer % self.interval
+        self.interval = math.random(2, 5)
 
         table.insert(self.pipePairs, PipePair(self.y))
         following_y = self.y + math.random(Y_CHANGE, Y_CHANGE * -1)
