@@ -7,3 +7,7 @@ Render the assets making up the background of the game.
 ## BA 1 – Parallax
 
 Move the assets in the background and with a different speed.
+
+## BA 2 — Android
+
+Define a table for the android. Render at the center of the screen.
