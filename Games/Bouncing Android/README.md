@@ -1,5 +1,5 @@
-A game picking up the gameplay from flappy bird and the graphics from an android phone.
+With this game I set out to take the lessons learned from _01 Pong_ and _02 Flappy Bird_ to replicate the flappy bird-like game provided on android devices running the lollipop version.
 
-## res
+## BA 0 — Static
 
-In the folder you find the different assets designed for the game. For the pipes, the idea is to use a rectangle and include the graphic of _lollipop.png_ at the end of said shape.
+Render the assets making up the background of the game.
