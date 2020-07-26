@@ -3,3 +3,7 @@ With this game I set out to take the lessons learned from _01 Pong_ and _02 Flap
 ## BA 0 — Static
 
 Render the assets making up the background of the game.
+
+## BA 1 – Parallax
+
+Move the assets in the background and with a different speed.
