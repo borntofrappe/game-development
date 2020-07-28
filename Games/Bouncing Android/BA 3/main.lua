@@ -22,7 +22,7 @@ BUILDINGS_3_OFFSET = 0
 BUILDINGS_3_SPEED = 40
 local buildings_3 = love.graphics.newImage('res/buildings-3.png')
 
-local sun = love.graphics.newImage('res/sun.png')
+local moon = love.graphics.newImage('res/moon.png')
 
 function love.load()
     love.window.setTitle('Bouncing Android')
@@ -59,7 +59,7 @@ function love.draw()
     love.graphics.draw(buildings_2, -BUILDINGS_2_OFFSET, 20)
     love.graphics.draw(buildings_1, -BUILDINGS_1_OFFSET, 20)
 
-    love.graphics.draw(sun, 50, 300)
+    love.graphics.draw(moon, 50, 325)
 
     android:render()
 end

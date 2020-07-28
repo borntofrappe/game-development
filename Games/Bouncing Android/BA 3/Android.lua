@@ -27,7 +27,7 @@ function Android:update(dt)
     self.dy = self.dy + GRAVITY * dt
     self.y = self.y + self.dy
 
-    self.dangle = self.dangle + GRAVITY / 3 * dt
+    self.dangle = self.dangle + GRAVITY / 2.5 * dt
     self.angle = math.min(180, math.max(30, self.angle + self.dangle))
   end
 
