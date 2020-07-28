@@ -11,3 +11,7 @@ Move the assets in the background and with a different speed.
 ## BA 2 — Android
 
 Define a table for the android. Render at the center of the screen.
+
+## BA 3 — It moves
+
+Add movement for the android, in the form of gravity, bouncing and change in the image's own rotation.
