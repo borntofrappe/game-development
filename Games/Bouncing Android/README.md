@@ -15,3 +15,7 @@ Define a table for the android. Render at the center of the screen.
 ## BA 3 — It moves
 
 Add movement for the android, in the form of gravity, bouncing and change in the image's own rotation.
+
+## BA 4 — Lollipop
+
+Draw lollipops with an image and a rectangle.
