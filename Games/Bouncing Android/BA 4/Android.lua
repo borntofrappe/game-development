@@ -4,7 +4,7 @@ local ANDROID_IMAGE = love.graphics.newImage('res/android.png')
 GRAVITY = 22
 
 function Android:init(x, y)
-  android = {}
+  local android = {}
 
   android.width = ANDROID_IMAGE:getWidth()
   android.height = ANDROID_IMAGE:getHeight()

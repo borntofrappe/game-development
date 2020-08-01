@@ -3,7 +3,7 @@ local LOLLIPOP_IMAGE = love.graphics.newImage('res/lollipop.png')
 local LOLLIPOP_SCROLL = -80
 
 function Lollipop:init()
-  lollipop = {}
+  local lollipop = {}
 
   lollipop.r = LOLLIPOP_IMAGE:getWidth()
   lollipop.x = WINDOW_WIDTH + lollipop.r

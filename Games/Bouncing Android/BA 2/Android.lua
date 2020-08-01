@@ -1,7 +1,7 @@
 Android = {}
 
 function Android:init()
-  android = {}
+  local android = {}
   android.image = love.graphics.newImage('res/android.png')
   android.width = android.image:getWidth()
   android.height = android.image:getHeight()
