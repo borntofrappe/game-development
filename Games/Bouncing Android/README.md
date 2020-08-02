@@ -246,4 +246,4 @@ Include lollipops in pairs.
 
 ### Notes
 
-This allows to experiment with inheritance using Lua and the table-focused approach to object-oriented programming.
+`LollipopPair` needs to know about the width and height of the single sprite. To this end, the script initializes a throw-away table to pick the measures from the `Lollipop` file.
