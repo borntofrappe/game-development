@@ -210,8 +210,6 @@ Add lollipops at an interval.
 
 ### Notes
 
-Lollipops are created with an image _and_ with a rectangle shape. You can create an image tying both elements together, but this would complicate how you ultimately detect a collision with the android (for a later update).
-
 To include multiple copies, `main.lua` mirrors the structure introduced in _02 Flappy Bird_:
 
 - specify two variables `timer` and `interval`
@@ -239,3 +237,13 @@ end
 ```
 
 Moreover, the lollipops are removed from the table once they scroll to the left of the game window. Similarly to flappy bird, this is achieved through a boolean, which is toggled to `true` in `Lollipop.lua`, and when the coordinate is less than the established value.
+
+## Update 5
+
+### Goal
+
+Include lollipops in pairs.
+
+### Notes
+
+This allows to experiment with inheritance using Lua and the table-focused approach to object-oriented programming.
