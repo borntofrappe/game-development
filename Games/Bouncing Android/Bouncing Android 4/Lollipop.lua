@@ -5,9 +5,9 @@ local LOLLIPOP_SCROLL = -80
 function Lollipop:init()
   local lollipop = {}
 
-  lollipop.r = LOLLIPOP_IMAGE:getWidth()
+  lollipop.r = LOLLIPOP_IMAGE:getWidth() / 2
   lollipop.x = WINDOW_WIDTH + lollipop.r
-  lollipop.y = math.random(WINDOW_HEIGHT / 2, WINDOW_HEIGHT)
+  lollipop.y = math.random(WINDOW_HEIGHT / 2, WINDOW_HEIGHT - lollipop.r * 2)
   lollipop.remove = false
 
   setmetatable(lollipop, {__index = self})
@@ -24,5 +24,5 @@ end
 
 function Lollipop:render()
   love.graphics.rectangle('fill', self.x - 5, self.y, 10, WINDOW_HEIGHT - self.y)
-  love.graphics.draw(LOLLIPOP_IMAGE, self.x - self.r / 2, self.y - self.r / 2)
+  love.graphics.draw(LOLLIPOP_IMAGE, self.x - self.r, self.y - self.r)
 end

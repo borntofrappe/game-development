@@ -24,7 +24,8 @@ BUILDINGS_3_SPEED = 5
 local buildings_3 = love.graphics.newImage('res/buildings-3.png')
 
 local moon = love.graphics.newImage('res/moon.png')
-local lollipops = {}
+
+lollipops = {}
 COUNTDOWN_TIME = 1
 INTERVAL_TIME = 4
 
@@ -36,9 +37,9 @@ function love.load()
     android = Android:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 20)
 
     table.insert(lollipops, Lollipop:init())
-    interval = INTERVAL_TIME
     timer = 0
-    love.mouse.waspressed = nil
+    interval = INTERVAL_TIME
+    love.mouse.waspressed = false
 end
 
 function love.keypressed(key)
@@ -75,7 +76,7 @@ function love.update(dt)
         end
     end
     android:update(dt)
-    love.mouse.waspressed = nil
+    love.mouse.waspressed = false
 end
 
 function love.draw()

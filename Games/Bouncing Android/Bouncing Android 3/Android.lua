@@ -1,7 +1,8 @@
 Android = {}
 local ANDROID_IMAGE = love.graphics.newImage('res/android.png')
 
-GRAVITY = 22
+GRAVITY_SPEED = 22
+GRAVITY_ANGLE = 8
 
 function Android:init(x, y)
   local android = {}
@@ -24,10 +25,10 @@ function Android:update(dt)
   -- implement the logic of the y coordinate for the angle as well
   -- [30, 180]
   if self.y < WINDOW_HEIGHT then
-    self.dy = self.dy + GRAVITY * dt
+    self.dy = self.dy + GRAVITY_SPEED * dt
     self.y = self.y + self.dy
 
-    self.dangle = self.dangle + GRAVITY / 2.5 * dt
+    self.dangle = self.dangle + GRAVITY_ANGLE * dt
     self.angle = math.min(180, math.max(30, self.angle + self.dangle))
   end
 

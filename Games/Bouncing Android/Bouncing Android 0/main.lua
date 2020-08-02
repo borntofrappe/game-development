@@ -19,7 +19,6 @@ function love.load()
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, SETTINGS)
 end
 
-
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()

@@ -8,8 +8,7 @@ function Android:init()
   android.x = WINDOW_WIDTH / 2 - android.width / 2
   android.y = WINDOW_HEIGHT / 2 - android.height / 2
 
-  self.__index = self
-  setmetatable(android, self)
+  setmetatable(android, {__index = self})
   return android
 end
 
