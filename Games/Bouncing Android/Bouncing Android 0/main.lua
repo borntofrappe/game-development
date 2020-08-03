@@ -6,13 +6,13 @@ SETTINGS = {
     vsync = true,
 }
 
-local background = love.graphics.newImage('res/background.png')
+local background = love.graphics.newImage('res/graphics/background.png')
 
-local buildings_1 = love.graphics.newImage('res/buildings-1.png')
-local buildings_2 = love.graphics.newImage('res/buildings-2.png')
-local buildings_3 = love.graphics.newImage('res/buildings-3.png')
+local buildings_1 = love.graphics.newImage('res/graphics/buildings-1.png')
+local buildings_2 = love.graphics.newImage('res/graphics/buildings-2.png')
+local buildings_3 = love.graphics.newImage('res/graphics/buildings-3.png')
 
-local moon = love.graphics.newImage('res/moon.png')
+local moon = love.graphics.newImage('res/graphics/moon.png')
 
 function love.load()
     love.window.setTitle('Bouncing Android')

@@ -1,25 +1,21 @@
-Android = {}
-local ANDROID_IMAGE = love.graphics.newImage('res/android.png')
+Android = Class{}
 
-GRAVITY_SPEED = 18
-GRAVITY_ANGLE = 6
+GRAVITY_SPEED = 22
+GRAVITY_ANGLE = 8
 
 function Android:init(x, y)
-  local android = {}
+  self.image = love.graphics.newImage('res/graphics/android.png')
+  self.width = self.image:getWidth()
+  self.height = self.image:getHeight()
+  self.x = x + self.width / 2
+  self.y = y + self.height / 2
 
-  android.width = ANDROID_IMAGE:getWidth()
-  android.height = ANDROID_IMAGE:getHeight()
-  android.x = x + android.width / 2
-  android.y = y + android.height / 2
+  self.dy = -10
 
-  android.dy = -8
-
-  android.angle = 45
-  android.dangle = -2
-
-  setmetatable(android, {__index = self})
-  return android
+  self.angle = 45
+  self.dangle = -2
 end
+
 
 function Android:update(dt)
   if self.y < WINDOW_HEIGHT then
@@ -31,13 +27,13 @@ function Android:update(dt)
   end
 
   if love.mouse.waspressed then
-    self.dy = -7
-    self.angle = math.min(self.angle, 70)
-    self.dangle = -2
+    self.dy = -9
+    self.angle = math.min(self.angle, 80)
+    self.dangle = -3
   end
 end
 
 function Android:render()
-  love.graphics.draw(ANDROID_IMAGE, self.x - self.width / 2, self.y - self.height / 2, math.rad(self.angle), 1, 1, self.width / 2, self.height / 2)
+  love.graphics.draw(self.image, self.x - self.width / 2, self.y - self.height / 2, math.rad(self.angle), 1, 1, self.width / 2, self.height / 2)
 end
 

@@ -1,15 +1,11 @@
-Android = {}
+Android = Class{}
 
 function Android:init()
-  local android = {}
-  android.image = love.graphics.newImage('res/android.png')
-  android.width = android.image:getWidth()
-  android.height = android.image:getHeight()
-  android.x = WINDOW_WIDTH / 2 - android.width / 2
-  android.y = WINDOW_HEIGHT / 2 - android.height / 2
-
-  setmetatable(android, {__index = self})
-  return android
+  self.image = love.graphics.newImage('res/graphics/android.png')
+  self.width = self.image:getWidth()
+  self.height = self.image:getHeight()
+  self.x = WINDOW_WIDTH / 2 - self.width / 2
+  self.y = WINDOW_HEIGHT / 2 - self.height / 2
 end
 
 function Android:render()

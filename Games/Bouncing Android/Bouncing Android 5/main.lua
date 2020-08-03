@@ -1,3 +1,5 @@
+Class = require 'res/lib/class'
+
 require 'Android'
 require 'Lollipop'
 require 'LollipopPair'
@@ -11,36 +13,32 @@ SETTINGS = {
 }
 
 
-local background = love.graphics.newImage('res/background.png')
+local background = love.graphics.newImage('res/graphics/background.png')
 
 BACKGROUND_WIDTH = background:getWidth()
 BUILDINGS_1_OFFSET = 0
 BUILDINGS_1_SPEED = 30
-local buildings_1 = love.graphics.newImage('res/buildings-1.png')
+local buildings_1 = love.graphics.newImage('res/graphics/buildings-1.png')
 BUILDINGS_2_OFFSET = 0
 BUILDINGS_2_SPEED = 15
-local buildings_2 = love.graphics.newImage('res/buildings-2.png')
+local buildings_2 = love.graphics.newImage('res/graphics/buildings-2.png')
 BUILDINGS_3_OFFSET = 0
 BUILDINGS_3_SPEED = 5
-local buildings_3 = love.graphics.newImage('res/buildings-3.png')
+local buildings_3 = love.graphics.newImage('res/graphics/buildings-3.png')
 
-local moon = love.graphics.newImage('res/moon.png')
+local moon = love.graphics.newImage('res/graphics/moon.png')
 
-lollipop_pairs = {}
-COUNTDOWN_TIME = 1
-INTERVAL_TIME = 4
+local android = Android(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+local lollipopPairs = {LollipopPair()}
 
 function love.load()
-    math.randomseed(os.time())
     love.window.setTitle('Bouncing Android')
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, SETTINGS)
 
-    android = Android:init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 20)
-
-    table.insert(lollipop_pairs, LollipopPair:init())
-    timer = 0
-    interval = INTERVAL_TIME
     love.mouse.waspressed = false
+    
+    timer = 0
+    interval = 4
 end
 
 function love.keypressed(key)
@@ -58,25 +56,27 @@ function love.update(dt)
     BUILDINGS_2_OFFSET = (BUILDINGS_2_OFFSET + BUILDINGS_2_SPEED * dt) % BACKGROUND_WIDTH
     BUILDINGS_3_OFFSET = (BUILDINGS_3_OFFSET + BUILDINGS_3_SPEED * dt) % BACKGROUND_WIDTH
 
+    android:update(dt)
+
     timer = timer + dt
-    if timer > COUNTDOWN_TIME then
-        timer = timer % COUNTDOWN_TIME
+    if timer > 1 then
+        timer = timer % 1
         interval = interval - 1
 
         if interval == 0 then
-            interval = INTERVAL_TIME
-            table.insert(lollipop_pairs, LollipopPair:init())
+            interval = 4
+            table.insert(lollipopPairs, LollipopPair())
         end
     end
 
-    for k, lollipop_pair in pairs(lollipop_pairs) do
-        lollipop_pair:update(dt)
+    for k, lollipopPair in pairs(lollipopPairs) do
+        lollipopPair:update(dt)
 
-        if lollipop_pair.remove then
-            table.remove(lollipop_pairs, k)
+        if lollipopPair.remove then
+            table.remove(lollipopPairs, k)
         end
     end
-    android:update(dt)
+
     love.mouse.waspressed = false
 end
 
@@ -88,8 +88,9 @@ function love.draw()
 
     love.graphics.draw(moon, 50, 325)
 
-    for k, lollipop_pair in pairs(lollipop_pairs) do
-        lollipop_pair:render()
+    for k, lollipopPair in pairs(lollipopPairs) do
+        lollipopPair:render()
     end
+
     android:render()
 end

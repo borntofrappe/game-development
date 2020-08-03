@@ -1,24 +1,19 @@
-LollipopPair = {}
+LollipopPair = Class{}
 
 local PAIR_SCROLL = -80
-local PAIR_WIDTH = Lollipop:init().width
-local PAIR_HEIGHT = Lollipop:init().height
+local PAIR_WIDTH = Lollipop().width
+local PAIR_HEIGHT = Lollipop().height
 local PAIR_GAP = 100
 
 function LollipopPair:init()
-  local pair = {}
-
-  pair.x = WINDOW_WIDTH
-  pair.y = math.random(PAIR_WIDTH + PAIR_GAP, WINDOW_HEIGHT - PAIR_WIDTH)
-  pair.lollipops = {
-    upper = Lollipop:init(pair.x, pair.y - PAIR_GAP - PAIR_HEIGHT, 'top'),
-    lower = Lollipop:init(pair.x, pair.y)
+  self.x = WINDOW_WIDTH
+  self.y = math.random(PAIR_WIDTH + PAIR_GAP, WINDOW_HEIGHT - PAIR_WIDTH)
+  self.lollipops = {
+    upper = Lollipop(self.x, self.y - PAIR_GAP - PAIR_HEIGHT, 'top'),
+    lower = Lollipop(self.x, self.y)
   }
 
-  pair.remove = false
-
-  setmetatable(pair, {__index = self})
-  return pair
+  self.remove = false
 end
 
 function LollipopPair:update(dt)

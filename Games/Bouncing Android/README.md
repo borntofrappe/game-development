@@ -1,16 +1,14 @@
 With this project I set out to take what I learned from _01 Pong_ and _02 Flappy Bird_ to replicate the flappy bird-like game provided on android devices running the lollipop version.
 
-Keep in mind that the scripts depend on the resources found in the _res_ folder.
+Keep in mind that the scripts depend on the resources found in the _res_ folder. I tried using the object-oriented approach explained in _programming in lua_, but ultimately decided to rely on the utility library that is `class.lua`. It is more convenient, and it is used thoroughly in the course.
 
 ## Update 0
-
-### Goal
 
 Render the assets making up the background.
 
 ### Notes
 
-The buildings included above the dark, starry sky are included through three `.png` images, and not only one. This is to ultimately move the assets at different speed for a parallax scroll.
+The buildings included above the background are included through three `.png` images. This is to ultimately move the assets at different speed to give the illusion of depth.
 
 To add the static assets:
 
@@ -18,36 +16,22 @@ To add the static assets:
 
 2. render the image with `love.graphics.draw`, specifying the image and the coordinates of the top left corner
 
-With regards to point #2, it is important to note how the images are all designed with the `400x550` dimensions picked for the window.
-
-It is also important to stress the _order_ with which the buildings are rendered: the darker shapes, which are meant to be visually more distant, are drawn first, so to have the lighter shapes on top.
-
-This covers much of the update, a static update if you will. The only interaction is included to have the window close when pressing the `escape` key.
-
-```lua
-function love.keypressed(key)
-    if key == 'escape' then
-        love.event.quit()
-    end
-end
-```
+The images are designed with the `400x550` dimensions picked for the window.
 
 ## Update 1
 
-### Goal
-
-Move the assets in the background at a different rate.
+Move the buildings in the background with different speed.
 
 ### Notes
 
-The images are drawn with the same logic introduced in _02 Flappy Bird_, by having a variable describing the horizontal coordinate and a variable detailing how much to offset this coordinate within the game loop.
+Include a variable describing the horizontal coordinate and a variable detailing how much to offset the coordinate within the game loop.
 
 ```lua
 BUILDINGS_1_OFFSET = 0
 BUILDINGS_1_SPEED = 20
 ```
 
-Here I illustrate for the first building, but the logic is repeated for the other images as well, just with a different sped value.
+The logic is repeated for the other images as well, just with a different sped value.
 
 With these variables, update the offset in `love.update(dt)`
 
@@ -65,62 +49,15 @@ love.graphics.draw(buildings_1, -BUILDINGS_1_OFFSET, 20)
 
 ## Update 2
 
-### Goal
-
-Define a table for the android. Render at the center of the screen.
-
-### Notes
-
-I used _table_ since Lua does not have a concept of class, but the idea is to use here object-oriented programming, and create a separate, independent entity in `Android.lua`.
-
-I'll refer you to the official manual for [object-oriented programming](https://www.lua.org/pil/16.html), but the idea is to crate a table, `Android`, with the desired attributes and methods. Within an initialization function then, then idea is to then return a different table, which looks at `Android` for any value it does not have.
-
-```lua
-Android = {}
-
-function Android:init()
-  local android = {}
-
-  -- set attributes
-
-  setmetatable(android, {__index = self})
-  return android
-end
-```
-
-For instance, in the moment you define a `render` function.
-
-```lua
-function Android:render()
-  love.graphics.draw(self.image, self.x, self.y)
-end
-```
-
-Any instance generated through `Android:init()` will have access to the function by virtue of setting the metatable.
-
-```lua
-android = Android:init()
-android:render()
-```
-
-One important note: I use `local` before initializing the table in the `Android:init` function. I found this necessary to avoid a potential conflict in the moment you create an instance with the same name.
-
-```lua
-function Android:init()
-  local android = {}
-  -- ...
-end
-```
+Introduce the android through a dedicated class.
 
 ## Update 3
-
-### Goal
 
 Have the android fall and bounce back following user interaction.
 
 ### Notes
 
-The vertical movement of the android mirrors that of the bird in _02 Flappy Bird_. Include a variable `dy`, have the variable change with the passage of time and then update the `y` coordinate according to `dy` itself. This allows to fake gravity by continuously increasing `dy`
+Include a variable `dy`, have the variable change with the passage of time and then update the `y` coordinate according to `dy` itself. This structrue allows to fake gravity by continuously increasing `dy`.
 
 ```lua
 GRAVITY = 22
@@ -131,7 +68,7 @@ function Android:update(dt)
 end
 ```
 
-Moreover, it allows to have the shape bounce back by setting `dy` equal to a negative value.
+Moreover, the structure allows to have the shape bounce back by setting `dy` equal to a negative value.
 
 ```lua
 function Android:update(dt)
@@ -165,18 +102,12 @@ function love.update(dt)
 end
 ```
 
-This covers the vertical movement of the android, but it's not all. In trying to be faithful to the original game, the image is also rotated as it moves up and down. The rotation is included with additional attributes in `Android.lua`.
+This covers the vertical movement of the android, but the update adds another element in the rotation of the image.
 
 ```lua
 function Android:init(x, y)
-  local android = {}
-
-  -- previous attributes
-  android.angle = 45
-  android.dangle = -2
-
-  setmetatable(android, {__index = self})
-  return android
+  self.angle = 45
+  self.dangle = -2
 end
 ```
 
@@ -204,43 +135,9 @@ love.graphics.draw(x, y, rotation, scalex, scaley, offsetx, offsety)
 
 ## Update 4
 
-### Goal
-
 Add lollipops at an interval.
 
-### Notes
-
-To include multiple copies, `main.lua` mirrors the structure introduced in _02 Flappy Bird_:
-
-- specify two variables `timer` and `interval`
-
-- update `timer` with delta time `dt` and every time it crosses a prescribed threshold, reduce `interval`
-
-- when `interval` hits `0`, create a new copy of the lollipop and reset the variables to the original values
-
-The lollipop copies are stored in a table, updated and rendered through a loop.
-
-```lua
-lollipops = {}
-
-function love.update(dt)
-  for k, lollopop in pairs(lollipops) do
-    lollopop:update(dt)
-  end
-end
-
-function love.draw()
-    for k, lollopop in pairs(lollipops) do
-        lollopop:render()
-    end
-end
-```
-
-Moreover, the lollipops are removed from the table once they scroll to the left of the game window. Similarly to flappy bird, this is achieved through a boolean, which is toggled to `true` in `Lollipop.lua`, and when the coordinate is less than the established value.
-
 ## Update 5
-
-### Goal
 
 Include lollipops in pairs.
 
@@ -249,8 +146,6 @@ Include lollipops in pairs.
 `LollipopPair` needs to know about the width and height of the single sprite. To this end, the script initializes a throw-away table to pick the measures from the `Lollipop` file.
 
 ## Update 6
-
-### Goal
 
 Add randomness in the design of the game.
 
@@ -274,5 +169,5 @@ end
 And an image at random is picked when a pair is initialized.
 
 ```lua
-table.insert(lollipop_pairs, LollipopPair:init(lollipop_images[math.random(#lollipop_images)]))
+table.insert(lollipopPairs, LollipopPair(lollipop_images[math.random(#lollipop_images)]))
 ```

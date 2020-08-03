@@ -1,24 +1,20 @@
-LollipopPair = {}
+LollipopPair = Class{}
 
 local PAIR_SCROLL = -80
-local PAIR_WIDTH = Lollipop:init().width
-local PAIR_HEIGHT = Lollipop:init().height
+local PAIR_WIDTH = Lollipop().width
+local PAIR_HEIGHT = Lollipop().height
 
 function LollipopPair:init(image)
-  local pair = {}
-
-  pair.gap = math.random(85, 120)
-  pair.x = WINDOW_WIDTH
-  pair.y = math.random(PAIR_WIDTH + pair.gap, WINDOW_HEIGHT - PAIR_WIDTH)
-  pair.lollipops = {
-    upper = Lollipop:init(image, pair.x, pair.y - pair.gap - PAIR_HEIGHT, 'top'),
-    lower = Lollipop:init(image, pair.x, pair.y, 'bottom')
+  self.image = image or love.graphics.newImage('res/graphics/lollipop-1.png')
+  self.gap = math.random(85, 120)
+  self.x = WINDOW_WIDTH
+  self.y = math.random(PAIR_WIDTH + self.gap, WINDOW_HEIGHT - PAIR_WIDTH)
+  self.lollipops = {
+    upper = Lollipop(self.image, self.x, self.y - self.gap - PAIR_HEIGHT, 'top'),
+    lower = Lollipop(self.image, self.x, self.y)
   }
 
-  pair.remove = false
-
-  setmetatable(pair, {__index = self})
-  return pair
+  self.remove = false
 end
 
 function LollipopPair:update(dt)
@@ -37,3 +33,4 @@ function LollipopPair:render()
     lollipop:render()
   end
 end
+

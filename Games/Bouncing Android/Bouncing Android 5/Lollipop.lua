@@ -1,17 +1,13 @@
-Lollipop = {}
-local LOLLIPOP_IMAGE = love.graphics.newImage('res/lollipop.png')
+Lollipop = Class{}
+
+local LOLLIPOP_IMAGE = love.graphics.newImage('res/graphics/lollipop-1.png')
 
 function Lollipop:init(x, y, origin)
-  local lollipop = {}
-
-  lollipop.width = LOLLIPOP_IMAGE:getWidth()
-  lollipop.height = LOLLIPOP_IMAGE:getHeight()
-  lollipop.x = x or 0
-  lollipop.y = y or 0
-  lollipop.origin = origin or 'bottom'
-
-  setmetatable(lollipop, {__index = self})
-  return lollipop
+  self.width = LOLLIPOP_IMAGE:getWidth()
+  self.height = LOLLIPOP_IMAGE:getHeight()
+  self.x = x or 0
+  self.y = y or 0
+  self.origin = origin or 'bottom'
 end
 
 function Lollipop:render()
