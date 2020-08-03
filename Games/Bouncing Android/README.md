@@ -179,3 +179,13 @@ Manage the state through a state machine.
 ### Notes
 
 The approach of a global state machine managing different states is taken directly from the course. It is extremely convenient to have a dedicated file in which to update and render the assets for each specific situation. In the title screen, show `title.png`. In the play state, show and scroll the buildings, show and move the android, the lollipops.
+
+## Update 8
+
+Add the score in the top left corner of the play state, and the score state when the android hits the bottom of the screen.
+
+### Notes
+
+I specifically mentioned the bottom of the screen as the game is not capable, with the current update, to detect a collision between android and lollipops.
+
+It is interesting to point out that the `:render` functions of the play and score state are one and the same. The difference between the two states boils down to how the play state updates the buildings/android/lollipops to actually move.
