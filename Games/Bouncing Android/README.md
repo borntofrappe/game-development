@@ -247,3 +247,32 @@ Include lollipops in pairs.
 ### Notes
 
 `LollipopPair` needs to know about the width and height of the single sprite. To this end, the script initializes a throw-away table to pick the measures from the `Lollipop` file.
+
+## Update 6
+
+### Goal
+
+Add randomness in the design of the game.
+
+### Notes
+
+Two random elements are imported from _02 Flappy Bird_, and relate to have a random gap between the individual lollolipops as well as a random interval for their appearance.
+
+Beside these elements, the idea is to add variety also in the design of the individual lollipops. To this end, the _res_ folder is equipped with additional `lollipop-*` images. The images are loaded in `main.lua`
+
+```lua
+function love.load()
+  lollipop_images = {
+    love.graphics.newImage('res/lollipop-1.png'),
+    love.graphics.newImage('res/lollipop-2.png'),
+    love.graphics.newImage('res/lollipop-3.png'),
+    love.graphics.newImage('res/lollipop-4.png')
+  }
+end
+```
+
+And an image at random is picked when a pair is initialized.
+
+```lua
+table.insert(lollipop_pairs, LollipopPair:init(lollipop_images[math.random(#lollipop_images)]))
+```
