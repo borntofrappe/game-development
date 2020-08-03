@@ -171,3 +171,11 @@ And an image at random is picked when a pair is initialized.
 ```lua
 table.insert(lollipopPairs, LollipopPair(lollipop_images[math.random(#lollipop_images)]))
 ```
+
+## Update 7
+
+Manage the state through a state machine.
+
+### Notes
+
+The approach of a global state machine managing different states is taken directly from the course. It is extremely convenient to have a dedicated file in which to update and render the assets for each specific situation. In the title screen, show `title.png`. In the play state, show and scroll the buildings, show and move the android, the lollipops.
