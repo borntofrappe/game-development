@@ -189,3 +189,64 @@ Add the score in the top left corner of the play state, and the score state when
 I specifically mentioned the bottom of the screen as the game is not capable, with the current update, to detect a collision between android and lollipops.
 
 It is interesting to point out that the `:render` functions of the play and score state are one and the same. The difference between the two states boils down to how the play state updates the buildings/android/lollipops to actually move.
+
+## Update 9
+
+Detect a collision between the android and the lollipops.
+
+### Notes
+
+Detecting a collision is made slightly more challenging given the non-rectangular shape of the lollipops. However, knowing the structure of the image, and granting a more lenient detection, it is possible to find an approximate, satisfactory solution.
+
+First off, it's necessary to reconsider the way the android is positioned rendered. By changing the offset value to have the image rotate from the center, it is possible to have `self.x` and `self.y` describe describe the exact center simply by using the input coordinates of `VIRTUAL_WIDTH / 2` and `VIRTUAL_HEIGHT / 2`
+
+```lua
+function Android:init(x, y)
+  self.x = x
+  self.y = y
+end
+
+function Android:render()
+  love.graphics.draw(self.image, self.x, self.y, math.rad(self.angle), 1, 1, self.width / 2, self.height / 2)
+end
+```
+
+In previous updates, I had the coordinates off because I figured the offset would impact only the rotation, and not from where the image would be drawn. By using the offset of `self.width / 2` and `self.height / 2`, the image is already drawn from the center.
+
+I came to this realization by drawing a circle atop the image. A visual way to debug the code, if you will.
+
+```lua
+function Android:render()
+  love.graphics.circle('fill', self.x, self.y, 5)
+end
+```
+
+With this modification, detecting a collision is a matter of expanding the approach introduced in the course. In the course, the lecturer describes the axis-alignment bounding box (AABB): if the character is before or after, if the character is above or below a rectangular shape, there is no collision. A similar test is repeated here as well, with a slight modification for the x-axis. For the y-axis, it's possible to use the coordinates and height of the lollipop as-is.
+
+```lua
+function Android:collides(lollipop)
+  if self.y < lollipop.y or self.y > lollipop.y + lollipop.height then
+    return false
+  end
+end
+```
+
+For the x-axis, however, add _padding_, extra space before the collision is actually detected.
+
+```lua
+function Android:collides(lollipop)
+  if self.x < lollipop.x + PADDING or self.x > lollipop.x + lollipop.width - PADDING then
+    return false
+  end
+
+  -- y-axis
+end
+```
+
+This is because the rectangle making up the lollipop stick is actually thinner than the full image. How much padding depends on the thickness of this rectangle, and also the position of `self.x`. Remember that `android.x` indicates the center of the image making up the android.
+
+This AABB test takes care of the lollipop stick, but not of the circle making up the head of the lollipop. To this end, I use pytagora's theorem against the center of this circle. The center is compared to two different coordinates depending on the position of the lollipop, considering once more what `android.x` and `android.y` represent:
+
+- for the upper lollipop, consider the top right corner of the android: `(android.x + android.width / 2, android.y - android.width / 2)`
+
+- for the lower lollipop, consider the middle point on the right side of the android: `(android.x + android.width / 2, android.y)`. This center right coordinate provides a more satisfactory solution than the bottom right corner, especially considering how the image leans consistently on its right side
