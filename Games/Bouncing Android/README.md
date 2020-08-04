@@ -1,6 +1,8 @@
 With this project I set out to take what I learned from _01 Pong_ and _02 Flappy Bird_ to replicate the flappy bird-like game provided on android devices running the lollipop version.
 
-Keep in mind that the scripts depend on the resources found in the _res_ folder. I tried using the object-oriented approach explained in _programming in lua_, but ultimately decided to rely on the utility library that is `class.lua`. It is more convenient, and it is used thoroughly in the course.
+Keep in mind that the scripts depend on the resources found in the _res_ folder.
+
+In the _— Final_ folder, you find the final and working version of the game. Collision detection is not perfect, but works in the context of a rather unforgiving game.
 
 ## Update 0
 
