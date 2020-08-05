@@ -6,7 +6,7 @@ function Paddle:init()
   self.width = 64
   self.height = 16
   self.dx = 0
-  self.skin = 4
+  self.skin = 1
   self.size = 2
 end
 

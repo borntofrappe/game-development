@@ -7,7 +7,7 @@ end
 function StartState:update(dt)
   if love.keyboard.waspressed('up') or love.keyboard.waspressed('down') then
     self.choice = self.choice == 1 and 2 or 1
-    gSounds['paddle_hit']:play()
+    gSounds['select']:play()
   end
 
   if love.keyboard.waspressed('escape') then
