@@ -46,6 +46,7 @@ function love.load()
   gFrames = {
     ['paddles'] = GenerateQuadsPaddles(gTextures['breakout']),
     ['balls'] = GenerateQuadsBalls(gTextures['breakout']),
+    ['bricks'] = GenerateQuadsBricks(gTextures['breakout'])
   }
 
   gStateMachine = StateMachine({

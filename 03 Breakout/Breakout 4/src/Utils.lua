@@ -87,3 +87,7 @@ function GenerateQuadsBalls(atlas)
 
   return table.slice(quads, 1, #quads - 1)
 end
+
+function GenerateQuadsBricks(atlas)
+  return table.slice(GenerateQuads(atlas, 32, 16), 1, 20)
+end
