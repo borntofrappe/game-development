@@ -1,7 +1,15 @@
 PauseState = Class({__includes = BaseState})
 
+function PauseState:init()
+  gSounds['music']:pause()
+end
+
 function PauseState:enter(params)
   self.x = params.x
+end
+
+function PauseState:exit()
+  gSounds['music']:play()
 end
 
 function PauseState:update(dt)

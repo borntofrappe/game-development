@@ -20,7 +20,7 @@ function PlayState:update(dt)
     gStateMachine:change('pause', {
       x = self.paddle.x
     })
-    gSounds['confirm']:play()
+    gSounds['pause']:play()
   end
 
   self.paddle:update(dt)

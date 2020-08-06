@@ -57,6 +57,9 @@ function love.load()
 
   gStateMachine:change('start')
 
+  gSounds['music']:setLooping(true)
+  gSounds['music']:play()
+
   love.keyboard.keypressed = {}
 end
 
@@ -73,9 +76,6 @@ function love.keyboard.waspressed(key)
 end
 
 function love.update(dt)
-  gSounds['music']:setLooping(true)
-  gSounds['music']:play()
-
   gStateMachine:update(dt)
 
   love.keyboard.keypressed = {}

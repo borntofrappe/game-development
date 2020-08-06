@@ -1,5 +1,9 @@
 PauseState = Class({__includes = BaseState})
 
+function PauseState:init()
+  gSounds['music']:pause()
+end
+
 function PauseState:enter(params)
   self.level = params.level
   self.health = params.health
@@ -8,6 +12,10 @@ function PauseState:enter(params)
   self.paddle = params.paddle
   self.ball = params.ball
   self.bricks = params.bricks
+end
+
+function PauseState:exit()
+  gSounds['music']:play()
 end
 
 function PauseState:update(dt)

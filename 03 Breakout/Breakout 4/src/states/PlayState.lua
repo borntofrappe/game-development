@@ -38,7 +38,7 @@ function PlayState:update(dt)
       },
       bricks = self.bricks
     })
-    gSounds['confirm']:play()
+    gSounds['pause']:play()
   end
 
   self.paddle:update(dt)

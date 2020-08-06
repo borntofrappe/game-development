@@ -35,7 +35,7 @@ function PlayState:update(dt)
         color = self.ball.color
       }
     })
-    gSounds['confirm']:play()
+    gSounds['pause']:play()
   end
 
   self.paddle:update(dt)
