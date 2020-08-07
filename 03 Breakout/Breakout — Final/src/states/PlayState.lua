@@ -11,54 +11,60 @@ function PlayState:enter(params)
 end
 
 function PlayState:update(dt)
-  if love.keyboard.waspressed('escape') then
-    gStateMachine:change('start')
-    gSounds['confirm']:play()
+  if love.keyboard.waspressed("escape") then
+    gStateMachine:change("start")
+    gSounds["confirm"]:play()
   end
 
-  if love.keyboard.waspressed('enter') or love.keyboard.waspressed('return') then
-    gStateMachine:change('pause', {
-      level = self.level,
-      health = self.health,
-      maxHealth = self.maxHealth,
-      score = self.score,
-      paddle = self.paddle,
-      ball = self.ball,
-      bricks = self.bricks
-    })
-    gSounds['pause']:play()
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    gStateMachine:change(
+      "pause",
+      {
+        level = self.level,
+        health = self.health,
+        maxHealth = self.maxHealth,
+        score = self.score,
+        paddle = self.paddle,
+        ball = self.ball,
+        bricks = self.bricks
+      }
+    )
+    gSounds["pause"]:play()
   end
 
   self.paddle:update(dt)
   self.ball:update(dt)
 
-  if self.ball:collides(self.paddle) then    
+  if self.ball:collides(self.paddle) then
     self.ball.y = self.paddle.y - self.ball.height
     self.ball.dy = self.ball.dy * -1
 
     deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
     self.ball.dx = self.ball.dx + deltaCenter * 4
-    
-    gSounds['paddle_hit']:play()
+
+    gSounds["paddle_hit"]:play()
   end
 
   for k, brick in pairs(self.bricks) do
     brick:update(dt)
-    
+
     if self.ball:collides(brick) and brick.inPlay then
       self.score = self.score + 50 * brick.tier + 200 * (brick.color - 1)
       brick:hit()
 
       if self:isLevelCleared() then
-        gSounds['victory']:play()
-        gStateMachine:change('victory', {
-          level = self.level,
-          health = self.health,
-          maxHealth = self.maxHealth,
-          score = self.score,
-          paddle = self.paddle,
-          ball = self.ball
-        })
+        gStateMachine:change(
+          "victory",
+          {
+            level = self.level,
+            health = self.health,
+            maxHealth = self.maxHealth,
+            score = self.score,
+            paddle = self.paddle,
+            ball = self.ball
+          }
+        )
+        gSounds["victory"]:play()
       end
 
       if self.ball.dx > 0 then
@@ -85,21 +91,27 @@ function PlayState:update(dt)
 
   if self.ball.y >= VIRTUAL_HEIGHT then
     self.health = self.health - 1
-    gSounds['hurt']:play()
-    if self.health == 0 then 
-      gStateMachine:change('gameover', {
-        score = self.score,
-      })
+    if self.health == 0 then
+      gStateMachine:change(
+        "gameover",
+        {
+          score = self.score
+        }
+      )
     else
-      gStateMachine:change('serve', {
-        level = self.level,
-        health = self.health,
-        maxHealth = self.maxHealth,
-        score = self.score,
-        paddle = self.paddle,
-        bricks = self.bricks
-      })
+      gStateMachine:change(
+        "serve",
+        {
+          level = self.level,
+          health = self.health,
+          maxHealth = self.maxHealth,
+          score = self.score,
+          paddle = self.paddle,
+          bricks = self.bricks
+        }
+      )
     end
+    gSounds["hurt"]:play()
   end
 end
 
@@ -108,7 +120,7 @@ function PlayState:render()
   displayScore(self.score)
 
   for k, brick in pairs(self.bricks) do
-    brick:render()  
+    brick:render()
     brick:renderParticles()
   end
   self.paddle:render()
