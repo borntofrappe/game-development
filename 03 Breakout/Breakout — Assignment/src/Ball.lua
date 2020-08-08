@@ -12,18 +12,6 @@ function Ball:init(x, y)
   self.color = 1
 end
 
-function Ball:collides(shape)
-  if self.x + self.width < shape.x or self.x > shape.x + shape.width then
-    return false
-  end
-
-  if self.y + self.height < shape.y or self.y > shape.y + shape.height then
-    return false
-  end
-
-  return true
-end
-
 function Ball:update(dt)
   self.x = self.x + self.dx * dt
   self.y = self.y + self.dy * dt

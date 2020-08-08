@@ -34,6 +34,7 @@ function love.load()
     ["no-select"] = love.audio.newSource("res/sounds/no-select.wav", "static"),
     ["paddle_hit"] = love.audio.newSource("res/sounds/paddle_hit.wav", "static"),
     ["pause"] = love.audio.newSource("res/sounds/pause.wav", "static"),
+    ["power-up"] = love.audio.newSource("res/sounds/power-up.wav", "static"),
     ["recover"] = love.audio.newSource("res/sounds/recover.wav", "static"),
     ["score"] = love.audio.newSource("res/sounds/score.wav", "static"),
     ["select"] = love.audio.newSource("res/sounds/select.wav", "static"),
@@ -47,7 +48,8 @@ function love.load()
     ["balls"] = GenerateQuadsBalls(gTextures["breakout"]),
     ["bricks"] = GenerateQuadsBricks(gTextures["breakout"]),
     ["hearts"] = GenerateQuads(gTextures["hearts"], 10, 9),
-    ["arrows"] = GenerateQuads(gTextures["arrows"], 24, 24)
+    ["arrows"] = GenerateQuads(gTextures["arrows"], 24, 24),
+    ["powerups"] = GenerateQuadsPowerups(gTextures["breakout"])
   }
 
   gStateMachine =
@@ -189,4 +191,16 @@ function loadHighScores()
   end
 
   return highScores
+end
+
+function testAABB(box1, box2)
+  if box1.x + box1.width < box2.x or box1.x > box2.x + box2.width then
+    return false
+  end
+
+  if box1.y + box1.height < box2.y or box1.y > box2.y + box2.height then
+    return false
+  end
+
+  return true
 end

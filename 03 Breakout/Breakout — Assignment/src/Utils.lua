@@ -86,3 +86,20 @@ end
 function GenerateQuadsBricks(atlas)
   return table.slice(GenerateQuads(atlas, 32, 16), 1, 20)
 end
+
+function GenerateQuadsPowerups(atlas)
+  --[[ start at (0, 192)
+    10 varieties of a 16x16 size
+  ]]
+  x = 0
+  y = 192
+
+  local quads = {}
+
+  for i = 1, 10 do
+    quads[i] = love.graphics.newQuad(x, y, 16, 16, atlas:getDimensions())
+    x = x + 16
+  end
+
+  return quads
+end

@@ -10,8 +10,9 @@ function PauseState:enter(params)
   self.maxHealth = params.maxHealth
   self.score = params.score
   self.paddle = params.paddle
-  self.ball = params.ball
+  self.balls = params.balls
   self.bricks = params.bricks
+  self.powerups = params.powerups
 end
 
 function PauseState:exit()
@@ -32,8 +33,9 @@ function PauseState:update(dt)
         maxHealth = self.maxHealth,
         score = self.score,
         paddle = self.paddle,
-        ball = self.ball,
-        bricks = self.bricks
+        balls = self.balls,
+        bricks = self.bricks,
+        powerups = self.powerups
       }
     )
     gSounds["confirm"]:play()
