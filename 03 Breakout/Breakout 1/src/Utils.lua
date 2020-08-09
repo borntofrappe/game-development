@@ -50,7 +50,7 @@ function GenerateQuadsPaddles(atlas)
     quads[counter] = love.graphics.newQuad(x + 32, y, 64, 16, atlas:getDimensions())
     counter = counter + 1
 
-    quads[counter] = love.graphics.newQuad(x + 96, y, 32, 16, atlas:getDimensions())
+    quads[counter] = love.graphics.newQuad(x + 96, y, 96, 16, atlas:getDimensions())
     counter = counter + 1
 
     -- (128x16) is on the row below
