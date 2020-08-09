@@ -16,13 +16,21 @@ function PaddleSelectState:update(dt)
   end
 
   if love.keyboard.waspressed('right') then
-    self.paddle.color = self.paddle.color == 4 and 1 or self.paddle.color + 1
-    gSounds['select']:play()
+    if self.paddle.color == 4 then
+      gSounds['no-select']:play()
+    else
+      self.paddle.color = self.paddle.color + 1
+      gSounds['select']:play()
+    end
   end
   
   if love.keyboard.waspressed('left') then
-    self.paddle.color = self.paddle.color == 1 and 4 or self.paddle.color - 1
-    gSounds['select']:play()
+    if self.paddle.color == 1 then
+      gSounds['no-select']:play()
+    else
+      self.paddle.color = self.paddle.color - 1
+      gSounds['select']:play()
+    end
   end
 end
 
@@ -48,7 +56,17 @@ function PaddleSelectState:render()
   )
 
   self.paddle:render()
+
+  love.graphics.setColor(1, 1, 1, 1)
+  if self.paddle.color == 1 then
+    love.graphics.setColor(1, 1, 1, 0.4)
+  end
   love.graphics.draw(gTextures['arrows'], gFrames['arrows'][1], VIRTUAL_WIDTH / 2 - 40 - 24, VIRTUAL_HEIGHT - 32 + 8 - 12)
+
+  love.graphics.setColor(1, 1, 1, 1)
+  if self.paddle.color == 4 then
+    love.graphics.setColor(1, 1, 1, 0.4)
+  end
   love.graphics.draw(gTextures['arrows'], gFrames['arrows'][2], VIRTUAL_WIDTH / 2 + 40, VIRTUAL_HEIGHT - 32 + 8 - 12)
 end
 
