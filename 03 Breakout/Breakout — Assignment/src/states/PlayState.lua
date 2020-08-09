@@ -144,9 +144,9 @@ function PlayState:update(dt)
       end
     end
 
-    if brick.hasPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
+    if brick.showPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
       brick.powerup.inPlay = false
-      gSounds["score"]:play()
+      gSounds["power-up"]:play()
       if brick.powerup.powerup == 9 then
         table.insert(self.balls, Ball(brick.powerup.x, brick.powerup.y))
       elseif brick.isLocked and brick.powerup.powerup == 10 then

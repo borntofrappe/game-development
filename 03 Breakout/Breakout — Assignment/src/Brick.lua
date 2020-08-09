@@ -28,7 +28,7 @@ colorBricks = {
   }
 }
 
-function Brick:init(x, y, tier, color, hasPowerup)
+function Brick:init(x, y, tier, color, showPowerup)
   self.x = x
   self.y = y
   self.width = 32
@@ -39,7 +39,7 @@ function Brick:init(x, y, tier, color, hasPowerup)
 
   self.inPlay = true
 
-  self.hasPowerup = hasPowerup
+  self.showPowerup = showPowerup
   self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2)
 
   self.particleSystem = love.graphics.newParticleSystem(gTextures["particle"], 80)
@@ -74,7 +74,7 @@ function Brick:hit()
     gSounds["score"]:stop()
     gSounds["score"]:play()
 
-    if self.hasPowerup and not self.powerup.inPlay then
+    if self.showPowerup and not self.powerup.inPlay then
       self.powerup.inPlay = true
     end
   end
@@ -83,13 +83,13 @@ end
 function Brick:update(dt)
   self.particleSystem:update(dt)
 
-  if self.hasPowerup and self.powerup.inPlay then
+  if self.showPowerup and self.powerup.inPlay then
     self.powerup:update(dt)
   end
 end
 
 function Brick:render()
-  if self.hasPowerup and self.powerup.inPlay then
+  if self.showPowerup and self.powerup.inPlay then
     self.powerup:render()
   end
 
