@@ -12,7 +12,7 @@ function LevelMaker.createMap(level)
 
       if not skipFlag then
         maxTier = math.min(4, math.floor(level / 3))
-        maxColor = math.min(4, math.floor(level / 4))
+        maxColor = math.min(5, math.ceil(level / 4))
         tier = math.random(1, maxTier)
         color = math.random(1, maxColor)
 
