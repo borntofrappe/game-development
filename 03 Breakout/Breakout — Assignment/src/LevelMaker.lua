@@ -12,11 +12,13 @@ function LevelMaker.createMap(level)
 
       if not skipFlag then
         maxTier = math.min(4, math.ceil(level / 2))
-        maxColor = math.min(4, math.ceil(level / 4))
+        maxColor = math.min(5, math.ceil(level / 4))
         tier = math.random(1, maxTier)
         color = math.random(1, maxColor)
 
-        brick = Brick((col - 1) * 32 + (VIRTUAL_WIDTH - cols * 32) / 2, row * 16, tier, color)
+        powerupFlag = math.random(1, 5) == 2
+
+        brick = Brick((col - 1) * 32 + (VIRTUAL_WIDTH - cols * 32) / 2, row * 16, tier, color, true)
         table.insert(bricks, brick)
       end
     end

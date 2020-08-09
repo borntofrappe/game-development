@@ -18,8 +18,6 @@ function PlayState:enter(params)
     table.insert(self.balls, params.ball)
   end
 
-  self.powerups = params.powerups or {}
-
   self.threshold = params.threshold
 end
 
@@ -40,7 +38,6 @@ function PlayState:update(dt)
         paddle = self.paddle,
         balls = self.balls,
         bricks = self.bricks,
-        powerups = self.powerups,
         threshold = self.threshold
       }
     )
@@ -104,12 +101,6 @@ function PlayState:update(dt)
           self.threshold = self.threshold * 2.5
         end
 
-        powerupFlag = math.random(5) == 1
-        if brick.tier == 1 and brick.color == 1 and powerupFlag then
-          powerup = Powerup(brick.x + brick.width / 2, brick.y + brick.height / 2)
-          table.insert(self.powerups, powerup)
-        end
-
         brick:hit()
 
         if self:isLevelCleared() then
@@ -148,17 +139,12 @@ function PlayState:update(dt)
         end
       end
     end
-  end
 
-  for k, powerup in pairs(self.powerups) do
-    powerup:update(dt)
-    if testAABB(powerup, self.paddle) then
-      table.insert(self.balls, Ball(powerup.x, powerup.y))
-      gSounds["power-up"]:play()
-      powerup.remove = true
-    end
-    if powerup.remove then
-      table.remove(self.powerups, k)
+    if brick.hasPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
+      brick.powerup.inPlay = false
+      if brick.powerup.powerup == 9 then
+        table.insert(self.balls, Ball(brick.powerup.x, brick.powerup.y))
+      end
     end
   end
 end
@@ -168,10 +154,6 @@ function PlayState:render()
   displayScore(self.score)
 
   self.paddle:render()
-
-  for k, powerup in pairs(self.powerups) do
-    powerup:render()
-  end
 
   for k, brick in pairs(self.bricks) do
     brick:render()

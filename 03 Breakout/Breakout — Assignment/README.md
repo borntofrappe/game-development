@@ -260,3 +260,77 @@ In the _Utils_ function `GenerateQuadsPaddles` I found a mistake in the way the 
 ```
 
 Considering the quad with a width of `32` has the effect of cropping the shape to a third of its actual size.
+
+## Powerup revisited
+
+Considering the way the key powerup is included, I realized that the previous approach for the powerup is insufficient. Instead of having a separate table for the powerups, I feel it is better to have the powerups as fields, as attributes of the `Brick` class. With this approach, unlocking a brick is a matter of picking up the key powerup for the same brick. This revision requires a few changes, but I think it's worth the effort.
+
+As mentioned, the `self.powerups` table becomes redundant, so any use of the variable is removed from the codebase.
+
+To determine if a brick has a powerup, add another flag in the `LevelMaker` function.
+
+```lua
+powerupFlag = math.random(1, 5) == 2
+brick = Brick((col - 1) * 32 + (VIRTUAL_WIDTH - cols * 32) / 2, row * 16, tier, color, powerupFlag)
+```
+
+Then, modify the `Brick` class to add a powerup, and update/render the sprite when the brick is destroyed.
+
+I made the decision of always including a powerup, but show the asset only if the flag resolves to `true`
+
+```lua
+function Brick:init(x, y, tier, color, hasPowerup)
+  self.hasPowerup = hasPowerup
+  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2)
+end
+```
+
+With this basic structure:
+
+- introduce the powerup when the brick is destroyed
+
+  ```lua
+  function Brick:hit()
+    self.inPlay = false
+    if self.hasPowerup and not self.powerup.inPlay then
+      self.powerup.inPlay = true
+    end
+  end
+  ```
+
+- update and render the powerup only when the boolean instructs so
+
+  ```lua
+  function Brick:update(dt)
+    if self.hasPowerup and self.powerup.inPlay then
+      self.powerup:update(dt)
+    end
+  end
+
+  function Brick:render()
+    if self.hasPowerup and self.powerup.inPlay then
+      self.powerup:render()
+    end
+  end
+  ```
+
+The play state requires a few adjustment as well. These are however centered on the fact that you do not consider a collision between the paddle and the powerups in the `self.powerups` table — which no longer exist — but between the paddle and the possible powerup of the brick.
+
+```lua
+for k, brick in pairs(self.bricks) do
+  if brick.hasPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
+    brick.powerup.inPlay = false
+    table.insert(self.balls, Ball(brick.powerup.x, brick.powerup.y))
+  end
+end
+```
+
+In the previous snippet, a collision with the paddle results in a ball being included in the `self.balls` table, but ultimately, that happes only if the powerup matches the desired sprite.
+
+```lua
+if brick.powerup.powerup == 9 then
+  table.insert(self.balls, Ball(brick.powerup.x, brick.powerup.y))
+end
+```
+
+This is important in the moment the game contemplates more types of powerup, like the one for the key.

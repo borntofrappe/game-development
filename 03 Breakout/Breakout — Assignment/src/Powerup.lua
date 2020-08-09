@@ -8,17 +8,21 @@ function Powerup:init(x, y)
   self.height = 16
   self.dy = math.random(40, 80)
 
-  self.remove = false
+  self.inPlay = false
 end
 
 function Powerup:update(dt)
-  self.y = self.y + self.dy * dt
+  if self.inPlay then
+    self.y = self.y + self.dy * dt
+  end
 
   if self.y > VIRTUAL_HEIGHT then
-    self.remove = true
+    self.inPlay = false
   end
 end
 
 function Powerup:render()
-  love.graphics.draw(gTextures["breakout"], gFrames["powerups"][self.powerup], self.x, self.y)
+  if self.inPlay then
+    love.graphics.draw(gTextures["breakout"], gFrames["powerups"][self.powerup], self.x, self.y)
+  end
 end

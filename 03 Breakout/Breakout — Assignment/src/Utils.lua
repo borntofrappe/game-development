@@ -84,7 +84,9 @@ function GenerateQuadsBalls(atlas)
 end
 
 function GenerateQuadsBricks(atlas)
-  return table.slice(GenerateQuads(atlas, 32, 16), 1, 20)
+  quads = table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+  quads[#quads + 1] = love.graphics.newQuad(160, 48, 32, 16, atlas:getDimensions())
+  return quads
 end
 
 function GenerateQuadsPowerups(atlas)

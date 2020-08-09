@@ -12,7 +12,6 @@ function PauseState:enter(params)
   self.paddle = params.paddle
   self.balls = params.balls
   self.bricks = params.bricks
-  self.powerups = params.powerups
   self.threshold = params.threshold
 end
 
