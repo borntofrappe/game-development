@@ -4,7 +4,7 @@
 
 - [x] grow and shrink the `Paddle` when the player gains enough points or loses a life
 
-- [ ] add a locked `Brick` that will only open when the player collects a second new powerup, a key, which should only spawn when such a `Brick` exist and randomly as per the `Ball` powerup
+- [x] add a locked `Brick` that will only open when the player collects a second new powerup, a key, which should only spawn when such a `Brick` exist and randomly as per the `Ball` powerup
 
 ## Powerup
 
@@ -334,3 +334,117 @@ end
 ```
 
 This is important in the moment the game contemplates more types of powerup, like the one for the key.
+
+## Locks and keys
+
+The third section of the assignment requires the use of two particular sprites. These are included in the quads for the bricks table, looking for specific coordinates.
+
+For the "unlocked" brick, it is a matter of extending the `GenerateQuads` function to consider one additional rectangle.
+
+```diff
+-quads = table.slice(GenerateQuads(atlas, 32, 16), 1, 20)
++quads = table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+```
+
+For the locked version, it is however necessary to extract the 32x16 shape at the end of the row. The sprite is added as the last element of the table using the `#` length character, but the `table.insert` method would equally work.
+
+```lua
+quads[#quads + 1] = love.graphics.newQuad(160, 48, 32, 16, atlas:getDimensions())
+```
+
+With the updated table, the two specific brick are rendered through `gFrames[22]` and `gFrames[21]` respectively. For instance and for the locked brick.
+
+```lua
+love.graphics.draw(gTextures["breakout"], gFrames["bricks"][22], self.x, self.y)
+```
+
+### Bug
+
+In the level maker, I made the mistake of using `4` as the maximum number for both the tier and color value. However, there are actually five color varieties.
+
+```diff
+-maxColor = math.min(4, math.ceil(level / 4))
++maxColor = math.min(5, math.ceil(level / 4))
+```
+
+### LockedBrick
+
+Instead of developing the feature in the `Brick` class, which would require several more conditionals, I decided to create a new class in `LockedBrick`. This one inherits from `Brick`, but ultimately overrides most of its methods.
+
+On top of the boolean `inPlay`, the class specifies a boolean `isLocked`.
+
+```lua
+function LockedBrick:init(x, y)
+  self.isLocked = true
+end
+```
+
+It also describes a specific powerup, number 10, to show the key.
+
+```lua
+function LockedBrick:init(x, y)
+  self.hasPowerup = true
+  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2, 10)
+end
+```
+
+With this structure, the idea is to modify the `hit` function to remove the brick only if the brick is unlocked. Otherwise, spawn the key powerup.
+
+In the render function finally, show either sprite based on the `boolean`.
+
+```lua
+if self.isLocked then
+  love.graphics.draw(gTextures["breakout"], gFrames["bricks"][22], self.x, self.y)
+else
+  love.graphics.draw(gTextures["breakout"], gFrames["bricks"][21], self.x, self.y)
+end
+```
+
+### Level maker, play state and powerup
+
+The inclusion of a new class requires a few changes to the codebase. FIrst off, it is necessary to included an instance of the locked version, following a certain probability.
+
+```lua
+lockFlag = math.random(1, 10) == 2
+if lockFlag then
+  brick = LockedBrick(...)
+  table.insert(bricks, brick)
+else
+  -- include normal bricks
+end
+```
+
+In the play state, it's necessary to consider the powerup, to "unlock" the connected brick.
+
+```lua
+if brick.isLocked and brick.powerup.powerup == 10 then
+  brick.isLocked = false
+end
+```
+
+It is also necessary to consider the locked version when updating the score.
+
+```lua
+if brick.tier and brick.color then
+  self.score = self.score + 50 * brick.tier + 200 * (brick.color - 1)
+elseif not brick.isLocked then
+  self.score = self.score + 1000
+end
+```
+
+Finally, and in the powerup class, it's necessary to make sure that the powerup returns to its original `y` coordinate if it doesn't hit the paddle and goes past the bottom of the game window.
+
+```lua
+function Powerup:init(x, y, isKey)
+  self.startingY = self.y
+end
+
+function Powerup:update(dt)
+  if self.y > VIRTUAL_HEIGHT then
+    self.inPlay = false
+    self.y = self.startingY
+  end
+end
+```
+
+It is unnecessary for regular powerups, but for the key, it is essential. Without this fix, there is a possibility that the paddle doesn't collect the powerup and the brick remains locked without end.

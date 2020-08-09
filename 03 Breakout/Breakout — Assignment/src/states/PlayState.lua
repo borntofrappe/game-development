@@ -95,7 +95,11 @@ function PlayState:update(dt)
 
     for key, ball in pairs(self.balls) do
       if testAABB(ball, brick) and brick.inPlay then
-        self.score = self.score + 50 * brick.tier + 200 * (brick.color - 1)
+        if brick.tier and brick.color then
+          self.score = self.score + 50 * brick.tier + 200 * (brick.color - 1)
+        elseif not brick.isLocked then
+          self.score = self.score + 1000
+        end
         if self.score > self.threshold then
           self.paddle:grow()
           self.threshold = self.threshold * 2.5
@@ -142,8 +146,11 @@ function PlayState:update(dt)
 
     if brick.hasPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
       brick.powerup.inPlay = false
+      gSounds["score"]:play()
       if brick.powerup.powerup == 9 then
         table.insert(self.balls, Ball(brick.powerup.x, brick.powerup.y))
+      elseif brick.isLocked and brick.powerup.powerup == 10 then
+        brick.isLocked = false
       end
     end
   end

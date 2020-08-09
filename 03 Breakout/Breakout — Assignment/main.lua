@@ -28,6 +28,7 @@ function love.load()
   gSounds = {
     ["brick-hit-1"] = love.audio.newSource("res/sounds/brick-hit-1.wav", "static"),
     ["brick-hit-2"] = love.audio.newSource("res/sounds/brick-hit-2.wav", "static"),
+    ["brick-hit-3"] = love.audio.newSource("res/sounds/brick-hit-3.wav", "static"),
     ["confirm"] = love.audio.newSource("res/sounds/confirm.wav", "static"),
     ["high_score"] = love.audio.newSource("res/sounds/high_score.wav", "static"),
     ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),

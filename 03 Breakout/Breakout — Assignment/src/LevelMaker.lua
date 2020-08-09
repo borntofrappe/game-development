@@ -8,18 +8,24 @@ function LevelMaker.createMap(level)
 
   for row = 1, rows do
     for col = 1, cols do
-      skipFlag = math.random(1, 3) == 2 and true or false
+      skipFlag = math.random(1, 3) == 2
 
       if not skipFlag then
-        maxTier = math.min(4, math.ceil(level / 2))
-        maxColor = math.min(5, math.ceil(level / 4))
-        tier = math.random(1, maxTier)
-        color = math.random(1, maxColor)
+        lockFlag = math.random(1, 10) == 2
+        if lockFlag then
+          brick = LockedBrick((col - 1) * 32 + (VIRTUAL_WIDTH - cols * 32) / 2, row * 16)
+          table.insert(bricks, brick)
+        else
+          maxTier = math.min(4, math.ceil(level / 2))
+          maxColor = math.min(5, math.ceil(level / 4))
+          tier = math.random(1, maxTier)
+          color = math.random(1, maxColor)
 
-        powerupFlag = math.random(1, 5) == 2
+          powerupFlag = math.random(1, 5) == 2
 
-        brick = Brick((col - 1) * 32 + (VIRTUAL_WIDTH - cols * 32) / 2, row * 16, tier, color, true)
-        table.insert(bricks, brick)
+          brick = Brick((col - 1) * 32 + (VIRTUAL_WIDTH - cols * 32) / 2, row * 16, tier, color, powerupFlag)
+          table.insert(bricks, brick)
+        end
       end
     end
   end

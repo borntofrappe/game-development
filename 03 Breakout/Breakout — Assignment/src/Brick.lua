@@ -89,12 +89,12 @@ function Brick:update(dt)
 end
 
 function Brick:render()
-  if self.inPlay then
-    love.graphics.draw(gTextures["breakout"], gFrames["bricks"][self.tier + 4 * (self.color - 1)], self.x, self.y)
-  end
-
   if self.hasPowerup and self.powerup.inPlay then
     self.powerup:render()
+  end
+
+  if self.inPlay then
+    love.graphics.draw(gTextures["breakout"], gFrames["bricks"][self.tier + 4 * (self.color - 1)], self.x, self.y)
   end
 end
 

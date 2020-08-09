@@ -1,9 +1,10 @@
 Powerup = Class {}
 
-function Powerup:init(x, y)
+function Powerup:init(x, y, powerup)
   self.x = x - 8
   self.y = y - 8
-  self.powerup = 9
+  self.startingY = self.y
+  self.powerup = powerup or 9
   self.width = 16
   self.height = 16
   self.dy = math.random(40, 80)
@@ -18,6 +19,7 @@ function Powerup:update(dt)
 
   if self.y > VIRTUAL_HEIGHT then
     self.inPlay = false
+    self.y = self.startingY
   end
 end
 
