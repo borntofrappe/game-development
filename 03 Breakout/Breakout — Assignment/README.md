@@ -2,7 +2,7 @@
 
 - [x] add a powerup to the game that spawns two extra `Ball`s
 
-- [ ] grow and shrink the `Paddle` when the player gains enough points or loses a life
+- [x] grow and shrink the `Paddle` when the player gains enough points or loses a life
 
 - [ ] add a locked `Brick` that will only open when the player collects a second new powerup, a key, which should only spawn when such a `Brick` exist and randomly as per the `Ball` powerup
 
@@ -167,3 +167,96 @@ end
 ```
 
 The same for the `update(dt)` function.
+
+## Paddle size
+
+The assignment instructs that the paddle should:
+
+- shrink if the player loses a heart (but no smaller of course than the smallest paddle size)
+
+- grow if the player exceeds a certain amount of score (but no larger than the largest Paddle)
+
+### Quads
+
+The quads for the different sizes and colors are already included in `gFrames['paddles']`. The size is also and already considered in the `love.draw` function.
+
+```lua
+function Paddle:render()
+  love.graphics.draw(gTextures["breakout"], gFrames["paddles"][self.size + 4 * (self.color - 1)], self.x, self.y)
+end
+```
+
+This means the script needs to just change the variable `size` to have the game render a different version.
+
+### Changes
+
+Changing the variale `size` works to render a different sprite, but the game needs to update the `width` of the paddle as well. This value is used throughout the game to determine the behavior of the paddle, for instance to detect a collision between paddle and ball, and a fixed value of `64` contrasts with a visual which now changes in width.
+
+I also decided to update `x`, so to have the paddle change in size, but stay centered in its current position.
+
+Finally, I decided to specify how the paddle changes through two methods of the `Paddle` class itself.
+
+- `shrink` reduces the size when the size exceeds the smallest value
+
+  ```lua
+  function Paddle:shrink()
+    if self.size > 1 then
+      self.size = self.size - 1
+      self.width = self.size * 32
+      self.x = self.x + 16
+    end
+  end
+  ```
+
+- `grow` achieves the opposite and increases the size when this is less than the greatest measure
+
+  ```lua
+  function Paddle:grow()
+    if self.size < 4 then
+      self.size = self.size + 1
+      self.width = self.size * 32
+      self.x = self.x - 16
+    end
+  end
+  ```
+
+### Gameplay
+
+The final step is to resize the paddle when instructed:
+
+- when the health is reduced
+
+  ```lua
+  self.health = self.health - 1
+  self.paddle:shrink()
+  ```
+
+- when scoring an arbitrary amount of points. To this end I included an additional variable, `threshold`.
+
+  In the serve state. This value is initialized at `1000`.
+
+  ```lua
+  function ServeState:enter(params)
+    self.threshold = params.threshold or 1000
+  end
+  ```
+
+  Every time the score surpasses this value, it is then multiplied by a hard-coded measure.
+
+  ```lua
+  if self.score > self.threshold then
+    self.paddle:grow()
+    self.threshold = self.threshold * 2.5
+  end
+  ```
+
+### Bug
+
+In the _Utils_ function `GenerateQuadsPaddles` I found a mistake in the way the third size is included.
+
+```diff
+-quads[counter] = love.graphics.newQuad(x + 96, y, 32, 16, atlas:getDimensions())
++quads[counter] = love.graphics.newQuad(x + 96, y, 96, 16, atlas:getDimensions())
+```
+
+Considering the quad with a width of `32` has the effect of cropping the shape to a third of its actual size.

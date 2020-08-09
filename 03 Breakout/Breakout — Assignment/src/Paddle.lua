@@ -12,6 +12,22 @@ function Paddle:init(x, y)
   self.size = 2
 end
 
+function Paddle:shrink()
+  if self.size > 1 then
+    self.size = self.size - 1
+    self.width = self.size * 32
+    self.x = self.x + 16
+  end
+end
+
+function Paddle:grow()
+  if self.size < 4 then
+    self.size = self.size + 1
+    self.width = self.size * 32
+    self.x = self.x - 16
+  end
+end
+
 function Paddle:update(dt)
   if love.keyboard.isDown("left") then
     self.dx = PADDLE_SPEED * dt * -1

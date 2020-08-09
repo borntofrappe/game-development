@@ -13,6 +13,7 @@ function PauseState:enter(params)
   self.balls = params.balls
   self.bricks = params.bricks
   self.powerups = params.powerups
+  self.threshold = params.threshold
 end
 
 function PauseState:exit()
@@ -35,7 +36,8 @@ function PauseState:update(dt)
         paddle = self.paddle,
         balls = self.balls,
         bricks = self.bricks,
-        powerups = self.powerups
+        powerups = self.powerups,
+        threshold = self.threshold
       }
     )
     gSounds["confirm"]:play()

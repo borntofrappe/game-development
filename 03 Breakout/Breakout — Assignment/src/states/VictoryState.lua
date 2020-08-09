@@ -6,6 +6,7 @@ function VictoryState:enter(params)
   self.maxHealth = params.maxHealth
   self.score = params.score
   self.paddle = params.paddle
+  self.threshold = params.threshold
 end
 
 function VictoryState:update(dt)
@@ -22,7 +23,8 @@ function VictoryState:update(dt)
         health = self.health,
         maxHealth = self.maxHealth,
         score = self.score,
-        paddle = self.paddle
+        paddle = self.paddle,
+        threshold = self.threshold
       }
     )
     gSounds["confirm"]:play()

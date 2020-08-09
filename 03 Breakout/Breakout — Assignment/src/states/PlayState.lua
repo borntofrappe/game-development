@@ -19,6 +19,8 @@ function PlayState:enter(params)
   end
 
   self.powerups = params.powerups or {}
+
+  self.threshold = params.threshold
 end
 
 function PlayState:update(dt)
@@ -38,7 +40,8 @@ function PlayState:update(dt)
         paddle = self.paddle,
         balls = self.balls,
         bricks = self.bricks,
-        powerups = self.powerups
+        powerups = self.powerups,
+        threshold = self.threshold
       }
     )
     gSounds["pause"]:play()
@@ -64,6 +67,7 @@ function PlayState:update(dt)
       gSounds["hurt"]:play()
       if #self.balls == 0 then
         self.health = self.health - 1
+        self.paddle:shrink()
         if self.health == 0 then
           gStateMachine:change(
             "gameover",
@@ -80,7 +84,8 @@ function PlayState:update(dt)
               maxHealth = self.maxHealth,
               score = self.score,
               paddle = self.paddle,
-              bricks = self.bricks
+              bricks = self.bricks,
+              threshold = self.threshold
             }
           )
         end
@@ -94,6 +99,10 @@ function PlayState:update(dt)
     for key, ball in pairs(self.balls) do
       if testAABB(ball, brick) and brick.inPlay then
         self.score = self.score + 50 * brick.tier + 200 * (brick.color - 1)
+        if self.score > self.threshold then
+          self.paddle:grow()
+          self.threshold = self.threshold * 2.5
+        end
 
         powerupFlag = math.random(5) == 1
         if brick.tier == 1 and brick.color == 1 and powerupFlag then
@@ -111,7 +120,8 @@ function PlayState:update(dt)
               health = self.health,
               maxHealth = self.maxHealth,
               score = self.score,
-              paddle = self.paddle
+              paddle = self.paddle,
+              threshold = self.threshold
             }
           )
           gSounds["victory"]:play()

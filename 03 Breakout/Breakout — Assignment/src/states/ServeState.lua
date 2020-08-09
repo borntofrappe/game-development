@@ -8,6 +8,7 @@ function ServeState:enter(params)
   self.paddle = params.paddle or Paddle(VIRTUAL_WIDTH / 2 - 32, VIRTUAL_HEIGHT - 32)
   self.ball = params.ball or Ball(VIRTUAL_WIDTH / 2 - 4, VIRTUAL_HEIGHT - 32 - 8)
   self.bricks = params.bricks or LevelMaker.createMap(self.level)
+  self.threshold = params.threshold or 1000
 end
 
 function ServeState:update(dt)
@@ -26,7 +27,8 @@ function ServeState:update(dt)
         score = self.score,
         paddle = self.paddle,
         ball = self.ball,
-        bricks = self.bricks
+        bricks = self.bricks,
+        threshold = self.threshold
       }
     )
     gSounds["confirm"]:play()
