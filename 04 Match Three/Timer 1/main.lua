@@ -72,7 +72,7 @@ end
 function love.draw()
   push:start()
   love.graphics.printf(
-    "Timer:" .. math.floor(seconds) .. " seconds (1s)",
+    "Timer:" .. seconds .. " seconds (1s)",
     0,
     VIRTUAL_HEIGHT / 2 - 12 - 28 - 2,
     VIRTUAL_WIDTH,
@@ -80,23 +80,17 @@ function love.draw()
   )
 
   love.graphics.printf(
-    "Timer:" .. math.floor(seconds2) .. " seconds (0.5s)",
+    "Timer:" .. seconds2 .. " seconds (0.5s)",
     0,
     VIRTUAL_HEIGHT / 2 - 12 - 1,
     VIRTUAL_WIDTH,
     "center"
   )
 
-  love.graphics.printf(
-    "Timer:" .. math.floor(seconds3) .. " seconds (4s)",
-    0,
-    VIRTUAL_HEIGHT / 2 + 12 + 1,
-    VIRTUAL_WIDTH,
-    "center"
-  )
+  love.graphics.printf("Timer:" .. seconds3 .. " seconds (4s)", 0, VIRTUAL_HEIGHT / 2 + 12 + 1, VIRTUAL_WIDTH, "center")
 
   love.graphics.printf(
-    "Timer:" .. math.floor(seconds4) .. " seconds (3s)",
+    "Timer:" .. seconds4 .. " seconds (3s)",
     0,
     VIRTUAL_HEIGHT / 2 + 12 + 28 + 2,
     VIRTUAL_WIDTH,

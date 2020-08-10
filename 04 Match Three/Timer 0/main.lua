@@ -44,12 +44,6 @@ end
 
 function love.draw()
   push:start()
-  love.graphics.printf(
-    "Timer:" .. math.floor(seconds) .. " seconds",
-    0,
-    VIRTUAL_HEIGHT / 2 - 12,
-    VIRTUAL_WIDTH,
-    "center"
-  )
+  love.graphics.printf("Timer:" .. seconds .. " seconds", 0, VIRTUAL_HEIGHT / 2 - 12, VIRTUAL_WIDTH, "center")
   push:finish()
 end
