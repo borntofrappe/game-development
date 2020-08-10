@@ -4,15 +4,21 @@ The fourth video moves on to create a game in which you match tiles of the same 
 
 - anonymous functions
 
-- tweening, interpolating between values
+- tweening
 
-- timers, different approaches to count time
+- timers
 
 - clearing matches
 
-- procedural grids, generating levels
+- procedural grids
 
-- sprite art and palettes, providing the assets through spritesheet
+- sprite art and palettes
+
+## Project structure
+
+The game is developed in increments, but there are also additional folders to discuss dedicated topics:
+
+1. _Timer_ details how to consider time events
 
 ## Resources
 
