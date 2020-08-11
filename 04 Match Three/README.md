@@ -20,6 +20,8 @@ The game is developed in increments, but there are also additional folders to di
 
 1. _Timer_ details how to consider time events
 
+2. _Tween_ describes how to interpolate between values over time
+
 ## Resources
 
 - [Match 3](https://youtu.be/64TbMmCgRv0)
