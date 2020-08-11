@@ -22,6 +22,8 @@ The game is developed in increments, but there are also additional folders to di
 
 2. _Tween_ describes how to interpolate between values over time
 
+3. _Chain_ illustrates how to have multiple operations in sequence
+
 ## Resources
 
 - [Match 3](https://youtu.be/64TbMmCgRv0)
