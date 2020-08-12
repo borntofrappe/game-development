@@ -15,14 +15,11 @@ function love.load()
     ["tiles"] = GenerateQuadsTiles(gTextures["match3"])
   }
 
-  rows = 8
-  columns = 8
-
-  board = generateBoard(rows, columns)
+  board = generateBoard(ROWS, COLUMNS)
 
   selectedTile = {
-    x = math.random(columns),
-    y = math.random(rows)
+    x = math.random(COLUMNS),
+    y = math.random(ROWS)
   }
 
   highlightedTile = nil
@@ -41,7 +38,7 @@ function love.keypressed(key)
   end
 
   if key == "right" then
-    selectedTile.x = math.min(columns, selectedTile.x + 1)
+    selectedTile.x = math.min(COLUMNS, selectedTile.x + 1)
   end
 
   if key == "left" then
@@ -53,7 +50,7 @@ function love.keypressed(key)
   end
 
   if key == "down" then
-    selectedTile.y = math.min(rows, selectedTile.y + 1)
+    selectedTile.y = math.min(ROWS, selectedTile.y + 1)
   end
 
   if key == "enter" or key == "return" then
@@ -77,7 +74,7 @@ function love.draw()
 
   love.graphics.draw(gTextures["background"], 0, 0)
 
-  love.graphics.translate(VIRTUAL_WIDTH / 2 - #board[1] * 32 / 2, VIRTUAL_HEIGHT / 2 - #board * 32 / 2)
+  love.graphics.translate(VIRTUAL_WIDTH / 2 - #board[1] * TILE_WIDTH / 2, VIRTUAL_HEIGHT / 2 - #board * TILE_HEIGHT / 2)
   drawBoard(board)
 
   push:finish()
@@ -85,8 +82,6 @@ end
 
 function generateBoard(rows, columns)
   local tiles = {}
-  local width = 32
-  local height = 32
   for y = 1, rows do
     table.insert(tiles, {})
     for x = 1, columns do
@@ -105,17 +100,36 @@ end
 function drawBoard(board)
   for y, row in ipairs(board) do
     for x, tile in ipairs(row) do
-      love.graphics.draw(gTextures["match3"], gFrames["tiles"][tile.color][tile.variety], (x - 1) * 32, (y - 1) * 32)
+      love.graphics.draw(
+        gTextures["match3"],
+        gFrames["tiles"][tile.color][tile.variety],
+        (x - 1) * TILE_WIDTH,
+        (y - 1) * TILE_HEIGHT
+      )
     end
   end
 
   if highlightedTile then
     love.graphics.setColor(1, 1, 1, 0.4)
-    love.graphics.rectangle("fill", (highlightedTile.x - 1) * 32, (highlightedTile.y - 1) * 32, 32, 32, 4)
+    love.graphics.rectangle(
+      "fill",
+      (highlightedTile.x - 1) * TILE_WIDTH,
+      (highlightedTile.y - 1) * TILE_HEIGHT,
+      TILE_WIDTH,
+      TILE_HEIGHT,
+      4
+    )
     love.graphics.setColor(1, 1, 1, 1)
   end
 
   love.graphics.setLineWidth(4)
   love.graphics.setColor(1, 0.1, 0.1, 1)
-  love.graphics.rectangle("line", (selectedTile.x - 1) * 32, (selectedTile.y - 1) * 32, 32, 32, 4)
+  love.graphics.rectangle(
+    "line",
+    (selectedTile.x - 1) * TILE_WIDTH,
+    (selectedTile.y - 1) * TILE_HEIGHT,
+    TILE_WIDTH,
+    TILE_HEIGHT,
+    4
+  )
 end

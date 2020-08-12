@@ -9,3 +9,8 @@ OPTIONS = {
   vsync = true,
   resizable = true
 }
+
+ROWS = 6
+COLUMNS = 8
+TILE_WIDTH = 32
+TILE_HEIGHT = 32

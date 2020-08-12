@@ -1,4 +1,4 @@
-With this static update, render a grid of tiles.
+Render a static grid of tiles.
 
 ## Quads
 
@@ -54,12 +54,12 @@ To render an individual tile then, use `love.graphics.draw`.
 love.graphics.draw(gTextures["match3"],gFrames["tiles"][1][1],0,0)
 ```
 
-## Board
+## generateBoard
 
 The grid is created with two nested for loops. Instead of using hard-coded values however, I decided to update the code to create a grid with a variable structure.
 
 ```lua
-function generateGrid(rows, columns)
+function generateBoard(rows, columns)
 
 end
 ```
@@ -80,26 +80,34 @@ for y = 1, rows do
 end
 ```
 
-For each tile, the nested table describes four values:
+For each tile, the nested table describes the values for the tile's color and variety. It does not add the `x` and `y` coordinate since I plan to use the index of the tables instead.
 
-- `x` and `y`, for the coordinates
+```lua
+table.insert(
+  tiles[y],
+  {
+    color = math.random(#gFrames['tiles']),
+    variety = math.random(#gFrames['tiles'][1])
+  }
+)
+```
 
-- `color` and `variety`, for the specific sprite in the quads table
+With a nested for loop, it's possible to rapidly target one cell. For instance, to target the first row, fourth column, you' consider the cell `board[1][4]`.
 
-Using a nested for loop is efficient to rapidly target one cell. For instance, to target the first row, fourth column, you' consider the cell `board[1][4]`.
+## drawBoard
+
+The function receives as argument the board to-be-rendered, and then loops through the table(s) to draw the specific tile.
 
 Once created, the grid is finally drawn in `love.draw`, once again using nested loops. Once again, the video uses hard-coded values for the rows and columns, but using `ipairs` you loop through the table in order, and taking stock of the structure of the input board.
 
 ```lua
-for k, row in ipairs(board) do
-  for key, tile in ipairs(row) do
-    tile =
-      love.graphics.draw(
-      gTextures["match3"],
-      gFrames["tiles"][tile.color][tile.variety],
-      tile.x,
-      tile.y
-    )
+function drawBoard(board)
+  for y, row in ipairs(board) do
+    for x, tile in ipairs(row) do
+      love.graphics.draw(gTextures["match3"], gFrames["tiles"][tile.color][tile.variety], (x - 1) * 32, (y - 1) * 32)
+    end
   end
 end
 ```
+
+I use the index value to draw the tiles side by side.
