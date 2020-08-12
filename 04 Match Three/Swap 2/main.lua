@@ -60,24 +60,20 @@ function love.keypressed(key)
         y = selectedTile.y
       }
     else
-      if math.abs(highlightedTile.x - selectedTile.x) + math.abs(highlightedTile.y - selectedTile.y) == 1 then
-        board[selectedTile.y][selectedTile.x], board[highlightedTile.y][highlightedTile.x] =
-          board[highlightedTile.y][highlightedTile.x],
-          board[selectedTile.y][selectedTile.x]
+      tile1 = board[selectedTile.y][selectedTile.x]
+      tile2 = board[highlightedTile.y][highlightedTile.x]
+      if math.abs(tile1.x - tile2.x) + math.abs(tile1.y - tile2.y) == 1 then
+        tempX, tempY = tile1.x, tile1.y
 
-        tempX = board[selectedTile.y][selectedTile.x].x
-        tempY = board[selectedTile.y][selectedTile.x].y
-
-        Timer.tween(  
-          0.25,
+        Timer.tween(
+          0.2,
           {
-            [board[selectedTile.y][selectedTile.x]] = {
-              x = board[highlightedTile.y][highlightedTile.x].x,
-              y = board[highlightedTile.y][highlightedTile.x].y
-            },
-            [board[highlightedTile.y][highlightedTile.x]] = {x = tempX, y = tempY}
+            [tile1] = {x = tile2.x, y = tile2.y},
+            [tile2] = {x = tempX, y = tempY}
           }
         )
+
+        board[tile1.y][tile1.x], board[tile2.y][tile2.x] = board[tile2.y][tile2.x], board[tile1.y][tile1.x]
       end
 
       highlightedTile = nil

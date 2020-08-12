@@ -10,7 +10,7 @@ OPTIONS = {
   resizable = true
 }
 
-ROWS = 8
+ROWS = 6
 COLUMNS = 8
 TILE_WIDTH = 32
 TILE_HEIGHT = 32

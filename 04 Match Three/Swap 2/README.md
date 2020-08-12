@@ -83,3 +83,18 @@ end
 ```
 
 Only when the tiles are adjacent, the difference between the coordinates in absolute terms totals `1`.
+
+## Update
+
+Using `board[selectedTile.y][selectedTile.x]` and `board[hihglightedTile.y][hihglightedTile.x]` over and over makes the code harded to read. For the tween animation, I decided to repeat the practice introduced in the video and use two variables `tile1` and `tile2` instead.
+
+```lua
+tile1 = board[selectedTile.y][selectedTile.x]
+tile2 = board[highlightedTile.y][highlightedTile.x]
+```
+
+They hold the same information, but make the logic behind the swap easier to understand. It's important to note that to swap the tiles in the grid, it is still necessary to access the `board` table.
+
+```lua
+board[tile1.y][tile1.x], board[tile2.y][tile2.x] = board[tile2.y][tile2.x], board[tile1.y][tile1.x]
+```

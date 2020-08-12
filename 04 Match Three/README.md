@@ -24,7 +24,7 @@ The game is developed in increments, but there are also additional folders to di
 
 3. _Chain_ illustrates how to have multiple operations in sequence
 
-4. _Swap_ starts to develop the game by swapping two tiles with one another
+4. _Swap_ starts to develop the game by swapping two tiles
 
 ## Resources
 
