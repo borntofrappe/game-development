@@ -1,4 +1,4 @@
-Draw tiles in a 8x8 grid.
+With this static update, render a grid of tiles.
 
 ## Quads
 
@@ -34,7 +34,9 @@ This is achieved by nesting two for loops, and modifying the `x` and `y` coordin
 
 - the colors are divided in two groups, and positioned side by side
 
-Refer to `GenerateQuadsTiles` for the actual implementation. With this function, the quads are included in `love.load` similarly to how quads were included in _Breakout_.
+Refer to `GenerateQuadsTiles` for the actual implementation.
+
+Once the function provides the desired structure, the quads are included in `love.load`.
 
 ```lua
 gTextures = {
@@ -54,12 +56,20 @@ love.graphics.draw(gTextures["match3"],gFrames["tiles"][1][1],0,0)
 
 ## Board
 
-The 8x8 grid is created with two nested for loops.
+The grid is created with two nested for loops. Instead of using hard-coded values however, I decided to update the code to create a grid with a variable structure.
 
 ```lua
-for y = 1, 8 do
+function generateGrid(rows, columns)
+
+end
+```
+
+With the extra arguments, the function builds the grid with a 2d table.
+
+```lua
+for y = 1, rows do
   table.insert(tiles, {})
-  for x = 1, 8 do
+  for x = 1, columns do
     table.insert(
       tiles[y],
       {
@@ -70,7 +80,7 @@ for y = 1, 8 do
 end
 ```
 
-Each tile describes four values:
+For each tile, the nested table describes four values:
 
 - `x` and `y`, for the coordinates
 
@@ -78,7 +88,7 @@ Each tile describes four values:
 
 Using a nested for loop is efficient to rapidly target one cell. For instance, to target the first row, fourth column, you' consider the cell `board[1][4]`.
 
-Once created, the grid is finally drawn once more with two nested for loop. The video uses a hard-coded set similarly to the one introduced in the previous snippet, but it's possible to also use `ipairs`. In this manner you loop through the rows, then through the cells of the rows, and draw the tile using the four fields.
+Once created, the grid is finally drawn in `love.draw`, once again using nested loops. Once again, the video uses hard-coded values for the rows and columns, but using `ipairs` you loop through the table in order, and taking stock of the structure of the input board.
 
 ```lua
 for k, row in ipairs(board) do
@@ -93,5 +103,3 @@ for k, row in ipairs(board) do
   end
 end
 ```
-
-In the code, the function accepts two arguments to move the entire grid, but this only changes the `x` and `y` coordinate in the drawing function.

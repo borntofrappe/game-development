@@ -14,7 +14,7 @@ function love.load()
     ["tiles"] = GenerateQuadsTiles(gTextures["match3"])
   }
 
-  board = generateBoard()
+  board = generateBoard(6, 8)
 
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
@@ -38,18 +38,19 @@ function love.draw()
 
   love.graphics.draw(gTextures["background"], 0, 0)
 
-  drawBoard(128, 16)
+  love.graphics.translate(VIRTUAL_WIDTH / 2 - #board[1] * 32 / 2, VIRTUAL_HEIGHT / 2 - #board * 32 / 2)
+  drawBoard(board)
 
   push:finish()
 end
 
-function generateBoard()
+function generateBoard(rows, columns)
   local tiles = {}
   local width = 32
   local height = 32
-  for y = 1, 8 do
+  for y = 1, rows do
     table.insert(tiles, {})
-    for x = 1, 8 do
+    for x = 1, columns do
       table.insert(
         tiles[y],
         {
@@ -64,16 +65,10 @@ function generateBoard()
   return tiles
 end
 
-function drawBoard(offsetX, offsetY)
-  for k, row in ipairs(board) do
-    for key, tile in ipairs(row) do
-      tile =
-        love.graphics.draw(
-        gTextures["match3"],
-        gFrames["tiles"][tile.color][tile.variety],
-        tile.x + offsetX,
-        tile.y + offsetY
-      )
+function drawBoard(board)
+  for y, row in ipairs(board) do
+    for x, tile in ipairs(row) do
+      love.graphics.draw(gTextures["match3"], gFrames["tiles"][tile.color][tile.variety], tile.x, tile.y)
     end
   end
 end
