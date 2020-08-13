@@ -16,17 +16,17 @@ The fourth video moves on to create a game in which you match tiles of the same 
 
 ## Project structure
 
-The game is developed in increments, but there are also additional folders to discuss dedicated topics:
+The game is developed in _Match Three \*_ folders. However, there are also additional demos to discuss dedicated topics:
 
-1. _Timer_ details how to consider time events
+1. _Timer_, how to consider time events
 
-2. _Tween_ describes how to interpolate between values over time
+2. _Tween_, how to interpolate between values over time
 
-3. _Chain_ illustrates how to have multiple operations in sequence
+3. _Chain_, how to have multiple operations in sequence
 
-4. _Swap_ starts to develop the game by swapping two tiles
+4. _Swap_, how to swapping two tiles
 
-Following these folders, the actual game is developed in _Match Three \*_.
+These are saved in the _Prep_ folder, and chronologically precede the games' folders.
 
 ## Resources
 
