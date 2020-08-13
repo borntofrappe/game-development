@@ -26,6 +26,8 @@ The game is developed in increments, but there are also additional folders to di
 
 4. _Swap_ starts to develop the game by swapping two tiles
 
+Following these folders, the actual game is developed in _Match Three \*_.
+
 ## Resources
 
 - [Match 3](https://youtu.be/64TbMmCgRv0)
