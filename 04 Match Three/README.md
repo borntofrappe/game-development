@@ -16,7 +16,11 @@ The fourth video moves on to create a game in which you match tiles of the same 
 
 ## Project structure
 
-The game is developed in _Match Three \*_ folders. However, there are also additional demos to discuss dedicated topics:
+In _Match Three — Final_ find the version of the game as developed alongside the video.
+
+In _Match Three — Assignment_ find the version including the assignments.
+
+That being said, the game is developed in _Match Three \*_ folders. There are also additional demos to discuss dedicated topics:
 
 1. _Timer_, how to consider time events
 
