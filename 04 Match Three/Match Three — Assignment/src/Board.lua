@@ -1,6 +1,7 @@
 Board = Class {}
 
-function Board:init(centerX, centerY)
+function Board:init(level, centerX, centerY)
+  self.level = level or 1
   self.centerX = centerX or VIRTUAL_WIDTH / 2
   self.centerY = centerY or VIRTUAL_HEIGHT / 2
 
@@ -9,7 +10,8 @@ function Board:init(centerX, centerY)
   for y = 1, ROWS do
     table.insert(self.tiles, {})
     for x = 1, COLUMNS do
-      table.insert(self.tiles[y], Tile(x, y))
+      local tile = Tile(x, y, self.level)
+      table.insert(self.tiles[y], tile)
     end
   end
 

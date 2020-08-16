@@ -1,13 +1,13 @@
 PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
-  self.board = Board(VIRTUAL_WIDTH / 2 + 100)
-  self.isUpdating = false
-
   self.level = 1
   self.score = 0
-  self.goal = 5000
+  self.goal = 500
   self.timer = 60
+
+  self.board = Board(self.level, VIRTUAL_WIDTH / 2 + 100, VIRTUAL_HEIGHT / 2)
+  self.isUpdating = false
 
   self.fadein = {
     ["r"] = 1,
@@ -288,7 +288,7 @@ function PlayState:removeMatches()
       self.score = self.score + 50 * tile.variety
       self.board.tiles[tile.y][tile.x] = nil
     end
-    if self.score > self.goal then
+    if self.score >= self.goal then
       gSounds["next-level"]:play()
 
       self.timer = self.timer + self.level * 10
@@ -361,7 +361,8 @@ function PlayState:updateTiles()
       for x = 1, COLUMNS do
         for y = ROWS, 1, -1 do
           if not self.board.tiles[y][x] then
-            self.board.tiles[y][x] = Tile(x, y)
+            local tile = Tile(x, y, self.level)
+            self.board.tiles[y][x] = tile
             self.board.tiles[y][x].y = -1
             Timer.tween(
               0.2,

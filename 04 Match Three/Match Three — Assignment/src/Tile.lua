@@ -1,10 +1,11 @@
 Tile = Class {}
 
-function Tile:init(x, y)
+function Tile:init(x, y, level)
   self.x = x
   self.y = y
+  self.level = level
   self.color = math.random(#gFrames["tiles"])
-  self.variety = math.random(#gFrames["tiles"][1])
+  self.variety = math.random(math.min(self.level, #gFrames["tiles"][1]))
 end
 
 function Tile:render()
