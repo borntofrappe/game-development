@@ -79,7 +79,9 @@ function Board:update(dt)
 end
 
 function Board:render()
+  love.graphics.setColor(1, 1, 1, 1)
   love.graphics.translate(self.centerX - COLUMNS * TILE_WIDTH / 2, self.centerY - ROWS * TILE_HEIGHT / 2)
+
   for y, row in pairs(self.tiles) do
     for x, tile in pairs(row) do
       tile:render()

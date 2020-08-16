@@ -107,3 +107,15 @@ Timer.tween():finish(
 ```
 
 Instead of using `self.rows` and `self.columns`, I've also updated the `Board` class to use the constants direclty: `ROW` and `COLUMNS`.
+
+## Update
+
+I revisited the update to:
+
+- remove a bug
+
+- add a transition to show the current level
+
+- render the graphics connected to the animation conditional to `self.isTweening` being true. There's no purpose in having love2d drawing transparent rectangles, or drawing elements below the bottom edge of the window
+
+- render static information regarding the level, in a panel to the left of the board

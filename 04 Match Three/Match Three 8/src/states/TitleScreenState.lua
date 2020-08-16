@@ -15,7 +15,7 @@ function TitleScreenState:init()
   self.color = 1
 
   Timer.every(
-    0.08,
+    0.1,
     function()
       self.color = self.color % #self.colors + 1
     end
@@ -94,9 +94,8 @@ function TitleScreenState:render()
   love.graphics.setFont(gFonts["normal"])
   for i, option in ipairs(self.options) do
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.printf(option, 0.5, VIRTUAL_HEIGHT / 2 + 10 + 14 + (i - 1) * 28 + 0.5, VIRTUAL_WIDTH, "center")
-    love.graphics.printf(option, 1, VIRTUAL_HEIGHT / 2 + 10 + 14 + (i - 1) * 28 + 1, VIRTUAL_WIDTH, "center")
-    love.graphics.printf(option, 1.5, VIRTUAL_HEIGHT / 2 + 10 + 14 + (i - 1) * 28 + 1.5, VIRTUAL_WIDTH, "center")
+    love.graphics.printf(option, 0.8, VIRTUAL_HEIGHT / 2 + 10 + 14 + (i - 1) * 28 + 0.8, VIRTUAL_WIDTH, "center")
+    love.graphics.printf(option, 1.6, VIRTUAL_HEIGHT / 2 + 10 + 14 + (i - 1) * 28 + 1.6, VIRTUAL_WIDTH, "center")
 
     if i == self.choice then
       love.graphics.setColor(0.42, 0.59, 0.94, 1)
@@ -107,6 +106,8 @@ function TitleScreenState:render()
     love.graphics.printf(option, 0, VIRTUAL_HEIGHT / 2 + 10 + 14 + (i - 1) * 28, VIRTUAL_WIDTH, "center")
   end
 
-  love.graphics.setColor(self.fadeout["r"], self.fadeout["g"], self.fadeout["b"], self.fadeout["a"])
-  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+  if self.isTweening then
+    love.graphics.setColor(self.fadeout["r"], self.fadeout["g"], self.fadeout["b"], self.fadeout["a"])
+    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+  end
 end
