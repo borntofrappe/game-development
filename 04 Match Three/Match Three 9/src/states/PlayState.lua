@@ -55,15 +55,6 @@ function PlayState:init()
                   Timer.every(
                     1,
                     function()
-                      if self.timer == 0 then
-                        Timer.clear()
-                        gStateMachine:change(
-                          "gameover",
-                          {
-                            score = self.score
-                          }
-                        )
-                      end
                       self.timer = self.timer - 1
                     end
                   )
@@ -139,7 +130,17 @@ function PlayState:update(dt)
     end
   end
 
-  Timer.update(dt)
+  if self.timer > 0 then
+    Timer.update(dt)
+  else
+    Timer.clear()
+    gStateMachine:change(
+      "gameover",
+      {
+        score = self.score
+      }
+    )
+  end
 end
 
 function PlayState:render()

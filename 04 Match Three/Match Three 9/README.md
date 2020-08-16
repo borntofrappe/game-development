@@ -31,58 +31,29 @@ Timer.every(
 )
 ```
 
-This one reduces the timer by 1 with every second. In the body of the callback function, add a conditional to check the countdown itself; here the idea is to move to the gameover state, with the current score, when the timer hits `0`.
-
-```lua
-Timer.every(
-  1,
-  function()
-    if self.timer == 0 then
-      gStateMachine:change(
-        "gameover",
-        {
-          score = self.score
-        }
-      )
-    end
-    self.timer = self.timer - 1
-  end
-)
-```
-
-Note that in this order the timer hits 0, and after a second it detects a gameover. By swapping the order of the two lines you can make it possible to terminate the session as soon as the timer hits 0.
-
-```lua
-Timer.every(
-  1,
-  function()
-    self.timer = self.timer - 1
-
-    if self.timer == 0 then
-      -- move to gameover
-    end
-  end
-)
-```
-
 ### Clear
 
 When you exit the play state, be it because the player moves to the title screen by pressing escape, or because the timer runs out, it's essential to clear the timer object.
 
 ```lua
-if self.timer == 0 then
-  Timer.clear()
-  gStateMachine:change(
-    "gameover",
-    {
-      score = self.score
-    }
-  )
-end
+function PlayState:update(dt)
+  if love.keyboard.waspressed("escape") then
+    Timer.clear()
+    gStateMachine:change("title")
+  end
 
-if love.keyboard.waspressed("escape") then
-  Timer.clear()
-  gStateMachine:change("title")
+
+  if self.timer > then
+    Timer.update(dt)
+  else
+    Timer.clear()
+    gStateMachine:change(
+      "gameover",
+      {
+        score = self.score
+      }
+    )
+  end
 end
 ```
 
