@@ -54,6 +54,7 @@ function love.load()
   gSounds["music3"]:play()
 
   love.keyboard.keypressed = {}
+  love.mouse.coor = {}
 
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
@@ -71,11 +72,15 @@ function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
+function love.mousepressed(x, y)
+end
+
 function love.update(dt)
   backgroundOffset = (backgroundOffset + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_SCROLL_THRESHOLD
   gStateMachine:update(dt)
 
   love.keyboard.keypressed = {}
+  love.mouse.coor = {}
 end
 
 function love.draw()

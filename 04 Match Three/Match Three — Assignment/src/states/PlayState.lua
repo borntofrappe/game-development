@@ -3,7 +3,7 @@ PlayState = Class({__includes = BaseState})
 function PlayState:init()
   self.level = 1
   self.score = 0
-  self.goal = 500
+  self.goal = 1000
   self.timer = 60
 
   self.board = Board(self.level, VIRTUAL_WIDTH / 2 + 100, VIRTUAL_HEIGHT / 2)
@@ -214,6 +214,7 @@ end
 function PlayState:updateMatches()
   local matches = {}
   for y = 1, ROWS do
+    ::row::
     local color = nil
     local colorMatches = 1
     for x = 1, COLUMNS do
@@ -221,11 +222,32 @@ function PlayState:updateMatches()
         colorMatches = colorMatches + 1
       else
         if colorMatches >= 3 then
+          local hasShiny = false
           local match = {}
           for x2 = x - 1, x - colorMatches, -1 do
-            table.insert(match, self.board.tiles[y][x2])
+            local tile = self.board.tiles[y][x2]
+            if tile.isShiny then
+              hasShiny = true
+              break
+            end
+
+            table.insert(match, tile)
           end
-          table.insert(matches, match)
+          if hasShiny then
+            match = {}
+            for x3 = 1, COLUMNS do
+              table.insert(match, self.board.tiles[y][x3])
+            end
+            table.insert(matches, match)
+            if y == ROWS then
+              break
+            else
+              y = y + 1
+              goto row
+            end
+          else
+            table.insert(matches, match)
+          end
         end
 
         color = self.board.tiles[y][x].color
@@ -237,9 +259,22 @@ function PlayState:updateMatches()
       end
     end
     if colorMatches >= 3 then
+      local hasShiny = false
       local match = {}
       for x = COLUMNS, COLUMNS - (colorMatches - 1), -1 do
-        table.insert(match, self.board.tiles[y][x])
+        local tile = self.board.tiles[y][x]
+        if tile.isShiny then
+          hasShiny = true
+          break
+        end
+
+        table.insert(match, tile)
+      end
+      if hasShiny then
+        match = {}
+        for x = 1, COLUMNS do
+          table.insert(match, self.board.tiles[y][x])
+        end
       end
       table.insert(matches, match)
     end
@@ -255,7 +290,14 @@ function PlayState:updateMatches()
         if colorMatches >= 3 then
           local match = {}
           for y2 = y - 1, y - colorMatches, -1 do
-            table.insert(match, self.board.tiles[y2][x])
+            local tile = self.board.tiles[y2][x]
+            if tile.isShiny then
+              for x2 = 1, COLUMNS do
+                table.insert(match, self.board.tiles[y2][x2])
+              end
+            end
+
+            table.insert(match, tile)
           end
           table.insert(matches, match)
         end
@@ -271,7 +313,14 @@ function PlayState:updateMatches()
     if colorMatches >= 3 then
       local match = {}
       for y = ROWS, ROWS - (colorMatches - 1), -1 do
-        table.insert(match, self.board.tiles[y][x])
+        local tile = self.board.tiles[y][x]
+        if tile.isShiny then
+          for x2 = 1, COLUMNS do
+            table.insert(match, self.board.tiles[y][x2])
+          end
+        end
+
+        table.insert(match, tile)
       end
       table.insert(matches, match)
     end
@@ -285,13 +334,12 @@ function PlayState:removeMatches()
   for k, match in pairs(self.board.matches) do
     self.timer = self.timer + #match
     for j, tile in pairs(match) do
-      self.score = self.score + 50 * tile.variety
+      self.score = self.score + 100 * tile.variety
       self.board.tiles[tile.y][tile.x] = nil
     end
     if self.score >= self.goal then
       gSounds["next-level"]:play()
 
-      self.timer = self.timer + self.level * 10
       self.level = self.level + 1
       self.goal = math.floor(self.goal * 2.5)
 
