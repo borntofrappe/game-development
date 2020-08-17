@@ -3,10 +3,14 @@ PlayState = Class({__includes = BaseState})
 function PlayState:init()
   self.level = 1
   self.score = 0
-  self.goal = 1000
-  self.timer = 60
+  self.goal = 1500
+  self.timer = 30
 
   self.board = Board(self.level, VIRTUAL_WIDTH / 2 + 100, VIRTUAL_HEIGHT / 2)
+  while not self:hasMatch() do
+    self.board = Board(self.level, VIRTUAL_WIDTH / 2 + 100, VIRTUAL_HEIGHT / 2)
+  end
+
   self.isUpdating = false
 
   self.fadein = {
@@ -82,9 +86,6 @@ function PlayState:update(dt)
         gSounds["select"]:play()
 
         self.board.selectedTile.x = self.board.selectedTile.x + 1
-      else
-        gSounds["error"]:stop()
-        gSounds["error"]:play()
       end
     end
 
@@ -94,9 +95,6 @@ function PlayState:update(dt)
         gSounds["select"]:play()
 
         self.board.selectedTile.x = self.board.selectedTile.x - 1
-      else
-        gSounds["error"]:stop()
-        gSounds["error"]:play()
       end
     end
 
@@ -106,9 +104,6 @@ function PlayState:update(dt)
         gSounds["select"]:play()
 
         self.board.selectedTile.y = self.board.selectedTile.y - 1
-      else
-        gSounds["error"]:stop()
-        gSounds["error"]:play()
       end
     end
 
@@ -118,9 +113,6 @@ function PlayState:update(dt)
         gSounds["select"]:play()
 
         self.board.selectedTile.y = self.board.selectedTile.y + 1
-      else
-        gSounds["error"]:stop()
-        gSounds["error"]:play()
       end
     end
 
@@ -131,25 +123,32 @@ function PlayState:update(dt)
           tile2 = self.board.tiles[self.board.highlightedTile.y][self.board.highlightedTile.x]
 
           if math.abs(tile1.x - tile2.x) + math.abs(tile1.y - tile2.y) == 1 then
-            tempX, tempY = tile1.x, tile1.y
-
-            Timer.tween(
-              0.15,
-              {
-                [tile1] = {x = tile2.x, y = tile2.y},
-                [tile2] = {x = tempX, y = tempY}
-              }
-            ):finish(
-              function()
-                if self:updateMatches() then
-                  self:updateBoard()
-                end
-              end
-            )
-
             self.board.tiles[tile1.y][tile1.x], self.board.tiles[tile2.y][tile2.x] =
               self.board.tiles[tile2.y][tile2.x],
               self.board.tiles[tile1.y][tile1.x]
+
+            if self:updateMatches() then
+              tempX, tempY = tile1.x, tile1.y
+
+              Timer.tween(
+                0.15,
+                {
+                  [tile1] = {x = tile2.x, y = tile2.y},
+                  [tile2] = {x = tempX, y = tempY}
+                }
+              ):finish(
+                function()
+                  if self:updateMatches() then
+                    self:updateBoard()
+                  end
+                end
+              )
+            else
+              gSounds["error"]:play()
+              self.board.tiles[tile1.y][tile1.x], self.board.tiles[tile2.y][tile2.x] =
+                self.board.tiles[tile2.y][tile2.x],
+                self.board.tiles[tile1.y][tile1.x]
+            end
           end
 
           self.board.highlightedTile = nil
@@ -179,22 +178,22 @@ end
 
 function PlayState:render()
   love.graphics.setColor(0.1, 0.17, 0.35, 0.7)
-  love.graphics.rectangle("fill", 16, 16, 188, 140, 8)
+  love.graphics.rectangle("fill", 16, 16, 192, 140, 8)
   love.graphics.setColor(0, 0, 0, 0.4)
-  love.graphics.rectangle("fill", 16, 16, 188, 140, 8)
+  love.graphics.rectangle("fill", 16, 16, 192, 140, 8)
 
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(0, 0, 0, 1)
-  love.graphics.printf("Level: " .. self.level, 17, 27, 188, "center")
-  love.graphics.printf("Score: " .. self.score, 17, 59, 188, "center")
-  love.graphics.printf("Goal: " .. self.goal, 17, 91, 188, "center")
-  love.graphics.printf("Timer: " .. self.timer, 17, 123, 188, "center")
+  love.graphics.printf("Level: " .. self.level, 17, 27, 192, "center")
+  love.graphics.printf("Score: " .. self.score, 17, 59, 192, "center")
+  love.graphics.printf("Goal: " .. self.goal, 17, 91, 192, "center")
+  love.graphics.printf("Timer: " .. self.timer, 17, 123, 192, "center")
 
   love.graphics.setColor(0.42, 0.59, 0.94, 1)
-  love.graphics.printf("Level: " .. self.level, 16, 26, 188, "center")
-  love.graphics.printf("Score: " .. self.score, 16, 58, 188, "center")
-  love.graphics.printf("Goal: " .. self.goal, 16, 90, 188, "center")
-  love.graphics.printf("Timer: " .. self.timer, 16, 122, 188, "center")
+  love.graphics.printf("Level: " .. self.level, 16, 26, 192, "center")
+  love.graphics.printf("Score: " .. self.score, 16, 58, 192, "center")
+  love.graphics.printf("Goal: " .. self.goal, 16, 90, 192, "center")
+  love.graphics.printf("Timer: " .. self.timer, 16, 122, 192, "center")
 
   self.board:render()
 
@@ -341,7 +340,7 @@ function PlayState:removeMatches()
       gSounds["next-level"]:play()
 
       self.level = self.level + 1
-      self.goal = math.floor(self.goal * 2.5)
+      self.goal = math.floor(self.goal * 2.15)
 
       self.isTweening = true
       self.levelText.y = -VIRTUAL_HEIGHT / 2 + 40
@@ -442,4 +441,45 @@ function PlayState:updateBoard()
   else
     self.isUpdating = false
   end
+end
+
+function PlayState:hasMatch()
+  for y = 1, ROWS - 1 do
+    for x = 1, COLUMNS - 1 do
+      local tile = self.board.tiles[y][x]
+      local neighbor1 = self.board.tiles[y][x + 1]
+
+      self.board.tiles[tile.y][tile.x], self.board.tiles[neighbor1.y][neighbor1.x] =
+        self.board.tiles[neighbor1.y][neighbor1.x],
+        self.board.tiles[tile.y][tile.x]
+      if self:updateMatches() then
+        self.board.tiles[tile.y][tile.x], self.board.tiles[neighbor1.y][neighbor1.x] =
+          self.board.tiles[neighbor1.y][neighbor1.x],
+          self.board.tiles[tile.y][tile.x]
+        return true
+      else
+        self.board.tiles[tile.y][tile.x], self.board.tiles[neighbor1.y][neighbor1.x] =
+          self.board.tiles[neighbor1.y][neighbor1.x],
+          self.board.tiles[tile.y][tile.x]
+      end
+
+      local neighbor2 = self.board.tiles[y + 1][x]
+      self.board.tiles[tile.y][tile.x], self.board.tiles[neighbor2.y][neighbor2.x] =
+        self.board.tiles[neighbor2.y][neighbor2.x],
+        self.board.tiles[tile.y][tile.x]
+
+      if self:updateMatches() then
+        self.board.tiles[tile.y][tile.x], self.board.tiles[neighbor2.y][neighbor2.x] =
+          self.board.tiles[neighbor2.y][neighbor2.x],
+          self.board.tiles[tile.y][tile.x]
+        return true
+      else
+        self.board.tiles[tile.y][tile.x], self.board.tiles[neighbor2.y][neighbor2.x] =
+          self.board.tiles[neighbor2.y][neighbor2.x],
+          self.board.tiles[tile.y][tile.x]
+      end
+    end
+  end
+
+  return false
 end

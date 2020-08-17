@@ -5,7 +5,7 @@ function Tile:init(x, y, level)
   self.y = y
   self.level = level
   self.isShiny = math.random(18) == 1
-  self.color = math.random(#gFrames["tiles"])
+  self.color = math.random(8)
   self.variety = math.random(math.min(self.level, #gFrames["tiles"][1]))
 end
 

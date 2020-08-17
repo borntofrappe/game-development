@@ -8,7 +8,7 @@ Consider the [assignment for Match 3](https://cs50.harvard.edu/games/2019/spring
 
 - [x] Create random shiny versions of blocks that will destroy an entire row on match, granting points for each block in the row
 
-- [ ] Only allow swapping when it results in a match
+- [x] Only allow swapping when it results in a match
 
 - [ ] (Optional) Implement matching using the mouse
 
@@ -194,3 +194,130 @@ end
 ```
 
 This is enough to have `match`, and then `matches`, contemplate the vertical match, as well as the tiles in the row of the shiny variant.
+
+## Valid swap
+
+To swap only when the swap creates a match:
+
+- swap the tiles in the table
+
+  ```lua
+  self.board.tiles[tile1.y][tile1.x], self.board.tiles[tile2.y][tile2.x] = self.board.tiles[tile2.y][tile2.x], self.board.tiles[tile1.y][tile1.x]
+  ```
+
+- check if there is a match
+
+  ```lua
+  if self:updateMatches() then
+  ```
+
+  If there is a match, the game continues to update the visuals
+
+  ```lua
+  if self:updateMatches() then
+    Timer.tween(
+      --
+  ```
+
+  If there is no match however, the game swaps the tiles back
+
+  ```lua
+  gSounds["error"]:play()
+  self.board.tiles[tile1.y][tile1.x], self.board.tiles[tile2.y][tile2.x] = self.board.tiles[tile2.y][tile2.x], self.board.tiles[tile1.y][tile1.x]
+  ```
+
+The tricky part is always ensuring that a match is available, one swap away.
+
+## hasMatch
+
+The idea is to loop through the table, swap each tile with its neighbors, and check if that swap creates a match. As soon as one is detected, return `true`. At the end of the loop, return `false`. It is a lengthy process, but by skipping duplicates, it should be possible to find whether or not there are possible matches.
+
+Start by looping through the board, excluding the last column and row.
+
+```lua
+function PlayState:hasMatch()
+  for y = 1, ROWS - 1 do
+    for x = 1, COLUMNS - 1 do
+    end
+  end
+end
+```
+
+For each tile then, consider the neighbor to the right and to the bottom.
+
+```lua
+function PlayState:hasMatch()
+  for y = 1, ROWS - 1 do
+    for x = 1, COLUMNS - 1 do
+      local tile = self.board.tiles[y][x]
+      local neighbor1 = self.board.tiles[y][x + 1]
+      local neighbor2 = self.board.tiles[y + 1][x]
+    end
+  end
+end
+```
+
+For each neighbor finally, swap the tiles, check for a match.
+
+```lua
+self.board.tiles[tile.y][tile.x], self.board.tiles[neighbor1.y][neighbor1.x] =
+  self.board.tiles[neighbor1.y][neighbor1.x],
+  self.board.tiles[tile.y][tile.x]
+if self:updateMatches() then
+
+end
+```
+
+Regardless of the outcome, be sure to swap the tiles back, by repeating the first line. If there is a match, exit the function by returning `true`. This means there is a match and the game can continue its normal function.
+
+```lua
+-- swap
+if self:updateMatches() then
+  -- swap back
+  return true
+end
+```
+
+Since the `return` statement is the last line of the function, swap the tiles before it.
+
+If there is no match, swap the tiles back. In this situation the loop continues with the tiles which follow.
+
+```lua
+if self:updateMatches() then
+  -- swap back
+  return true
+else
+  -- swap back
+end
+```
+
+### Testing
+
+To test the feature, I decided to:
+
+- reduce the size of the board, to five columns and rows
+
+  ```lua
+  ROWS = 5
+  COLUMNS = 5
+  ```
+
+- use every color in the spritesheet
+
+  ```lua
+  function Tile:init(x, y, level)
+    self.color = math.random(#gFrames["tiles"])
+  end
+  ```
+
+- in the while loop, change the appearance of the very first tile to use the last color and variety
+
+  ```lua
+  while not self:hasMatch() do
+    self.board = Board(self.level, VIRTUAL_WIDTH / 2 + 100, VIRTUAL_HEIGHT / 2)
+    self.board.tiles[1][1].color = 18
+    self.board.tiles[1][1].variety = 6
+  end
+  ```
+
+In this manner, by launching the game enough times it's possible to see the while loop in action. The tile in the top left corner will be grey and with a star.
