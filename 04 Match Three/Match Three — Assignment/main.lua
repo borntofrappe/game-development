@@ -54,7 +54,7 @@ function love.load()
   gSounds["music3"]:play()
 
   love.keyboard.keypressed = {}
-  love.mouse.coor = {}
+  love.mouse.isReleased = false
 
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
@@ -72,7 +72,8 @@ function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
-function love.mousepressed(x, y)
+function love.mousereleased()
+  love.mouse.isReleased = true
 end
 
 function love.update(dt)
@@ -80,7 +81,7 @@ function love.update(dt)
   gStateMachine:update(dt)
 
   love.keyboard.keypressed = {}
-  love.mouse.coor = {}
+  love.mouse.isReleased = false
 end
 
 function love.draw()

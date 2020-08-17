@@ -10,7 +10,7 @@ Consider the [assignment for Match 3](https://cs50.harvard.edu/games/2019/spring
 
 - [x] Only allow swapping when it results in a match
 
-- [ ] (Optional) Implement matching using the mouse
+- [x] (Optional) Implement matching using the mouse
 
 ## Time addition
 
@@ -321,3 +321,22 @@ To test the feature, I decided to:
   ```
 
 In this manner, by launching the game enough times it's possible to see the while loop in action. The tile in the top left corner will be grey and with a star.
+
+## Mouse
+
+For the update, it's necessary to know the coordinates of the cursor, as well as whether the mouse is pressed or not.
+
+For the coordinates, the information is included in a table similar to the keys being pressed with a keyboard.
+
+```lua
+function love.load()
+
+
+end
+
+function love.mousepressed(x, y)
+
+end
+```
+
+The game depends on the coordinates of the cursor, as well

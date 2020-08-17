@@ -6,9 +6,14 @@ function PlayState:init()
   self.goal = 1500
   self.timer = 30
 
-  self.board = Board(self.level, VIRTUAL_WIDTH / 2 + 100, VIRTUAL_HEIGHT / 2)
+  self.x = VIRTUAL_WIDTH / 2 - 16
+  self.y = VIRTUAL_HEIGHT / 2 - ROWS * TILE_HEIGHT / 2
+  self.width = COLUMNS * TILE_WIDTH
+  self.height = ROWS * TILE_HEIGHT
+
+  self.board = Board(self.level, self.x, self.y)
   while not self:hasMatch() do
-    self.board = Board(self.level, VIRTUAL_WIDTH / 2 + 100, VIRTUAL_HEIGHT / 2)
+    self.board = Board(self.level, self.x, self.y)
   end
 
   self.isUpdating = false
@@ -75,6 +80,68 @@ end
 
 function PlayState:update(dt)
   if not self.isTweening then
+    if not self.isUpdating then
+      if love.mouse.isDown(1) then
+        x, y = push:toGame(love.mouse.getPosition())
+        if x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height then
+          tileX = math.floor((x - self.x) / TILE_WIDTH) + 1
+          tileY = math.floor((y - self.y) / TILE_HEIGHT) + 1
+
+          self.board.selectedTile = {
+            x = tileX,
+            y = tileY
+          }
+
+          if not self.board.highlightedTile then
+            self.board.highlightedTile = {
+              x = tileX,
+              y = tileY
+            }
+          end
+        end
+      end
+
+      if love.mouse.isReleased then
+        if self.board.highlightedTile then
+          tile1 = self.board.tiles[self.board.selectedTile.y][self.board.selectedTile.x]
+          tile2 = self.board.tiles[self.board.highlightedTile.y][self.board.highlightedTile.x]
+
+          if math.abs(tile1.x - tile2.x) + math.abs(tile1.y - tile2.y) == 1 then
+            self.board.tiles[tile1.y][tile1.x], self.board.tiles[tile2.y][tile2.x] =
+              self.board.tiles[tile2.y][tile2.x],
+              self.board.tiles[tile1.y][tile1.x]
+
+            if self:updateMatches() then
+              tempX, tempY = tile1.x, tile1.y
+
+              Timer.tween(
+                0.15,
+                {
+                  [tile1] = {x = tile2.x, y = tile2.y},
+                  [tile2] = {x = tempX, y = tempY}
+                }
+              ):finish(
+                function()
+                  if self:updateMatches() then
+                    self:updateBoard()
+                  end
+                end
+              )
+            else
+              gSounds["error"]:play()
+              self.board.tiles[tile1.y][tile1.x], self.board.tiles[tile2.y][tile2.x] =
+                self.board.tiles[tile2.y][tile2.x],
+                self.board.tiles[tile1.y][tile1.x]
+            end
+          else
+            gSounds["error"]:play()
+          end
+
+          self.board.highlightedTile = nil
+        end
+      end
+    end
+
     if love.keyboard.waspressed("escape") then
       Timer.clear()
       gStateMachine:change("title")
@@ -149,6 +216,8 @@ function PlayState:update(dt)
                 self.board.tiles[tile2.y][tile2.x],
                 self.board.tiles[tile1.y][tile1.x]
             end
+          else
+            gSounds["error"]:play()
           end
 
           self.board.highlightedTile = nil

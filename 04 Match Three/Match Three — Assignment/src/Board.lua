@@ -1,9 +1,9 @@
 Board = Class {}
 
-function Board:init(level, centerX, centerY)
+function Board:init(level, offsetX, offsetY)
   self.level = level or 1
-  self.centerX = centerX or VIRTUAL_WIDTH / 2
-  self.centerY = centerY or VIRTUAL_HEIGHT / 2
+  self.offsetX = offsetX or VIRTUAL_WIDTH / 2 - COLUMNS * TILE_WIDTH / 2
+  self.offsetY = offsetY or VIRTUAL_HEIGHT / 2 - ROWS * TILE_HEIGHT / 2
 
   self.tiles = {}
 
@@ -22,9 +22,9 @@ function Board:init(level, centerX, centerY)
 end
 
 function Board:render()
-  love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.translate(self.centerX - COLUMNS * TILE_WIDTH / 2, self.centerY - ROWS * TILE_HEIGHT / 2)
+  love.graphics.translate(self.offsetX, self.offsetY)
 
+  love.graphics.setColor(1, 1, 1, 1)
   for y, row in pairs(self.tiles) do
     for x, tile in pairs(row) do
       tile:render()
@@ -56,5 +56,5 @@ function Board:render()
       4
     )
   end
-  love.graphics.translate((self.centerX - COLUMNS * TILE_WIDTH / 2) * -1, (self.centerY - ROWS * TILE_HEIGHT / 2) * -1)
+  love.graphics.translate(-self.offsetX, -self.offsetY)
 end
