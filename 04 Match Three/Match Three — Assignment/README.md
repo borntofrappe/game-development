@@ -324,19 +324,90 @@ In this manner, by launching the game enough times it's possible to see the whil
 
 ## Mouse
 
-For the update, it's necessary to know the coordinates of the cursor, as well as whether the mouse is pressed or not.
+The assignment asks to implement a swap using mouse controls, but I decided update the title screen and gameover state to have the game completely playable with a cursor instead of a keyboard.
 
-For the coordinates, the information is included in a table similar to the keys being pressed with a keyboard.
+The logic depends on the following information:
+
+- is the cursor down
+
+- is the cursor released
+
+To detect if the mouse is down, love2d provides the `love.mouse.isDown()` function.
 
 ```lua
-function love.load()
-
-
-end
-
-function love.mousepressed(x, y)
-
+function PlayState:update(dt)
+  if love.mouse.isDown(1) then
+  end
 end
 ```
 
-The game depends on the coordinates of the cursor, as well
+To detect a mouse release however, it's necessary to use `love.mousereleased` from the main script.
+
+```lua
+function love.load()
+  love.mouse.isReleased = false
+end
+
+function love.mousereleased()
+  love.mouse.isReleased = true
+end
+
+function love.update(dt)
+  love.mouse.isReleased = false
+end
+```
+
+The `love.mouse` object is modified to provide the additional, necesasry boolean.
+
+### Play
+
+Consider the mouse coordinates following the `love.mouse.isDown` function.
+
+```lua
+if love.mouse.isDown(1) then
+  x, y = push:toGame(love.mouse.getPosition())
+  end
+end
+```
+
+From this starting point:
+
+- check if the coordinates fall in the area describing the board
+
+- determine the `x` and `y` values of the tile being pressed
+
+- change the selected tile to describe the tile being pressed
+
+- if a tile is not highlighted, use the same tile for the highlighted variant
+
+Once a tile is highlighted, it is then when the mouse is released that the code tries to swap the two tiles. The code repeats here much of the logic following a key press on the enter key, trying to swap the selected and highlighted tiles.
+
+Just be sure to reset highlighted tile, and regardless of whether the swap occurs. This ensures that, as the mouse is pressed again, the game considers the selected/highlighted variants anew.
+
+### Title screen
+
+Similarly to the play state, the `update` function considers the coordinates of the cursor in the scope of `isDown()`.
+
+Based on this information, however, the logic is different:
+
+- check if the coordinates fall in the rectangle describing the menu
+
+- if the coordinate describes the top half, change the option to 'start', else to 'quit game'
+
+Once the cursor is released finally, move to the start state, or quit the game. Using the same logic which follows a press on the enter key.
+
+### Gameover
+
+The state requires the smallest change. Move to the title state when the `isReleased` boolean highlights that the cursor has been released.
+
+```lua
+if love.mouse.isReleased then
+  gStateMachine:change("title")
+end
+```
+
+The change is not triggered by a mouse press, since this would interfere with the mouse press on the title screen.
+
+```lua
+
+```

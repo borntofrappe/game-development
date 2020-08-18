@@ -5,7 +5,7 @@ function GameoverState:enter(params)
 end
 
 function GameoverState:update(dt)
-  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") or love.mouse.isReleased then
     gStateMachine:change("title")
   end
 
@@ -22,19 +22,17 @@ function GameoverState:render()
 
   love.graphics.setFont(gFonts["big"])
   love.graphics.setColor(0, 0, 0, 1)
-  love.graphics.printf("GAME", VIRTUAL_WIDTH / 2 - 98, VIRTUAL_HEIGHT / 2 - 72, 200, "center")
-  love.graphics.printf("OVER", VIRTUAL_WIDTH / 2 - 98, VIRTUAL_HEIGHT / 2 - 38, 200, "center")
+  love.graphics.printf("GAME", VIRTUAL_WIDTH / 2 - 98, VIRTUAL_HEIGHT / 2 - 66, 200, "center")
+  love.graphics.printf("OVER", VIRTUAL_WIDTH / 2 - 98, VIRTUAL_HEIGHT / 2 - 32, 200, "center")
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.printf("Your score:", VIRTUAL_WIDTH / 2 - 99, VIRTUAL_HEIGHT / 2 + 1, 200, "center")
-  love.graphics.printf(self.score, VIRTUAL_WIDTH / 2 - 99, VIRTUAL_HEIGHT / 2 + 25, 200, "center")
-  love.graphics.printf("Press enter", VIRTUAL_WIDTH / 2 - 99, VIRTUAL_HEIGHT / 2 + 53, 200, "center")
+  love.graphics.printf("Your score:", VIRTUAL_WIDTH / 2 - 99, VIRTUAL_HEIGHT / 2 + 19, 200, "center")
+  love.graphics.printf(self.score, VIRTUAL_WIDTH / 2 - 99, VIRTUAL_HEIGHT / 2 + 43, 200, "center")
 
   love.graphics.setFont(gFonts["big"])
   love.graphics.setColor(0.42, 0.59, 0.94, 1)
-  love.graphics.printf("GAME", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2 - 74, 200, "center")
-  love.graphics.printf("OVER", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2 - 40, 200, "center")
+  love.graphics.printf("GAME", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2 - 68, 200, "center")
+  love.graphics.printf("OVER", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2 - 34, 200, "center")
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.printf("Your score:", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2, 200, "center")
-  love.graphics.printf(self.score, VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2 + 24, 200, "center")
-  love.graphics.printf("Press enter", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2 + 52, 200, "center")
+  love.graphics.printf("Your score:", VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2 + 18, 200, "center")
+  love.graphics.printf(self.score, VIRTUAL_WIDTH / 2 - 100, VIRTUAL_HEIGHT / 2 + 42, 200, "center")
 end

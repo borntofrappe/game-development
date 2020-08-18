@@ -14,6 +14,11 @@ function TitleScreenState:init()
   }
   self.color = 1
 
+  self.menuX = VIRTUAL_WIDTH / 2 - 105
+  self.menuY = VIRTUAL_HEIGHT / 2 + 10
+  self.menuWidth = 210
+  self.menuHeight = 80
+
   Timer.every(
     0.1,
     function()
@@ -38,13 +43,24 @@ end
 
 function TitleScreenState:update(dt)
   if not self.isTweening then
+    if love.mouse.isDown(1) then
+      x, y = push:toGame(love.mouse.getPosition())
+      if x > self.menuX and x < self.menuX + self.menuWidth and y > self.menuY and y < self.menuY + self.menuHeight then
+        if y < self.menuY + self.menuHeight / 2 then
+          self.choice = 1
+        else
+          self.choice = 2
+        end
+      end
+    end
+
     if love.keyboard.waspressed("up") or love.keyboard.waspressed("down") then
       self.choice = self.choice == 1 and 2 or 1
       gSounds["select"]:stop()
       gSounds["select"]:play()
     end
 
-    if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") or love.mouse.isReleased then
       if self.choice == 1 then
         self.isTweening = true
         Timer.tween(
@@ -73,8 +89,8 @@ function TitleScreenState:render()
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   love.graphics.setColor(1, 1, 1, 0.5)
-  love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 105, VIRTUAL_HEIGHT / 6, 210, 64, 8)
-  love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 105, VIRTUAL_HEIGHT / 2 + 5, 210, 90, 8)
+  love.graphics.rectangle("fill", self.menuX, VIRTUAL_HEIGHT / 6, self.menuWidth, 64, 8)
+  love.graphics.rectangle("fill", self.menuX, self.menuY, self.menuWidth, self.menuHeight, 8)
 
   love.graphics.setFont(gFonts["big"])
   for i = 1, #self.title do
