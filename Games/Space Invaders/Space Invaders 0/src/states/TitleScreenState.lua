@@ -2,9 +2,12 @@ TitleScreenState = Class({__includes = BaseState})
 
 function TitleScreenState:init()
   self.title = {
-    ["text"] = TITLE,
+    ["image"] = love.graphics.newImage("res/graphics/title.png"),
     ["y"] = WINDOW_HEIGHT
   }
+  self.title.width = self.title.image:getWidth()
+  self.title.height = self.title.image:getHeight()
+  self.title.x = WINDOW_WIDTH / 2 - self.title.width / 2
 
   self.instruction = {
     ["text"] = "Push start",
@@ -14,7 +17,7 @@ function TitleScreenState:init()
   Timer.tween(
     1.5,
     {
-      [self.title] = {y = WINDOW_HEIGHT / 2 - 100}
+      [self.title] = {y = WINDOW_HEIGHT / 2 - self.title.height / 1.5}
     }
   ):finish(
     function()
@@ -45,11 +48,12 @@ function TitleScreenState:update(dt)
 end
 
 function TitleScreenState:render()
-  love.graphics.setColor(0.15, 0.9, 0.35, 1)
-  love.graphics.setFont(gFonts["title"])
-  love.graphics.printf(self.title.text:upper(), 0, self.title.y, WINDOW_WIDTH, "center")
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.draw(self.title.image, self.title.x, self.title.y)
 
-  love.graphics.setColor(0.85, 0.52, 0.5, self.instruction.alpha)
-  love.graphics.setFont(gFonts["text"])
-  love.graphics.printf(self.instruction.text:upper(), 0, WINDOW_HEIGHT / 2 + 48, WINDOW_WIDTH, "center")
+  love.graphics.setFont(gFonts["normal"])
+  -- love.graphics.setColor(74 / 137, 163 / 192, 151 / 255, 1)
+
+  love.graphics.setColor(197 / 255, 163 / 255, 151 / 255, self.instruction.alpha)
+  love.graphics.printf(self.instruction.text:upper(), 0, self.title.y + self.title.height, WINDOW_WIDTH, "center")
 end

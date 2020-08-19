@@ -1,7 +1,5 @@
-TITLE = "Shape Invaders"
-
-WINDOW_WIDTH = 500
-WINDOW_HEIGHT = 500
+WINDOW_WIDTH = 460
+WINDOW_HEIGHT = 460
 
 OPTIONS = {
   fullscreen = false,

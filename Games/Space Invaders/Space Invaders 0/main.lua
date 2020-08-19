@@ -1,11 +1,11 @@
 require "src/Dependencies"
 
 function love.load()
-  love.window.setTitle(TITLE)
+  love.window.setTitle("Space Invaders")
 
   gFonts = {
-    ["title"] = love.graphics.newFont("res/fonts/font-title.ttf", 64),
-    ["text"] = love.graphics.newFont("res/fonts/font-text.ttf", 20)
+    ["big"] = love.graphics.newFont("res/fonts/font.ttf", 32),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
   gStateMachine =
