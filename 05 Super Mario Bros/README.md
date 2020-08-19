@@ -14,6 +14,14 @@ The fifth video covers a 2D platformer inspired by Super Mario Bros.
 
 - powerups
 
+## Project structure
+
+<!-- In _Super Mario Bros — Final_ find the version of the game as developed alongside the video.
+
+In _Super Mario Bros — Assignment_ find the version including the assignments. -->
+
+The game is developed in _Super Mario Bros \*_ folders. There are also additional demos to discuss dedicated topics.
+
 ## Resources
 
 - [Super Mario Bros](https://youtu.be/gvONAgleKPg)
