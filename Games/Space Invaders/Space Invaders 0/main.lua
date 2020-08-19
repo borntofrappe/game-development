@@ -4,7 +4,6 @@ function love.load()
   love.window.setTitle("Space Invaders")
 
   gFonts = {
-    ["big"] = love.graphics.newFont("res/fonts/font.ttf", 32),
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 

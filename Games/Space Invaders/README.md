@@ -28,3 +28,5 @@ The following table works as a reference for the size of the individual quads in
 ## Update 0 — title
 
 Render a screen with the title, above a basic instruction on how to proceed. Use the `timer` module from the **knife** library, to animate the scene.
+
+_Please note_: the state includes also a hard-coded hi-score, to illustrate how to display such a record. Ultimately, the idea is to update the value with the player score achieved during the game.
