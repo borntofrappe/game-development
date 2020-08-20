@@ -14,6 +14,5 @@ end
 
 function PlayState:render()
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
   self.player:render()
 end

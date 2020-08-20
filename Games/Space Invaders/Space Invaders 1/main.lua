@@ -5,7 +5,8 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
   gFonts = {
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
+    ["big"] = love.graphics.newFont("res/fonts/font.ttf", 64),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
   }
 
   gTextures = {

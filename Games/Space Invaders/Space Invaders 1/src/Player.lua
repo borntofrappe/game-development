@@ -1,8 +1,8 @@
 Player = Class {}
 
 function Player:init()
-  self.width = 9
-  self.height = 7
+  self.width = 27
+  self.height = 21
   self.x = WINDOW_WIDTH / 2 - self.width / 2
   self.y = WINDOW_HEIGHT - self.height - 8
 
@@ -11,9 +11,9 @@ end
 
 function Player:update(dt)
   if love.keyboard.isDown("left") then
-    self.dx = -100
+    self.dx = -PLAYER_SPEED
   elseif love.keyboard.isDown("right") then
-    self.dx = 100
+    self.dx = PLAYER_SPEED
   else
     self.dx = 0
   end
