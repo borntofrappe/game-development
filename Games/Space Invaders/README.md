@@ -19,8 +19,16 @@ Render a screen with the title, above a basic instruction on how to proceed. Use
 
 _Please note_: the state specifies a hard-coded high score, to illustrate how to display such a record. Ultimately, the idea is to update the value with the player score achieved during the game.
 
+_Please note_: future updates modifies _main.lua_ to have the game immediately start from the play state. This is to speed up the development, but ultimately the state is reached from the title screen, and by pressing enter.
+
 ## Update 1 — player
 
 Render the quad making up the player's visual, and allow to move said visual horizontally.
 
-_Please note_: the update modifies _main.lua_ to have the game immediately start from the play state. This is to speed up the development, but ultimately the state is reached from the title screen, and by pressing enter.
+## Update 2 — aliens
+
+Render rows of aliens using the three variants provided in the spritesheet, one row after the other.
+
+`GenerateQuadsAliens` is built to provide a table where each alien has two variants. Ultimately, the idea is to use the second variant to animate the shape.
+
+A timer is included to illustrate how the animation would actually take place.
