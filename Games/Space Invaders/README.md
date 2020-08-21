@@ -11,7 +11,7 @@ For the graphics, you find in the _res_ folder a spritesheet for the visuals of 
 | Alien       | 24    | 21     |
 | Bonus Alien | 39    | 18     |
 | Player      | 27    | 21     |
-| Projectile  | 3     | 18     |
+| Projectile  | 3     | 15     |
 
 ## Update 0 — title
 
@@ -32,3 +32,9 @@ Render rows of aliens using the three variants provided in the spritesheet, one 
 `GenerateQuadsAliens` is built to provide a table where each alien has two variants. Ultimately, the idea is to use the second variant to animate the shape.
 
 A timer is included to illustrate how the animation would actually take place.
+
+## Update 3 — bullet
+
+Fire a bullet and detect collision with the static aliens. In keeping with the super game boy version, there should be only one bullet at a time.
+
+TODO: update the spritesheet to have the bullet less tall.
