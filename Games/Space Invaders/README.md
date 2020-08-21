@@ -36,5 +36,3 @@ A timer is included to illustrate how the animation would actually take place.
 ## Update 3 — bullet
 
 Fire a bullet and detect collision with the static aliens. In keeping with the super game boy version, there should be only one bullet at a time.
-
-TODO: update the spritesheet to have the bullet less tall.
