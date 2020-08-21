@@ -1,20 +1,4 @@
-push = require("res/lib/push")
-
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
-
-VIRTUAL_WIDTH = 256
-VIRTUAL_HEIGHT = 144
-
-OPTIONS = {
-  fullscreen = false,
-  vsync = true,
-  resizable = true
-}
-
-TILE_SIZE = 16
-TILE_GROUND = 1
-TILE_SKY = 2
+require "src/Dependencies"
 
 function love.load()
   love.window.setTitle("Tiles")
@@ -33,7 +17,7 @@ function love.load()
   for y = 1, mapHeight do
     tiles[y] = {}
     for x = 1, mapWidth do
-      local tile = {id = y < 5 and TILE_SKY or TILE_GROUND}
+      local tile = {id = y <= math.ceil(VIRTUAL_HEIGHT / TILE_SIZE / 2) and TILE_SKY or TILE_GROUND}
       tiles[y][x] = tile
     end
   end
@@ -45,12 +29,27 @@ function love.load()
   }
 end
 
+function love.keypressed(key)
+  if key == "escape" then
+    love.event.quit()
+  elseif key == "r" then
+    background.r = math.random(255) / 255
+    background.g = math.random(255) / 255
+    background.b = math.random(255) / 255
+  end
+end
+
+function love.resize(width, height)
+  push:resize(width, height)
+end
+
 function love.draw()
   push:start()
 
   love.graphics.setColor(background.r, background.g, background.b, 1)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
+  love.graphics.setColor(1, 1, 1, 1)
   for y = 1, mapHeight do
     for x = 1, mapWidth do
       local tile = tiles[y][x]
@@ -59,32 +58,4 @@ function love.draw()
   end
 
   push:finish()
-end
-
-function GenerateQuads(atlas, tileWidth, tileHeight)
-  local sheetWidth = atlas:getWidth() / tileWidth
-  local sheetHeight = atlas:getHeight() / tileHeight
-
-  local counter = 1
-  local spritesheet = {}
-
-  for y = 0, sheetHeight - 1 do
-    for x = 0, sheetWidth - 1 do
-      local sprite = love.graphics.newQuad(x * tileWidth, y * tileHeight, tileWidth, tileHeight, atlas:getDimensions())
-      spritesheet[counter] = sprite
-      counter = counter + 1
-    end
-  end
-
-  return spritesheet
-end
-
-function love.keypressed(key)
-  if key == "escape" then
-    love.event.quit()
-  end
-end
-
-function love.resize(width, height)
-  push:resize(width, height)
 end
