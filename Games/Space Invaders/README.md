@@ -36,3 +36,7 @@ A timer is included to illustrate how the animation would actually take place.
 ## Update 3 — bullet
 
 Fire a bullet and detect collision with the static aliens. In keeping with the super game boy version, there should be only one bullet at a time.
+
+## Update 4 — rows of aliens
+
+Include the aliens in rows. Move the rows horizontally and vertically when when they bounce with the game's window.
