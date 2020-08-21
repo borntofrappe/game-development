@@ -40,3 +40,7 @@ Fire a bullet and detect collision with the static aliens. In keeping with the s
 ## Update 4 — rows of aliens
 
 Include the aliens in rows. Move the rows horizontally and vertically when when they bounce with the game's window.
+
+## Update 5 — round and victory
+
+Introduce the round state for a brief period of time, and always before the play state.
