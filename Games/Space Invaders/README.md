@@ -44,3 +44,9 @@ Include the aliens in rows. Move the rows horizontally and vertically when when 
 ## Update 5 — round and victory
 
 Introduce the round state for a brief period of time, and always before the play state.
+
+## Update 6 — pause
+
+Allow to pause the game by pressing enter.
+
+TODO: fix horizontal position by animating the rows to the same `x` before starting the timer
