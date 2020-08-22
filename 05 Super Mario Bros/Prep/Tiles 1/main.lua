@@ -42,7 +42,7 @@ end
 
 function love.update(dt)
   if love.keyboard.isDown("right") then
-    cameraScroll = cameraScroll + CAMERA_SCROLL_SPEED * dt
+    cameraScroll = math.min(mapWidth * TILE_SIZE - VIRTUAL_WIDTH, cameraScroll + CAMERA_SCROLL_SPEED * dt)
   elseif love.keyboard.isDown("left") then
     cameraScroll = math.max(0, cameraScroll - CAMERA_SCROLL_SPEED * dt)
   end
