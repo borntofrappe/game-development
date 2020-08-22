@@ -7,7 +7,7 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  tilesheet = love.graphics.newImage("tiles.png")
+  tilesheet = love.graphics.newImage("res/graphics/tiles2.png")
   quads = GenerateQuads(tilesheet, TILE_SIZE, TILE_SIZE)
 
   tiles = {}

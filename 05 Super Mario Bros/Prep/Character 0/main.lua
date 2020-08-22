@@ -8,7 +8,7 @@ function love.load()
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
   gTextures = {
-    ["tiles"] = love.graphics.newImage("tiles.png"),
+    ["tiles"] = love.graphics.newImage("res/graphics/tiles2.png"),
     ["character"] = love.graphics.newImage("res/graphics/character.png")
   }
 

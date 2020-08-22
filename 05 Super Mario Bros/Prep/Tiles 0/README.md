@@ -18,7 +18,7 @@ for y = 1, mapHeight do
 end
 ```
 
-The way the quads are setup, `1` coincides with the brick expressing the first 16 pixels of _tiles.png_. `2` represents instead a transparent tile, effectively showing the background.
+The way the quads are setup, `1` coincides with the brick expressing the first 16 pixels of _tiles2.png_. `2` represents instead a transparent tile, effectively showing the background.
 
 These values are set through constants, but the logic of the previous snippet remains.
 
