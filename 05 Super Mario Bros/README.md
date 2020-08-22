@@ -24,6 +24,8 @@ The game is developed in _Super Mario Bros \*_ folders. There are also additiona
 
 1. _Tiles_, how to render tiles and fake movement with horizontal scroll
 
+2. _Character_, how to render, move, jump and animate the sprite making up the character
+
 ## Resources
 
 - [Super Mario Bros](https://youtu.be/gvONAgleKPg)

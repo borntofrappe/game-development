@@ -1,7 +1,7 @@
 require "src/Dependencies"
 
 function love.load()
-  love.window.setTitle("Tiles")
+  love.window.setTitle("Character")
   math.randomseed(os.time())
 
   love.graphics.setDefaultFilter("nearest", "nearest")
