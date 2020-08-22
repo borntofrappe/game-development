@@ -20,7 +20,9 @@ The fifth video covers a 2D platformer inspired by Super Mario Bros.
 
 In _Super Mario Bros — Assignment_ find the version including the assignments. -->
 
-The game is developed in _Super Mario Bros \*_ folders. There are also additional demos to discuss dedicated topics.
+The game is developed in _Super Mario Bros \*_ folders. There are also additional demos to discuss dedicated topics:
+
+1. _Tiles_, how to render tiles and fake movement with horizontal scroll
 
 ## Resources
 
