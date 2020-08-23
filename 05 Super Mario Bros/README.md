@@ -26,6 +26,8 @@ The game is developed in _Super Mario Bros \*_ folders. There are also additiona
 
 2. _Character_, how to render, move, jump and animate the sprite making up the character
 
+3. _Level_, how to generate a level with different features
+
 ## Resources
 
 - [Super Mario Bros](https://youtu.be/gvONAgleKPg)
