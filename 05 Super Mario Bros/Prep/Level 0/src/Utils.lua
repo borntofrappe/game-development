@@ -15,3 +15,83 @@ function GenerateQuads(atlas, tileWidth, tileHeight)
 
   return spritesheet
 end
+
+function GenerateQuadsTiles(atlas)
+  local quads = {}
+
+  local columns = 6
+  local rows = 10
+  local x = 0
+  local y = 0
+  local width = 80
+  local height = 64
+
+  local columns_tiles = 5
+  local rows_tiles = 4
+  local x_tiles = 0
+  local y_tiles = 0
+  local width_tiles = 16
+  local height_tiles = 16
+
+  for column = 1, columns do
+    y = 0
+    for row = 1, rows do
+      quads[(column - 1) * rows + row] = {}
+      x_tiles = 0
+      y_tiles = 0
+      for row_tiles = 1, rows_tiles do
+        x_tiles = 0
+        for column_tiles = 1, columns_tiles do
+          quads[(column - 1) * rows + row][(row_tiles - 1) * columns_tiles + column_tiles] =
+            love.graphics.newQuad(x + x_tiles, y + y_tiles, width_tiles, height_tiles, atlas:getDimensions())
+          x_tiles = x_tiles + width_tiles
+        end
+        y_tiles = y_tiles + height_tiles
+      end
+      y = y + height
+    end
+    x = x + width
+  end
+
+  return quads
+end
+
+function GenerateQuadsTileTops(atlas)
+  local quads = {}
+
+  local columns = 6
+  local rows = 18
+  local x = 0
+  local y = 0
+  local width = 80
+  local height = 64
+
+  local columns_tiles = 5
+  local rows_tiles = 4
+  local x_tiles = 0
+  local y_tiles = 0
+  local width_tiles = 16
+  local height_tiles = 16
+
+  for column = 1, columns do
+    y = 0
+    for row = 1, rows do
+      quads[(column - 1) * rows + row] = {}
+      x_tiles = 0
+      y_tiles = 0
+      for row_tiles = 1, rows_tiles do
+        x_tiles = 0
+        for column_tiles = 1, columns_tiles do
+          quads[(column - 1) * rows + row][(row_tiles - 1) * columns_tiles + column_tiles] =
+            love.graphics.newQuad(x + x_tiles, y + y_tiles, width_tiles, height_tiles, atlas:getDimensions())
+          x_tiles = x_tiles + width_tiles
+        end
+        y_tiles = y_tiles + height_tiles
+      end
+      y = y + height
+    end
+    x = x + width
+  end
+
+  return quads
+end

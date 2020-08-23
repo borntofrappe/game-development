@@ -8,14 +8,22 @@ function love.load()
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
   gTextures = {
-    ["tiles"] = love.graphics.newImage("res/graphics/tiles2.png"),
+    ["tiles"] = love.graphics.newImage("res/graphics/tiles.png"),
+    ["tops"] = love.graphics.newImage("res/graphics/tile_tops.png"),
+    ["backgrounds"] = love.graphics.newImage("res/graphics/backgrounds.png"),
     ["character"] = love.graphics.newImage("res/graphics/character.png")
   }
 
   gFrames = {
-    ["tiles"] = GenerateQuads(gTextures["tiles"], TILE_SIZE, TILE_SIZE),
+    ["tiles"] = GenerateQuadsTiles(gTextures["tiles"]),
+    ["tops"] = GenerateQuadsTileTops(gTextures["tops"]),
+    ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], 256, 128),
     ["character"] = GenerateQuads(gTextures["character"], CHARACTER_WIDTH, CHARACTER_HEIGHT)
   }
+
+  variety_backgrounds = math.random(#gFrames.backgrounds)
+  variety_tiles = math.random(#gFrames.tiles)
+  variety_tops = math.random(#gFrames.tops)
 
   characterX = VIRTUAL_WIDTH / 2 - CHARACTER_WIDTH / 2
   characterY = TILE_SIZE * (ROWS_SKY - 1) - CHARACTER_HEIGHT
@@ -58,7 +66,10 @@ function love.load()
   for y = 1, mapHeight do
     tiles[y] = {}
     for x = 1, mapWidth do
-      local tile = {id = y < ROWS_SKY and TILE_SKY or TILE_GROUND}
+      local tile = {
+        id = y < ROWS_SKY and TILE_SKY or TILE_GROUND,
+        topper = y == ROWS_SKY
+      }
       tiles[y][x] = tile
     end
   end
@@ -74,9 +85,9 @@ function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   elseif key == "r" then
-    background.r = math.random(255) / 255
-    background.g = math.random(255) / 255
-    background.b = math.random(255) / 255
+    variety_backgrounds = math.random(#gFrames.backgrounds)
+    variety_tiles = math.random(#gFrames.tiles)
+    variety_tops = math.random(#gFrames.tops)
   elseif key == "space" then
     if not jumping then
       jumping = true
@@ -130,15 +141,26 @@ end
 function love.draw()
   push:start()
 
-  love.graphics.setColor(background.r, background.g, background.b, 1)
-  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
-
+  love.graphics.draw(gTextures["backgrounds"], gFrames["backgrounds"][variety_backgrounds], 0, 0)
   love.graphics.translate(-math.floor(cameraScroll), 0)
   love.graphics.setColor(1, 1, 1, 1)
   for y = 1, mapHeight do
     for x = 1, mapWidth do
       local tile = tiles[y][x]
-      love.graphics.draw(gTextures["tiles"], gFrames["tiles"][tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+      love.graphics.draw(
+        gTextures["tiles"],
+        gFrames["tiles"][variety_tiles][tile.id],
+        (x - 1) * TILE_SIZE,
+        (y - 1) * TILE_SIZE
+      )
+      if tile.topper then
+        love.graphics.draw(
+          gTextures["tops"],
+          gFrames["tops"][variety_tops][1],
+          (x - 1) * TILE_SIZE,
+          (y - 1) * TILE_SIZE
+        )
+      end
     end
   end
 
