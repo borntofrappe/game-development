@@ -1,0 +1,17 @@
+WINDOW_WIDTH = 640
+WINDOW_HEIGHT = 450
+
+OPTIONS = {
+  fullscreen = false,
+  vsync = true,
+  resizable = false
+}
+
+PLAYER_SPEED = 200
+BULLET_SPEED = 300
+
+ALIEN_JUMP = 16
+ALIEN_WIDTH = 24
+ALIEN_HEIGHT = 21
+ALIEN_GAP_X = 16
+ALIEN_GAP_Y = 12
