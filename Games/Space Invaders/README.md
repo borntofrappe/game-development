@@ -49,4 +49,8 @@ Introduce the round state for a brief period of time, and always before the play
 
 Allow to pause the game by pressing enter.
 
-TODO: fix horizontal position by animating the rows to the same `x` before starting the timer
+## Update 7 — fixes
+
+Fix the timer to have the aliens "catch up" when returning from the pause state.
+
+<!-- Fix the horizontal scroll so that the aliens change direction only when the first/last _available_ column approaches the window's edges. In the previous version, the game considered a bounce with the first/last column regardless of whether the aliens in said column existed or not. -->
