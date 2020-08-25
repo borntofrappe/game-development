@@ -4,15 +4,9 @@ Recreate the popular game _Space Invaders_.
 
 - [ ] Fix the horizontal scroll so that the aliens change direction only when the first/last _available_ column approaches the window's edges. In the previous version, the game considered a bounce with the first/last column regardless of whether the aliens in said column existed or not.
 
-- [x] Slow down the frequency with which the aliens move
-
-- [x] Describe dy movement similarly to dx
-
-- [x] Clear timer in round state
+- [x] Fix the way the timer is set up and cleared
 
 - [ ] Change the frequency as the player destroys a certain number of aliens
-
-- [x] Add score table state
 
 - [ ] Detect a loss when the aliens reach the bottom of the screen
 

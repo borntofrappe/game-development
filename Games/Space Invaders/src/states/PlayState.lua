@@ -84,6 +84,7 @@ end
 
 function PlayState:update(dt)
   if love.keyboard.waspressed("escape") then
+    Timer.clear()
     gStateMachine:change("title")
   end
 
@@ -103,6 +104,7 @@ function PlayState:update(dt)
           self.score = self.score + 10 * alien.type
 
           if self:checkVictory() then
+            Timer.clear()
             gSounds["menu"]:play()
             gStateMachine:change(
               "round",
@@ -129,6 +131,8 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    Timer.clear()
+    gSounds["pause"]:play()
     gStateMachine:change(
       "pause",
       {

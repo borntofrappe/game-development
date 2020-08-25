@@ -2,8 +2,6 @@ PauseState = Class({__includes = BaseState})
 
 function PauseState:init()
   self.text = "Pause"
-  gSounds["pause"]:play()
-  Timer.clear()
 end
 
 function PauseState:enter(params)

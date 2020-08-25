@@ -1,5 +1,14 @@
 ScoreTableState = Class({__includes = BaseState})
 
+function ScoreTableState:init()
+  Timer.after(
+    10,
+    function()
+      gStateMachine:change("title")
+    end
+  )
+end
+
 function ScoreTableState:update(dt)
   Timer.update(dt)
 
@@ -8,6 +17,7 @@ function ScoreTableState:update(dt)
   end
 
   if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    Timer.clear()
     gStateMachine:change("title")
   end
 end

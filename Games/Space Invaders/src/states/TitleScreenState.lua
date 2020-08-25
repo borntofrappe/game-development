@@ -1,8 +1,6 @@
 TitleScreenState = Class({__includes = BaseState})
 
 function TitleScreenState:init()
-  Timer.clear()
-
   self.title = {
     ["text"] = "Space\nInvaders",
     ["y"] = WINDOW_HEIGHT
@@ -20,7 +18,8 @@ function TitleScreenState:init()
   }
 
   self.isTweening = true
-  Timer.tween(
+  self.titleTimer =
+    Timer.tween(
     1.5,
     {
       [self.title] = {y = WINDOW_HEIGHT / 2 - 72}
