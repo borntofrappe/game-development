@@ -1,5 +1,9 @@
 RoundState = Class({__includes = BaseState})
 
+function RoundState:init()
+  Timer.clear()
+end
+
 function RoundState:enter(params)
   self.round = params and params.round or 1
 

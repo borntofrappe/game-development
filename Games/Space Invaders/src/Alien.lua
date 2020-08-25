@@ -12,7 +12,8 @@ function Alien:init(x, y, type, variant)
   self.inPlay = true
 
   self.direction = 1
-  self.dx = ALIEN_JUMP
+  self.dx = ALIEN_JUMP_X
+  self.dy = ALIEN_JUMP_Y
 end
 
 function Alien:render()

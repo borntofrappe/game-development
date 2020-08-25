@@ -45,6 +45,13 @@ function TitleScreenState:init()
               )
             end
           )
+
+          Timer.after(
+            10,
+            function()
+              gStateMachine:change("score")
+            end
+          )
         end
       )
     end

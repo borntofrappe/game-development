@@ -42,6 +42,9 @@ function love.load()
       end,
       ["pause"] = function()
         return PauseState()
+      end,
+      ["score"] = function()
+        return ScoreTableState()
       end
     }
   )
