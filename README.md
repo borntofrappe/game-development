@@ -20,6 +20,16 @@ In the _Games_ folder, I repeat the concepts by creating either a variant of the
 
 - _Game — Assignment_ adds the features requested for the game's assignment
 
+## Launch games
+
+Provided you have installed love2d, you can launch the games from the command line
+
+```bash
+"C:\Program Files\LOVE\love.exe" "C:\Games\Space Invaders"
+```
+
+The first string describes the location of the executable behind love2d, the second string details the folder with the necessary entry point in "main.lua".
+
 ## Resources
 
 - [GD50 playlist](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz)
