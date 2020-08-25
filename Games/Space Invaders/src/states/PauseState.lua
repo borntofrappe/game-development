@@ -8,7 +8,9 @@ function PauseState:enter(params)
   self.player = params.player
   self.bullet = params.bullet
   self.rows = params.rows
+  self.round = params.round
   self.score = params.score
+  self.health = params.health
 end
 
 function PauseState:update(dt)
@@ -19,7 +21,9 @@ function PauseState:update(dt)
         player = self.player,
         bullet = self.bullet,
         rows = self.rows,
-        score = self.score
+        round = self.round,
+        score = self.score,
+        health = self.health
       }
     )
   end
@@ -30,7 +34,12 @@ function PauseState:update(dt)
 end
 
 function PauseState:render()
-  showScore(self.score)
+  showInfo(
+    {
+      score = self.score,
+      health = self.health
+    }
+  )
 
   love.graphics.setColor(1, 1, 1, 1)
   if self.bullet then

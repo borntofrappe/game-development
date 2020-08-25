@@ -5,11 +5,12 @@ end
 
 function PlayState:enter(params)
   self.round = params.round
+  self.score = params.score
+  self.health = params.health
 
   self.player = params.player or Player()
   self.bullet = params.bullet or nil
   self.rows = params.rows or self:createRows()
-  self.score = params.score or 0
 
   local x = self.rows[#self.rows][1].x
 
@@ -46,6 +47,8 @@ function PlayState:enter(params)
               if k == 1 and j == 1 then
                 if alien.direction == 1 then
                   if alien.x >= WINDOW_WIDTH - #row * (ALIEN_WIDTH + ALIEN_GAP_X) then
+                    gSounds["move"]:stop()
+                    gSounds["move"]:play()
                     for k, row in ipairs(self.rows) do
                       for j, alien in ipairs(row) do
                         alien.direction = -1
@@ -60,6 +63,8 @@ function PlayState:enter(params)
                   end
                 elseif alien.direction == -1 then
                   if alien.x <= 16 then
+                    gSounds["move"]:stop()
+                    gSounds["move"]:play()
                     for k, row in ipairs(self.rows) do
                       for j, alien in ipairs(row) do
                         alien.direction = 1
@@ -109,7 +114,9 @@ function PlayState:update(dt)
             gStateMachine:change(
               "round",
               {
-                round = self.round + 1
+                round = self.round + 1,
+                score = self.score,
+                health = self.health
               }
             )
           end
@@ -139,14 +146,21 @@ function PlayState:update(dt)
         player = self.player,
         bullet = self.bullet,
         rows = self.rows,
-        score = self.score
+        round = self.round,
+        score = self.score,
+        health = self.health
       }
     )
   end
 end
 
 function PlayState:render()
-  showScore(self.score)
+  showInfo(
+    {
+      score = self.score,
+      health = self.health
+    }
+  )
 
   love.graphics.setColor(1, 1, 1, 1)
 
@@ -166,7 +180,7 @@ end
 function PlayState:createRows()
   local rows = {}
   local x = 16
-  local y = 72
+  local y = 76
 
   for row = 1, 5 do
     x = 16

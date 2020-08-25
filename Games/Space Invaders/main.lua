@@ -83,7 +83,10 @@ function testAABB(box1, box2)
   return true
 end
 
-function showScore(score)
+function showInfo(info)
+  local score = info.score or 0
+  local health = info.health or 3
+
   local scoreString = tostring(score)
   local scoreZeros = "00000"
 
@@ -92,5 +95,9 @@ function showScore(score)
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(1, 1, 1, 1)
 
-  love.graphics.printf(scoreText:upper(), 0, 8, WINDOW_WIDTH, "center")
+  love.graphics.printf(scoreText:upper(), 0, 16, WINDOW_WIDTH / 2 - 8, "right")
+
+  local healthText = "= " .. health
+  love.graphics.draw(gTextures["space-invaders"], gFrames["player"], WINDOW_WIDTH / 2 + 56, 16)
+  love.graphics.print(healthText:upper(), WINDOW_WIDTH / 2 + 96, 16)
 end
