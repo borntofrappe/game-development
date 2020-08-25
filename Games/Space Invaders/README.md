@@ -2,11 +2,9 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] show lives next to the score
+- [x] Add gameover state (press g from the play state)
 
-- [x] play sound when aliens move vertically
-
-- [x] update audio files
+- [x] stretch the audio for the explosion
 
 - [ ] Fix the horizontal scroll so that the aliens change direction only when the first/last _available_ column approaches the window's edges. In the current version, the game considered a bounce with the first/last column regardless of whether the aliens in said column existed or not.
 

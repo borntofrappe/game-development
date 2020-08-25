@@ -88,6 +88,12 @@ function PlayState:enter(params)
 end
 
 function PlayState:update(dt)
+  if love.keyboard.waspressed("g") then
+    Timer.clear()
+    gSounds["explosion"]:play()
+    gStateMachine:change("gameover")
+  end
+
   if love.keyboard.waspressed("escape") then
     Timer.clear()
     gStateMachine:change("title")

@@ -45,6 +45,9 @@ function love.load()
       end,
       ["score"] = function()
         return ScoreTableState()
+      end,
+      ["gameover"] = function()
+        return GameoverState()
       end
     }
   )
