@@ -1,5 +1,27 @@
 Recreate the popular game _Space Invaders_.
 
+## Roadmap
+
+- [ ] Fix the horizontal scroll so that the aliens change direction only when the first/last _available_ column approaches the window's edges. In the previous version, the game considered a bounce with the first/last column regardless of whether the aliens in said column existed or not.
+
+- [ ] Slow down the frequency with which the aliens move
+
+- [ ] Add sounds
+
+- [ ] Add score above the screen
+
+- [ ] Add score table state
+
+- [ ] Detect a loss when the aliens reach the bottom of the screen
+
+- [ ] Allow the aliens to fire back at random
+
+- [ ] Add lives and detect collision with the aliens' bullets
+
+- [ ] Add shields
+
+- [ ] Improve aliens AI to have the bullets fired in the vicinity of the player
+
 ## Design
 
 For the font, I decided to use the same font introduced in _Pong_.
@@ -48,9 +70,3 @@ Introduce the round state for a brief period of time, and always before the play
 ## Update 6 — pause
 
 Allow to pause the game by pressing enter.
-
-## Update 7 — fixes
-
-Fix the timer to have the aliens "catch up" when returning from the pause state.
-
-<!-- Fix the horizontal scroll so that the aliens change direction only when the first/last _available_ column approaches the window's edges. In the previous version, the game considered a bounce with the first/last column regardless of whether the aliens in said column existed or not. -->

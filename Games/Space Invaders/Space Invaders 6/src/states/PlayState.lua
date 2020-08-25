@@ -1,5 +1,8 @@
 PlayState = Class({__includes = BaseState})
 
+function PlayState:init()
+end
+
 function PlayState:enter(params)
   self.round = params.round
 
@@ -7,8 +10,23 @@ function PlayState:enter(params)
   self.bullet = params.bullet or nil
   self.rows = params.rows or self:createRows()
 
-  for k, row in pairs(self.rows) do
-    for j, alien in pairs(row) do
+  local x = self.rows[#self.rows][1].x
+
+  for k, row in ipairs(self.rows) do
+    for j, alien in ipairs(row) do
+      if alien.x ~= x + (j - 1) * (ALIEN_GAP_X + ALIEN_WIDTH) then
+        Timer.after(
+          0.1 * (#self.rows - (k + 1)),
+          function()
+            alien.x = x + (j - 1) * (ALIEN_GAP_X + ALIEN_WIDTH)
+          end
+        )
+      end
+    end
+  end
+
+  for k, row in ipairs(self.rows) do
+    for j, alien in ipairs(row) do
       Timer.after(
         0.1 * (#self.rows - (k + 1)),
         function()
@@ -21,8 +39,8 @@ function PlayState:enter(params)
               if k == 1 and j == 1 then
                 if alien.direction == 1 then
                   if alien.x >= WINDOW_WIDTH - #row * (ALIEN_WIDTH + 16) then
-                    for k, row in pairs(self.rows) do
-                      for j, alien in pairs(row) do
+                    for k, row in ipairs(self.rows) do
+                      for j, alien in ipairs(row) do
                         alien.direction = -1
                         Timer.after(
                           0.03 * (#self.rows - (k + 1)),
@@ -35,8 +53,8 @@ function PlayState:enter(params)
                   end
                 elseif alien.direction == -1 then
                   if alien.x <= 16 then
-                    for k, row in pairs(self.rows) do
-                      for j, alien in pairs(row) do
+                    for k, row in ipairs(self.rows) do
+                      for j, alien in ipairs(row) do
                         alien.direction = 1
                         Timer.after(
                           0.03 * (#self.rows - (k + 1)),
@@ -58,18 +76,19 @@ function PlayState:enter(params)
 end
 
 function PlayState:update(dt)
-  Timer.update(dt)
   if love.keyboard.waspressed("escape") then
     gStateMachine:change("title")
   end
+
+  Timer.update(dt)
 
   self.player:update(dt)
 
   if self.bullet then
     self.bullet:update(dt)
 
-    for k, row in pairs(self.rows) do
-      for j, alien in pairs(row) do
+    for k, row in ipairs(self.rows) do
+      for j, alien in ipairs(row) do
         if self.bullet and alien.inPlay and testAABB(alien, self.bullet) then
           alien.inPlay = false
           self.bullet = nil
@@ -115,10 +134,11 @@ function PlayState:render()
   if self.bullet then
     self.bullet:render()
   end
+
   self.player:render()
 
-  for k, row in pairs(self.rows) do
-    for j, alien in pairs(row) do
+  for k, row in ipairs(self.rows) do
+    for j, alien in ipairs(row) do
       alien:render()
     end
   end
@@ -146,8 +166,8 @@ end
 
 function PlayState:checkVictory()
   local hasWon = true
-  for k, row in pairs(self.rows) do
-    for j, alien in pairs(row) do
+  for k, row in ipairs(self.rows) do
+    for j, alien in ipairs(row) do
       if alien.inPlay then
         hasWon = false
         break
