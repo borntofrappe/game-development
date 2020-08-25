@@ -6,9 +6,9 @@ Recreate the popular game _Space Invaders_.
 
 - [ ] Slow down the frequency with which the aliens move
 
-- [ ] Add sounds
+- [x] Add sounds
 
-- [ ] Add score above the screen
+- [x] Add score above the screen
 
 - [ ] Add score table state
 
