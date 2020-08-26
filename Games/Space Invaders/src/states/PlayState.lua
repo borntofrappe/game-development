@@ -6,21 +6,21 @@ end
 function PlayState:enter(params)
   self.player = params.player or Player()
   self.bullet = params.bullet or nil
-  self.rows = params.rows or self:createRows()
+  self.aliens = params.aliens or self:createAliens()
 
   self.speed = params.speed or 1
   self.round = params.round
   self.score = params.score
   self.health = params.health
 
-  self:moveRows()
+  self:moveAliens()
 end
 
 function PlayState:update(dt)
   if love.keyboard.waspressed("s") then
     Timer.clear()
     self.speed = self.speed + 0.1
-    self:moveRows()
+    self:moveAliens()
   end
 
   if love.keyboard.waspressed("g") then
@@ -41,7 +41,7 @@ function PlayState:update(dt)
   if self.bullet then
     self.bullet:update(dt)
 
-    for k, row in ipairs(self.rows) do
+    for k, row in ipairs(self.aliens) do
       for j, alien in ipairs(row) do
         if self.bullet and alien.inPlay and testAABB(alien, self.bullet) then
           gSounds["hit"]:play()
@@ -61,6 +61,31 @@ function PlayState:update(dt)
               }
             )
           end
+
+          if alien.isFirst then
+            alien.isFirst = false
+            for column = alien.column + 1, COLUMNS do
+              for row = 1, ROWS do
+                if self.aliens[row][column].inPlay then
+                  self.aliens[row][column].isFirst = true
+                  break
+                end
+              end
+            end
+          end
+
+          if alien.isLast then
+            alien.isLast = false
+            for column = alien.column - 1, 1, -1 do
+              for row = 1, ROWS do
+                if self.aliens[row][column].inPlay then
+                  self.aliens[row][column].isLast = true
+                  break
+                end
+              end
+            end
+          end
+
           break
         end
       end
@@ -86,7 +111,7 @@ function PlayState:update(dt)
       {
         player = self.player,
         bullet = self.bullet,
-        rows = self.rows,
+        aliens = self.aliens,
         round = self.round,
         score = self.score,
         health = self.health
@@ -111,97 +136,98 @@ function PlayState:render()
 
   self.player:render()
 
-  for k, row in ipairs(self.rows) do
+  for k, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       alien:render()
     end
   end
 end
 
-function PlayState:createRows()
-  local rows = {}
-  local x = 16
-  local y = 76
+function PlayState:createAliens()
+  local aliens = {}
 
-  for row = 1, 5 do
-    x = 16
-    rows[row] = {}
-    local type = 3 - math.floor(row / 2)
-    for column = 1, 8 do
-      rows[row][column] = Alien(x, y, type)
-      x = x + ALIEN_GAP_X + ALIEN_WIDTH
+  for row = 1, ROWS do
+    aliens[row] = {}
+    for column = 1, COLUMNS do
+      local alien = Alien(row, column)
+      aliens[row][column] = alien
     end
-
-    y = y + ALIEN_GAP_Y + ALIEN_HEIGHT
   end
 
-  return rows
+  return aliens
 end
 
-function PlayState:moveRows()
-  local x = self.rows[#self.rows][1].x
+function PlayState:moveAliens()
+  local x = self.aliens[#self.aliens][1].x
+  local y = self.aliens[#self.aliens][1].y
 
   local delay = 0.1 / self.speed
   local interval = 0.6 / self.speed
   local stagger = 0.05 / self.speed
 
-  for k, row in ipairs(self.rows) do
+  for k, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
-      if alien.x ~= x + (j - 1) * (ALIEN_GAP_X + ALIEN_WIDTH) then
+      if
+        alien.x ~= x + (j - 1) * (ALIEN_GAP_X + ALIEN_WIDTH) or
+          alien.y ~= y - (#self.aliens - k) * (ALIEN_GAP_Y + ALIEN_HEIGHT)
+       then
         if k == 1 then
           gSounds["move"]:play()
         end
         Timer.after(
-          delay * (#self.rows - (k + 1)),
+          delay * (#self.aliens - (k + 1)),
           function()
             alien.x = x + (j - 1) * (ALIEN_GAP_X + ALIEN_WIDTH)
+            alien.y = y - (#self.aliens - k) * (ALIEN_GAP_Y + ALIEN_HEIGHT)
           end
         )
       end
     end
   end
 
-  for k, row in ipairs(self.rows) do
+  for k, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       Timer.after(
-        delay * (#self.rows - (k + 1)),
+        delay * (#self.aliens - (k + 1)),
         function()
           Timer.every(
             interval,
             function()
-              if k == #self.rows then
+              if k == #self.aliens then
                 gSounds["move"]:play()
               end
               alien.x = alien.x + alien.direction * alien.dx
               alien.variant = alien.variant == 1 and 2 or 1
 
-              if k == 1 and j == 1 then
-                if alien.direction == 1 then
-                  if alien.x >= WINDOW_WIDTH - #row * (ALIEN_WIDTH + ALIEN_GAP_X) then
+              if alien.direction == 1 then
+                if alien.isLast then
+                  if alien.x >= WINDOW_WIDTH - (ALIEN_WIDTH + 16) then
                     gSounds["move"]:stop()
                     gSounds["move"]:play()
-                    for k, row in ipairs(self.rows) do
+                    for k, row in ipairs(self.aliens) do
                       for j, alien in ipairs(row) do
-                        alien.direction = -1
                         Timer.after(
-                          stagger * (#self.rows - (k + 1)),
+                          stagger * (#self.aliens - (k + 1)),
                           function()
+                            alien.direction = -1
                             alien.y = alien.y + alien.dy
                           end
                         )
                       end
                     end
                   end
-                elseif alien.direction == -1 then
+                end
+              elseif alien.direction == -1 then
+                if alien.isFirst then
                   if alien.x <= 16 then
                     gSounds["move"]:stop()
                     gSounds["move"]:play()
-                    for k, row in ipairs(self.rows) do
+                    for k, row in ipairs(self.aliens) do
                       for j, alien in ipairs(row) do
-                        alien.direction = 1
                         Timer.after(
-                          stagger * (#self.rows - (k + 1)),
+                          stagger * (#self.aliens - (k + 1)),
                           function()
+                            alien.direction = 1
                             alien.y = alien.y + alien.dy
                           end
                         )
@@ -220,7 +246,7 @@ end
 
 function PlayState:checkVictory()
   local hasWon = true
-  for k, row in ipairs(self.rows) do
+  for k, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       if alien.inPlay then
         hasWon = false

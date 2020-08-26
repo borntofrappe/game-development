@@ -7,7 +7,7 @@ end
 function PauseState:enter(params)
   self.player = params.player
   self.bullet = params.bullet
-  self.rows = params.rows
+  self.aliens = params.aliens
   self.speed = params.speed
   self.round = params.round
   self.score = params.score
@@ -21,7 +21,7 @@ function PauseState:update(dt)
       {
         player = self.player,
         bullet = self.bullet,
-        rows = self.rows,
+        aliens = self.aliens,
         speed = self.speed,
         round = self.round,
         score = self.score,
@@ -49,7 +49,7 @@ function PauseState:render()
   end
   self.player:render()
 
-  for k, row in pairs(self.rows) do
+  for k, row in pairs(self.aliens) do
     for j, alien in pairs(row) do
       alien:render()
     end
