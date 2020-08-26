@@ -1,18 +1,17 @@
 TitleScreenState = Class({__includes = BaseState})
 
 function TitleScreenState:init()
-  self.title = {
+  self.titleText = {
     ["text"] = "Space\nInvaders",
     ["y"] = WINDOW_HEIGHT
   }
 
-  self.hiScore = 1000
-  self.record = {
-    ["text"] = "Hi-Score:     " .. self.hiScore,
+  self.recordText = {
+    ["text"] = "Hi-Score:     " .. gRecord,
     ["alpha"] = 0
   }
 
-  self.instruction = {
+  self.instructionText = {
     ["text"] = "Push start",
     ["alpha"] = 0
   }
@@ -22,24 +21,24 @@ function TitleScreenState:init()
     Timer.tween(
     1.5,
     {
-      [self.title] = {y = WINDOW_HEIGHT / 2 - 72}
+      [self.titleText] = {y = WINDOW_HEIGHT / 2 - 72}
     }
   ):finish(
     function()
       Timer.after(
         0.5,
         function()
-          self.instruction.alpha = 1
-          self.record.alpha = 1
+          self.instructionText.alpha = 1
+          self.recordText.alpha = 1
           self.isTweening = false
           Timer.every(
             2,
             function()
-              self.instruction.alpha = 0
+              self.instructionText.alpha = 0
               Timer.after(
                 1,
                 function()
-                  self.instruction.alpha = 1
+                  self.instructionText.alpha = 1
                 end
               )
             end
@@ -76,12 +75,12 @@ end
 function TitleScreenState:render()
   love.graphics.setFont(gFonts["big"])
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.printf(self.title.text:upper(), 0, self.title.y, WINDOW_WIDTH, "center")
+  love.graphics.printf(self.titleText.text:upper(), 0, self.titleText.y, WINDOW_WIDTH, "center")
 
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.setColor(36 / 255, 191 / 255, 97 / 255, self.record.alpha)
-  love.graphics.printf(self.record.text:upper(), 0, 8, WINDOW_WIDTH, "center")
+  love.graphics.setColor(36 / 255, 191 / 255, 97 / 255, self.recordText.alpha)
+  love.graphics.printf(self.recordText.text:upper(), 0, 8, WINDOW_WIDTH, "center")
 
-  love.graphics.setColor(252 / 255, 197 / 255, 34 / 255, self.instruction.alpha)
-  love.graphics.printf(self.instruction.text:upper(), 0, WINDOW_HEIGHT / 2 + 64, WINDOW_WIDTH, "center")
+  love.graphics.setColor(252 / 255, 197 / 255, 34 / 255, self.instructionText.alpha)
+  love.graphics.printf(self.instructionText.text:upper(), 0, WINDOW_HEIGHT / 2 + 64, WINDOW_WIDTH, "center")
 end

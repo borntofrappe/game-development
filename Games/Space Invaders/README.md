@@ -2,11 +2,9 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] change the speed as `n` aliens are destroyed — not when pressing s
+- [x] add record state
 
-- [x] detect a loss when the aliens reach the height of the player — not when pressing g
-
-- [x] reduce vertical dimension
+- [x] register score in title screen
 
 - [ ] Allow the aliens to fire back at random
 

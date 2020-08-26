@@ -2,11 +2,18 @@ GameoverState = Class({__includes = BaseState})
 
 function GameoverState:init()
   self.text = "Gameover"
+end
 
+function GameoverState:enter(params)
   Timer.after(
-    5,
+    4,
     function()
-      gStateMachine:change("title")
+      if params.score > gRecord then
+        gRecord = params.score
+        gStateMachine:change("record")
+      else
+        gStateMachine:change("title")
+      end
     end
   )
 end

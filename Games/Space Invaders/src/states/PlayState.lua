@@ -22,7 +22,12 @@ function PlayState:update(dt)
   if self.gameover then
     Timer.clear()
     gSounds["explosion"]:play()
-    gStateMachine:change("gameover")
+    gStateMachine:change(
+      "gameover",
+      {
+        score = self.score
+      }
+    )
   else
     -- developer options, just to test how different features
     -- increase speed
@@ -38,6 +43,16 @@ function PlayState:update(dt)
       if self.health == 0 then
         self.gameover = true
       end
+    end
+
+    -- immediate gameover
+    if love.keyboard.waspressed("g") then
+      self.gameover = true
+    end
+
+    -- add 1k points
+    if love.keyboard.waspressed("p") then
+      self.score = self.score + 1000
     end
 
     if love.keyboard.waspressed("escape") then

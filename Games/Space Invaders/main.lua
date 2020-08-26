@@ -4,6 +4,8 @@ function love.load()
   love.window.setTitle("Space Invaders")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
+  gRecord = 1000
+
   gFonts = {
     ["big"] = love.graphics.newFont("res/fonts/font.ttf", 72),
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
@@ -48,6 +50,9 @@ function love.load()
       end,
       ["gameover"] = function()
         return GameoverState()
+      end,
+      ["record"] = function()
+        return RecordState()
       end
     }
   )
