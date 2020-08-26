@@ -2,9 +2,11 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] fix horizontal and vertical position when returning from the pause state. Previously, the code would consider only the horizontal dimension
+- [x] change the speed as `n` aliens are destroyed — not when pressing s
 
-- [x] Fix the horizontal scroll so that the aliens change direction only when the first/last _available_ column approaches the window's edges. In the current version, the game considered a bounce with the first/last column regardless of whether the aliens in said column existed or not
+- [x] detect a loss when the aliens reach the height of the player — not when pressing g
+
+- [x] reduce vertical dimension
 
 - [ ] Allow the aliens to fire back at random
 
@@ -13,12 +15,6 @@ Recreate the popular game _Space Invaders_.
 - [ ] Add shields
 
 - [ ] Improve aliens AI to have the bullets fired in the vicinity of the player
-
-- [ ] gameplay
-
-  - [ ] change the speed as `n` aliens are destroyed — not when pressing s
-
-  - [ ] detect a loss when the aliens reach the height of the player — not when pressing g
 
 ## Design
 

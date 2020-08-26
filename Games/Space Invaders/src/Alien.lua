@@ -18,8 +18,9 @@ function Alien:init(row, column)
   self.dx = ALIEN_JUMP_X
   self.dy = ALIEN_JUMP_Y
 
-  self.isFirst = self.row == 1 and self.column == 1
-  self.isLast = self.row == 1 and self.column == COLUMNS
+  self.bounceFirst = self.row == 1 and self.column == 1
+  self.bounceLast = self.row == 1 and self.column == COLUMNS
+  self.isLast = self.row == ROWS and self.column == column
 end
 
 function Alien:render()
