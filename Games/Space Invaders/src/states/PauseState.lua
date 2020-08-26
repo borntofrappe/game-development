@@ -8,6 +8,7 @@ function PauseState:enter(params)
   self.player = params.player
   self.bullet = params.bullet
   self.rows = params.rows
+  self.speed = params.speed
   self.round = params.round
   self.score = params.score
   self.health = params.health
@@ -21,6 +22,7 @@ function PauseState:update(dt)
         player = self.player,
         bullet = self.bullet,
         rows = self.rows,
+        speed = self.speed,
         round = self.round,
         score = self.score,
         health = self.health
