@@ -18,7 +18,9 @@ function love.load()
   gFrames = {
     ["player"] = GenerateQuadPlayer(gTextures["space-invaders"]),
     ["aliens"] = GenerateQuadsAliens(gTextures["space-invaders"]),
-    ["bullet"] = GenerateQuadBullet(gTextures["space-invaders"])
+    ["bullet"] = GenerateQuadBullet(gTextures["space-invaders"]),
+    ["bullet-particles"] = GenerateQuadBulletParticles(gTextures["space-invaders"]),
+    ["player-particles"] = GenerateQuadPlayerParticles(gTextures["space-invaders"])
   }
 
   gSounds = {

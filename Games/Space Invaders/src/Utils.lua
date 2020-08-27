@@ -31,3 +31,33 @@ function GenerateQuadBullet(atlas)
   local height = 15
   return love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
 end
+
+function GenerateQuadBulletParticles(atlas)
+  local quads = {}
+  local x = 48
+  local y = 0
+  local width = 24
+  local height = 21
+
+  for i = 1, 3 do
+    quads[i] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+    y = y + height
+  end
+
+  return quads
+end
+
+function GenerateQuadPlayerParticles(atlas)
+  local quads = {}
+  local x = 48
+  local y = 63
+  local width = 30
+  local height = 12
+
+  for i = 1, 2 do
+    quads[i] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+    y = y + height
+  end
+
+  return quads
+end
