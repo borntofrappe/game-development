@@ -7,6 +7,7 @@ function Player:init()
   self.y = WINDOW_HEIGHT - self.height - 8
 
   self.dx = 0
+  self.inPlay = true
 end
 
 function Player:update(dt)
@@ -22,5 +23,7 @@ function Player:update(dt)
 end
 
 function Player:render()
-  love.graphics.draw(gTextures["space-invaders"], gFrames["player"], self.x, self.y)
+  if self.inPlay then
+    love.graphics.draw(gTextures["space-invaders"], gFrames["player"], self.x, self.y)
+  end
 end

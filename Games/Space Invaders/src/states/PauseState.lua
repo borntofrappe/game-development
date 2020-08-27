@@ -59,7 +59,7 @@ function PauseState:render()
   end
 
   for i, particle in ipairs(self.particles) do
-    love.graphics.draw(gTextures["space-invaders"], gFrames["bullet-particles"][particle.type], particle.x, particle.y)
+    love.graphics.draw(gTextures["space-invaders"], gFrames["particles"][particle.type], particle.x, particle.y)
   end
 
   love.graphics.setColor(0, 0, 0, 1)

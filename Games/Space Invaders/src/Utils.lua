@@ -32,7 +32,7 @@ function GenerateQuadBullet(atlas)
   return love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
 end
 
-function GenerateQuadBulletParticles(atlas)
+function GenerateQuadsParticles(atlas)
   local quads = {}
   local x = 48
   local y = 0
@@ -44,17 +44,12 @@ function GenerateQuadBulletParticles(atlas)
     y = y + height
   end
 
-  return quads
-end
+  x = 39
+  y = 63
+  width = 30
+  height = 18
 
-function GenerateQuadPlayerParticles(atlas)
-  local quads = {}
-  local x = 48
-  local y = 63
-  local width = 30
-  local height = 12
-
-  for i = 1, 2 do
+  for i = 4, 5 do
     quads[i] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
     y = y + height
   end

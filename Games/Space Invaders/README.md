@@ -2,9 +2,11 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] update constants
+- [x] show player particles before the gameover state. Don't jump to the state immediately as the aliens collide with the bottom level
 
-- [x] fix text alignment
+- [x] include particles in the same quads table
+
+- [x] fix graphic matching the height of the last two particles
 
 - [ ] allow the aliens to fire back at random
 
@@ -20,11 +22,11 @@ For the font, I decided to use the same font introduced in _Pong_.
 
 For the graphics, I used GIMP to create the spritesheet you find in the "res" folder. The following table works as a reference for the size of the individual shapes, and supports the logic described in "Utils.lua".
 
-| Visual           | Width | Height |
-| ---------------- | ----- | ------ |
-| Alien            | 24    | 21     |
-| Bonus Alien      | 39    | 18     |
-| Player           | 27    | 21     |
-| Bullet           | 3     | 15     |
-| Particle bullet  | 24    | 21     |
-| Particles player | 30    | 12     |
+| Visual               | Width | Height |
+| -------------------- | ----- | ------ |
+| Alien                | 24    | 21     |
+| Bonus Alien          | 39    | 18     |
+| Player               | 27    | 21     |
+| Bullet               | 3     | 15     |
+| Particles (type 1-3) | 24    | 21     |
+| Particles (type 4-5) | 30    | 18     |

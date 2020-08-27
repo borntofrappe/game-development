@@ -2,6 +2,7 @@ PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
   self.gameover = false
+  self.isTweening = false
 end
 
 function PlayState:enter(params)
@@ -22,14 +23,40 @@ end
 
 function PlayState:update(dt)
   if self.gameover then
-    Timer.clear()
-    gSounds["explosion"]:play()
-    gStateMachine:change(
-      "gameover",
-      {
-        score = self.score
+    if not self.isTweening then
+      Timer.clear()
+      self.isTweening = true
+      self.player.inPlay = false
+
+      local i = #self.particles + 1
+      local types = {4, 5}
+      self.particles[i] = {
+        x = self.player.x + self.player.width / 2 - PLAYER_PARTICLES_WIDTH / 2,
+        y = self.player.y + self.player.height / 2 - PLAYER_PARTICLES_HEIGHT / 2,
+        type = types[1]
       }
-    )
+
+      gSounds["explosion"]:play()
+      Timer.every(
+        0.5,
+        function()
+          self.particles[i].type = self.particles[i].type == types[1] and types[2] or types[1]
+        end
+      )
+      Timer.after(
+        2.5,
+        function()
+          gStateMachine:change(
+            "gameover",
+            {
+              score = self.score
+            }
+          )
+        end
+      )
+    end
+
+    Timer.update(dt)
   else
     -- developer options, just to test how different features
     -- increase speed
@@ -224,7 +251,7 @@ function PlayState:render()
   end
 
   for i, particle in ipairs(self.particles) do
-    love.graphics.draw(gTextures["space-invaders"], gFrames["bullet-particles"][particle.type], particle.x, particle.y)
+    love.graphics.draw(gTextures["space-invaders"], gFrames["particles"][particle.type], particle.x, particle.y)
   end
 end
 
