@@ -21,7 +21,7 @@ function TitleScreenState:init()
     Timer.tween(
     1.5,
     {
-      [self.titleText] = {y = WINDOW_HEIGHT / 2 - 72}
+      [self.titleText] = {y = WINDOW_HEIGHT / 2 - 88}
     }
   ):finish(
     function()
@@ -82,5 +82,5 @@ function TitleScreenState:render()
   love.graphics.printf(self.recordText.text:upper(), 0, 8, WINDOW_WIDTH, "center")
 
   love.graphics.setColor(252 / 255, 197 / 255, 34 / 255, self.instructionText.alpha)
-  love.graphics.printf(self.instructionText.text:upper(), 0, WINDOW_HEIGHT / 2 + 64, WINDOW_WIDTH, "center")
+  love.graphics.printf(self.instructionText.text:upper(), 0, WINDOW_HEIGHT * 2 / 3 - 24, WINDOW_WIDTH, "center")
 end

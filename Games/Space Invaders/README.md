@@ -2,13 +2,9 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] show particles
+- [x] update constants
 
-  - [x] top of the window
-
-  - [x] collision with alien
-
-- [x] use `i` with `ipairs` to signal the index — not the key `k`
+- [x] fix text alignment
 
 - [ ] allow the aliens to fire back at random
 

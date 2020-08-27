@@ -79,6 +79,7 @@ end
 
 function love.draw()
   gStateMachine:render()
+  -- showGrid()
 end
 
 function testAABB(box1, box2)
@@ -105,9 +106,22 @@ function showInfo(info)
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(1, 1, 1, 1)
 
-  love.graphics.printf(scoreText:upper(), 0, 16, WINDOW_WIDTH / 2 - 8, "right")
+  love.graphics.printf(scoreText:upper(), 0, 16, WINDOW_WIDTH / 2, "right")
 
   local healthText = "= " .. health
-  love.graphics.draw(gTextures["space-invaders"], gFrames["player"], WINDOW_WIDTH / 2 + 56, 16)
-  love.graphics.print(healthText:upper(), WINDOW_WIDTH / 2 + 96, 16)
+  love.graphics.draw(gTextures["space-invaders"], gFrames["player"], WINDOW_WIDTH / 8 * 5, 16)
+  love.graphics.print(healthText:upper(), WINDOW_WIDTH / 8 * 5 + 46, 16)
+end
+
+function showGrid()
+  love.graphics.setColor(1, 1, 1, 1)
+  local cols = 8
+  for x = 1, cols do
+    love.graphics.rectangle("fill", WINDOW_WIDTH / cols * x - 1, 0, 2, WINDOW_HEIGHT)
+  end
+
+  local rows = 6
+  for y = 1, rows do
+    love.graphics.rectangle("fill", 0, WINDOW_HEIGHT / rows * y - 1, WINDOW_WIDTH, 2)
+  end
 end

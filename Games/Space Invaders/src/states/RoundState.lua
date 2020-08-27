@@ -30,5 +30,5 @@ end
 function RoundState:render()
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(36 / 255, 191 / 255, 97 / 255, 1)
-  love.graphics.printf(self.roundText:upper(), 0, WINDOW_HEIGHT / 2 - 30, WINDOW_WIDTH, "center")
+  love.graphics.printf(self.roundText:upper(), 0, WINDOW_HEIGHT / 2 - 36, WINDOW_WIDTH, "center")
 end
