@@ -9,6 +9,7 @@ function PlayState:enter(params)
   self.player = params.player or Player()
   self.bullet = params.bullet or nil
   self.aliens = params.aliens or self:createAliens()
+  self.bullets = params.bullets or {}
 
   self.speed = params.speed or 1
   self.round = params.round
@@ -113,9 +114,9 @@ function PlayState:update(dt)
               self:moveAliens()
             end
 
-            local k = #self.particles + 1
+            local i = #self.particles + 1
 
-            self.particles[k] = {
+            self.particles[i] = {
               x = alien.x,
               y = alien.y,
               type = 1
@@ -124,7 +125,7 @@ function PlayState:update(dt)
             Timer.after(
               0.25,
               function()
-                self.particles[k] = nil
+                self.particles[i] = nil
               end
             )
 
@@ -139,6 +140,15 @@ function PlayState:update(dt)
                   health = self.health
                 }
               )
+            end
+
+            if alien.lastRow then
+              alien.lastRow = false
+              for row = alien.row - 1, 1, -1 do
+                if self.aliens[row][alien.column].inPlay then
+                  self.aliens[row][alien.column].lastRow = true
+                end
+              end
             end
 
             if alien.bounceFirst then
@@ -184,9 +194,9 @@ function PlayState:update(dt)
     end
 
     if self.bullet and self.bullet.y < 0 then
-      local k = #self.particles + 1
-      self.particles[k] = {
-        x = self.bullet.x + BULLET_WIDTH - BULLET_PARTICLES_WIDTH / 2,
+      local i = #self.particles + 1
+      self.particles[i] = {
+        x = self.bullet.x + self.bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
         y = 0,
         type = 2
       }
@@ -194,17 +204,39 @@ function PlayState:update(dt)
       Timer.after(
         0.25,
         function()
-          self.particles[k] = nil
+          self.particles[i] = nil
         end
       )
 
       self.bullet = nil
     end
 
+    for i, bullet in ipairs(self.bullets) do
+      bullet:update(dt)
+
+      if bullet.y > WINDOW_HEIGHT - bullet.height then
+        local i = #self.particles + 1
+        self.particles[i] = {
+          x = bullet.x + bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
+          y = WINDOW_HEIGHT - BULLET_PARTICLES_HEIGHT,
+          type = 3
+        }
+
+        Timer.after(
+          0.25,
+          function()
+            self.particles[i] = nil
+          end
+        )
+
+        table.remove(self.bullets, i)
+      end
+    end
+
     if love.keyboard.waspressed("up") or love.keyboard.waspressed("space") then
       if not self.bullet then
         gSounds["shoot"]:play()
-        self.bullet = Bullet(self.player.x + self.player.width / 2, self.player.y)
+        self.bullet = Bullet(self.player.x + self.player.width / 2, self.player.y, -1)
       end
     end
 
@@ -217,6 +249,7 @@ function PlayState:update(dt)
           player = self.player,
           bullet = self.bullet,
           aliens = self.aliens,
+          bullets = self.bullets,
           particles = self.particles,
           round = self.round,
           score = self.score,
@@ -248,6 +281,10 @@ function PlayState:render()
     for j, alien in ipairs(row) do
       alien:render()
     end
+  end
+
+  for i, bullet in ipairs(self.bullets) do
+    bullet:render()
   end
 
   for i, particle in ipairs(self.particles) do
@@ -310,6 +347,11 @@ function PlayState:moveAliens()
               end
               alien.x = alien.x + alien.direction * alien.dx
               alien.variant = alien.variant == 1 and 2 or 1
+
+              if alien.lastRow and math.random(20) == 1 then
+                local i = #self.bullets + 1
+                self.bullets[i] = Bullet(alien.x + alien.width / 2, alien.y + alien.height, 0.5)
+              end
 
               if alien.direction == 1 then
                 if alien.bounceLast then

@@ -2,15 +2,17 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] show player particles before the gameover state. Don't jump to the state immediately as the aliens collide with the bottom level
+- [x] allow the aliens to fire back at random
 
-- [x] include particles in the same quads table
-
-- [x] fix graphic matching the height of the last two particles
-
-- [ ] allow the aliens to fire back at random
+- [ ] fix how the bullets and particles are added/removed
 
 - [ ] detect collision with the aliens' bullets
+
+  - [ ] show particles animation
+
+  - [ ] round state (health > 0)
+
+  - [ ] gameover state (health == 0)
 
 - [ ] add shields
 
