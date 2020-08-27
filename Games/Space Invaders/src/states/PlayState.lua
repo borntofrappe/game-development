@@ -15,6 +15,8 @@ function PlayState:enter(params)
   self.health = params.health
   self.hits = params.hits or 0
 
+  self.particles = {}
+
   self:moveAliens()
 end
 
@@ -67,20 +69,37 @@ function PlayState:update(dt)
     if self.bullet then
       self.bullet:update(dt)
 
-      for k, row in ipairs(self.aliens) do
+      for i, row in ipairs(self.aliens) do
         for j, alien in ipairs(row) do
           if self.bullet and alien.inPlay and testAABB(alien, self.bullet) then
             gSounds["hit"]:play()
             alien.inPlay = false
+
             self.bullet = nil
             self.score = self.score + 10 * alien.type
             self.hits = self.hits + 1
+
             if self.hits >= 8 then
               self.hits = 0
               self.speed = self.speed + 0.15
               Timer.clear()
               self:moveAliens()
             end
+
+            local k = #self.particles + 1
+
+            self.particles[k] = {
+              x = alien.x,
+              y = alien.y,
+              type = 1
+            }
+
+            Timer.after(
+              0.25,
+              function()
+                self.particles[k] = nil
+              end
+            )
 
             if self:checkVictory() then
               Timer.clear()
@@ -137,7 +156,21 @@ function PlayState:update(dt)
       end
     end
 
-    if self.bullet and self.bullet.y < -self.bullet.height then
+    if self.bullet and self.bullet.y < 0 then
+      local k = #self.particles + 1
+      self.particles[k] = {
+        x = self.bullet.x + BULLET_WIDTH - BULLET_PARTICLES_WIDTH / 2,
+        y = 0,
+        type = 2
+      }
+
+      Timer.after(
+        0.25,
+        function()
+          self.particles[k] = nil
+        end
+      )
+
       self.bullet = nil
     end
 
@@ -157,6 +190,7 @@ function PlayState:update(dt)
           player = self.player,
           bullet = self.bullet,
           aliens = self.aliens,
+          particles = self.particles,
           round = self.round,
           score = self.score,
           health = self.health,
@@ -183,10 +217,14 @@ function PlayState:render()
 
   self.player:render()
 
-  for k, row in ipairs(self.aliens) do
+  for i, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       alien:render()
     end
+  end
+
+  for i, particle in ipairs(self.particles) do
+    love.graphics.draw(gTextures["space-invaders"], gFrames["bullet-particles"][particle.type], particle.x, particle.y)
   end
 end
 
@@ -212,30 +250,30 @@ function PlayState:moveAliens()
   local interval = 0.6 / self.speed
   local stagger = 0.04 / self.speed
 
-  for k, row in ipairs(self.aliens) do
+  for i, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       if
         alien.x ~= x + (j - 1) * (ALIEN_GAP_X + ALIEN_WIDTH) or
-          alien.y ~= y - (#self.aliens - k) * (ALIEN_GAP_Y + ALIEN_HEIGHT)
+          alien.y ~= y - (#self.aliens - i) * (ALIEN_GAP_Y + ALIEN_HEIGHT)
        then
         if alien.isLast then
           gSounds["move"]:play()
         end
         Timer.after(
-          delay * (#self.aliens - (k + 1)),
+          delay * (#self.aliens - (i + 1)),
           function()
             alien.x = x + (j - 1) * (ALIEN_GAP_X + ALIEN_WIDTH)
-            alien.y = y - (#self.aliens - k) * (ALIEN_GAP_Y + ALIEN_HEIGHT)
+            alien.y = y - (#self.aliens - i) * (ALIEN_GAP_Y + ALIEN_HEIGHT)
           end
         )
       end
     end
   end
 
-  for k, row in ipairs(self.aliens) do
+  for i, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       Timer.after(
-        delay * (#self.aliens - (k + 1)),
+        delay * (#self.aliens - (i + 1)),
         function()
           Timer.every(
             interval,
@@ -251,10 +289,10 @@ function PlayState:moveAliens()
                   if alien.x >= WINDOW_WIDTH - (ALIEN_WIDTH + 16) then
                     gSounds["move"]:stop()
                     gSounds["move"]:play()
-                    for k, row in ipairs(self.aliens) do
+                    for i, row in ipairs(self.aliens) do
                       for j, alien in ipairs(row) do
                         Timer.after(
-                          stagger * (#self.aliens - (k + 1)),
+                          stagger * (#self.aliens - (i + 1)),
                           function()
                             alien.direction = -1
                             alien.y = alien.y + alien.dy
@@ -272,10 +310,10 @@ function PlayState:moveAliens()
                   if alien.x <= 16 then
                     gSounds["move"]:stop()
                     gSounds["move"]:play()
-                    for k, row in ipairs(self.aliens) do
+                    for i, row in ipairs(self.aliens) do
                       for j, alien in ipairs(row) do
                         Timer.after(
-                          stagger * (#self.aliens - (k + 1)),
+                          stagger * (#self.aliens - (i + 1)),
                           function()
                             alien.direction = 1
                             alien.y = alien.y + alien.dy
@@ -299,7 +337,7 @@ end
 
 function PlayState:checkVictory()
   local hasWon = true
-  for k, row in ipairs(self.aliens) do
+  for i, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       if alien.inPlay then
         hasWon = false

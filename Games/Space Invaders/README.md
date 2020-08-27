@@ -2,9 +2,13 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] add particles in the spritesheet
+- [x] show particles
 
-- [x] update utils to provide the quads for the particles
+  - [x] top of the window
+
+  - [x] collision with alien
+
+- [x] use `i` with `ipairs` to signal the index — not the key `k`
 
 - [ ] allow the aliens to fire back at random
 
@@ -20,13 +24,11 @@ For the font, I decided to use the same font introduced in _Pong_.
 
 For the graphics, I used GIMP to create the spritesheet you find in the "res" folder. The following table works as a reference for the size of the individual shapes, and supports the logic described in "Utils.lua".
 
-| Visual             | Width | Height |
-| ------------------ | ----- | ------ |
-| Alien              | 24    | 21     |
-| Bonus Alien        | 39    | 18     |
-| Player             | 27    | 21     |
-| Projectile         | 3     | 15     |
-| Particle collision | 24    | 21     |
-| Particle top       | 24    | 21     |
-| Particle bottom    | 24    | 21     |
-| Particles player   | 30    | 12     |
+| Visual           | Width | Height |
+| ---------------- | ----- | ------ |
+| Alien            | 24    | 21     |
+| Bonus Alien      | 39    | 18     |
+| Player           | 27    | 21     |
+| Bullet           | 3     | 15     |
+| Particle bullet  | 24    | 21     |
+| Particles player | 30    | 12     |

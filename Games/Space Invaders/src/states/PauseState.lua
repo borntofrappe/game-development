@@ -8,6 +8,7 @@ function PauseState:enter(params)
   self.player = params.player
   self.bullet = params.bullet
   self.aliens = params.aliens
+  self.particles = params.particles
   self.speed = params.speed
   self.round = params.round
   self.score = params.score
@@ -51,10 +52,14 @@ function PauseState:render()
   end
   self.player:render()
 
-  for k, row in pairs(self.aliens) do
-    for j, alien in pairs(row) do
+  for i, row in ipairs(self.aliens) do
+    for j, alien in ipairs(row) do
       alien:render()
     end
+  end
+
+  for i, particle in ipairs(self.particles) do
+    love.graphics.draw(gTextures["space-invaders"], gFrames["bullet-particles"][particle.type], particle.x, particle.y)
   end
 
   love.graphics.setColor(0, 0, 0, 1)
