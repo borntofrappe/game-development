@@ -67,7 +67,7 @@ function TitleScreenState:update(dt)
     if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
       Timer.clear()
       gSounds["menu"]:play()
-      gStateMachine:change("round")
+      gStateMachine:change("round", {})
     end
   end
 end

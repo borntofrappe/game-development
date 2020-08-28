@@ -2,19 +2,13 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] fix lastRow bug — only the aliens in the last row should fire a bullet
+- [x] move logic initializing the game in the round state
 
-- [x] cap at `x` the number of bullets that aliens are able to shoot
+- [x] pass the information related to the aliens and player from the play state to the round state
 
-- [x] fix how the bullets and particles are added/removed to the table
+- [ ] add hit state, to dispatch either to the round or gameover state
 
 - [ ] detect collision with the aliens' bullets
-
-  - [ ] show particles animation
-
-  - [ ] round state (health > 0)
-
-  - [ ] gameover state (health == 0)
 
 - [ ] add shields
 

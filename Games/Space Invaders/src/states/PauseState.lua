@@ -10,13 +10,13 @@ function PauseState:enter(params)
   self.aliens = params.aliens
   self.bullets = params.bullets
 
-  self.particles = params.particles
-
-  self.speed = params.speed
   self.round = params.round
   self.score = params.score
   self.health = params.health
   self.hits = params.hits
+  self.speed = params.speed
+
+  self.particles = params.particles
 end
 
 function PauseState:update(dt)
@@ -28,11 +28,11 @@ function PauseState:update(dt)
         bullet = self.bullet,
         aliens = self.aliens,
         bullets = self.bullets,
-        speed = self.speed,
         round = self.round,
         score = self.score,
         health = self.health,
-        hits = self.hits
+        hits = self.hits,
+        speed = self.speed
       }
     )
   end

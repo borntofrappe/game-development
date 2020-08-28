@@ -6,16 +6,16 @@ function PlayState:init()
 end
 
 function PlayState:enter(params)
-  self.player = params.player or Player()
-  self.bullet = params.bullet or nil
-  self.aliens = params.aliens or self:createAliens()
-  self.bullets = params.bullets or {}
+  self.player = params.player
+  self.bullet = params.bullet
+  self.aliens = params.aliens
+  self.bullets = params.bullets
 
-  self.speed = params.speed or 1
   self.round = params.round
   self.score = params.score
   self.health = params.health
-  self.hits = params.hits or 0
+  self.hits = params.hits
+  self.speed = params.speed
 
   self.particles = {}
 
@@ -247,11 +247,12 @@ function PlayState:update(dt)
           bullet = self.bullet,
           aliens = self.aliens,
           bullets = self.bullets,
-          particles = self.particles,
           round = self.round,
           score = self.score,
           health = self.health,
-          hits = self.hits
+          hits = self.hits,
+          speed = self.speed,
+          particles = self.particles
         }
       )
     end
@@ -287,20 +288,6 @@ function PlayState:render()
   for i, particle in ipairs(self.particles) do
     love.graphics.draw(gTextures["space-invaders"], gFrames["particles"][particle.type], particle.x, particle.y)
   end
-end
-
-function PlayState:createAliens()
-  local aliens = {}
-
-  for row = 1, ROWS do
-    aliens[row] = {}
-    for column = 1, COLUMNS do
-      local alien = Alien(row, column)
-      aliens[row][column] = alien
-    end
-  end
-
-  return aliens
 end
 
 function PlayState:moveAliens()
