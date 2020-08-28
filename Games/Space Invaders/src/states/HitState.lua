@@ -50,9 +50,7 @@ function HitState:enter(params)
           "round",
           {
             player = self.player,
-            bullet = self.bullet,
             aliens = self.aliens,
-            bullets = self.bullets,
             round = self.round,
             score = self.score,
             health = self.health - 1,

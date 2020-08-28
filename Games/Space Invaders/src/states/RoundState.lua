@@ -8,7 +8,7 @@ function RoundState:enter(params)
 
   self.round = params.round or 1
   self.score = params.score or 0
-  self.health = params.health or 3
+  self.health = params.health or 2
   self.hits = params.hits or 0
   self.speed = params.speed or 1
 

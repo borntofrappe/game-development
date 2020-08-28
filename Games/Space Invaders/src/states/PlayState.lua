@@ -97,6 +97,7 @@ function PlayState:update(dt)
           self.hits = self.hits + 1
 
           if self.hits >= 8 then
+            Timer.clear()
             self.hits = 0
             self.speed = self.speed + 0.15
             self:moveAliens()
@@ -193,7 +194,27 @@ function PlayState:update(dt)
   for i, bullet in ipairs(self.bullets) do
     bullet:update(dt)
 
-    if bullet.y > WINDOW_HEIGHT - bullet.height then
+    if testAABB(bullet, self.player) then
+      table.remove(self.bullets, i)
+
+      gStateMachine:change(
+        "hit",
+        {
+          player = self.player,
+          bullet = self.bullet,
+          aliens = self.aliens,
+          bullets = self.bullets,
+          round = self.round,
+          score = self.score,
+          health = self.health,
+          hits = self.hits,
+          speed = self.speed,
+          particles = self.particles
+        }
+      )
+    end
+
+    if bullet.y > WINDOW_HEIGHT then
       table.insert(
         self.particles,
         {

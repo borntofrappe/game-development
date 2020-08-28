@@ -2,11 +2,11 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] fix the Timer object by removing the timers from state to state
+- [x] detect collision with the aliens' bullets
 
-- [x] add hit state, to dispatch either to the round or gameover state
+- [x] pass only the necessary information from hit to round state
 
-- [ ] detect collision with the aliens' bullets
+- [x] initialize health to 2
 
 - [ ] add shields
 
