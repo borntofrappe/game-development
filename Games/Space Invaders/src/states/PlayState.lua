@@ -24,40 +24,42 @@ end
 
 function PlayState:update(dt)
   if self.gameover then
+    local types = {4, 5}
     if not self.isTweening then
       Timer.clear()
       self.isTweening = true
       self.player.inPlay = false
 
-      local i = #self.particles + 1
-      local types = {4, 5}
-      self.particles[i] = {
-        x = self.player.x + self.player.width / 2 - PLAYER_PARTICLES_WIDTH / 2,
-        y = self.player.y + self.player.height / 2 - PLAYER_PARTICLES_HEIGHT / 2,
-        type = types[1]
-      }
+      table.insert(
+        self.particles,
+        {
+          x = self.player.x + self.player.width / 2 - PLAYER_PARTICLES_WIDTH / 2,
+          y = self.player.y + self.player.height / 2 - PLAYER_PARTICLES_HEIGHT / 2,
+          type = types[1],
+          dt = 0,
+          timeout = 4
+        }
+      )
 
       gSounds["explosion"]:play()
-      Timer.every(
-        0.5,
-        function()
-          self.particles[i].type = self.particles[i].type == types[1] and types[2] or types[1]
-        end
-      )
-      Timer.after(
-        2.5,
-        function()
-          gStateMachine:change(
-            "gameover",
-            {
-              score = self.score
-            }
-          )
-        end
-      )
     end
 
-    Timer.update(dt)
+    self.particles[#self.particles].dt = self.particles[#self.particles].dt + dt
+
+    if self.particles[#self.particles].dt > 0.5 then
+      self.particles[#self.particles].dt = self.particles[#self.particles].dt % 0.5
+      self.particles[#self.particles].type = self.particles[#self.particles].type == types[1] and types[2] or types[1]
+      self.particles[#self.particles].timeout = self.particles[#self.particles].timeout - 1
+
+      if self.particles[#self.particles].timeout == 0 then
+        gStateMachine:change(
+          "gameover",
+          {
+            score = self.score
+          }
+        )
+      end
+    end
   else
     -- developer options, just to test how different features
     -- increase speed
@@ -114,19 +116,14 @@ function PlayState:update(dt)
               self:moveAliens()
             end
 
-            local i = #self.particles + 1
-
-            self.particles[i] = {
-              x = alien.x,
-              y = alien.y,
-              type = 1
-            }
-
-            Timer.after(
-              0.25,
-              function()
-                self.particles[i] = nil
-              end
+            table.insert(
+              self.particles,
+              {
+                x = alien.x,
+                y = alien.y,
+                type = 1,
+                dt = 0
+              }
             )
 
             if self:checkVictory() then
@@ -147,6 +144,7 @@ function PlayState:update(dt)
               for row = alien.row - 1, 1, -1 do
                 if self.aliens[row][alien.column].inPlay then
                   self.aliens[row][alien.column].lastRow = true
+                  break
                 end
               end
             end
@@ -194,18 +192,14 @@ function PlayState:update(dt)
     end
 
     if self.bullet and self.bullet.y < 0 then
-      local i = #self.particles + 1
-      self.particles[i] = {
-        x = self.bullet.x + self.bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
-        y = 0,
-        type = 2
-      }
-
-      Timer.after(
-        0.25,
-        function()
-          self.particles[i] = nil
-        end
+      table.insert(
+        self.particles,
+        {
+          x = self.bullet.x + self.bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
+          y = 0,
+          type = 2,
+          dt = 0
+        }
       )
 
       self.bullet = nil
@@ -215,21 +209,24 @@ function PlayState:update(dt)
       bullet:update(dt)
 
       if bullet.y > WINDOW_HEIGHT - bullet.height then
-        local i = #self.particles + 1
-        self.particles[i] = {
-          x = bullet.x + bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
-          y = WINDOW_HEIGHT - BULLET_PARTICLES_HEIGHT,
-          type = 3
-        }
-
-        Timer.after(
-          0.25,
-          function()
-            self.particles[i] = nil
-          end
+        table.insert(
+          self.particles,
+          {
+            x = bullet.x + bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
+            y = WINDOW_HEIGHT - BULLET_PARTICLES_HEIGHT,
+            type = 3,
+            dt = 0
+          }
         )
 
         table.remove(self.bullets, i)
+      end
+    end
+
+    for i, particle in ipairs(self.particles) do
+      particle.dt = particle.dt + dt
+      if particle.dt >= 0.25 then
+        table.remove(self.particles, i)
       end
     end
 
@@ -348,9 +345,8 @@ function PlayState:moveAliens()
               alien.x = alien.x + alien.direction * alien.dx
               alien.variant = alien.variant == 1 and 2 or 1
 
-              if alien.lastRow and math.random(20) == 1 then
-                local i = #self.bullets + 1
-                self.bullets[i] = Bullet(alien.x + alien.width / 2, alien.y + alien.height, 0.5)
+              if alien.lastRow and math.random(20) == 1 and #self.bullets < 2 then
+                table.insert(self.bullets, Bullet(alien.x + alien.width / 2, alien.y + alien.height, 0.5))
               end
 
               if alien.direction == 1 then

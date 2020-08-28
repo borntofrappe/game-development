@@ -2,9 +2,11 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] allow the aliens to fire back at random
+- [x] fix lastRow bug — only the aliens in the last row should fire a bullet
 
-- [ ] fix how the bullets and particles are added/removed
+- [x] cap at `x` the number of bullets that aliens are able to shoot
+
+- [x] fix how the bullets and particles are added/removed to the table
 
 - [ ] detect collision with the aliens' bullets
 
