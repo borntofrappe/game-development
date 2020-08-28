@@ -2,19 +2,9 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] add record audio
-
-- [x] minor fixes
-
-  - [x] remove dev functions
-
-  - [x] pixel error when rendering the particles for the player
-
-  - [x] render bullets behind aliens
+- [x] improve aliens AI to have the aliens fire more frequently in the vicinity of the player
 
 - [ ] add shields
-
-- [ ] improve aliens AI to have the bullets fired in the vicinity of the player
 
 ## Design
 
