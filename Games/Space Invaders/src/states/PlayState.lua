@@ -2,6 +2,7 @@ PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
   self.particles = {}
+  self.hasRecord = false
 end
 
 function PlayState:enter(params)
@@ -26,57 +27,6 @@ end
 function PlayState:update(dt)
   Timer.update(dt)
 
-  -- developer options, just to test how different features
-  -- increase speed
-  if love.keyboard.waspressed("s") then
-    Timer.clear()
-    self.speed = self.speed + 0.15
-    self:moveAliens()
-  end
-
-  -- single hit
-  if love.keyboard.waspressed("h") then
-    gStateMachine:change(
-      "hit",
-      {
-        player = self.player,
-        bullet = self.bullet,
-        aliens = self.aliens,
-        bullets = self.bullets,
-        round = self.round,
-        score = self.score,
-        health = self.health,
-        hits = self.hits,
-        speed = self.speed,
-        particles = self.particles
-      }
-    )
-  end
-
-  -- immediate gameover
-  if love.keyboard.waspressed("g") then
-    gStateMachine:change(
-      "hit",
-      {
-        player = self.player,
-        bullet = self.bullet,
-        aliens = self.aliens,
-        bullets = self.bullets,
-        round = self.round,
-        score = self.score,
-        health = 0,
-        hits = self.hits,
-        speed = self.speed,
-        particles = self.particles
-      }
-    )
-  end
-
-  -- add 1k points
-  if love.keyboard.waspressed("p") then
-    self.score = self.score + 1000
-  end
-
   if love.keyboard.waspressed("escape") then
     gStateMachine:change("title")
   end
@@ -94,6 +44,11 @@ function PlayState:update(dt)
 
           self.bullet = nil
           self.score = self.score + 10 * alien.type
+          if self.score >= gRecord and not self.hasRecord then
+            gSounds["record"]:play()
+            self.hasRecord = true
+          end
+
           self.hits = self.hits + 1
 
           if self.hits >= 8 then
@@ -238,6 +193,7 @@ function PlayState:update(dt)
 
   if love.keyboard.waspressed("up") or love.keyboard.waspressed("space") then
     if not self.bullet then
+      gSounds["shoot"]:stop()
       gSounds["shoot"]:play()
       self.bullet = Bullet(self.player.x + self.player.width / 2, self.player.y, -1)
     end
@@ -264,7 +220,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  showInfo(
+  showGameInfo(
     {
       score = self.score,
       health = self.health
@@ -279,18 +235,18 @@ function PlayState:render()
 
   self.player:render()
 
+  for i, bullet in ipairs(self.bullets) do
+    bullet:render()
+  end
+
   for i, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       alien:render()
     end
   end
 
-  for i, bullet in ipairs(self.bullets) do
-    bullet:render()
-  end
-
   for i, particle in ipairs(self.particles) do
-    love.graphics.draw(gTextures["space-invaders"], gFrames["particles"][particle.type], particle.x, particle.y)
+    love.graphics.draw(gTextures["spritesheet"], gFrames["particles"][particle.type], particle.x, particle.y)
   end
 end
 
@@ -337,6 +293,8 @@ function PlayState:moveAliens()
               alien.variant = alien.variant == 1 and 2 or 1
 
               if alien.lastRow and math.random(20) == 1 and #self.bullets < 2 then
+                gSounds["shoot"]:stop()
+                gSounds["shoot"]:play()
                 table.insert(self.bullets, Bullet(alien.x + alien.width / 2, alien.y + alien.height, 0.5))
               end
 

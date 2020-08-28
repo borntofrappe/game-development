@@ -2,11 +2,15 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] detect collision with the aliens' bullets
+- [x] add record audio
 
-- [x] pass only the necessary information from hit to round state
+- [x] minor fixes
 
-- [x] initialize health to 2
+  - [x] remove dev functions
+
+  - [x] pixel error when rendering the particles for the player
+
+  - [x] render bullets behind aliens
 
 - [ ] add shields
 
@@ -16,13 +20,13 @@ Recreate the popular game _Space Invaders_.
 
 For the font, I decided to use the same font introduced in _Pong_.
 
-For the graphics, I used GIMP to create the spritesheet you find in the "res" folder. The following table works as a reference for the size of the individual shapes, and supports the logic described in "Utils.lua".
+For the graphics, I used GIMP to create the spritesheet you find in the "res" folder. The following table works as a reference for the coordinates and sizes of the individual shapes. The information is most relevant for "Utils.lua", where the quads are generated from the single image.
 
-| Visual               | Width | Height |
-| -------------------- | ----- | ------ |
-| Alien                | 24    | 21     |
-| Bonus Alien          | 39    | 18     |
-| Player               | 27    | 21     |
-| Bullet               | 3     | 15     |
-| Particles (type 1-3) | 24    | 21     |
-| Particles (type 4-5) | 30    | 18     |
+| Visual               | x   | y   | Width | Height |
+| -------------------- | --- | --- | ----- | ------ |
+| Alien                | 0   | 0   | 24    | 21     |
+| Bonus Alien          | 0   | 63  | 39    | 18     |
+| Player               | 0   | 81  | 27    | 21     |
+| Bullet               | 29  | 87  | 3     | 15     |
+| Particles (type 1-3) | 48  | 0   | 24    | 21     |
+| Particles (type 4-5) | 42  | 66  | 30    | 18     |

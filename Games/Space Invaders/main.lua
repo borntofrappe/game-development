@@ -12,14 +12,14 @@ function love.load()
   }
 
   gTextures = {
-    ["space-invaders"] = love.graphics.newImage("res/graphics/space-invaders.png")
+    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
   }
 
   gFrames = {
-    ["player"] = GenerateQuadPlayer(gTextures["space-invaders"]),
-    ["aliens"] = GenerateQuadsAliens(gTextures["space-invaders"]),
-    ["bullet"] = GenerateQuadBullet(gTextures["space-invaders"]),
-    ["particles"] = GenerateQuadsParticles(gTextures["space-invaders"])
+    ["player"] = GenerateQuadPlayer(gTextures["spritesheet"]),
+    ["aliens"] = GenerateQuadsAliens(gTextures["spritesheet"]),
+    ["bullet"] = GenerateQuadBullet(gTextures["spritesheet"]),
+    ["particles"] = GenerateQuadsParticles(gTextures["spritesheet"])
   }
 
   gSounds = {
@@ -28,6 +28,7 @@ function love.load()
     ["menu"] = love.audio.newSource("res/sounds/menu.wav", "static"),
     ["move"] = love.audio.newSource("res/sounds/move.wav", "static"),
     ["pause"] = love.audio.newSource("res/sounds/pause.wav", "static"),
+    ["record"] = love.audio.newSource("res/sounds/record.wav", "static"),
     ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static")
   }
 
@@ -46,8 +47,8 @@ function love.load()
       ["pause"] = function()
         return PauseState()
       end,
-      ["score"] = function()
-        return ScoreTableState()
+      ["points"] = function()
+        return PointsState()
       end,
       ["hit"] = function()
         return HitState()
@@ -81,7 +82,6 @@ end
 
 function love.draw()
   gStateMachine:render()
-  -- showGrid()
 end
 
 function testAABB(box1, box2)
@@ -96,7 +96,7 @@ function testAABB(box1, box2)
   return true
 end
 
-function showInfo(info)
+function showGameInfo(info)
   local score = info.score or 0
   local health = info.health or 3
 
@@ -111,19 +111,20 @@ function showInfo(info)
   love.graphics.printf(scoreText:upper(), 0, 16, WINDOW_WIDTH / 2, "right")
 
   local healthText = "= " .. health
-  love.graphics.draw(gTextures["space-invaders"], gFrames["player"], WINDOW_WIDTH / 8 * 5, 16)
+  love.graphics.draw(gTextures["spritesheet"], gFrames["player"], WINDOW_WIDTH / 8 * 5, 16)
   love.graphics.print(healthText:upper(), WINDOW_WIDTH / 8 * 5 + 46, 16)
 end
 
-function showGrid()
-  love.graphics.setColor(1, 1, 1, 1)
-  local cols = 8
-  for x = 1, cols do
-    love.graphics.rectangle("fill", WINDOW_WIDTH / cols * x - 1, 0, 2, WINDOW_HEIGHT)
+function createAliens()
+  local aliens = {}
+
+  for row = 1, ROWS do
+    aliens[row] = {}
+    for column = 1, COLUMNS do
+      local alien = Alien(row, column)
+      aliens[row][column] = alien
+    end
   end
 
-  local rows = 6
-  for y = 1, rows do
-    love.graphics.rectangle("fill", 0, WINDOW_HEIGHT / rows * y - 1, WINDOW_WIDTH, 2)
-  end
+  return aliens
 end

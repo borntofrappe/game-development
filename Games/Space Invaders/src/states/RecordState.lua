@@ -1,11 +1,13 @@
 RecordState = Class({__includes = BaseState})
 
 function RecordState:init()
+  gSounds["record"]:play()
+
   self.text = "You\nget\nHi-score!"
 
   self.delay =
     Timer.after(
-    4,
+    3,
     function()
       self.delay:remove()
       gStateMachine:change("title")

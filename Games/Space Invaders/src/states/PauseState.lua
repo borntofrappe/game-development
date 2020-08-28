@@ -20,6 +20,10 @@ function PauseState:enter(params)
 end
 
 function PauseState:update(dt)
+  if love.keyboard.waspressed("escape") then
+    love.event.quit()
+  end
+
   if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
     gStateMachine:change(
       "play",
@@ -36,14 +40,10 @@ function PauseState:update(dt)
       }
     )
   end
-
-  if love.keyboard.waspressed("escape") then
-    love.event.quit()
-  end
 end
 
 function PauseState:render()
-  showInfo(
+  showGameInfo(
     {
       score = self.score,
       health = self.health
@@ -56,18 +56,18 @@ function PauseState:render()
   end
   self.player:render()
 
+  for i, bullet in ipairs(self.bullets) do
+    bullet:render()
+  end
+
   for i, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       alien:render()
     end
   end
 
-  for i, bullet in ipairs(self.bullets) do
-    bullet:render()
-  end
-
   for i, particle in ipairs(self.particles) do
-    love.graphics.draw(gTextures["space-invaders"], gFrames["particles"][particle.type], particle.x, particle.y)
+    love.graphics.draw(gTextures["spritesheet"], gFrames["particles"][particle.type], particle.x, particle.y)
   end
 
   love.graphics.setColor(0, 0, 0, 1)

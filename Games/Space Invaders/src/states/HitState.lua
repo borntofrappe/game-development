@@ -1,6 +1,7 @@
 HitState = Class({__includes = BaseState})
 
 function HitState:init()
+  gSounds["explosion"]:play()
   self.types = {4, 5}
 end
 
@@ -19,22 +20,21 @@ function HitState:enter(params)
   self.particles = params.particles
 
   self.particle = {
-    x = self.player.x + self.player.width / 2 - PLAYER_PARTICLES_WIDTH / 2,
-    y = self.player.y + self.player.height / 2 - PLAYER_PARTICLES_HEIGHT / 2,
+    x = math.floor(self.player.x + self.player.width / 2 - PLAYER_PARTICLES_WIDTH / 2),
+    y = math.floor(self.player.y + self.player.height / 2 - PLAYER_PARTICLES_HEIGHT / 2),
     type = self.types[1]
   }
-  gSounds["explosion"]:play()
 
   self.interval =
     Timer.every(
-    0.5,
+    0.4,
     function()
       self.particle.type = self.particle.type == self.types[1] and self.types[2] or self.types[1]
     end
   )
   self.delay =
     Timer.after(
-    2.5,
+    2,
     function()
       self.interval:remove()
       self.delay:remove()
@@ -68,7 +68,7 @@ function HitState:update(dt)
 end
 
 function HitState:render()
-  showInfo(
+  showGameInfo(
     {
       score = self.score,
       health = self.health
@@ -80,22 +80,22 @@ function HitState:render()
     self.bullet:render()
   end
 
+  for i, bullet in ipairs(self.bullets) do
+    bullet:render()
+  end
+
   for i, row in ipairs(self.aliens) do
     for j, alien in ipairs(row) do
       alien:render()
     end
   end
 
-  for i, bullet in ipairs(self.bullets) do
-    bullet:render()
-  end
-
   for i, particle in ipairs(self.particles) do
-    love.graphics.draw(gTextures["space-invaders"], gFrames["particles"][particle.type], particle.x, particle.y)
+    love.graphics.draw(gTextures["spritesheet"], gFrames["particles"][particle.type], particle.x, particle.y)
   end
 
   love.graphics.draw(
-    gTextures["space-invaders"],
+    gTextures["spritesheet"],
     gFrames["particles"][self.particle.type],
     self.particle.x,
     self.particle.y

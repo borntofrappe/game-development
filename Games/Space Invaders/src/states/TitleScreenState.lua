@@ -48,7 +48,7 @@ function TitleScreenState:init()
             10,
             function()
               self.tween:remove()
-              gStateMachine:change("score")
+              gStateMachine:change("points")
             end
           )
         end

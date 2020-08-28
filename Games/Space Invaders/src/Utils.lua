@@ -44,8 +44,8 @@ function GenerateQuadsParticles(atlas)
     y = y + height
   end
 
-  x = 39
-  y = 63
+  x = 42
+  y = 66
   width = 30
   height = 18
 

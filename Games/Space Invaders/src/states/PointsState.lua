@@ -1,6 +1,6 @@
-ScoreTableState = Class({__includes = BaseState})
+PointsState = Class({__includes = BaseState})
 
-function ScoreTableState:init()
+function PointsState:init()
   self.delay =
     Timer.after(
     10,
@@ -11,12 +11,8 @@ function ScoreTableState:init()
   )
 end
 
-function ScoreTableState:update(dt)
+function PointsState:update(dt)
   Timer.update(dt)
-
-  if love.keyboard.waspressed("escape") then
-    love.event.quit()
-  end
 
   if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
     self.delay:remove()
@@ -24,7 +20,7 @@ function ScoreTableState:update(dt)
   end
 end
 
-function ScoreTableState:render()
+function PointsState:render()
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(36 / 255, 191 / 255, 97 / 255, 1)
   love.graphics.printf(string.upper("Play"), 0, WINDOW_HEIGHT / 3 - 24 - 8 - 24, WINDOW_WIDTH, "center")
@@ -34,7 +30,7 @@ function ScoreTableState:render()
 
   for i = 1, 3 do
     love.graphics.draw(
-      gTextures["space-invaders"],
+      gTextures["spritesheet"],
       gFrames["aliens"][(3 - i + 1)][1],
       WINDOW_WIDTH / 2 - 100,
       WINDOW_HEIGHT / 2 + 16 + (i - 1) * 42

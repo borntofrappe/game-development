@@ -24,6 +24,6 @@ end
 
 function Player:render()
   if self.inPlay then
-    love.graphics.draw(gTextures["space-invaders"], gFrames["player"], self.x, self.y)
+    love.graphics.draw(gTextures["spritesheet"], gFrames["player"], self.x, self.y)
   end
 end

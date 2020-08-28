@@ -26,6 +26,6 @@ end
 
 function Alien:render()
   if self.inPlay then
-    love.graphics.draw(gTextures["space-invaders"], gFrames["aliens"][self.type][self.variant], self.x, self.y)
+    love.graphics.draw(gTextures["spritesheet"], gFrames["aliens"][self.type][self.variant], self.x, self.y)
   end
 end

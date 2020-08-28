@@ -14,5 +14,5 @@ function Bullet:update(dt)
 end
 
 function Bullet:render()
-  love.graphics.draw(gTextures["space-invaders"], gFrames["bullet"], self.x, self.y)
+  love.graphics.draw(gTextures["spritesheet"], gFrames["bullet"], self.x, self.y)
 end
