@@ -1,8 +1,7 @@
 PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
-  self.gameover = false
-  self.isTweening = false
+  self.particles = {}
 end
 
 function PlayState:enter(params)
@@ -17,245 +16,229 @@ function PlayState:enter(params)
   self.hits = params.hits
   self.speed = params.speed
 
-  self.particles = {}
-
   self:moveAliens()
 end
 
+function PlayState:exit()
+  Timer.clear()
+end
+
 function PlayState:update(dt)
-  if self.gameover then
-    local types = {4, 5}
-    if not self.isTweening then
-      Timer.clear()
-      self.isTweening = true
-      self.player.inPlay = false
+  Timer.update(dt)
 
-      table.insert(
-        self.particles,
-        {
-          x = self.player.x + self.player.width / 2 - PLAYER_PARTICLES_WIDTH / 2,
-          y = self.player.y + self.player.height / 2 - PLAYER_PARTICLES_HEIGHT / 2,
-          type = types[1],
-          dt = 0,
-          timeout = 4
-        }
-      )
+  -- developer options, just to test how different features
+  -- increase speed
+  if love.keyboard.waspressed("s") then
+    Timer.clear()
+    self.speed = self.speed + 0.15
+    self:moveAliens()
+  end
 
-      gSounds["explosion"]:play()
-    end
+  -- single hit
+  if love.keyboard.waspressed("h") then
+    gStateMachine:change(
+      "hit",
+      {
+        player = self.player,
+        bullet = self.bullet,
+        aliens = self.aliens,
+        bullets = self.bullets,
+        round = self.round,
+        score = self.score,
+        health = self.health,
+        hits = self.hits,
+        speed = self.speed,
+        particles = self.particles
+      }
+    )
+  end
 
-    self.particles[#self.particles].dt = self.particles[#self.particles].dt + dt
+  -- immediate gameover
+  if love.keyboard.waspressed("g") then
+    gStateMachine:change(
+      "hit",
+      {
+        player = self.player,
+        bullet = self.bullet,
+        aliens = self.aliens,
+        bullets = self.bullets,
+        round = self.round,
+        score = self.score,
+        health = 0,
+        hits = self.hits,
+        speed = self.speed,
+        particles = self.particles
+      }
+    )
+  end
 
-    if self.particles[#self.particles].dt > 0.5 then
-      self.particles[#self.particles].dt = self.particles[#self.particles].dt % 0.5
-      self.particles[#self.particles].type = self.particles[#self.particles].type == types[1] and types[2] or types[1]
-      self.particles[#self.particles].timeout = self.particles[#self.particles].timeout - 1
+  -- add 1k points
+  if love.keyboard.waspressed("p") then
+    self.score = self.score + 1000
+  end
 
-      if self.particles[#self.particles].timeout == 0 then
-        gStateMachine:change(
-          "gameover",
-          {
-            score = self.score
-          }
-        )
-      end
-    end
-  else
-    -- developer options, just to test how different features
-    -- increase speed
-    if love.keyboard.waspressed("s") then
-      Timer.clear()
-      self.speed = self.speed + 0.15
-      self:moveAliens()
-    end
+  if love.keyboard.waspressed("escape") then
+    gStateMachine:change("title")
+  end
 
-    -- reduce health
-    if love.keyboard.waspressed("h") then
-      self.health = self.health - 1
-      if self.health == 0 then
-        self.gameover = true
-      end
-    end
+  self.player:update(dt)
 
-    -- immediate gameover
-    if love.keyboard.waspressed("g") then
-      self.gameover = true
-    end
+  if self.bullet then
+    self.bullet:update(dt)
 
-    -- add 1k points
-    if love.keyboard.waspressed("p") then
-      self.score = self.score + 1000
-    end
+    for i, row in ipairs(self.aliens) do
+      for j, alien in ipairs(row) do
+        if self.bullet and alien.inPlay and testAABB(alien, self.bullet) then
+          gSounds["hit"]:play()
+          alien.inPlay = false
 
-    if love.keyboard.waspressed("escape") then
-      Timer.clear()
-      gStateMachine:change("title")
-    end
+          self.bullet = nil
+          self.score = self.score + 10 * alien.type
+          self.hits = self.hits + 1
 
-    Timer.update(dt)
+          if self.hits >= 8 then
+            self.hits = 0
+            self.speed = self.speed + 0.15
+            self:moveAliens()
+          end
 
-    self.player:update(dt)
+          table.insert(
+            self.particles,
+            {
+              x = alien.x,
+              y = alien.y,
+              type = 1,
+              dt = 0
+            }
+          )
 
-    if self.bullet then
-      self.bullet:update(dt)
-
-      for i, row in ipairs(self.aliens) do
-        for j, alien in ipairs(row) do
-          if self.bullet and alien.inPlay and testAABB(alien, self.bullet) then
-            gSounds["hit"]:play()
-            alien.inPlay = false
-
-            self.bullet = nil
-            self.score = self.score + 10 * alien.type
-            self.hits = self.hits + 1
-
-            if self.hits >= 8 then
-              self.hits = 0
-              self.speed = self.speed + 0.15
-              Timer.clear()
-              self:moveAliens()
-            end
-
-            table.insert(
-              self.particles,
+          if self:checkVictory() then
+            gSounds["menu"]:play()
+            gStateMachine:change(
+              "round",
               {
-                x = alien.x,
-                y = alien.y,
-                type = 1,
-                dt = 0
+                round = self.round + 1,
+                score = self.score,
+                health = self.health
               }
             )
+          end
 
-            if self:checkVictory() then
-              Timer.clear()
-              gSounds["menu"]:play()
-              gStateMachine:change(
-                "round",
-                {
-                  round = self.round + 1,
-                  score = self.score,
-                  health = self.health
-                }
-              )
+          if alien.lastRow then
+            alien.lastRow = false
+            for row = alien.row - 1, 1, -1 do
+              if self.aliens[row][alien.column].inPlay then
+                self.aliens[row][alien.column].lastRow = true
+                break
+              end
             end
+          end
 
-            if alien.lastRow then
-              alien.lastRow = false
-              for row = alien.row - 1, 1, -1 do
-                if self.aliens[row][alien.column].inPlay then
-                  self.aliens[row][alien.column].lastRow = true
+          if alien.bounceFirst then
+            alien.bounceFirst = false
+            for column = alien.column + 1, COLUMNS do
+              for row = 1, ROWS do
+                if self.aliens[row][column].inPlay then
+                  self.aliens[row][column].bounceFirst = true
                   break
                 end
               end
             end
-
-            if alien.bounceFirst then
-              alien.bounceFirst = false
-              for column = alien.column + 1, COLUMNS do
-                for row = 1, ROWS do
-                  if self.aliens[row][column].inPlay then
-                    self.aliens[row][column].bounceFirst = true
-                    break
-                  end
-                end
-              end
-            end
-
-            if alien.bounceLast then
-              alien.bounceLast = false
-              for column = alien.column - 1, 1, -1 do
-                for row = 1, ROWS do
-                  if self.aliens[row][column].inPlay then
-                    self.aliens[row][column].bounceLast = true
-                    break
-                  end
-                end
-              end
-            end
-
-            if alien.isLast then
-              alien.isLast = false
-              for row = alien.row, 1, -1 do
-                for column = COLUMNS, 1, -1 do
-                  if self.aliens[row][column].inPlay then
-                    self.aliens[row][column].isLast = true
-                    break
-                  end
-                end
-              end
-            end
-
-            break
           end
+
+          if alien.bounceLast then
+            alien.bounceLast = false
+            for column = alien.column - 1, 1, -1 do
+              for row = 1, ROWS do
+                if self.aliens[row][column].inPlay then
+                  self.aliens[row][column].bounceLast = true
+                  break
+                end
+              end
+            end
+          end
+
+          if alien.isLast then
+            alien.isLast = false
+            for row = alien.row, 1, -1 do
+              for column = COLUMNS, 1, -1 do
+                if self.aliens[row][column].inPlay then
+                  self.aliens[row][column].isLast = true
+                  break
+                end
+              end
+            end
+          end
+
+          break
         end
       end
     end
+  end
 
-    if self.bullet and self.bullet.y < 0 then
+  if self.bullet and self.bullet.y < 0 then
+    table.insert(
+      self.particles,
+      {
+        x = self.bullet.x + self.bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
+        y = 0,
+        type = 2,
+        dt = 0
+      }
+    )
+
+    self.bullet = nil
+  end
+
+  for i, bullet in ipairs(self.bullets) do
+    bullet:update(dt)
+
+    if bullet.y > WINDOW_HEIGHT - bullet.height then
       table.insert(
         self.particles,
         {
-          x = self.bullet.x + self.bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
-          y = 0,
-          type = 2,
+          x = bullet.x + bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
+          y = WINDOW_HEIGHT - BULLET_PARTICLES_HEIGHT,
+          type = 3,
           dt = 0
         }
       )
 
-      self.bullet = nil
+      table.remove(self.bullets, i)
     end
+  end
 
-    for i, bullet in ipairs(self.bullets) do
-      bullet:update(dt)
-
-      if bullet.y > WINDOW_HEIGHT - bullet.height then
-        table.insert(
-          self.particles,
-          {
-            x = bullet.x + bullet.width / 2 - BULLET_PARTICLES_WIDTH / 2,
-            y = WINDOW_HEIGHT - BULLET_PARTICLES_HEIGHT,
-            type = 3,
-            dt = 0
-          }
-        )
-
-        table.remove(self.bullets, i)
-      end
+  for i, particle in ipairs(self.particles) do
+    particle.dt = particle.dt + dt
+    if particle.dt >= 0.25 then
+      table.remove(self.particles, i)
     end
+  end
 
-    for i, particle in ipairs(self.particles) do
-      particle.dt = particle.dt + dt
-      if particle.dt >= 0.25 then
-        table.remove(self.particles, i)
-      end
+  if love.keyboard.waspressed("up") or love.keyboard.waspressed("space") then
+    if not self.bullet then
+      gSounds["shoot"]:play()
+      self.bullet = Bullet(self.player.x + self.player.width / 2, self.player.y, -1)
     end
+  end
 
-    if love.keyboard.waspressed("up") or love.keyboard.waspressed("space") then
-      if not self.bullet then
-        gSounds["shoot"]:play()
-        self.bullet = Bullet(self.player.x + self.player.width / 2, self.player.y, -1)
-      end
-    end
-
-    if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
-      Timer.clear()
-      gSounds["pause"]:play()
-      gStateMachine:change(
-        "pause",
-        {
-          player = self.player,
-          bullet = self.bullet,
-          aliens = self.aliens,
-          bullets = self.bullets,
-          round = self.round,
-          score = self.score,
-          health = self.health,
-          hits = self.hits,
-          speed = self.speed,
-          particles = self.particles
-        }
-      )
-    end
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    gSounds["pause"]:play()
+    gStateMachine:change(
+      "pause",
+      {
+        player = self.player,
+        bullet = self.bullet,
+        aliens = self.aliens,
+        bullets = self.bullets,
+        round = self.round,
+        score = self.score,
+        health = self.health,
+        hits = self.hits,
+        speed = self.speed,
+        particles = self.particles
+      }
+    )
   end
 end
 
@@ -349,7 +332,21 @@ function PlayState:moveAliens()
                             alien.direction = -1
                             alien.y = alien.y + alien.dy
                             if alien.isLast and alien.y + alien.height >= self.player.y then
-                              self.gameover = true
+                              gStateMachine:change(
+                                "hit",
+                                {
+                                  player = self.player,
+                                  bullet = self.bullet,
+                                  aliens = self.aliens,
+                                  bullets = self.bullets,
+                                  round = self.round,
+                                  score = self.score,
+                                  health = 0,
+                                  hits = self.hits,
+                                  speed = self.speed,
+                                  particles = self.particles
+                                }
+                              )
                             end
                           end
                         )
@@ -370,7 +367,21 @@ function PlayState:moveAliens()
                             alien.direction = 1
                             alien.y = alien.y + alien.dy
                             if alien.isLast and alien.y + alien.height >= self.player.y then
-                              self.gameover = true
+                              gStateMachine:change(
+                                "hit",
+                                {
+                                  player = self.player,
+                                  bullet = self.bullet,
+                                  aliens = self.aliens,
+                                  bullets = self.bullets,
+                                  round = self.round,
+                                  score = self.score,
+                                  health = 0,
+                                  hits = self.hits,
+                                  speed = self.speed,
+                                  particles = self.particles
+                                }
+                              )
                             end
                           end
                         )

@@ -17,7 +17,7 @@ function TitleScreenState:init()
   }
 
   self.isTweening = true
-  self.titleTimer =
+  self.tween =
     Timer.tween(
     1.5,
     {
@@ -47,6 +47,7 @@ function TitleScreenState:init()
           Timer.after(
             10,
             function()
+              self.tween:remove()
               gStateMachine:change("score")
             end
           )
@@ -65,8 +66,8 @@ function TitleScreenState:update(dt)
     end
 
     if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
-      Timer.clear()
       gSounds["menu"]:play()
+      self.tween:remove()
       gStateMachine:change("round", {})
     end
   end

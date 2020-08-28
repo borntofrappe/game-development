@@ -5,9 +5,11 @@ function GameoverState:init()
 end
 
 function GameoverState:enter(params)
-  Timer.after(
+  self.delay =
+    Timer.after(
     4,
     function()
+      self.delay:remove()
       if params.score > gRecord then
         gRecord = params.score
         gStateMachine:change("record")

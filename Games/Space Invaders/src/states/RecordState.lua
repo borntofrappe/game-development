@@ -3,9 +3,11 @@ RecordState = Class({__includes = BaseState})
 function RecordState:init()
   self.text = "You\nget\nHi-score!"
 
-  Timer.after(
+  self.delay =
+    Timer.after(
     4,
     function()
+      self.delay:remove()
       gStateMachine:change("title")
     end
   )

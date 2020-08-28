@@ -2,11 +2,9 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] move logic initializing the game in the round state
+- [x] fix the Timer object by removing the timers from state to state
 
-- [x] pass the information related to the aliens and player from the play state to the round state
-
-- [ ] add hit state, to dispatch either to the round or gameover state
+- [x] add hit state, to dispatch either to the round or gameover state
 
 - [ ] detect collision with the aliens' bullets
 

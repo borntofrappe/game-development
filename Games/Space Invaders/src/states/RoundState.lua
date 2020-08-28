@@ -15,9 +15,11 @@ function RoundState:enter(params)
   self.roundZero = self.round < 10 and "0" .. self.round or tostring(self.round)
   self.roundText = "Round\n" .. self.roundZero .. "\nReady!"
 
-  Timer.after(
+  self.delay =
+    Timer.after(
     2.5,
     function()
+      self.delay:remove()
       gStateMachine:change(
         "play",
         {
