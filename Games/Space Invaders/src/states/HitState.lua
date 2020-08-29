@@ -13,6 +13,7 @@ function HitState:enter(params)
 
   self.round = params.round
   self.score = params.score
+  self.hasRecord = params.hasRecord
   self.health = params.health
   self.hits = params.hits
   self.speed = params.speed
@@ -42,7 +43,8 @@ function HitState:enter(params)
         gStateMachine:change(
           "gameover",
           {
-            score = self.score
+            score = self.score,
+            hasRecord = self.hasRecord
           }
         )
       else
@@ -53,6 +55,7 @@ function HitState:enter(params)
             aliens = self.aliens,
             round = self.round,
             score = self.score,
+            hasRecord = self.hasRecord,
             health = self.health - 1,
             hits = self.hits,
             speed = self.speed

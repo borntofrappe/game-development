@@ -12,6 +12,7 @@ function PauseState:enter(params)
 
   self.round = params.round
   self.score = params.score
+  self.hasRecord = params.hasRecord
   self.health = params.health
   self.hits = params.hits
   self.speed = params.speed
@@ -34,6 +35,7 @@ function PauseState:update(dt)
         bullets = self.bullets,
         round = self.round,
         score = self.score,
+        hasRecord = self.hasRecord,
         health = self.health,
         hits = self.hits,
         speed = self.speed

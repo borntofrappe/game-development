@@ -2,8 +2,11 @@ RecordState = Class({__includes = BaseState})
 
 function RecordState:init()
   gSounds["record"]:play()
-
   self.text = "You\nget\nHi-score!"
+end
+
+function RecordState:enter(params)
+  gRecord = params.score
 
   self.delay =
     Timer.after(

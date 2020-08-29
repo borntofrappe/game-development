@@ -8,6 +8,7 @@ function RoundState:enter(params)
 
   self.round = params.round or 1
   self.score = params.score or 0
+  self.hasRecord = params.hasRecord or false
   self.health = params.health or 2
   self.hits = params.hits or 0
   self.speed = params.speed or 1
@@ -29,6 +30,7 @@ function RoundState:enter(params)
           bullets = self.bullets,
           round = self.round,
           score = self.score,
+          hasRecord = self.hasRecord,
           health = self.health,
           hits = self.hits,
           speed = self.speed

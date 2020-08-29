@@ -2,7 +2,15 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] improve aliens AI to have the aliens fire more frequently in the vicinity of the player
+- [x] fix audio bug when playing record audio — should play only once in the play state
+
+- [ ] fix bug resulting in an error when the aliens reach the bottom of the screen
+
+- [ ] change the style for the aliens' bullets
+
+- [ ] add special alien moving horizontally and above the screen
+
+- [ ] animate "PLAY" in the state showing the number of points awarded for each alien
 
 - [ ] add shields
 

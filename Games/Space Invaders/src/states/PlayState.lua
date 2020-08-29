@@ -2,7 +2,6 @@ PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
   self.particles = {}
-  self.hasRecord = false
 end
 
 function PlayState:enter(params)
@@ -13,6 +12,7 @@ function PlayState:enter(params)
 
   self.round = params.round
   self.score = params.score
+  self.hasRecord = params.hasRecord
   self.health = params.health
   self.hits = params.hits
   self.speed = params.speed
@@ -75,7 +75,8 @@ function PlayState:update(dt)
               {
                 round = self.round + 1,
                 score = self.score,
-                health = self.health
+                health = self.health,
+                hasRecord = self.hasRecord
               }
             )
           end
@@ -161,6 +162,7 @@ function PlayState:update(dt)
           bullets = self.bullets,
           round = self.round,
           score = self.score,
+          hasRecord = self.hasRecord,
           health = self.health,
           hits = self.hits,
           speed = self.speed,
@@ -210,6 +212,7 @@ function PlayState:update(dt)
         bullets = self.bullets,
         round = self.round,
         score = self.score,
+        hasRecord = self.hasRecord,
         health = self.health,
         hits = self.hits,
         speed = self.speed,
@@ -326,6 +329,7 @@ function PlayState:moveAliens()
                                   bullets = self.bullets,
                                   round = self.round,
                                   score = self.score,
+                                  hasRecord = self.hasRecord,
                                   health = 0,
                                   hits = self.hits,
                                   speed = self.speed,
@@ -361,6 +365,7 @@ function PlayState:moveAliens()
                                   bullets = self.bullets,
                                   round = self.round,
                                   score = self.score,
+                                  hasRecord = self.hasRecord,
                                   health = 0,
                                   hits = self.hits,
                                   speed = self.speed,
