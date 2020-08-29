@@ -2,17 +2,15 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [x] fix audio bug when playing record audio — should play only once in the play state
+- [ ] bug: math.random does not benefit from a changing seed
 
-- [ ] fix bug resulting in an error when the aliens reach the bottom of the screen
+- [ ] feature: add special alien moving horizontally and above the screen
 
-- [ ] change the style for the aliens' bullets
+- [ ] style: change the design for the aliens' bullets
 
-- [ ] add special alien moving horizontally and above the screen
+- [ ] style: animate "PLAY" in the state showing the number of points awarded for each alien
 
-- [ ] animate "PLAY" in the state showing the number of points awarded for each alien
-
-- [ ] add shields
+- [ ] feature: add shields
 
 ## Design
 

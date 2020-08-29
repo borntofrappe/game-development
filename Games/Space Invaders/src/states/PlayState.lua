@@ -2,6 +2,7 @@ PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
   self.particles = {}
+  self.gameover = false
 end
 
 function PlayState:enter(params)
@@ -25,6 +26,25 @@ function PlayState:exit()
 end
 
 function PlayState:update(dt)
+  if self.gameover then
+    gStateMachine:change(
+      "hit",
+      {
+        player = self.player,
+        bullet = self.bullet,
+        aliens = self.aliens,
+        bullets = self.bullets,
+        round = self.round,
+        score = self.score,
+        hasRecord = self.hasRecord,
+        health = 0,
+        hits = self.hits,
+        speed = self.speed,
+        particles = self.particles
+      }
+    )
+  end
+
   Timer.update(dt)
 
   if love.keyboard.waspressed("escape") then
@@ -320,22 +340,7 @@ function PlayState:moveAliens()
                             alien.direction = -1
                             alien.y = alien.y + alien.dy
                             if alien.isLast and alien.y + alien.height >= self.player.y then
-                              gStateMachine:change(
-                                "hit",
-                                {
-                                  player = self.player,
-                                  bullet = self.bullet,
-                                  aliens = self.aliens,
-                                  bullets = self.bullets,
-                                  round = self.round,
-                                  score = self.score,
-                                  hasRecord = self.hasRecord,
-                                  health = 0,
-                                  hits = self.hits,
-                                  speed = self.speed,
-                                  particles = self.particles
-                                }
-                              )
+                              self.gameover = true
                             end
                           end
                         )
@@ -356,22 +361,7 @@ function PlayState:moveAliens()
                             alien.direction = 1
                             alien.y = alien.y + alien.dy
                             if alien.isLast and alien.y + alien.height >= self.player.y then
-                              gStateMachine:change(
-                                "hit",
-                                {
-                                  player = self.player,
-                                  bullet = self.bullet,
-                                  aliens = self.aliens,
-                                  bullets = self.bullets,
-                                  round = self.round,
-                                  score = self.score,
-                                  hasRecord = self.hasRecord,
-                                  health = 0,
-                                  hits = self.hits,
-                                  speed = self.speed,
-                                  particles = self.particles
-                                }
-                              )
+                              self.gameover = true
                             end
                           end
                         )
