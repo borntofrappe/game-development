@@ -1,6 +1,7 @@
 require "src/Dependencies"
 
 function love.load()
+  math.randomseed(os.time())
   love.window.setTitle("Space Invaders")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 

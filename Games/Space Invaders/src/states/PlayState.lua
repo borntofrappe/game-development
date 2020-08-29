@@ -315,10 +315,10 @@ function PlayState:moveAliens()
               alien.x = alien.x + alien.direction * alien.dx
               alien.variant = alien.variant == 1 and 2 or 1
 
-              if alien.lastRow and #self.bullets < 2 then
+              if alien.lastRow and #self.bullets < 3 then
                 local odds = 24
                 if math.abs((alien.x + alien.width / 2) - (self.player.x + self.player.width / 2)) < WINDOW_WIDTH / 8 then
-                  odds = 10
+                  odds = 8
                 end
                 if math.random(odds) == 1 then
                   gSounds["shoot"]:stop()

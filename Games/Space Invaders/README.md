@@ -2,8 +2,6 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [ ] bug: math.random does not benefit from a changing seed
-
 - [ ] feature: add special alien moving horizontally and above the screen
 
 - [ ] style: change the design for the aliens' bullets
