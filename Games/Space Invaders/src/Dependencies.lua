@@ -7,6 +7,7 @@ require "src/Utils"
 require "src/Player"
 require "src/Bullet"
 require "src/Alien"
+require "src/AlienBonus"
 
 require "src/StateMachine"
 

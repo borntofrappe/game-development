@@ -28,20 +28,31 @@ function PointsState:render()
 
   love.graphics.printf(string.upper("Score Table"), 0, WINDOW_HEIGHT / 2 - 24, WINDOW_WIDTH, "center")
 
-  for i = 1, 3 do
-    love.graphics.draw(
-      gTextures["spritesheet"],
-      gFrames["aliens"][(3 - i + 1)][1],
-      WINDOW_WIDTH / 2 - 100,
-      WINDOW_HEIGHT / 2 + 16 + (i - 1) * 42
-    )
+  for i = 0, 3 do
+    if i == 0 then
+      love.graphics.draw(
+        gTextures["spritesheet"],
+        gFrames["aliens"][4],
+        WINDOW_WIDTH / 2 - 100 - 7.5,
+        WINDOW_HEIGHT / 2 + 16
+      )
 
-    love.graphics.printf(
-      string.upper("= " .. (3 - i + 1) * 10 .. " Points"),
-      16,
-      WINDOW_HEIGHT / 2 + 16 + (i - 1) * 42,
-      WINDOW_WIDTH,
-      "center"
-    )
+      love.graphics.printf(string.upper("=  ? Points"), 16, WINDOW_HEIGHT / 2 + 16, WINDOW_WIDTH, "center")
+    else
+      love.graphics.draw(
+        gTextures["spritesheet"],
+        gFrames["aliens"][(3 - i + 1)][1],
+        WINDOW_WIDTH / 2 - 100,
+        WINDOW_HEIGHT / 2 + 16 + (i) * 42
+      )
+
+      love.graphics.printf(
+        string.upper("= " .. (3 - i + 1) * 10 .. " Points"),
+        16,
+        WINDOW_HEIGHT / 2 + 16 + (i) * 42,
+        WINDOW_WIDTH,
+        "center"
+      )
+    end
   end
 end

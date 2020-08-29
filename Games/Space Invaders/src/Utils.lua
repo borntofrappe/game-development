@@ -10,16 +10,25 @@ function GenerateQuadsAliens(atlas)
   local quads = {}
   local x = 0
   local y = 0
+  local width = ALIEN_WIDTH
+  local height = ALIEN_HEIGHT
 
   for i = 1, 3 do
     x = 0
     quads[i] = {}
     for j = 1, 2 do
-      quads[i][j] = love.graphics.newQuad(x, y, ALIEN_WIDTH, ALIEN_HEIGHT, atlas:getDimensions())
-      x = x + ALIEN_WIDTH
+      quads[i][j] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+      x = x + width
     end
-    y = y + ALIEN_HEIGHT
+    y = y + height
   end
+
+  x = 0
+  y = 63
+  width = 39
+  height = 18
+
+  quads[4] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
 
   return quads
 end

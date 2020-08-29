@@ -9,6 +9,7 @@ function PauseState:enter(params)
   self.bullet = params.bullet
   self.aliens = params.aliens
   self.bullets = params.bullets
+  self.bonus = params.bonus
 
   self.round = params.round
   self.score = params.score
@@ -33,6 +34,7 @@ function PauseState:update(dt)
         bullet = self.bullet,
         aliens = self.aliens,
         bullets = self.bullets,
+        bonus = self.bonus,
         round = self.round,
         score = self.score,
         hasRecord = self.hasRecord,
@@ -70,6 +72,10 @@ function PauseState:render()
 
   for i, particle in ipairs(self.particles) do
     love.graphics.draw(gTextures["spritesheet"], gFrames["particles"][particle.type], particle.x, particle.y)
+  end
+
+  if self.bonus then
+    self.bonus:render()
   end
 
   love.graphics.setColor(0, 0, 0, 1)

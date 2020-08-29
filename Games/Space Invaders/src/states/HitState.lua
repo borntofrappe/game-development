@@ -10,6 +10,7 @@ function HitState:enter(params)
   self.bullet = params.bullet
   self.aliens = params.aliens
   self.bullets = params.bullets
+  self.bonus = params.bonus
 
   self.round = params.round
   self.score = params.score
@@ -54,6 +55,7 @@ function HitState:enter(params)
             player = self.player,
             aliens = self.aliens,
             round = self.round,
+            bonus = self.bonus,
             score = self.score,
             hasRecord = self.hasRecord,
             health = self.health - 1,
@@ -95,6 +97,10 @@ function HitState:render()
 
   for i, particle in ipairs(self.particles) do
     love.graphics.draw(gTextures["spritesheet"], gFrames["particles"][particle.type], particle.x, particle.y)
+  end
+
+  if self.bonus then
+    self.bonus:render()
   end
 
   love.graphics.draw(

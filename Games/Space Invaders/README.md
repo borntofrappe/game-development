@@ -2,13 +2,13 @@ Recreate the popular game _Space Invaders_.
 
 ## Updates
 
-- [ ] feature: add special alien moving horizontally and above the screen
+- fix: add audio file for the bonus alien
 
-- [ ] style: change the design for the aliens' bullets
+- style: change the design for the aliens' bullets
 
-- [ ] style: animate "PLAY" in the state showing the number of points awarded for each alien
+- style: animate "PLAY" in the state showing the number of points awarded for each alien
 
-- [ ] feature: add shields
+- feature: add shields
 
 ## Design
 

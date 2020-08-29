@@ -10,6 +10,7 @@ function PlayState:enter(params)
   self.bullet = params.bullet
   self.aliens = params.aliens
   self.bullets = params.bullets
+  self.bonus = params.bonus
 
   self.round = params.round
   self.score = params.score
@@ -34,6 +35,7 @@ function PlayState:update(dt)
         bullet = self.bullet,
         aliens = self.aliens,
         bullets = self.bullets,
+        bonus = self.bonus,
         round = self.round,
         score = self.score,
         hasRecord = self.hasRecord,
@@ -147,6 +149,12 @@ function PlayState:update(dt)
             end
           end
 
+          if not self.bonus and math.random(10) == 1 then
+            -- temporary audio file
+            gSounds["record"]:play()
+            self.bonus = AlienBonus()
+          end
+
           break
         end
       end
@@ -180,6 +188,7 @@ function PlayState:update(dt)
           bullet = self.bullet,
           aliens = self.aliens,
           bullets = self.bullets,
+          bonus = self.bonus,
           round = self.round,
           score = self.score,
           hasRecord = self.hasRecord,
@@ -203,6 +212,29 @@ function PlayState:update(dt)
       )
 
       table.remove(self.bullets, i)
+    end
+  end
+
+  if self.bonus then
+    self.bonus:update(dt)
+    if self.bullet and testAABB(self.bonus, self.bullet) then
+      gSounds["hit"]:play()
+      self.bonus.inPlay = false
+      self.bullet = nil
+      self.score = self.score + 100 + math.random(10) * 10
+
+      table.insert(
+        self.particles,
+        {
+          x = self.bonus.x + self.bonus.width / 2 - BULLET_PARTICLES_WIDTH / 2,
+          y = self.bonus.y + self.bonus.height / 2 - BULLET_PARTICLES_HEIGHT / 2,
+          type = 1,
+          dt = 0
+        }
+      )
+    end
+    if not self.bonus.inPlay then
+      self.bonus = nil
     end
   end
 
@@ -230,6 +262,7 @@ function PlayState:update(dt)
         bullet = self.bullet,
         aliens = self.aliens,
         bullets = self.bullets,
+        bonus = self.bonus,
         round = self.round,
         score = self.score,
         hasRecord = self.hasRecord,
@@ -270,6 +303,10 @@ function PlayState:render()
 
   for i, particle in ipairs(self.particles) do
     love.graphics.draw(gTextures["spritesheet"], gFrames["particles"][particle.type], particle.x, particle.y)
+  end
+
+  if self.bonus then
+    self.bonus:render()
   end
 end
 

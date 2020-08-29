@@ -5,6 +5,7 @@ function RoundState:enter(params)
   self.bullet = params.bullet or nil
   self.aliens = params.aliens or createAliens()
   self.bullets = params.bullets or {}
+  self.bonus = params.bonus
 
   self.round = params.round or 1
   self.score = params.score or 0
@@ -28,6 +29,7 @@ function RoundState:enter(params)
           bullet = self.bullet,
           aliens = self.aliens,
           bullets = self.bullets,
+          bonus = self.bonus,
           round = self.round,
           score = self.score,
           hasRecord = self.hasRecord,
