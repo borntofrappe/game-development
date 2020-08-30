@@ -3,6 +3,7 @@ require "src/constants"
 Class = require "res/lib/class"
 
 require "src/Player"
+require "src/Platform"
 
 require "src/Utils"
 

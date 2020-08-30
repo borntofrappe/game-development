@@ -19,7 +19,8 @@ function love.load()
   }
 
   gFrames = {
-    ["player"] = GenerateQuadPlayer(gTextures["spritesheet"])
+    ["player"] = GenerateQuadPlayer(gTextures["spritesheet"]),
+    ["platforms"] = GenerateQuadsPlatforms(gTextures["spritesheet"])
   }
 
   gStateMachine =
@@ -58,4 +59,16 @@ function love.draw()
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
   gStateMachine:render()
+end
+
+function testAABB(box1, box2)
+  if box1.x + box1.width < box2.x or box1.x > box2.x + box2.width then
+    return false
+  end
+
+  if box1.y + box1.height < box2.y or box1.y > box2.y + box2.height then
+    return false
+  end
+
+  return true
 end
