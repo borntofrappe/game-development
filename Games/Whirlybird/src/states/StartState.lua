@@ -10,6 +10,23 @@ function StartState:update(dt)
     love.event.quit()
   end
 
+  if love.keyboard.isDown("right") then
+    self.player:slide("right")
+  end
+
+  if love.keyboard.isDown("left") then
+    self.player:slide("left")
+  end
+
+  if love.mouse.isDown(1) then
+    x = love.mouse.getPosition()
+    if x > WINDOW_WIDTH / 2 then
+      self.player:slide("right")
+    else
+      self.player:slide("left")
+    end
+  end
+
   self.player:update(dt)
 end
 

@@ -2,12 +2,6 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- feature: move the player left and right
-
-  - with left and right arrows
-
-  - by clicking on the left and right half
-
 - style: design helper graphics to illustrate how to play
 
 - feature: design play state with hard-coded platforms
