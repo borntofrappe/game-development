@@ -27,11 +27,14 @@ function love.load()
     {
       ["start"] = function()
         return StartState()
+      end,
+      ["play"] = function()
+        return PlayState()
       end
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("start", {})
 
   love.keyboard.keypressed = {}
 end

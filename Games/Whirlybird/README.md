@@ -4,7 +4,7 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - style: design helper graphics to illustrate how to play
 
-- feature: design play state with hard-coded platforms
+- feature: add platforms to play state
 
 - feature: prompt a gameover when the player crosses the bottom of the screen
 

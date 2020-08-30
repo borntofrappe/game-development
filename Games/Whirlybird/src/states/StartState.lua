@@ -2,12 +2,25 @@ StartState = Class({__includes = BaseState})
 
 function StartState:init()
   self.text = "Start"
-  self.player = Player(WINDOW_WIDTH / 2 - PLAYER_WIDTH / 2, WINDOW_HEIGHT - 60 - PLAYER_HEIGHT)
+  self.y = WINDOW_HEIGHT - 60
+end
+
+function StartState:enter(params)
+  self.player = params.player or Player(WINDOW_WIDTH / 2 - PLAYER_WIDTH / 2, self.y - PLAYER_HEIGHT)
 end
 
 function StartState:update(dt)
   if love.keyboard.waspressed("escape") then
     love.event.quit()
+  end
+
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    gStateMachine:change(
+      "play",
+      {
+        player = self.player
+      }
+    )
   end
 
   if love.keyboard.isDown("right") then
@@ -19,12 +32,25 @@ function StartState:update(dt)
   end
 
   if love.mouse.isDown(1) then
-    x = love.mouse.getPosition()
-    if x > WINDOW_WIDTH / 2 then
-      self.player:slide("right")
+    x, y = love.mouse.getPosition()
+    if y >= self.y then
+      gStateMachine:change(
+        "play",
+        {
+          player = self.player
+        }
+      )
     else
-      self.player:slide("left")
+      if x > WINDOW_WIDTH / 2 then
+        self.player:slide("right")
+      else
+        self.player:slide("left")
+      end
     end
+  end
+
+  if self.player.y >= self.y - PLAYER_HEIGHT then
+    self.player:bounce(self.y - PLAYER_HEIGHT)
   end
 
   self.player:update(dt)
@@ -32,7 +58,7 @@ end
 
 function StartState:render()
   love.graphics.setColor(gColors["grey"]["r"], gColors["grey"]["g"], gColors["grey"]["b"])
-  love.graphics.rectangle("fill", 0, WINDOW_HEIGHT - 60, WINDOW_WIDTH, 60)
+  love.graphics.rectangle("fill", 0, self.y, WINDOW_WIDTH, WINDOW_HEIGHT - self.y)
 
   love.graphics.setColor(gColors["background"]["r"], gColors["background"]["g"], gColors["background"]["b"])
   love.graphics.setFont(gFonts["big"])

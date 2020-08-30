@@ -16,11 +16,6 @@ function Player:update(dt)
   self.dy = self.dy + GRAVITY * dt
   self.y = self.y + self.dy
 
-  if self.y >= self.y0 then
-    self.y = self.y0
-    self.dy = -PLAYER_JUMP
-  end
-
   if self.dx >= 0 then
     self.dx = self.dx - FRICTION * dt
     self.x = self.x + self.dx * self.direction
@@ -50,4 +45,9 @@ end
 function Player:slide(direction)
   self.dx = PLAYER_SLIDE
   self.direction = direction == "right" and 1 or -1
+end
+
+function Player:bounce(y)
+  self.y = self.y
+  self.dy = -PLAYER_JUMP
 end
