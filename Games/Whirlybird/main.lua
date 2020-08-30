@@ -14,6 +14,14 @@ function love.load()
     ["grey"] = {["r"] = 91 / 255, ["g"] = 96 / 255, ["b"] = 99 / 255}
   }
 
+  gTextures = {
+    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
+  }
+
+  gFrames = {
+    ["player"] = GenerateQuadPlayer(gTextures["spritesheet"])
+  }
+
   gStateMachine =
     StateMachine(
     {
