@@ -31,6 +31,9 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState()
+      end,
+      ["gameover"] = function()
+        return GameoverState()
       end
     }
   )

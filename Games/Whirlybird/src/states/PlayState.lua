@@ -50,7 +50,7 @@ function PlayState:update(dt)
   end
 
   if self.player.y >= WINDOW_HEIGHT - PLAYER_HEIGHT then
-    self.player:bounce(WINDOW_HEIGHT - PLAYER_HEIGHT)
+    gStateMachine:change("gameover")
   end
 
   self.player:update(dt)

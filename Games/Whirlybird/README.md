@@ -6,9 +6,7 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - style: redesign platforms to be less wide
 
-- feature: prompt a gameover when the player crosses the bottom of the screen
-
-- feature: scroll vertically with the player. Above as it bounces on the platforms, below as it falls (for a limited section)
+- feature: scroll vertically with the player. Above as it bounces on the platforms, below as it falls
 
 - style: design falling animation
 
