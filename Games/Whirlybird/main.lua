@@ -5,9 +5,11 @@ function love.load()
   love.window.setTitle("Whirlybird")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
+  gRecord = 0
+
   gFonts = {
     ["big"] = love.graphics.newFont("res/fonts/font.ttf", 48),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 20)
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
   }
 
   gColors = {
@@ -75,4 +77,13 @@ function testAABB(box1, box2)
   end
 
   return true
+end
+
+function showScore(score)
+  love.graphics.setColor(gColors["background"]["r"], gColors["background"]["g"], gColors["background"]["b"])
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, 46)
+
+  love.graphics.setColor(gColors["grey"]["r"], gColors["grey"]["g"], gColors["grey"]["b"])
+  love.graphics.setFont(gFonts["normal"])
+  love.graphics.print(score .. " HI:" .. gRecord, 12, 12)
 end

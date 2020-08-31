@@ -1,5 +1,5 @@
 WINDOW_WIDTH = 400
-WINDOW_HEIGHT = 560
+WINDOW_HEIGHT = 600
 
 OPTIONS = {
   fullscreen = false,

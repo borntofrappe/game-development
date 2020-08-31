@@ -8,6 +8,7 @@ end
 function StartState:enter(params)
   self.player = params.player or Player(WINDOW_WIDTH / 2 - PLAYER_WIDTH / 2, self.y - PLAYER_HEIGHT)
   self.cameraScroll = params.cameraScroll or 0
+  self.score = params.score or 0
 
   self.player.y = self.player.y + self.cameraScroll
 end
@@ -21,7 +22,8 @@ function StartState:update(dt)
     gStateMachine:change(
       "play",
       {
-        player = self.player
+        player = self.player,
+        score = self.score
       }
     )
   end

@@ -14,7 +14,8 @@ function PlayState:init()
 end
 
 function PlayState:enter(params)
-  self.player = params.player
+  self.player = params.player or Player(WINDOW_WIDTH / 2 - PLAYER_WIDTH / 2, WINDOW_HEIGHT / 2 - PLAYER_HEIGHT / 2)
+  self.score = params.score or 0
 end
 
 function PlayState:update(dt)
@@ -37,6 +38,7 @@ function PlayState:update(dt)
 
   if self.player.dy < 5 and self.player.y < WINDOW_HEIGHT / 4 - self.cameraScroll then
     self.cameraScroll = self.cameraScroll + 5
+    self.score = self.cameraScroll
 
     for k, platform in pairs(self.platforms) do
       if self.cameraScroll + platform.y > WINDOW_HEIGHT then
@@ -60,7 +62,12 @@ function PlayState:update(dt)
   end
 
   if self.player.y >= WINDOW_HEIGHT - PLAYER_HEIGHT - self.cameraScroll then
-    gStateMachine:change("gameover")
+    gStateMachine:change(
+      "gameover",
+      {
+        score = self.score
+      }
+    )
   end
 
   self.player:update(dt)
@@ -70,38 +77,24 @@ function PlayState:update(dt)
       "start",
       {
         player = self.player,
-        cameraScroll = self.cameraScroll
+        cameraScroll = self.cameraScroll,
+        score = self.score
       }
     )
-  end
-
-  -- helper functions to test camera scroll
-  if love.keyboard.isDown("up") then
-    self.cameraScroll = self.cameraScroll + 5
-
-    for k, platform in pairs(self.platforms) do
-      if self.cameraScroll + platform.y > WINDOW_HEIGHT then
-        table.remove(self.platforms, k)
-
-        table.insert(
-          self.platforms,
-          Platform(self.x + math.random(PLATFORM_GAP_X * -1, PLATFORM_GAP_X), self.y, math.random(4))
-        )
-        self.y = self.y - PLATFORM_GAP_Y
-      end
-    end
-  end
-
-  if love.keyboard.isDown("down") then
-    self.cameraScroll = math.max(self.cameraScroll - 5, 0)
   end
 end
 
 function PlayState:render()
   love.graphics.translate(0, self.cameraScroll)
+
+  love.graphics.setColor(1, 1, 1, 1)
   for k, platform in pairs(self.platforms) do
     platform:render()
   end
 
   self.player:render()
+
+  love.graphics.translate(0, -self.cameraScroll)
+
+  showScore(self.score)
 end
