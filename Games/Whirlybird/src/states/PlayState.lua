@@ -6,7 +6,12 @@ function PlayState:init()
   self.y = WINDOW_HEIGHT - 60
 
   for i = 1, 5 do
-    self.platforms[i] = Platform(self.x, self.y - PLATFORM_GAP * (i - 1), 1)
+    self.platforms[i] =
+      Platform(
+      self.x + math.random(PLATFORM_GAP_X * -1, PLATFORM_GAP_X),
+      self.y - PLATFORM_GAP_Y * (i - 1),
+      math.random(4)
+    )
   end
 end
 

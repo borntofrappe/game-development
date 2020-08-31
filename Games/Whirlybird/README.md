@@ -8,8 +8,6 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - style: design falling animation
 
-- style: redesign the hat to have multiple versions with different colors
-
 - feature: animate gameover state with player jumping on a solid v. crumbling platform
 
 ## Design
@@ -22,7 +20,7 @@ For the spritesheet, refer to the following table.
 | ----------- | --- | --- | ----- | ------ |
 | Player      | 0   | 0   | 39    | 33     |
 | Hat         | 42  | 0   | 21    | 12     |
-| Platform(s) | 0   | 33  | 51    | 18     |
+| Platform(s) | 0   | 33  | 39    | 15     |
 
 The platforms have a different height, but are all designed in a box 63 wide by 24 tall. Since the player can only bounce on the top of a platform, having a transparent section at the bottom does not influence the gameplay; this simplifies the way the quads are created from the spritesheet.
 
