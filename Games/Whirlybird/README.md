@@ -2,8 +2,6 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- feature: scroll vertically as the player moves vertically
-
 - feature: add and record score in the top left corner
 
 - feature: change the jumping behavior based on the type of the platform
@@ -21,6 +19,10 @@ Recreate the pixelated game made playable from the "Play Games" application deve
   - 4: squish trampoline
 
 - feature: allow to fall for a brief period before triggering the gameover. Use falling animation.
+
+- feature: add hat to jump a considerable amount
+
+- style: design sprite for the player with a hat
 
 - style: design helper graphics to illustrate how to play
 
