@@ -5,13 +5,12 @@ function PlayState:init()
   self.x = WINDOW_WIDTH / 2 - PLATFORM_WIDTH / 2
   self.y = WINDOW_HEIGHT - 60
 
-  for i = 1, 5 do
-    self.platforms[i] =
-      Platform(
-      self.x + math.random(PLATFORM_GAP_X * -1, PLATFORM_GAP_X),
-      self.y - PLATFORM_GAP_Y * (i - 1),
-      math.random(4)
-    )
+  self.cameraScroll = 0
+
+  for i = 1, 10 do
+    self.platforms[i] = Platform(self.x + math.random(PLATFORM_GAP_X * -1, PLATFORM_GAP_X), self.y, math.random(4))
+
+    self.y = self.y - PLATFORM_GAP_Y
   end
 end
 
@@ -28,6 +27,28 @@ function PlayState:update(dt)
       }
     )
   end
+
+  -- helper functions to test camera scroll
+  if love.keyboard.isDown("up") then
+    self.cameraScroll = self.cameraScroll + 5
+
+    for k, platform in pairs(self.platforms) do
+      if self.cameraScroll + platform.y > WINDOW_HEIGHT then
+        table.remove(self.platforms, k)
+
+        table.insert(
+          self.platforms,
+          Platform(self.x + math.random(PLATFORM_GAP_X * -1, PLATFORM_GAP_X), self.y, math.random(4))
+        )
+        self.y = self.y - PLATFORM_GAP_Y
+      end
+    end
+  end
+
+  if love.keyboard.isDown("down") then
+    self.cameraScroll = math.max(self.cameraScroll - 5, 0)
+  end
+  --
 
   if love.keyboard.isDown("right") then
     self.player:slide("right")
@@ -54,7 +75,7 @@ function PlayState:update(dt)
     end
   end
 
-  if self.player.y >= WINDOW_HEIGHT - PLAYER_HEIGHT then
+  if self.player.y >= WINDOW_HEIGHT - PLAYER_HEIGHT - self.cameraScroll then
     gStateMachine:change("gameover")
   end
 
@@ -62,6 +83,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
+  love.graphics.translate(0, self.cameraScroll)
   for k, platform in pairs(self.platforms) do
     platform:render()
   end

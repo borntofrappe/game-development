@@ -2,11 +2,27 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- style: design helper graphics to illustrate how to play
-
-- feature: scroll vertically with the player. Above as it bounces on the platforms, below as it falls
+- feature: scroll vertically as the player moves vertically
 
 - feature: add and record score in the top left corner
+
+- feature: change the jumping behavior based on the type of the platform
+
+  - 2: break the platform
+
+  - 4: jump higher
+
+  - 5: jump through — add cloud to quads table
+
+- feature: animate platforms
+
+  - 2: progressively break platform
+
+  - 4: squish trampoline
+
+- feature: allow to fall for a brief period before triggering the gameover. Use falling animation.
+
+- style: design helper graphics to illustrate how to play
 
 - feature: animate gameover state with player jumping on a solid v. crumbling platform
 

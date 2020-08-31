@@ -9,5 +9,5 @@ function Platform:init(x, y, type)
 end
 
 function Platform:render()
-  love.graphics.draw(gTextures["spritesheet"], gFrames["platforms"][self.type], self.x, self.y)
+  love.graphics.draw(gTextures["spritesheet"], gFrames["platforms"][self.type], math.floor(self.x), math.floor(self.y))
 end
