@@ -4,10 +4,6 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - bug: scroll the window to have the player at most half of the window's height
 
-- style: increase gravity, reduce jumping
-
-- feature: add bouncing audio
-
 - feature: change the jumping behavior based on the type of the platform
 
   - 2: break the platform

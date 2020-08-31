@@ -48,6 +48,7 @@ function Player:slide(direction)
 end
 
 function Player:bounce(y)
+  gSounds["bounce"]:play()
   self.y = self.y
   self.dy = -PLAYER_JUMP
 end

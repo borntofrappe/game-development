@@ -12,6 +12,10 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
   }
 
+  gSounds = {
+    ["bounce"] = love.audio.newSource("res/sounds/bounce.wav", "static")
+  }
+
   gColors = {
     ["background"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
     ["grey"] = {["r"] = 91 / 255, ["g"] = 96 / 255, ["b"] = 99 / 255}
