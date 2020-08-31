@@ -6,7 +6,7 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - feature: scroll vertically with the player. Above as it bounces on the platforms, below as it falls
 
-- style: design falling animation
+- feature: add and record score in the top left corner
 
 - feature: animate gameover state with player jumping on a solid v. crumbling platform
 
@@ -16,11 +16,12 @@ The font is the same font introduced in _Pong_.
 
 For the spritesheet, refer to the following table.
 
-| Visual      | x   | y   | width | height |
-| ----------- | --- | --- | ----- | ------ |
-| Player      | 0   | 0   | 39    | 33     |
-| Hat         | 42  | 0   | 21    | 12     |
-| Platform(s) | 0   | 33  | 39    | 15     |
+| Visual         | x   | y   | width | height |
+| -------------- | --- | --- | ----- | ------ |
+| Player         | 0   | 0   | 39    | 33     |
+| Player Falling | 33  | 0   | 39    | 45     |
+| Hat(s)         | 39  | 0   | 21    | 12     |
+| Platform(s)    | 39  | 39  | 39    | 15     |
 
 The platforms have a different height, but are all designed in a box 63 wide by 24 tall. Since the player can only bounce on the top of a platform, having a transparent section at the bottom does not influence the gameplay; this simplifies the way the quads are created from the spritesheet.
 
