@@ -4,8 +4,6 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - style: design helper graphics to illustrate how to play
 
-- style: redesign platforms to be less wide
-
 - feature: scroll vertically with the player. Above as it bounces on the platforms, below as it falls
 
 - style: design falling animation
@@ -24,7 +22,7 @@ For the spritesheet, refer to the following table.
 | ----------- | --- | --- | ----- | ------ |
 | Player      | 0   | 0   | 39    | 33     |
 | Hat         | 42  | 0   | 21    | 12     |
-| Platform(s) | 0   | 33  | 63    | 24     |
+| Platform(s) | 0   | 33  | 51    | 18     |
 
 The platforms have a different height, but are all designed in a box 63 wide by 24 tall. Since the player can only bounce on the top of a platform, having a transparent section at the bottom does not influence the gameplay; this simplifies the way the quads are created from the spritesheet.
 
