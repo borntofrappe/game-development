@@ -1,6 +1,7 @@
 require "src/constants"
 
 Class = require "res/lib/class"
+require("res/lib/Animation")
 
 require "src/Player"
 require "src/Interactable"

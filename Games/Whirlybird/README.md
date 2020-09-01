@@ -4,9 +4,9 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - bug: scroll the window to have the player at most half of the window's height
 
-- bug: guarantee a playable sequence
+- bug: guarantee a playable sequence of interactables (level maker?)
 
-- feature: animate interactables looping through the different varieties. Move the fourth and eight types horizontally.
+- visual bug: redesign fading platform with uniform changes in opacity
 
 - feature: allow to fall for a brief period before triggering the gameover. Use falling animation
 

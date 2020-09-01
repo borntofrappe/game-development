@@ -57,22 +57,34 @@ function PlayState:update(dt)
   if self.player.dy > 0 then
     for k, interactable in pairs(self.interactables) do
       if testAABB(self.player, interactable) then
-        self.player.y = interactable.y - self.player.height
         if interactable.type == 3 then
+          interactable.isAnimated = true
+          self.player.y = interactable.y - self.player.height
           self.player:bounce()
-          table.remove(self.interactables, k)
         elseif interactable.type == 5 then
-          table.remove(self.interactables, k)
+          interactable.isAnimated = true
         elseif interactable.type == 6 then
+          interactable.isAnimated = true
+          self.player.y = interactable.y - self.player.height
           self.player:bounce(1.5)
-        elseif interactable.type == 7 or (interactable.type == 8 and interactable.variety == 3) then
+        elseif interactable.type == 7 then
           gStateMachine:change(
             "gameover",
             {
               score = self.score
             }
           )
+        elseif interactable.type == 8 then
+          if interactable.variety == 3 then
+            gStateMachine:change(
+              "gameover",
+              {
+                score = self.score
+              }
+            )
+          end
         else
+          self.player.y = interactable.y - self.player.height
           self.player:bounce()
         end
       end
@@ -86,6 +98,13 @@ function PlayState:update(dt)
         score = self.score
       }
     )
+  end
+
+  for k, interactable in pairs(self.interactables) do
+    interactable:update(dt)
+    if not interactable.inPlay then
+      table.remove(self.interactables, k)
+    end
   end
 
   self.player:update(dt)
