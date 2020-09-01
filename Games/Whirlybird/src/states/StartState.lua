@@ -54,8 +54,9 @@ function StartState:update(dt)
     end
   end
 
-  if self.player.y >= self.y - PLAYER_HEIGHT then
-    self.player:bounce(self.y - PLAYER_HEIGHT)
+  if self.player.y >= self.y - self.player.height then
+    self.player.y = self.y - self.player.height
+    self.player:bounce()
   end
 
   self.player:update(dt)

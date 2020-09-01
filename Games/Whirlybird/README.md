@@ -32,18 +32,23 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 The font is the same font introduced in _Pong_.
 
-For the spritesheet, refer to the following table.
+For the spritesheet, the player and platforms are designed with different sizes.
 
-| Visual         | x   | y   | width | height |
-| -------------- | --- | --- | ----- | ------ |
-| Player         | 0   | 0   | 39    | 33     |
-| Player Falling | 33  | 0   | 39    | 45     |
-| Hat(s)         | 39  | 0   | 21    | 12     |
-| Platform(s)    | 39  | 39  | 39    | 15     |
+| Visual                              | x   | y   | width | height |
+| ----------------------------------- | --- | --- | ----- | ------ |
+| Player                              | 0   | 0   | 39    | 33     |
+| Player Flying                       | 39  | 0   | 36    | 42     |
+| Player Falling                      | 147 | 0   | 39    | 45     |
+| Hat                                 | 0   | 42  | 21    | 18     |
+| Solid platform                      | 0   | 60  | 39    | 9      |
+| Fading platform                     | 0   | 69  | 39    | 9      |
+| Crumbling and moving platform,cloud | 0   | 78  | 39    | 15     |
+| Trampoline and spikes               | 0   | 123 | 39    | 21     |
+| Enemy                               | 0   | 165 | 39    | 39     |
 
-The platforms have a different height, but are all designed in a box 63 wide by 24 tall. Since the player can only bounce on the top of a platform, having a transparent section at the bottom does not influence the gameplay; this simplifies the way the quads are created from the spritesheet.
+Side by side you find different versions, to use when animating the visuals.
 
-For the color palette, refer to the following table.
+For the palette, the game relies on the following colors.
 
 | Color      | r   | g   | b   |
 | ---------- | --- | --- | --- |
