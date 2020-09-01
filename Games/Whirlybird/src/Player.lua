@@ -47,7 +47,8 @@ function Player:slide(direction)
   self.direction = direction == "right" and 1 or -1
 end
 
-function Player:bounce()
+function Player:bounce(intensity)
+  local multiplier = intensity and intensity or 1
   gSounds["bounce"]:play()
-  self.dy = -PLAYER_JUMP
+  self.dy = -PLAYER_JUMP * multiplier
 end

@@ -3,7 +3,7 @@ Interactable = Class {}
 function Interactable:init(x, y, type)
   self.x = x
   self.y = y
-  self.type = type
+  self.type = math.random(TYPES)
   self.width = INTERACTABLE_WIDTH
   self.height = INTERACTABLE_HEIGHTS[self.type]
   self.variety = 1

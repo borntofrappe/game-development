@@ -4,17 +4,7 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - bug: scroll the window to have the player at most half of the window's height
 
-- feature: change the jumping behavior based on the type of the interactable
-
-  - 3: break the platform
-
-  - 5: jump through — add cloud to quads table
-
-  - 6: jump higher
-
-  - 7: game over
-
-  - 8: game over, only with the third variety
+- bug: guarantee a playable sequence
 
 - feature: animate interactables looping through the different varieties. Move the fourth and eight types horizontally.
 

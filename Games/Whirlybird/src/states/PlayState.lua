@@ -8,12 +8,7 @@ function PlayState:init()
   self.cameraScroll = 0
 
   for i = 1, 10 do
-    self.interactables[i] =
-      Interactable(
-      self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X),
-      self.y,
-      math.random(#INTERACTABLE_HEIGHTS)
-    )
+    self.interactables[i] = Interactable(self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X), self.y)
     self.y = self.y - INTERACTABLE_GAP_Y
   end
 end
@@ -52,11 +47,7 @@ function PlayState:update(dt)
 
         table.insert(
           self.interactables,
-          Interactable(
-            self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X),
-            self.y,
-            math.random(#INTERACTABLE_HEIGHTS)
-          )
+          Interactable(self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X), self.y)
         )
         self.y = self.y - INTERACTABLE_GAP_Y
       end
@@ -67,7 +58,23 @@ function PlayState:update(dt)
     for k, interactable in pairs(self.interactables) do
       if testAABB(self.player, interactable) then
         self.player.y = interactable.y - self.player.height
-        self.player:bounce()
+        if interactable.type == 3 then
+          self.player:bounce()
+          table.remove(self.interactables, k)
+        elseif interactable.type == 5 then
+          table.remove(self.interactables, k)
+        elseif interactable.type == 6 then
+          self.player:bounce(1.5)
+        elseif interactable.type == 7 or (interactable.type == 8 and interactable.variety == 3) then
+          gStateMachine:change(
+            "gameover",
+            {
+              score = self.score
+            }
+          )
+        else
+          self.player:bounce()
+        end
       end
     end
   end
