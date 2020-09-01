@@ -27,7 +27,7 @@ function love.load()
 
   gFrames = {
     ["player"] = GenerateQuadPlayer(gTextures["spritesheet"]),
-    ["platforms"] = GenerateQuadsPlatforms(gTextures["spritesheet"])
+    ["interactables"] = GenerateQuadsInteractables(gTextures["spritesheet"])
   }
 
   gStateMachine =

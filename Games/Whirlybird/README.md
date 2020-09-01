@@ -4,25 +4,23 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - bug: scroll the window to have the player at most half of the window's height
 
-- feature: change the jumping behavior based on the type of the platform
+- feature: change the jumping behavior based on the type of the interactable
 
-  - 2: break the platform
-
-  - 4: jump higher
+  - 3: break the platform
 
   - 5: jump through — add cloud to quads table
 
-- feature: animate platforms
+  - 6: jump higher
 
-  - 2: progressively break platform
+  - 7: game over
 
-  - 4: squish trampoline
+  - 8: game over, only with the third variety
 
-- feature: allow to fall for a brief period before triggering the gameover. Use falling animation.
+- feature: animate interactables looping through the different varieties. Move the fourth and eight types horizontally.
 
-- feature: add hat to jump a considerable amount
+- feature: allow to fall for a brief period before triggering the gameover. Use falling animation
 
-- style: design sprite for the player with a hat
+- style: design sprites for a collision with the seventh and eight type of interactable
 
 - style: design helper graphics to illustrate how to play
 
