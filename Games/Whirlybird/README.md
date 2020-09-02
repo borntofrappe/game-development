@@ -2,7 +2,7 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- bug: guarantee a playable sequence of interactables (level maker?)
+- bug: avoid pop-in by ensuring the platforms exist before they are in focus
 
 - bug: scroll the window to have the player at most half of the window's height
 

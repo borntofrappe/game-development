@@ -1,14 +1,14 @@
 PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
-  self.interactables = {}
   self.x = WINDOW_WIDTH / 2 - INTERACTABLE_WIDTH / 2
   self.y = WINDOW_HEIGHT - 60
-  self.y0 = 0
   self.cameraScroll = 0
 
+  self.previous = 1
+  self.interactables = {}
   for i = 1, 10 do
-    self.interactables[i] = Interactable(self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X), self.y)
+    self.interactables[i] = Interactable(self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X), self.y, 1)
     self.y = self.y - INTERACTABLE_GAP_Y
   end
 end
@@ -45,9 +45,22 @@ function PlayState:update(dt)
       if self.cameraScroll + interactable.y > WINDOW_HEIGHT then
         table.remove(self.interactables, k)
 
+        local isSafe = false
+        for j, type in pairs(INTERACTABLE_SAFE) do
+          if self.previous == type then
+            isSafe = true
+            break
+          end
+        end
+
+        local type =
+          isSafe and INTERACTABLE_TYPES[math.random(#INTERACTABLE_TYPES)] or
+          INTERACTABLE_SAFE[math.random(#INTERACTABLE_SAFE)]
+        self.previous = type
+
         table.insert(
           self.interactables,
-          Interactable(self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X), self.y)
+          Interactable(self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X), self.y, type)
         )
         self.y = self.y - INTERACTABLE_GAP_Y
       end
