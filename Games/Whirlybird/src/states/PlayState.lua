@@ -58,22 +58,27 @@ function PlayState:update(dt)
     for k, interactable in pairs(self.interactables) do
       if testAABB(self.player, interactable) then
         if interactable.type == 3 then
+          gSounds["destroy"]:play()
           interactable.isAnimated = true
           self.player.y = interactable.y - self.player.height
           self.player:bounce()
         elseif interactable.type == 5 then
           interactable.isAnimated = true
         elseif interactable.type == 6 then
+          gSounds["jump"]:play()
           interactable.isAnimated = true
           self.player.y = interactable.y - self.player.height
-          self.player:bounce(1.5)
+          self.player:bounce(2)
         elseif interactable.type == 7 then
+          gSounds["hurt"]:play()
           self:hurt()
         elseif interactable.type == 8 then
           if interactable.variety == 3 then
+            gSounds["hurt"]:play()
             self:hurt()
           end
         else
+          gSounds["bounce"]:play()
           self.player.y = interactable.y - self.player.height
           self.player:bounce()
         end

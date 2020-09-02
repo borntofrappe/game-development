@@ -2,19 +2,19 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- bug/feature: add audio for the hurt state
+- bug: guarantee a playable sequence of interactables (level maker?)
 
 - bug: scroll the window to have the player at most half of the window's height
 
-- bug: guarantee a playable sequence of interactables (level maker?)
-
 - feature: allow to fall for a brief period before triggering the gameover. Use falling animation
 
-- style: design sprites for a collision with the seventh and eight type of interactable
+- feature: add hat powerup
+
+- suggestion: add delay between hurt and gameover state
+
+- suggestion: refactor eight interactable into enemy class. Moves horizontally and vertically.
 
 - style: design helper graphics to illustrate how to play
-
-- feature: animate gameover state with player jumping on a solid v. crumbling platform
 
 ## Design
 

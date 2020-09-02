@@ -13,7 +13,11 @@ function love.load()
   }
 
   gSounds = {
-    ["bounce"] = love.audio.newSource("res/sounds/bounce.wav", "static")
+    ["bounce"] = love.audio.newSource("res/sounds/bounce.wav", "static"),
+    ["destroy"] = love.audio.newSource("res/sounds/destroy.wav", "static"),
+    ["fly"] = love.audio.newSource("res/sounds/fly.wav", "static"),
+    ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),
+    ["jump"] = love.audio.newSource("res/sounds/jump.wav", "static")
   }
 
   gColors = {
