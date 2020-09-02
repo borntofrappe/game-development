@@ -68,20 +68,10 @@ function PlayState:update(dt)
           self.player.y = interactable.y - self.player.height
           self.player:bounce(1.5)
         elseif interactable.type == 7 then
-          gStateMachine:change(
-            "gameover",
-            {
-              score = self.score
-            }
-          )
+          self:hurt()
         elseif interactable.type == 8 then
           if interactable.variety == 3 then
-            gStateMachine:change(
-              "gameover",
-              {
-                score = self.score
-              }
-            )
+            self:hurt()
           end
         else
           self.player.y = interactable.y - self.player.height
@@ -134,4 +124,16 @@ function PlayState:render()
   love.graphics.translate(0, -self.cameraScroll)
 
   showScore(self.score)
+end
+
+function PlayState:hurt()
+  gStateMachine:change(
+    "hurt",
+    {
+      cameraScroll = self.cameraScroll,
+      score = self.score,
+      interactables = self.interactables,
+      player = self.player
+    }
+  )
 end

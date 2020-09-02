@@ -2,10 +2,12 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
+- bug/feature: add audio for the hurt state
+
 - bug: scroll the window to have the player at most half of the window's height
 
 - bug: guarantee a playable sequence of interactables (level maker?)
-  
+
 - feature: allow to fall for a brief period before triggering the gameover. Use falling animation
 
 - style: design sprites for a collision with the seventh and eight type of interactable
@@ -25,6 +27,7 @@ For the spritesheet, the player and platforms are designed with different sizes.
 | Player                              | 0   | 0   | 39    | 33     |
 | Player Flying                       | 39  | 0   | 36    | 42     |
 | Player Falling                      | 147 | 0   | 39    | 45     |
+| Player Particles                    | 198 | 45  | 27    | 27     |
 | Hat                                 | 0   | 42  | 21    | 18     |
 | Solid platform                      | 0   | 60  | 39    | 9      |
 | Fading platform                     | 0   | 69  | 39    | 9      |
