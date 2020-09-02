@@ -28,6 +28,16 @@ INTERACTABLE_HEIGHTS = {
   [7] = 21,
   [8] = 39
 }
+INTERACTABLE_INTERVALS = {
+  [1] = 1,
+  [2] = 0.8,
+  [3] = 0.07,
+  [4] = 0.5,
+  [5] = 0.08,
+  [6] = 0.07,
+  [7] = 0.05,
+  [8] = 1
+}
 
 INTERACTABLE_SPEED = 30
 TYPES = #INTERACTABLE_HEIGHTS

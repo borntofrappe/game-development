@@ -10,11 +10,11 @@ function Interactable:init(x, y, type)
   self.direction = math.random(2) == 1 and 1 or -1
   self.dx = INTERACTABLE_SPEED
 
-  self.isAnimated = self.type == 2 or self.type == 4 or self.type == 8
+  self.isAnimated = self.type == 2 or self.type == 4 or self.type == 7 or self.type == 8
   self.inPlay = true
 
   self.timer = 0
-  self.interval = self.isAnimated and 1 or 0.07
+  self.interval = INTERACTABLE_INTERVALS[self.type]
   self.variety = 1
   self.varieties = 4
 end
