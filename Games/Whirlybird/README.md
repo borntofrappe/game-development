@@ -2,8 +2,6 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- bug: touch controls for gameover state
-
 - feature: add hat powerup
 
 - style: design helper graphics to illustrate how to play

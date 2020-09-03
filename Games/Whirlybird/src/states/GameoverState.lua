@@ -16,7 +16,7 @@ function GameoverState:update()
     love.event.quit()
   end
 
-  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") or love.mouse.isDown(1) then
     gStateMachine:change("play", {})
   end
 end
