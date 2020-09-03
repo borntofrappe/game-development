@@ -2,11 +2,7 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- bug: avoid pop-in by ensuring the platforms exist before they are in focus
-
-- bug: scroll the window to have the player at most half of the window's height
-
-- feature: allow to fall for a brief period before triggering the gameover. Use falling animation
+- feature: allow to fall for a brief period before triggering the gameover. Use falling animation. Falling state?
 
 - feature: add hat powerup
 

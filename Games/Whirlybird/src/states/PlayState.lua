@@ -7,7 +7,7 @@ function PlayState:init()
 
   self.previous = 1
   self.interactables = {}
-  for i = 1, 10 do
+  for i = 1, math.ceil(WINDOW_HEIGHT / INTERACTABLE_GAP_Y) * 2 do
     self.interactables[i] = Interactable(self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X), self.y, 1)
     self.y = self.y - INTERACTABLE_GAP_Y
   end
@@ -38,8 +38,8 @@ function PlayState:update(dt)
   end
 
   if self.player.dy < 5 and self.player.y < WINDOW_HEIGHT / 3 - self.cameraScroll then
-    self.cameraScroll = self.cameraScroll + 5
-    self.score = self.cameraScroll
+    self.score = self.score + 5
+    self.cameraScroll = WINDOW_HEIGHT / 3 - self.player.y
 
     for k, interactable in pairs(self.interactables) do
       if self.cameraScroll + interactable.y > WINDOW_HEIGHT then
@@ -130,7 +130,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  love.graphics.translate(0, self.cameraScroll)
+  love.graphics.translate(0, math.floor(self.cameraScroll))
 
   love.graphics.setColor(1, 1, 1, 1)
   for k, interactable in pairs(self.interactables) do
@@ -139,7 +139,7 @@ function PlayState:render()
 
   self.player:render()
 
-  love.graphics.translate(0, -self.cameraScroll)
+  love.graphics.translate(0, math.floor(self.cameraScroll) * -1)
 
   showScore(self.score)
 end
