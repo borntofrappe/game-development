@@ -2,13 +2,9 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- bug: redesign player sprites to be vertically aligned
+- bug: touch controls for gameover state
 
 - feature: add hat powerup
-
-- suggestion: add delay between hurt and gameover state
-
-- suggestion: refactor eight interactable into enemy class. Moves horizontally and vertically.
 
 - style: design helper graphics to illustrate how to play
 

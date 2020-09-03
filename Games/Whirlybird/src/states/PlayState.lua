@@ -11,6 +11,9 @@ function PlayState:init()
     self.interactables[i] = Interactable(self.x + math.random(INTERACTABLE_GAP_X * -1, INTERACTABLE_GAP_X), self.y, 1)
     self.y = self.y - INTERACTABLE_GAP_Y
   end
+
+  self.timer = 0
+  self.delay = 0.5
 end
 
 function PlayState:enter(params)
@@ -36,6 +39,15 @@ function PlayState:update(dt)
       self.player:slide("left")
     end
   end
+
+  for k, interactable in pairs(self.interactables) do
+    interactable:update(dt)
+    if not interactable.inPlay then
+      table.remove(self.interactables, k)
+    end
+  end
+
+  self.player:update(dt)
 
   if self.player.dy < 5 and self.player.y < WINDOW_HEIGHT / 3 - self.cameraScroll then
     self.score = self.score + 5
@@ -100,25 +112,20 @@ function PlayState:update(dt)
   end
 
   if self.player.y >= WINDOW_HEIGHT - self.player.height - self.cameraScroll - self.interactables[1].height then
-    gStateMachine:change(
-      "falling",
-      {
-        cameraScroll = self.cameraScroll,
-        score = self.score,
-        interactables = self.interactables,
-        player = self.player
-      }
-    )
-  end
-
-  for k, interactable in pairs(self.interactables) do
-    interactable:update(dt)
-    if not interactable.inPlay then
-      table.remove(self.interactables, k)
+    self.cameraScroll = (WINDOW_HEIGHT - self.player.y - self.player.height - self.interactables[1].height)
+    self.timer = self.timer + dt
+    if self.timer >= self.delay then
+      gStateMachine:change(
+        "falling",
+        {
+          cameraScroll = self.cameraScroll,
+          score = self.score,
+          interactables = self.interactables,
+          player = self.player
+        }
+      )
     end
   end
-
-  self.player:update(dt)
 
   if love.keyboard.waspressed("escape") then
     gStateMachine:change(

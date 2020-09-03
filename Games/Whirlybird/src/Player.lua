@@ -64,8 +64,8 @@ function Player:change(state)
     height = PLAYER_FALLING_HEIGHT
   end
 
-  self.x = self.x + self.width / 2 - width / 2
-  self.y = self.y + self.height / 2 - height / 2
+  self.x = self.x + (self.width - width)
+  self.y = self.y + (self.height - height)
   self.width = width
   self.height = height
 end
