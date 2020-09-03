@@ -1,5 +1,31 @@
-function GenerateQuadPlayer(atlas)
-  return love.graphics.newQuad(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, atlas:getDimensions())
+function GenerateQuadsPlayer(atlas)
+  local quads = {}
+
+  local x = 0
+  local y = 0
+  local width = PLAYER_WIDTH
+  local height = PLAYER_HEIGHT
+
+  quads[1] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+
+  x = x + width
+  width = PLAYER_FLYING_WIDTH
+  height = PLAYER_FLYING_HEIGHT
+
+  for i = 2, 4 do
+    quads[i] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+    x = x + width
+  end
+
+  width = PLAYER_FALLING_WIDTH
+  height = PLAYER_FALLING_HEIGHT
+
+  for i = 5, 6 do
+    quads[i] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+    x = x + width
+  end
+
+  return quads
 end
 
 function GenerateQuadsInteractables(atlas)

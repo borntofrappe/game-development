@@ -30,7 +30,7 @@ function love.load()
   }
 
   gFrames = {
-    ["player"] = GenerateQuadPlayer(gTextures["spritesheet"]),
+    ["player"] = GenerateQuadsPlayer(gTextures["spritesheet"]),
     ["interactables"] = GenerateQuadsInteractables(gTextures["spritesheet"]),
     ["particles"] = GenerateQuadsParticles(gTextures["spritesheet"])
   }
@@ -46,6 +46,9 @@ function love.load()
       end,
       ["hurt"] = function()
         return HurtState()
+      end,
+      ["falling"] = function()
+        return FallingState()
       end,
       ["gameover"] = function()
         return GameoverState()

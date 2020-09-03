@@ -99,11 +99,14 @@ function PlayState:update(dt)
     end
   end
 
-  if self.player.y >= WINDOW_HEIGHT - self.player.height - self.cameraScroll then
+  if self.player.y >= WINDOW_HEIGHT - self.player.height - self.cameraScroll - self.interactables[1].height then
     gStateMachine:change(
-      "gameover",
+      "falling",
       {
-        score = self.score
+        cameraScroll = self.cameraScroll,
+        score = self.score,
+        interactables = self.interactables,
+        player = self.player
       }
     )
   end

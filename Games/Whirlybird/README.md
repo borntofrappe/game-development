@@ -2,7 +2,7 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Updates
 
-- feature: allow to fall for a brief period before triggering the gameover. Use falling animation. Falling state?
+- bug: redesign player sprites to be vertically aligned
 
 - feature: add hat powerup
 

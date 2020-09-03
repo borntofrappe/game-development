@@ -5,7 +5,7 @@ function Player:init(x, y)
   self.height = PLAYER_HEIGHT
   self.x = x
   self.y = y
-  self.y0 = y
+  self.variety = 1
 
   self.direction = 1
   self.dx = 0
@@ -33,7 +33,7 @@ end
 function Player:render()
   love.graphics.draw(
     gTextures["spritesheet"],
-    gFrames["player"],
+    gFrames["player"][self.variety],
     self.direction == 1 and math.floor(self.x) or math.floor(self.x + self.width),
     math.floor(self.y),
     0,
@@ -50,4 +50,22 @@ end
 function Player:bounce(type)
   local multiplier = type and type or 1
   self.dy = -PLAYER_JUMP * multiplier
+end
+
+function Player:change(state)
+  local width = PLAYER_WIDTH
+  local height = PLAYER_HEIGHT
+
+  if state == "flying" then
+    width = PLAYER_FLYING_WIDTH
+    height = PLAYER_FLYING_HEIGHT
+  elseif state == "falling" then
+    width = PLAYER_FALLING_WIDTH
+    height = PLAYER_FALLING_HEIGHT
+  end
+
+  self.x = self.x + self.width / 2 - width / 2
+  self.y = self.y + self.height / 2 - height / 2
+  self.width = width
+  self.height = height
 end
