@@ -2,32 +2,42 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Roadmap
 
+- feature: add gameover graphics
+
 - suggestion: refactor interactable #8 into enemy. Move horizontally and vertically
 
-- style: design helper graphics to illustrate how to play
+- bug: reset dy when moving from gameover to play
 
-- style: design additional animation for gameover state
+- visual bug: redesign moving platform to be more realistic
+
+- visual bug: randomize the sprite at which the platforms start (currently they are animated in unison)
 
 ## Design
 
 The font is the same font introduced in _Pong_.
 
-For the spritesheet, the player and platforms are designed with different sizes.
+For the spritesheet, the player and interactables are designed in "spritesheet.png"
 
-| Visual                              | x   | y   | width | height |
-| ----------------------------------- | --- | --- | ----- | ------ |
-| Player                              | 0   | 0   | 39    | 33     |
-| Player Flying                       | 39  | 0   | 36    | 42     |
-| Player Falling                      | 147 | 0   | 39    | 45     |
-| Player Particles                    | 198 | 45  | 27    | 27     |
-| Hat                                 | 0   | 42  | 21    | 18     |
-| Solid platform                      | 0   | 60  | 39    | 9      |
-| Fading platform                     | 0   | 69  | 39    | 9      |
-| Crumbling and moving platform,cloud | 0   | 78  | 39    | 15     |
-| Trampoline and spikes               | 0   | 123 | 39    | 21     |
-| Enemy                               | 0   | 165 | 39    | 39     |
+| Visual                               | x   | y   | width | height |
+| ------------------------------------ | --- | --- | ----- | ------ |
+| Player                               | 0   | 0   | 39    | 33     |
+| Player Flying                        | 39  | 0   | 36    | 42     |
+| Player Falling                       | 147 | 0   | 39    | 45     |
+| Player Particles                     | 198 | 45  | 27    | 27     |
+| Hat                                  | 0   | 42  | 21    | 18     |
+| Solid platform                       | 0   | 60  | 39    | 9      |
+| Fading platform                      | 0   | 69  | 39    | 9      |
+| Crumbling and moving platform, cloud | 0   | 78  | 39    | 15     |
+| Trampoline and spikes                | 0   | 123 | 39    | 21     |
+| Enemy                                | 0   | 165 | 39    | 39     |
 
-Side by side you find different versions, to use when animating the visuals.
+For the gameover state, additional visuals are designed in "spritesheet-gameover.png"
+
+| Visual                  | x   | y   | width | height |
+| ----------------------- | --- | --- | ----- | ------ |
+| Jumping, falling player | 0   | 0   | 45    | 48     |
+| Check, exclamation mark | 0   | 96  | 30    | 24     |
+| Play again              | 0   | 120 | 54    | 35     |
 
 For the palette, the game relies on the following colors.
 
