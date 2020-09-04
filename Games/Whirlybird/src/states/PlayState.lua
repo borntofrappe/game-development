@@ -19,7 +19,6 @@ end
 function PlayState:enter(params)
   self.player = params.player or Player(WINDOW_WIDTH / 2 - PLAYER_WIDTH / 2, WINDOW_HEIGHT / 2 - PLAYER_HEIGHT / 2)
   self.score = params.score or 0
-  self.player.dy = -5
 end
 
 function PlayState:update(dt)

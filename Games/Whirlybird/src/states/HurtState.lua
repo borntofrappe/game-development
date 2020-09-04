@@ -39,7 +39,7 @@ function HurtState:update(dt)
 end
 
 function HurtState:render()
-  love.graphics.translate(0, self.cameraScroll)
+  love.graphics.translate(0, math.floor(self.cameraScroll))
 
   love.graphics.setColor(1, 1, 1, 1)
   for k, interactable in pairs(self.interactables) do
@@ -48,7 +48,7 @@ function HurtState:render()
 
   self.particles:render()
 
-  love.graphics.translate(0, -self.cameraScroll)
+  love.graphics.translate(0, math.floor(self.cameraScroll) * -1)
 
   showScore(self.score)
 end

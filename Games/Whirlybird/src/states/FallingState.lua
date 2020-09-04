@@ -2,8 +2,8 @@ FallingState = Class({__includes = BaseState})
 
 function FallingState:init()
   self.timer = 0
-  self.delay = 1.5
-  self.falling = 1.25
+  self.delay = 1.25
+  self.falling = 1
 end
 
 function FallingState:enter(params)

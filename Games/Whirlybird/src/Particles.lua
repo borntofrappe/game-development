@@ -8,7 +8,7 @@ function Particles:init(x, y)
 
   self.inPlay = true
   self.timer = 0
-  self.interval = 0.08
+  self.interval = 0.07
 end
 
 function Particles:update(dt)
