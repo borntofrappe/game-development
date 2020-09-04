@@ -2,9 +2,7 @@ HurtState = Class({__includes = BaseState})
 
 function HurtState:init()
   self.timer = 0
-  self.interval = 0.08
-  self.variety = 1
-  self.varieties = #gFrames["particles"]
+  self.delay = 0.5
 end
 
 function HurtState:enter(params)
@@ -13,25 +11,27 @@ function HurtState:enter(params)
   self.interactables = params.interactables
   self.player = params.player
 
-  self.x = self.player.x + self.player.width / 2 - PLAYER_PARTICLES_WIDTH / 2
-  self.y = self.player.y + self.player.height / 2 - PLAYER_PARTICLES_HEIGHT / 2
+  self.particles =
+    Particles(
+    self.player.x + self.player.width / 2 - PLAYER_PARTICLES_WIDTH / 2,
+    self.player.y + self.player.height / 2 - PLAYER_PARTICLES_HEIGHT / 2
+  )
 end
 
 function HurtState:update(dt)
-  self.timer = self.timer + dt
-  if self.timer >= self.interval then
-    self.timer = self.timer % self.interval
-    if self.variety == self.varieties then
+  if not self.particles.inPlay then
+    self.timer = self.timer + dt
+    if self.timer >= self.delay then
       gStateMachine:change(
         "gameover",
         {
           score = self.score
         }
       )
-    else
-      self.variety = self.variety + 1
     end
   end
+
+  self.particles:update(dt)
 
   for k, interactable in pairs(self.interactables) do
     interactable:update(dt)
@@ -46,12 +46,7 @@ function HurtState:render()
     interactable:render()
   end
 
-  love.graphics.draw(
-    gTextures["spritesheet"],
-    gFrames["particles"][self.variety],
-    math.floor(self.x),
-    math.floor(self.y)
-  )
+  self.particles:render()
 
   love.graphics.translate(0, -self.cameraScroll)
 

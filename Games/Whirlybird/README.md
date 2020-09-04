@@ -1,8 +1,12 @@
 Recreate the pixelated game made playable from the "Play Games" application developed by Google.
 
-## Updates
+## Roadmap
+
+- suggestion: refactor interactable #8 into enemy. Move horizontally and vertically
 
 - style: design helper graphics to illustrate how to play
+
+- style: design additional animation for gameover state
 
 ## Design
 
