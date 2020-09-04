@@ -84,3 +84,53 @@ function GenerateQuadsHat(atlas)
 
   return quads
 end
+
+function GenerateQuadsSprites(atlas)
+  local x = 0
+  local y = 0
+  local width = SPRITE_WIDTH
+  local height = SPRITE_HEIGHT
+  local types = 2
+  local varieties = 6
+
+  local quads = {}
+
+  for i = 1, types do
+    quads[i] = {}
+    x = 0
+    for j = 1, varieties do
+      quads[i][j] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+
+      x = x + width
+    end
+    y = y + height
+  end
+
+  return quads
+end
+
+function GenerateQuadsChecks(atlas)
+  local x = 0
+  local y = 96
+  local width = CHECKS_WIDTH
+  local height = CHECKS_HEIGHT
+  local types = 2
+
+  local quads = {}
+
+  for i = 1, types do
+    quads[i] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+    x = x + width
+  end
+
+  return quads
+end
+
+function GenerateQuadButton(atlas)
+  local x = 0
+  local y = 120
+  local width = BUTTON_WIDTH
+  local height = BUTTON_HEIGHT
+
+  return love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+end

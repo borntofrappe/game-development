@@ -8,7 +8,7 @@ function love.load()
   gRecord = 0
 
   gFonts = {
-    ["big"] = love.graphics.newFont("res/fonts/font.ttf", 48),
+    ["big"] = love.graphics.newFont("res/fonts/font.ttf", 56),
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
   }
 
@@ -26,14 +26,18 @@ function love.load()
   }
 
   gTextures = {
-    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
+    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png"),
+    ["spritesheet-gameover"] = love.graphics.newImage("res/graphics/spritesheet-gameover.png")
   }
 
   gFrames = {
     ["player"] = GenerateQuadsPlayer(gTextures["spritesheet"]),
     ["interactables"] = GenerateQuadsInteractables(gTextures["spritesheet"]),
     ["particles"] = GenerateQuadsParticles(gTextures["spritesheet"]),
-    ["hat"] = GenerateQuadsHat(gTextures["spritesheet"])
+    ["hat"] = GenerateQuadsHat(gTextures["spritesheet"]),
+    ["sprites"] = GenerateQuadsSprites(gTextures["spritesheet-gameover"]),
+    ["checks"] = GenerateQuadsChecks(gTextures["spritesheet-gameover"]),
+    ["button"] = GenerateQuadButton(gTextures["spritesheet-gameover"])
   }
 
   gStateMachine =

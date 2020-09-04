@@ -2,7 +2,7 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Roadmap
 
-- feature: add gameover graphics
+- style: redesign button with opposite color palette
 
 - suggestion: refactor interactable #8 into enemy. Move horizontally and vertically
 
