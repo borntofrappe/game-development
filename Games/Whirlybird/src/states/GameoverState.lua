@@ -60,32 +60,37 @@ function GameoverState:render()
   love.graphics.draw(
     gTextures["spritesheet-gameover"],
     gFrames["checks"][1],
-    WINDOW_WIDTH / 2 - 16 - CHECKS_WIDTH - (SPRITE_WIDTH - CHECKS_WIDTH) / 2,
-    WINDOW_HEIGHT / 3 + 42
+    math.floor(WINDOW_WIDTH / 2 - 16 - CHECKS_WIDTH - (SPRITE_WIDTH - CHECKS_WIDTH) / 2),
+    math.floor(WINDOW_HEIGHT / 3 + 42)
   )
 
   love.graphics.draw(
     gTextures["spritesheet-gameover"],
     gFrames["checks"][2],
-    WINDOW_WIDTH / 2 + 16 + (SPRITE_WIDTH - CHECKS_WIDTH) / 2,
-    WINDOW_HEIGHT / 3 + 42
+    math.floor(WINDOW_WIDTH / 2 + 16 + (SPRITE_WIDTH - CHECKS_WIDTH) / 2),
+    math.floor(WINDOW_HEIGHT / 3 + 42)
   )
 
   love.graphics.draw(
     gTextures["spritesheet-gameover"],
     gFrames["sprites"][1][self.variety],
-    WINDOW_WIDTH / 2 - 16 - SPRITE_WIDTH,
-    WINDOW_HEIGHT / 3 + 42 + 32 + CHECKS_HEIGHT
+    math.floor(WINDOW_WIDTH / 2 - 16 - SPRITE_WIDTH),
+    math.floor(WINDOW_HEIGHT / 3 + 42 + 32 + CHECKS_HEIGHT)
   )
 
   love.graphics.draw(
     gTextures["spritesheet-gameover"],
     gFrames["sprites"][2][self.variety],
-    WINDOW_WIDTH / 2 + 16,
-    WINDOW_HEIGHT / 3 + 42 + 32 + CHECKS_HEIGHT
+    math.floor(WINDOW_WIDTH / 2 + 16),
+    math.floor(WINDOW_HEIGHT / 3 + 42 + 32 + CHECKS_HEIGHT)
   )
 
-  love.graphics.draw(gTextures["spritesheet-gameover"], gFrames["button"], self.button.x, self.button.y)
+  love.graphics.draw(
+    gTextures["spritesheet-gameover"],
+    gFrames["button"],
+    math.floor(self.button.x),
+    math.floor(self.button.y)
+  )
 
   showScore(self.score)
 end

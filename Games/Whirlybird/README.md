@@ -2,8 +2,6 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 ## Roadmap
 
-- style: redesign button with opposite color palette
-
 - suggestion: refactor interactable #8 into enemy. Move horizontally and vertically
 
 - bug: reset dy when moving from gameover to play
@@ -37,7 +35,7 @@ For the gameover state, additional visuals are designed in "spritesheet-gameover
 | ----------------------- | --- | --- | ----- | ------ |
 | Jumping, falling player | 0   | 0   | 45    | 48     |
 | Check, exclamation mark | 0   | 96  | 30    | 24     |
-| Play again              | 0   | 120 | 54    | 35     |
+| Play again              | 0   | 120 | 66    | 50     |
 
 For the palette, the game relies on the following colors.
 
