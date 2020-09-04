@@ -17,11 +17,24 @@ function Interactable:init(x, y, type)
   self.interval = INTERACTABLE_INTERVALS[self.type]
   self.variety = 1
   self.varieties = 4
+
+  self.hat = nil
+  if math.random(4) == 1 then
+    for k, type in pairs(INTERACTABLE_HAT) do
+      if self.type == type then
+        self.hat = Hat(self.x + self.width / 2 - HAT_WIDTH / 2, self.y - HAT_HEIGHT - 10)
+        break
+      end
+    end
+  end
 end
 
 function Interactable:update(dt)
   if self.type == 4 or self.type == 8 then
     self.x = self.x + self.dx * self.direction * dt
+    if self.hat then
+      self.hat.x = self.x + self.width / 2 - HAT_WIDTH / 2
+    end
     if self.x <= 0 then
       self.x = 0
       self.direction = self.direction * -1
@@ -49,6 +62,10 @@ function Interactable:update(dt)
       end
     end
   end
+
+  if self.hat then
+    self.hat:update(dt)
+  end
 end
 
 function Interactable:render()
@@ -58,4 +75,8 @@ function Interactable:render()
     math.floor(self.x),
     math.floor(self.y)
   )
+
+  if self.hat then
+    self.hat:render()
+  end
 end

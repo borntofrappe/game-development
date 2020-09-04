@@ -67,3 +67,20 @@ function GenerateQuadsParticles(atlas)
 
   return quads
 end
+
+function GenerateQuadsHat(atlas)
+  local x = 0
+  local y = 42
+  local width = 21
+  local height = 18
+  local varieties = 4
+
+  local quads = {}
+
+  for i = 1, varieties do
+    quads[i] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+    x = x + width
+  end
+
+  return quads
+end

@@ -80,9 +80,16 @@ function PlayState:update(dt)
   end
 
   if self.player.dy > 0 then
+    self.player:change()
     for k, interactable in pairs(self.interactables) do
       if testAABB(self.player, interactable) then
-        if interactable.type == 3 then
+        if interactable.hat then
+          interactable.hat = nil
+          self.player:change("flying")
+          gSounds["fly"]:play()
+          self.player.y = interactable.y - self.player.height
+          self.player:bounce(3)
+        elseif interactable.type == 3 then
           gSounds["destroy"]:play()
           interactable.isAnimated = true
           self.player.y = interactable.y - self.player.height
@@ -115,6 +122,7 @@ function PlayState:update(dt)
     self.cameraScroll = (WINDOW_HEIGHT - self.player.y - self.player.height - self.interactables[1].height)
     self.timer = self.timer + dt
     if self.timer >= self.delay then
+      self.player:change("falling")
       gStateMachine:change(
         "falling",
         {
@@ -128,6 +136,7 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("escape") then
+    self.player:change()
     gStateMachine:change(
       "start",
       {

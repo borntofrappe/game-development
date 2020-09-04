@@ -4,6 +4,7 @@ Class = require "res/lib/class"
 
 require "src/Player"
 require "src/Interactable"
+require "src/Hat"
 
 require "src/Utils"
 
