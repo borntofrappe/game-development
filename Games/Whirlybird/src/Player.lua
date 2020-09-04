@@ -10,7 +10,7 @@ function Player:init(x, y)
 
   self.direction = 1
   self.dx = 0
-  self.dy = PLAYER_JUMP
+  self.dy = 0
 
   self.timer = 0
   self.interval = 0.1

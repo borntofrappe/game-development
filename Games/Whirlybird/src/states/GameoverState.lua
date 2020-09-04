@@ -13,7 +13,7 @@ function GameoverState:init()
   self.variety = 1
   self.varieties = #gFrames["sprites"][1]
   self.timer = 0
-  self.interval = 0.12
+  self.interval = 0.1
 end
 
 function GameoverState:enter(params)
@@ -38,6 +38,7 @@ function GameoverState:update(dt)
   end
 
   if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    gStateMachine:change("play", {})
   end
 
   if love.mouse.isDown(1) then

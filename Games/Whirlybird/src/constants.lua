@@ -36,14 +36,14 @@ INTERACTABLE_INTERVALS = {
   [1] = 1,
   [2] = 0.8,
   [3] = 0.07,
-  [4] = 0.5,
+  [4] = 0.25,
   [5] = 0.08,
   [6] = 0.05,
   [7] = 0.05,
   [8] = 0.5
 }
 
-INTERACTABLE_SPEED = 50
+INTERACTABLE_SPEED = 80
 INTERACTABLE_TYPES = {1, 2, 3, 4, 5, 6, 7, 8}
 INTERACTABLE_SAFE = {1, 2, 4, 6}
 INTERACTABLE_HAT = {1, 3, 4}

@@ -16,7 +16,10 @@ function Interactable:init(x, y, type)
   self.timer = 0
   self.interval = INTERACTABLE_INTERVALS[self.type]
   self.variety = 1
-  self.varieties = 4
+  if self.type == 2 or self.type == 7 or self.type == 8 then
+    self.variety = math.random(#gFrames["interactables"][1])
+  end
+  self.varieties = #gFrames["interactables"][1]
 
   self.hat = nil
   if math.random(4) == 1 then

@@ -4,12 +4,6 @@ Recreate the pixelated game made playable from the "Play Games" application deve
 
 - suggestion: refactor interactable #8 into enemy. Move horizontally and vertically
 
-- bug: reset dy when moving from gameover to play
-
-- visual bug: redesign moving platform to be more realistic
-
-- visual bug: randomize the sprite at which the platforms start (currently they are animated in unison)
-
 ## Design
 
 The font is the same font introduced in _Pong_.

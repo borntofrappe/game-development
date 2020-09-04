@@ -7,7 +7,7 @@ function Hat:init(x, y)
   self.width = HAT_WIDTH
   self.height = HAT_HEIGHT
 
-  self.variety = 1
+  self.variety = math.random(#gFrames["hat"])
   self.varieties = #gFrames["hat"]
   self.timer = 0
   self.interval = 0.2
