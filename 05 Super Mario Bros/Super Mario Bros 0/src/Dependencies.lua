@@ -5,3 +5,23 @@ require("res/lib/Animation")
 
 require("src/constants")
 require("src/Utils")
+
+require("src/Character")
+
+require("src/StateMachine")
+require("src/states/BaseState")
+require("src/states/PlayState")
+
+gTextures = {
+  ["tiles"] = love.graphics.newImage("res/graphics/tiles.png"),
+  ["tops"] = love.graphics.newImage("res/graphics/tile_tops.png"),
+  ["backgrounds"] = love.graphics.newImage("res/graphics/backgrounds.png"),
+  ["character"] = love.graphics.newImage("res/graphics/character.png")
+}
+
+gFrames = {
+  ["tiles"] = GenerateQuadsTiles(gTextures["tiles"]),
+  ["tops"] = GenerateQuadsTileTops(gTextures["tops"]),
+  ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], 256, 128),
+  ["character"] = GenerateQuads(gTextures["character"], CHARACTER_WIDTH, CHARACTER_HEIGHT)
+}
