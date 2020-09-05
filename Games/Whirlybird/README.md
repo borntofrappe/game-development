@@ -1,9 +1,5 @@
 Recreate the pixelated game made playable from the "Play Games" application developed by Google.
 
-## Roadmap
-
-- suggestion: refactor interactable #8 into enemy. Move horizontally and vertically
-
 ## Design
 
 The font is the same font introduced in _Pong_.

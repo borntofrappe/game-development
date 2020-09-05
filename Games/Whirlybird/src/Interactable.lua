@@ -3,12 +3,15 @@ Interactable = Class {}
 function Interactable:init(x, y, type)
   self.x = x
   self.y = y
+  self.y0 = y
   self.type = type
   self.width = INTERACTABLE_WIDTH
   self.height = INTERACTABLE_HEIGHTS[self.type]
 
-  self.direction = math.random(2) == 1 and 1 or -1
-  self.dx = INTERACTABLE_SPEED
+  self.directionX = math.random(2) == 1 and 1 or -1
+  self.dx = INTERACTABLE_SPEED_X
+  self.directionY = math.random(2) == 1 and 1 or -1
+  self.dy = INTERACTABLE_SPEED_Y
 
   self.isAnimated = self.type == 2 or self.type == 4 or self.type == 7 or self.type == 8
   self.inPlay = true
@@ -34,16 +37,23 @@ end
 
 function Interactable:update(dt)
   if self.type == 4 or self.type == 8 then
-    self.x = self.x + self.dx * self.direction * dt
+    self.x = self.x + self.dx * self.directionX * dt
     if self.hat then
       self.hat.x = self.x + self.width / 2 - HAT_WIDTH / 2
     end
     if self.x <= 0 then
       self.x = 0
-      self.direction = self.direction * -1
+      self.directionX = self.directionX * -1
     elseif self.x >= WINDOW_WIDTH - self.width then
       self.x = WINDOW_WIDTH - self.width
-      self.direction = self.direction * -1
+      self.directionX = self.directionX * -1
+    end
+
+    if self.type == 8 then
+      self.y = self.y + self.dy * self.directionY * dt
+      if math.abs(self.y - self.y0) > INTERACTABLE_JIGGER then
+        self.directionY = self.directionY * -1
+      end
     end
   end
 
