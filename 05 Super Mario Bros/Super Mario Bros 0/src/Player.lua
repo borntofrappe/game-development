@@ -1,13 +1,13 @@
-Character = Class {}
+Player = Class {}
 
-function Character:init(x, y)
+function Player:init(x, y)
   self.x = x
   self.y = y
-  self.width = CHARACTER_WIDTH
-  self.height = CHARACTER_HEIGHT
+  self.width = PLAYER_WIDTH
+  self.height = PLAYER_HEIGHT
 
-  self.movementSpeed = CHARACTER_MOVEMENT_SPEED
-  self.jumpSpeed = CHARACTER_JUMP_SPEED
+  self.movementSpeed = PLAYER_MOVEMENT_SPEED
+  self.jumpSpeed = PLAYER_JUMP_SPEED
 
   self.dy = 0
   self.jumping = false
@@ -40,7 +40,7 @@ function Character:init(x, y)
   self.direction = "right"
 end
 
-function Character:update(dt)
+function Player:update(dt)
   self.currentAnimation:update(dt)
 
   if self.jumping then
@@ -56,10 +56,10 @@ function Character:update(dt)
   end
 end
 
-function Character:render()
+function Player:render()
   love.graphics.draw(
-    gTextures["character"],
-    gFrames["character"][self.currentAnimation:getCurrentFrame()],
+    gTextures["player"],
+    gFrames["player"][self.currentAnimation:getCurrentFrame()],
     self.direction == "right" and math.floor(self.x) or math.floor(self.x + self.width),
     math.floor(self.y),
     0,
@@ -68,13 +68,13 @@ function Character:render()
   )
 end
 
-function Character:jump()
+function Player:jump()
   self.jumping = true
   self.dy = -self.jumpSpeed
   self.currentAnimation = self.jumpingAnimation
 end
 
-function Character:move(direction, dt)
+function Player:move(direction, dt)
   self.direction = direction
   if self.direction == "right" then
     self.x = math.min(MAP_WIDTH * TILE_SIZE - self.width, self.x + self.movementSpeed * dt)
@@ -87,7 +87,7 @@ function Character:move(direction, dt)
   end
 end
 
-function Character:idle()
+function Player:idle()
   if not self.jumping then
     self.currentAnimation = self.idleAnimation
   end

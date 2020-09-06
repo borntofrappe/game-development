@@ -1,14 +1,14 @@
 PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
-  self.variety_backgrounds = math.random(#gFrames.backgrounds)
+  self.background = math.random(#gFrames.backgrounds)
   self.variety_tiles = math.random(#gFrames.tiles)
   self.variety_tops = math.random(#gFrames.tops)
 
-  self.character = Character(VIRTUAL_WIDTH / 2 - CHARACTER_WIDTH / 2, TILE_SIZE * (ROWS_SKY - 1) - CHARACTER_HEIGHT)
+  self.player = Player(VIRTUAL_WIDTH / 2 - PLAYER_WIDTH / 2, TILE_SIZE * (ROWS_SKY - 1) - PLAYER_HEIGHT)
   self.cameraScroll = 0
 
-  self.tiles = GenerateLevel(MAP_WIDTH, MAP_HEIGHT)
+  self.level = LevelMaker.generate(MAP_WIDTH, MAP_HEIGHT)
 end
 
 function PlayState:update(dt)
@@ -17,41 +17,37 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("r") then
-    self.variety_backgrounds = math.random(#gFrames.backgrounds)
+    self.background = math.random(#gFrames.backgrounds)
     self.variety_tiles = math.random(#gFrames.tiles)
     self.variety_tops = math.random(#gFrames.tops)
   end
 
   if love.keyboard.waspressed("space") then
-    if not self.character.jumping then
-      self.character:jump()
+    if not self.player.jumping then
+      self.player:jump()
     end
   end
 
-  self.character:update(dt)
+  self.player:update(dt)
 
   if love.keyboard.isDown("right") then
-    self.character:move("right", dt)
+    self.player:move("right", dt)
   elseif love.keyboard.isDown("left") then
-    self.character:move("left", dt)
+    self.player:move("left", dt)
     self.direction = "left"
   else
-    self.character:idle()
+    self.player:idle()
   end
 
-  self.cameraScroll =
-    math.max(
-    0,
-    math.min(MAP_WIDTH * TILE_SIZE - VIRTUAL_WIDTH, self.character.x + self.character.width / 2 - VIRTUAL_WIDTH / 2)
-  )
+  self:updateCamera()
 end
 
 function PlayState:render()
-  love.graphics.draw(gTextures["backgrounds"], gFrames["backgrounds"][self.variety_backgrounds], 0, 0)
+  love.graphics.draw(gTextures["backgrounds"], gFrames["backgrounds"][self.background], 0, 0)
   love.graphics.translate(-math.floor(self.cameraScroll), 0)
   love.graphics.setColor(1, 1, 1, 1)
 
-  for x, column in ipairs(self.tiles) do
+  for x, column in ipairs(self.level) do
     for y, tile in ipairs(column) do
       love.graphics.draw(
         gTextures["tiles"],
@@ -70,5 +66,13 @@ function PlayState:render()
     end
   end
 
-  self.character:render()
+  self.player:render()
+end
+
+function PlayState:updateCamera()
+  self.cameraScroll =
+    math.max(
+    0,
+    math.min(MAP_WIDTH * TILE_SIZE - VIRTUAL_WIDTH, self.player.x + self.player.width / 2 - VIRTUAL_WIDTH / 2)
+  )
 end
