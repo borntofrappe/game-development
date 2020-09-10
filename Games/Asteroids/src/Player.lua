@@ -20,7 +20,7 @@ end
 
 function Player:update(dt)
   if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
-    local angle = self.angle % 360
+    local angle = math.abs(self.angle)
     if angle > 90 and angle < 270 and self.direction == 1 then
       self.direction = -1
     elseif (angle < 90 or angle > 270) and self.direction == -1 then
@@ -65,7 +65,7 @@ function Player:update(dt)
 
   if self.dangle > 0 then
     self.dangle = self.dangle - FRICTION_LATERAL * dt
-    self.angle = self.angle + self.dangle * self.directionAngle * dt
+    self.angle = (self.angle + self.dangle * self.directionAngle * dt) % 360
   end
 end
 
@@ -73,6 +73,8 @@ function Player:render()
   love.graphics.translate(self.x, self.y)
   love.graphics.rotate(math.rad(self.angle))
 
+  love.graphics.setColor(0, 0, 0, 1)
+  love.graphics.polygon("fill", 0, -10, 10, 10, -10, 10)
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setLineWidth(2)
   love.graphics.polygon("line", 0, -10, 10, 10, -10, 10)

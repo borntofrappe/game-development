@@ -7,6 +7,7 @@ function love.load()
   love.keyboard.keyPressed = {}
 
   player = Player:create()
+  projectiles = {}
 end
 
 function love.keypressed(key)
@@ -22,6 +23,17 @@ function love.update(dt)
     love.event.quit()
   end
 
+  if love.keyboard.wasPressed("space") then
+    local projectile = Projectile:create(player.x, player.y, player.angle)
+    table.insert(projectiles, projectile)
+  end
+
+  for k, projectile in pairs(projectiles) do
+    projectile:update(dt)
+    if not projectile.inPlay then
+      table.remove(projectiles, k)
+    end
+  end
   player:update(dt)
 
   love.keyboard.keyPressed = {}
@@ -31,5 +43,8 @@ function love.draw()
   love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
+  for k, projectile in pairs(projectiles) do
+    projectile:render()
+  end
   player:render()
 end
