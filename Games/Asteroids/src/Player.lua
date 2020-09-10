@@ -8,8 +8,6 @@ function Player:create()
     dx = 0,
     dy = 0,
     angle = 0,
-    direction = 0,
-    dangle = 0,
     isPushing = false
   }
 
@@ -27,13 +25,11 @@ function Player:update(dt)
   end
 
   if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
-    self.direction = 1
-    self.dangle = PUSH_LATERAL
+    self.angle = self.angle + PUSH_LATERAL
   end
 
   if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
-    self.direction = -1
-    self.dangle = PUSH_LATERAL
+    self.angle = self.angle - PUSH_LATERAL
   end
 
   if self.dx < 0 then
@@ -65,11 +61,6 @@ function Player:update(dt)
 
   if self.x > WINDOW_WIDTH then
     self.x = -8
-  end
-
-  if self.dangle > 0 then
-    self.dangle = self.dangle - FRICTION_LATERAL * dt
-    self.angle = (self.angle + self.dangle * self.direction * dt) % 360
   end
 end
 

@@ -1,16 +1,18 @@
-Projectile = {}
-Projectile.__index = Projectile
+Asteroid = {}
+Asteroid.__index = Asteroid
 
-function Projectile:create(x, y, angle)
-  local dy = math.cos(math.rad(angle)) * PUSH_PROJECTILE * -1
-  local dx = math.sin(math.rad(angle)) * PUSH_PROJECTILE
+function Asteroid:create()
+  local x = math.random(2) == 1 and math.random(0, WINDOW_WIDTH / 3) or math.random(WINDOW_WIDTH * 2 / 3, WINDOW_WIDTH)
+  local y =
+    math.random(2) == 1 and math.random(0, WINDOW_HEIGHT / 3) or math.random(WINDOW_HEIGHT * 2 / 3, WINDOW_WIDTH)
+  local dx = math.random(2) == 1 and math.random(10, 40) or math.random(-10, -40)
+  local dy = math.random(2) == 1 and math.random(10, 40) or math.random(-10, -40)
   this = {
     x = x,
     y = y,
-    r = 2,
+    r = 10,
     dx = dx,
     dy = dy,
-    timer = 0,
     inPlay = true
   }
 
@@ -19,12 +21,7 @@ function Projectile:create(x, y, angle)
   return this
 end
 
-function Projectile:update(dt)
-  self.timer = self.timer + dt
-  if self.timer >= TIMER_PROJECTILE then
-    self.inPlay = false
-  end
-
+function Asteroid:update(dt)
   if self.inPlay then
     self.x = self.x + self.dx * dt
     self.y = self.y + self.dy * dt
@@ -47,7 +44,7 @@ function Projectile:update(dt)
   end
 end
 
-function Projectile:render()
+function Asteroid:render()
   if self.inPlay then
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.circle("fill", self.x, self.y, self.r)

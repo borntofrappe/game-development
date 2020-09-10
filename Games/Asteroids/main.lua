@@ -8,6 +8,10 @@ function love.load()
 
   player = Player:create()
   projectiles = {}
+  asteroids = {}
+  for i = 1, 4 do
+    table.insert(asteroids, Asteroid:create())
+  end
 end
 
 function love.keypressed(key)
@@ -28,6 +32,13 @@ function love.update(dt)
     table.insert(projectiles, projectile)
   end
 
+  for k, asteroid in pairs(asteroids) do
+    asteroid:update(dt)
+    if not asteroid.inPlay then
+      table.remove(asteroids, k)
+    end
+  end
+
   for k, projectile in pairs(projectiles) do
     projectile:update(dt)
     if not projectile.inPlay then
@@ -42,6 +53,10 @@ end
 function love.draw()
   love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+
+  for k, asteroid in pairs(asteroids) do
+    asteroid:render()
+  end
 
   for k, projectile in pairs(projectiles) do
     projectile:render()
