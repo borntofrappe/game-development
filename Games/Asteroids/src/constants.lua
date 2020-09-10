@@ -6,3 +6,5 @@ OPTIONS = {
   vsync = true,
   resizable = false
 }
+
+PLAYER_SPEED = 20

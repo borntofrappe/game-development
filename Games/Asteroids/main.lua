@@ -5,6 +5,8 @@ function love.load()
   love.window.setTitle("Asteroids")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
   love.keyboard.keyPressed = {}
+
+  player = Player:create()
 end
 
 function love.keypressed(key)
@@ -20,10 +22,14 @@ function love.update(dt)
     love.event.quit()
   end
 
+  player:update(dt)
+
   love.keyboard.keyPressed = {}
 end
 
 function love.draw()
   love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+
+  player:render()
 end
