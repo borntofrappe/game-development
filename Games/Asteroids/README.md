@@ -8,8 +8,6 @@ Recreate the popular game, taking inspiration from the Game Boy version.
 
 - feature: add lives with a mishapen triangle
 
-- feature: add score, with 20, 50, 100 points
-
 - feature: add state with title, play and gameover state
 
 - feature: register high score, starting at 35000 points

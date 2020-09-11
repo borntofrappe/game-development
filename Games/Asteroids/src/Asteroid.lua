@@ -19,7 +19,7 @@ function Asteroid:create(x, y, size)
     inPlay = true
   }
 
-  this.r = this.size * 5
+  this.r = this.size * 4
 
   setmetatable(this, self)
 

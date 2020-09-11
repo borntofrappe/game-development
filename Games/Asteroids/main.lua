@@ -4,11 +4,23 @@ function love.load()
   math.randomseed(os.time())
   love.window.setTitle("Asteroids")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
+
+  font = love.graphics.newFont("res/fonts/font.ttf", 16)
+  love.graphics.setFont(font)
+  points = {
+    [3] = 20,
+    [2] = 50,
+    [1] = 100
+  }
+
   love.keyboard.keyPressed = {}
+
+  score = 0
 
   player = Player:create()
   projectiles = {}
   asteroids = {}
+
   for i = 1, 4 do
     table.insert(asteroids, Asteroid:create())
   end
@@ -39,6 +51,7 @@ function love.update(dt)
         table.insert(asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
         table.insert(asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
       end
+      score = score + points[asteroid.size]
       table.remove(asteroids, k)
     end
   end
@@ -64,6 +77,8 @@ function love.draw()
   love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
+  showScore(score)
+
   for k, asteroid in pairs(asteroids) do
     asteroid:render()
   end
@@ -84,4 +99,9 @@ function testAABB(circle1, circle2)
   end
 
   return true
+end
+
+function showScore(score)
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.printf(score, 0, 8, WINDOW_WIDTH / 4, "right")
 end
