@@ -5,7 +5,12 @@ function love.load()
   love.window.setTitle("Asteroids")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  font = love.graphics.newFont("res/fonts/font.ttf", 16)
+  colors = {
+    ["background"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
+    ["foreground"] = {["r"] = 0, ["g"] = 0, ["b"] = 0}
+  }
+
+  font = love.graphics.newFont("res/fonts/font.ttf", 18)
   love.graphics.setFont(font)
   points = {
     [3] = 20,
@@ -16,6 +21,7 @@ function love.load()
   love.keyboard.keyPressed = {}
 
   score = 0
+  hiScore = 3500
   lives = 3
 
   player = Player:create()
@@ -59,6 +65,9 @@ function love.update(dt)
         table.insert(asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
       end
       score = score + points[asteroid.size]
+      if score > hiScore then
+        hiScore = score
+      end
       table.remove(asteroids, k)
     end
   end
@@ -81,10 +90,10 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0, 0, 0, 1)
+  love.graphics.setColor(colors["background"]["r"], colors["background"]["g"], colors["background"]["b"])
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
-  showGameStats(score, lives)
+  showGameStats(score, hiScore, lives)
 
   for k, asteroid in pairs(asteroids) do
     asteroid:render()
@@ -108,16 +117,17 @@ function testAABB(circle1, circle2)
   return true
 end
 
-function showGameStats(score, lives)
-  local x = WINDOW_WIDTH / 4
-  local y = 8
-  love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.printf(score, 0, y, x, "right")
+function showGameStats(score, hiScore, lives)
+  love.graphics.setColor(colors["foreground"]["r"], colors["foreground"]["g"], colors["foreground"]["b"])
+  local x = math.floor(WINDOW_WIDTH / 4)
+  local y = 2
+  love.graphics.print(hiScore, x, y)
 
-  x = x + 8
-  love.graphics.setColor(1, 1, 1, 1)
+  y = y + 20
+  love.graphics.printf(score, 0, y, x, "right")
+  x = x + 4
   for life = 1, lives - 1 do
     x = x + 8
-    love.graphics.polygon("fill", x, y, x, y + 12, x - 4, y + 8)
+    love.graphics.polygon("fill", x, y + 2, x, y + 15, x - 6, y + 10)
   end
 end

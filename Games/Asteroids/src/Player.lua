@@ -78,14 +78,14 @@ function Player:render()
   love.graphics.rotate(math.rad(self.angle))
 
   if self.isPushing then
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(colors["foreground"]["r"], colors["foreground"]["g"], colors["foreground"]["b"])
     love.graphics.setLineWidth(1.5)
     love.graphics.polygon("line", -self.r / 2, self.r, self.r / 2, self.r, 0, self.r * 3 / 2)
   end
 
-  love.graphics.setColor(0, 0, 0, 1)
+  love.graphics.setColor(colors["background"]["r"], colors["background"]["g"], colors["background"]["b"])
   love.graphics.polygon("fill", 0, -self.r, self.r, self.r, -self.r, self.r)
-  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setColor(colors["foreground"]["r"], colors["foreground"]["g"], colors["foreground"]["b"])
   love.graphics.setLineWidth(2)
   love.graphics.polygon("line", 0, -self.r, self.r, self.r, -self.r, self.r)
 end

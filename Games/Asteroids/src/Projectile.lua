@@ -49,7 +49,7 @@ end
 
 function Projectile:render()
   if self.inPlay then
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(colors["foreground"]["r"], colors["foreground"]["g"], colors["foreground"]["b"])
     love.graphics.circle("fill", self.x, self.y, self.r)
   end
 end
