@@ -8,12 +8,21 @@ function Player:create()
     dx = 0,
     dy = 0,
     angle = 0,
-    isPushing = false
+    isPushing = false,
+    r = 8
   }
 
   setmetatable(this, self)
 
   return this
+end
+
+function Player:reset()
+  self.x = WINDOW_WIDTH / 2
+  self.y = WINDOW_HEIGHT / 2
+  self.dx = 0
+  self.dy = 0
+  self.angle = 0
 end
 
 function Player:update(dt)
@@ -71,12 +80,12 @@ function Player:render()
   if self.isPushing then
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setLineWidth(1.5)
-    love.graphics.polygon("line", -5, 8, 5, 8, 0, 13)
+    love.graphics.polygon("line", -self.r / 2, self.r, self.r / 2, self.r, 0, self.r * 3 / 2)
   end
 
   love.graphics.setColor(0, 0, 0, 1)
-  love.graphics.polygon("fill", 0, -8, 8, 8, -8, 8)
+  love.graphics.polygon("fill", 0, -self.r, self.r, self.r, -self.r, self.r)
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setLineWidth(2)
-  love.graphics.polygon("line", 0, -8, 8, 8, -8, 8)
+  love.graphics.polygon("line", 0, -self.r, self.r, self.r, -self.r, self.r)
 end

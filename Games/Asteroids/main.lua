@@ -16,6 +16,7 @@ function love.load()
   love.keyboard.keyPressed = {}
 
   score = 0
+  lives = 3
 
   player = Player:create()
   projectiles = {}
@@ -46,6 +47,12 @@ function love.update(dt)
 
   for k, asteroid in pairs(asteroids) do
     asteroid:update(dt)
+    if testAABB(player, asteroid) then
+      lives = math.max(0, lives - 1)
+      player:reset()
+      asteroid.inPlay = false
+    end
+
     if not asteroid.inPlay then
       if asteroid.size > 1 then
         table.insert(asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
@@ -77,7 +84,7 @@ function love.draw()
   love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
-  showScore(score)
+  showGameStats(score, lives)
 
   for k, asteroid in pairs(asteroids) do
     asteroid:render()
@@ -101,7 +108,16 @@ function testAABB(circle1, circle2)
   return true
 end
 
-function showScore(score)
+function showGameStats(score, lives)
+  local x = WINDOW_WIDTH / 4
+  local y = 8
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.printf(score, 0, 8, WINDOW_WIDTH / 4, "right")
+  love.graphics.printf(score, 0, y, x, "right")
+
+  x = x + 8
+  love.graphics.setColor(1, 1, 1, 1)
+  for life = 1, lives - 1 do
+    x = x + 8
+    love.graphics.polygon("fill", x, y, x, y + 12, x - 4, y + 8)
+  end
 end
