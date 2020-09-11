@@ -35,12 +35,22 @@ function love.update(dt)
   for k, asteroid in pairs(asteroids) do
     asteroid:update(dt)
     if not asteroid.inPlay then
+      if asteroid.size > 1 then
+        table.insert(asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
+        table.insert(asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
+      end
       table.remove(asteroids, k)
     end
   end
 
   for k, projectile in pairs(projectiles) do
     projectile:update(dt)
+    for j, asteroid in pairs(asteroids) do
+      if testAABB(projectile, asteroid) then
+        projectile.inPlay = false
+        asteroid.inPlay = false
+      end
+    end
     if not projectile.inPlay then
       table.remove(projectiles, k)
     end
@@ -62,4 +72,16 @@ function love.draw()
     projectile:render()
   end
   player:render()
+end
+
+function testAABB(circle1, circle2)
+  if circle1.x > circle2.x + circle2.r or circle1.x < circle2.x - circle2.r then
+    return false
+  end
+
+  if circle1.y > circle2.y + circle2.r or circle1.y < circle2.y - circle2.r then
+    return false
+  end
+
+  return true
 end

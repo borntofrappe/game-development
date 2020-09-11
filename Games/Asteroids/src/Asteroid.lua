@@ -1,20 +1,25 @@
 Asteroid = {}
 Asteroid.__index = Asteroid
 
-function Asteroid:create()
-  local x = math.random(2) == 1 and math.random(0, WINDOW_WIDTH / 3) or math.random(WINDOW_WIDTH * 2 / 3, WINDOW_WIDTH)
-  local y =
+function Asteroid:create(x, y, size)
+  local randomX =
+    math.random(2) == 1 and math.random(0, WINDOW_WIDTH / 3) or math.random(WINDOW_WIDTH * 2 / 3, WINDOW_WIDTH)
+  local randomY =
     math.random(2) == 1 and math.random(0, WINDOW_HEIGHT / 3) or math.random(WINDOW_HEIGHT * 2 / 3, WINDOW_WIDTH)
+
   local dx = math.random(2) == 1 and math.random(10, 40) or math.random(-10, -40)
   local dy = math.random(2) == 1 and math.random(10, 40) or math.random(-10, -40)
+
   this = {
-    x = x,
-    y = y,
-    r = 10,
+    x = x or randomX,
+    y = y or randomY,
     dx = dx,
     dy = dy,
+    size = size or 3,
     inPlay = true
   }
+
+  this.r = this.size * 5
 
   setmetatable(this, self)
 

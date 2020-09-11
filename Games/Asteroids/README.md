@@ -4,8 +4,6 @@ Recreate the popular game, taking inspiration from the Game Boy version.
 
 ## Roadmap
 
-- feature: detect collision with asteroid; consider a size attribute (3, 2, 1) populating the game with smaller and smaller asteroids
-
 - feature: add level based on difficulty; 1, 2, 3, starting with 2, 4, 6 asteroids respectively
 
 - feature: add lives with a mishapen triangle
