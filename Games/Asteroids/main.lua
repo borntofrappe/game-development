@@ -5,32 +5,34 @@ function love.load()
   love.window.setTitle("Asteroids")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  colors = {
+  gColors = {
     ["background"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
     ["foreground"] = {["r"] = 0, ["g"] = 0, ["b"] = 0}
   }
 
-  font = love.graphics.newFont("res/fonts/font.ttf", 18)
-  love.graphics.setFont(font)
-  points = {
-    [3] = 20,
-    [2] = 50,
-    [1] = 100
+  gFonts = {
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 48),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 18)
   }
 
   love.keyboard.keyPressed = {}
 
-  score = 0
-  hiScore = 3500
-  lives = 3
+  gStateMachine =
+    StateMachine:create(
+    {
+      ["title"] = function()
+        return TitleScreenState:create()
+      end,
+      ["play"] = function()
+        return PlayState:create()
+      end,
+      ["gameover"] = function()
+        return GameoverState:create()
+      end
+    }
+  )
 
-  player = Player:create()
-  projectiles = {}
-  asteroids = {}
-
-  for i = 1, 4 do
-    table.insert(asteroids, Asteroid:create())
-  end
+  gStateMachine:change("title")
 end
 
 function love.keypressed(key)
@@ -42,67 +44,15 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
-  if love.keyboard.wasPressed("escape") then
-    love.event.quit()
-  end
-
-  if love.keyboard.wasPressed("space") then
-    local projectile = Projectile:create(player.x, player.y, player.angle)
-    table.insert(projectiles, projectile)
-  end
-
-  for k, asteroid in pairs(asteroids) do
-    asteroid:update(dt)
-    if testAABB(player, asteroid) then
-      lives = math.max(0, lives - 1)
-      player:reset()
-      asteroid.inPlay = false
-    end
-
-    if not asteroid.inPlay then
-      if asteroid.size > 1 then
-        table.insert(asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
-        table.insert(asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
-      end
-      score = score + points[asteroid.size]
-      if score > hiScore then
-        hiScore = score
-      end
-      table.remove(asteroids, k)
-    end
-  end
-
-  for k, projectile in pairs(projectiles) do
-    projectile:update(dt)
-    for j, asteroid in pairs(asteroids) do
-      if testAABB(projectile, asteroid) then
-        projectile.inPlay = false
-        asteroid.inPlay = false
-      end
-    end
-    if not projectile.inPlay then
-      table.remove(projectiles, k)
-    end
-  end
-  player:update(dt)
-
+  gStateMachine:update(dt)
   love.keyboard.keyPressed = {}
 end
 
 function love.draw()
-  love.graphics.setColor(colors["background"]["r"], colors["background"]["g"], colors["background"]["b"])
+  love.graphics.setColor(gColors["background"]["r"], gColors["background"]["g"], gColors["background"]["b"])
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
-  showGameStats(score, hiScore, lives)
-
-  for k, asteroid in pairs(asteroids) do
-    asteroid:render()
-  end
-
-  for k, projectile in pairs(projectiles) do
-    projectile:render()
-  end
-  player:render()
+  gStateMachine:render()
 end
 
 function testAABB(circle1, circle2)
@@ -115,19 +65,4 @@ function testAABB(circle1, circle2)
   end
 
   return true
-end
-
-function showGameStats(score, hiScore, lives)
-  love.graphics.setColor(colors["foreground"]["r"], colors["foreground"]["g"], colors["foreground"]["b"])
-  local x = math.floor(WINDOW_WIDTH / 4)
-  local y = 2
-  love.graphics.print(hiScore, x, y)
-
-  y = y + 20
-  love.graphics.printf(score, 0, y, x, "right")
-  x = x + 4
-  for life = 1, lives - 1 do
-    x = x + 8
-    love.graphics.polygon("fill", x, y + 2, x, y + 15, x - 6, y + 10)
-  end
 end

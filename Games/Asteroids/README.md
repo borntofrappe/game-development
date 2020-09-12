@@ -6,10 +6,6 @@ Recreate the popular game, taking inspiration from the Game Boy version.
 
 - feature: add level based on difficulty; 1, 2, 3, starting with 2, 4, 6 asteroids respectively
 
-- feature: add state with title, play and gameover state
-
-- feature: register high score, starting at 35000 points
-
 - feature: allow to teleport to somewhere random on the screen — where an asteroid is not present
 
 - feature: allow to pause the game
