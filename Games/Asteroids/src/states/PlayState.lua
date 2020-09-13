@@ -1,6 +1,8 @@
 PlayState = BaseState:create()
 
-function PlayState:enter()
+function PlayState:enter(params)
+  self.difficulty = params.difficulty
+
   self.points = {
     [3] = 20,
     [2] = 50,
@@ -15,7 +17,7 @@ function PlayState:enter()
   self.projectiles = {}
   self.asteroids = {}
 
-  for i = 1, 4 do
+  for i = 1, self.difficulty * 2 do
     table.insert(self.asteroids, Asteroid:create())
   end
 end
