@@ -1,7 +1,7 @@
 PlayState = BaseState:create()
 
 function PlayState:enter(params)
-  self.difficulty = params.difficulty
+  self.difficulty = params.difficulty or 2
 
   self.points = {
     [3] = 20,
@@ -9,22 +9,32 @@ function PlayState:enter(params)
     [1] = 100
   }
 
-  self.score = 0
-  self.hiScore = 3500
-  self.lives = 3
+  self.score = params.score or 0
+  self.hiScore = params.hiScore or 3500
+  self.lives = params.lives or 3
 
-  self.player = Player:create()
-  self.projectiles = {}
-  self.asteroids = {}
-
-  for i = 1, self.difficulty * 2 do
-    table.insert(self.asteroids, Asteroid:create())
-  end
+  self.player = params.player or Player:create()
+  self.projectiles = params.projectiles or {}
+  self.asteroids = params.asteroids or self:createLevel(self.difficulty * 2)
 end
 
 function PlayState:update(dt)
   if love.keyboard.wasPressed("escape") then
     gStateMachine:change("title")
+  end
+
+  if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
+    gStateMachine:change(
+      "pause",
+      {
+        score = self.score,
+        hiScore = self.hiScore,
+        lives = self.lives,
+        player = self.player,
+        projectiles = self.projectiles,
+        asteroids = self.asteroids
+      }
+    )
   end
 
   if love.keyboard.wasPressed("space") then
@@ -107,6 +117,14 @@ function PlayState:render()
     projectile:render()
   end
   self.player:render()
+end
+
+function PlayState:createLevel(n)
+  local asteroids = {}
+  for i = 1, n do
+    table.insert(asteroids, Asteroid:create())
+  end
+  return asteroids
 end
 
 function PlayState:showStats()

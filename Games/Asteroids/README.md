@@ -4,8 +4,6 @@ Recreate the popular game, taking inspiration from the Game Boy version.
 
 ## Roadmap
 
-- feature: allow to pause the game
-
 - bonus: design sprite sheet for asteroids and spaceship
 
 - bonus: add a random enemy, moving horizontally and occasionally firing toward the player; starting from a level with 4 asteroids, awarding 200 points

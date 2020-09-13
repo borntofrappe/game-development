@@ -26,6 +26,9 @@ function love.load()
       ["play"] = function()
         return PlayState:create()
       end,
+      ["pause"] = function()
+        return PauseState:create()
+      end,
       ["gameover"] = function()
         return GameoverState:create()
       end
