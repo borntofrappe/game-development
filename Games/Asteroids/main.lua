@@ -12,7 +12,7 @@ function love.load()
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/fonts/font.ttf", 48),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 18)
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
   love.keyboard.keyPressed = {}

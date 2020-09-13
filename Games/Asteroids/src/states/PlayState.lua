@@ -93,6 +93,6 @@ function PlayState:showStats()
   x = x + 4
   for life = 1, self.lives - 1 do
     x = x + 8
-    love.graphics.polygon("fill", x, y + 2, x, y + 15, x - 6, y + 10)
+    love.graphics.polygon("fill", x, y + 4, x, y + 18, x - 5, y + 14)
   end
 end
