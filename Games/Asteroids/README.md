@@ -4,8 +4,6 @@ Recreate the popular game, taking inspiration from the Game Boy version.
 
 ## Roadmap
 
-- feature: allow to teleport to somewhere random on the screen — where an asteroid is not present
-
 - feature: allow to pause the game
 
 - bonus: design sprite sheet for asteroids and spaceship

@@ -32,6 +32,31 @@ function PlayState:update(dt)
     table.insert(self.projectiles, projectile)
   end
 
+  if love.keyboard.wasPressed("down") or love.keyboard.wasPressed("s") then
+    local isSearching = true
+    local x
+    local y
+    while (isSearching) do
+      x = math.random(0, WINDOW_WIDTH)
+      y = math.random(0, WINDOW_HEIGHT)
+      local player = Player:create(x, y)
+
+      local isValid = true
+      for k, asteroid in pairs(self.asteroids) do
+        if testAABB(player, asteroid) then
+          isValid = false
+          break
+        end
+      end
+      if isValid then
+        isSearching = false
+      end
+    end
+
+    self.player.x = x
+    self.player.y = y
+  end
+
   for k, asteroid in pairs(self.asteroids) do
     asteroid:update(dt)
     if testAABB(self.player, asteroid) then

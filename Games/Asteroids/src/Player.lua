@@ -1,10 +1,10 @@
 Player = {}
 Player.__index = Player
 
-function Player:create()
+function Player:create(x, y)
   this = {
-    x = WINDOW_WIDTH / 2,
-    y = WINDOW_HEIGHT / 2,
+    x = x or WINDOW_WIDTH / 2,
+    y = y or WINDOW_HEIGHT / 2,
     dx = 0,
     dy = 0,
     angle = 0,
