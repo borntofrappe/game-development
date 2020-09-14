@@ -1,22 +1,28 @@
 VictoryState = BaseState:create()
 
 function VictoryState:enter(params)
-  self.timeout = 3
+  self.timeout = 2.5
 
   self.score = params.score
   self.lives = params.lives
+  self.player = params.player
   self.numberAsteroids = params.numberAsteroids
+
+  gSounds["victory"]:play()
 end
 
 function VictoryState:update(dt)
   if self.timeout > 0 then
     self.timeout = self.timeout - dt
+
+    self.player:update(dt)
   else
     gStateMachine:change(
       "play",
       {
         score = self.score,
         lives = self.lives,
+        player = self.player,
         numberAsteroids = self.numberAsteroids + 1
       }
     )
@@ -26,6 +32,5 @@ end
 function VictoryState:render()
   showStats(self.score, self.lives)
 
-  love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
-  love.graphics.printf(string.upper("Level Complete"), 0, WINDOW_HEIGHT / 2 - 8, WINDOW_WIDTH, "center")
+  self.player:render()
 end

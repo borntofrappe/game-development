@@ -76,7 +76,12 @@ function PlayState:update(dt)
       self.player:reset()
       asteroid.inPlay = false
       if self.lives == 0 then
-        gStateMachine:change("gameover")
+        gStateMachine:change(
+          "gameover",
+          {
+            asteroids = self.asteroids
+          }
+        )
       end
     end
     if not asteroid.inPlay then
@@ -97,6 +102,7 @@ function PlayState:update(dt)
           {
             score = self.score,
             lives = self.lives,
+            player = self.player,
             numberAsteroids = self.numberAsteroids
           }
         )

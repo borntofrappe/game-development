@@ -37,6 +37,5 @@ function PauseState:render()
     projectile:render()
   end
 
-  love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
-  love.graphics.printf(string.upper("Pause"), 0, WINDOW_HEIGHT / 2 - 8, WINDOW_WIDTH, "center")
+  self.player:render()
 end

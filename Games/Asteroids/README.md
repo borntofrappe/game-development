@@ -4,16 +4,6 @@ Recreate the popular game **Asteroid**, using the shape functions from the `love
 
 ## Roadmap
 
-- gameplay:
-
-  - award a life every 10k points
-
-  - allow to move in the victory state
-
-  - remove text in the pause and victory state
-
-  - keep updating the asteroids in the gameover state
-
 - bonus: design and include a random enemy, moving horizontally and occasionally firing toward the player; starting from a level with 4 asteroids; awarding 200 points
 
 - bonus: add decorative elements in the background

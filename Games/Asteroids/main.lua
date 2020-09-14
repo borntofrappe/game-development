@@ -18,7 +18,8 @@ function love.load()
     ["destroy-1"] = love.audio.newSource("res/sounds/destroy-1.wav", "static"),
     ["gameover"] = love.audio.newSource("res/sounds/gameover.wav", "static"),
     ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),
-    ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static")
+    ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static"),
+    ["victory"] = love.audio.newSource("res/sounds/victory.wav", "static")
   }
 
   gFonts = {
