@@ -1,7 +1,7 @@
 VictoryState = BaseState:create()
 
 function VictoryState:enter(params)
-  self.timeout = 2.5
+  self.timeout = 2
 
   self.score = params.score
   self.lives = params.lives

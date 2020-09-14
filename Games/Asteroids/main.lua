@@ -19,6 +19,7 @@ function love.load()
     ["gameover"] = love.audio.newSource("res/sounds/gameover.wav", "static"),
     ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),
     ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static"),
+    ["teleport"] = love.audio.newSource("res/sounds/teleport.wav", "static"),
     ["victory"] = love.audio.newSource("res/sounds/victory.wav", "static")
   }
 

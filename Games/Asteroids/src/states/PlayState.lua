@@ -44,6 +44,8 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.wasPressed("down") or love.keyboard.wasPressed("s") then
+    gSounds["teleport"]:stop()
+    gSounds["teleport"]:play()
     local isSearching = true
     local x
     local y
@@ -66,6 +68,8 @@ function PlayState:update(dt)
 
     self.player.x = x
     self.player.y = y
+    self.player.dx = 0
+    self.player.dy = 0
   end
 
   for k, asteroid in pairs(self.asteroids) do

@@ -2,27 +2,19 @@
 
 Recreate the popular game **Asteroid**, using the shape functions from the `love.graphics` module.
 
-## Roadmap
-
-- bonus: design and include a random enemy, moving horizontally and occasionally firing toward the player; starting from a level with 4 asteroids; awarding 200 points
-
-- bonus: add decorative elements in the background
-
-- docs: add notes on object oriented programming and object inheritance, considering how the state machine is implemented
-
-## Notes
+## Project structure
 
 The game is structured as follows:
 
 - "main.lua" works as the entry point for the application
 
-- the "src" folder contains any additional files. "main.lua" requires every single component by including "Dependencies.lua" at the top of the document. Itself, "Dependencies.lua" is used to require every other asset
+- the "src" folder contains any additional `.lua` file developing the game. "main.lua" requires every single component by including "Dependencies.lua" at the top of the document. Itself, "Dependencies.lua" is used to require every other asset
 
 - the "res" folder provides audio files and the font used throughout the application. The font is [Audiowide](https://fonts.google.com/specimen/Audiowide), while the audio files are created with Bfxr.
 
-The folder also describes a spritesheet I designed with GIMP. Ultimately, I decided not to use the raster images, and rely on the shapes provided by Love2D instead.
+The "graphics" folder also describes a spritesheet I designed with GIMP. Ultimately, I decided not to use the raster image, and rely on the shapes provided by Love2D instead.
 
-### Object Oriented Programming
+## Object oriented programming
 
 Lua doesn't have a concept of classes, nor of objects. It is however possible to implement an prototype-instance structure by using the data structure of a table.
 
@@ -73,3 +65,24 @@ end
 ```
 
 Once you call the function from the `player` — small p — table, the script will look at prototype since the `player` table doesn't have a function with the same name.
+
+### Inheritance
+
+The files describing the different states of the game inherit from `BaseState`. To allow for such a feature, it's necessary to move the `.__index` declaration within the body of the initialization function.
+
+```lua
+BaseState = {}
+
+function BaseState:create()
+  this = {}
+  setmetatable(this, self)
+  self.__index = self
+  return this
+end
+```
+
+This change is necessary to have `self` refer to the individual states. Looking at the pause state, for instance, once the class is initialized with the `:create` method from the `BaseState` table, it gains access to its attributes and methods.
+
+```lua
+PauseState = BaseState:create()
+```

@@ -12,6 +12,7 @@ function GameoverState:update(dt)
     self.timeout = self.timeout - dt
 
     if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
+      gSounds["gameover"]:stop()
       gStateMachine:change("title")
     end
 
