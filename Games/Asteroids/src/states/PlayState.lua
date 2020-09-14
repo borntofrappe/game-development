@@ -8,7 +8,6 @@ function PlayState:enter(params)
   }
 
   self.score = params.score or 0
-  self.hiScore = params.hiScore or 3500
   self.lives = params.lives or 3
 
   self.player = params.player or Player:create()
@@ -27,7 +26,6 @@ function PlayState:update(dt)
       "pause",
       {
         score = self.score,
-        hiScore = self.hiScore,
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
@@ -83,8 +81,8 @@ function PlayState:update(dt)
         table.insert(self.asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
       end
       self.score = self.score + self.points[asteroid.size]
-      if self.score > self.hiScore then
-        self.hiScore = self.score
+      if self.score > gRecord then
+        gRecord = self.score
       end
       table.remove(self.asteroids, k)
 
@@ -93,7 +91,6 @@ function PlayState:update(dt)
           "victory",
           {
             score = self.score,
-            hiScore = self.hiScore,
             lives = self.lives,
             numberAsteroids = self.numberAsteroids
           }
@@ -119,7 +116,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  showStats(self.score, self.hiScore, self.lives)
+  showStats(self.score, self.lives)
 
   for k, asteroid in pairs(self.asteroids) do
     asteroid:render()

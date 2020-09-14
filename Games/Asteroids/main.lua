@@ -5,6 +5,7 @@ function love.load()
   love.window.setTitle("Asteroids")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
+  gRecord = 3500
   gColors = {
     ["background"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
     ["foreground"] = {["r"] = 0, ["g"] = 0, ["b"] = 0}
@@ -65,11 +66,11 @@ function testAABB(circle1, circle2)
   return (circle1.x - circle2.x) ^ 2 + (circle1.y - circle2.y) ^ 2 < (circle1.r + circle2.r) ^ 2
 end
 
-function showStats(score, hiScore, lives)
+function showStats(score, lives)
   love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
   local x = math.floor(WINDOW_WIDTH / 4)
   local y = 2
-  love.graphics.print(hiScore, x, y)
+  love.graphics.print(gRecord, x, y)
 
   y = y + 20
   love.graphics.printf(score, 0, y, x, "right")

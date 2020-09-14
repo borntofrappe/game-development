@@ -4,7 +4,6 @@ function VictoryState:enter(params)
   self.timeout = 3
 
   self.score = params.score
-  self.hiScore = params.hiScore
   self.lives = params.lives
   self.numberAsteroids = params.numberAsteroids
 end
@@ -17,7 +16,6 @@ function VictoryState:update(dt)
       "play",
       {
         score = self.score,
-        hiScore = self.hiScore,
         lives = self.lives,
         numberAsteroids = self.numberAsteroids + 1
       }
@@ -26,7 +24,7 @@ function VictoryState:update(dt)
 end
 
 function VictoryState:render()
-  showStats(self.score, self.hiScore, self.lives)
+  showStats(self.score, self.lives)
 
   love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
   love.graphics.printf(string.upper("Level Complete"), 0, WINDOW_HEIGHT / 2 - 8, WINDOW_WIDTH, "center")

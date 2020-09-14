@@ -6,7 +6,7 @@ Recreate the popular game, taking inspiration from the Game Boy version.
 
 - suggestion: consider how to draw the player as if on a different layer, a separate canvas (translation/rotation affects everything rendered after the player)
 
-- feature: register high score
+- suggestion: tweak gameplay in terms of speed (player, bullet, asteroids)
 
 - feature: add sound
 

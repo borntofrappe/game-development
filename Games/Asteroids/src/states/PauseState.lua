@@ -2,7 +2,6 @@ PauseState = BaseState:create()
 
 function PauseState:enter(params)
   self.score = params.score
-  self.hiScore = params.hiScore
   self.lives = params.lives
 
   self.player = params.player
@@ -17,7 +16,6 @@ function PauseState:update(dt)
       "play",
       {
         score = self.score,
-        hiScore = self.hiScore,
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
@@ -29,7 +27,7 @@ function PauseState:update(dt)
 end
 
 function PauseState:render()
-  showStats(self.score, self.hiScore, self.lives)
+  showStats(self.score, self.lives)
 
   for k, asteroid in pairs(self.asteroids) do
     asteroid:render()
