@@ -4,17 +4,31 @@ Recreate the popular game, taking inspiration from the Game Boy version.
 
 ## Roadmap
 
-- suggestion: consider how to draw the player as if on a different layer, a separate canvas (translation/rotation affects everything rendered after the player)
+- update: use spritesheet in place of shapes
 
-- suggestion: tweak gameplay in terms of speed (player, bullet, asteroids)
+- update: add audio files
 
-- feature: add sound
+- feature: include "setup" state where the player blinks and cannot be manouvered/destroyed
 
-- bonus: design sprite sheet for asteroids and spaceship
+- gameplay:
 
-- bonus: add a random enemy, moving horizontally and occasionally firing toward the player; starting from a level with 4 asteroids, awarding 200 points
+  - award a life every 10k points
+
+  - allow to move in the victory state
+
+  - remove text in the pause and victory state
+
+  - keep updating the asteroids in the gameover state
+
+- style: complete sounds with "setup", victory and gameover audio files
+
+- style: complete sprite sheet with multiple sprites for the asteroids
+
+- bonus: design and include a random enemy, moving horizontally and occasionally firing toward the player; starting from a level with 4 asteroids; awarding 200 points
 
 - bonus: add decorative elements in the background
+
+- docs: add notes on object oriented programming and object inheritance, considering how the state machine is implemented
 
 ## Notes
 
@@ -22,7 +36,16 @@ The game is structured as follows:
 
 - "main.lua" works as the entry point for the application
 
-- the "src" folder contains any additional files. "main.lua" requires every single component by including "Dependencies.lua" at the top of the document. Itself, "Dependencies.lua" is used to require every other asset.
+- the "src" folder contains any additional files. "main.lua" requires every single component by including "Dependencies.lua" at the top of the document. Itself, "Dependencies.lua" is used to require every other asset
+
+- the "res" folder provides images, audio files and the font used throughout the application. The font is [Audiowide](https://fonts.google.com/specimen/Audiowide), the audio files are created with Bfxr, and the sprites are designed with GIMP.
+
+| Sprite     | Width | Height |
+| ---------- | ----- | ------ |
+| Player     | 36    | 33     |
+| Asteroid-l | 45    | 42     |
+| Asteroid-m | 30    | 27     |
+| Asteroid-s | 21    | 18     |
 
 ### Object Oriented Programming
 
