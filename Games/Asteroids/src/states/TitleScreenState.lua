@@ -10,6 +10,7 @@ function TitleScreenState:update(dt)
   end
 
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
+    gSounds["setup"]:play()
     gStateMachine:change(
       "play",
       {

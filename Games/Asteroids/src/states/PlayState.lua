@@ -14,9 +14,18 @@ function PlayState:enter(params)
   self.projectiles = params.projectiles or {}
   self.numberAsteroids = params.numberAsteroids or params.difficulty * 2
   self.asteroids = params.asteroids or self:createLevel()
+
+  self.interval = 3
+  self.timer = 0
 end
 
 function PlayState:update(dt)
+  self.timer = self.timer + dt
+  if self.timer >= self.interval then
+    self.timer = self.timer % self.interval
+    gSounds["background-noise"]:play()
+  end
+
   if love.keyboard.wasPressed("escape") then
     gStateMachine:change("title")
   end
