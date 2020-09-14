@@ -59,13 +59,5 @@ function love.draw()
 end
 
 function testAABB(circle1, circle2)
-  if circle1.x > circle2.x + circle2.r or circle1.x < circle2.x - circle2.r then
-    return false
-  end
-
-  if circle1.y > circle2.y + circle2.r or circle1.y < circle2.y - circle2.r then
-    return false
-  end
-
-  return true
+  return (circle1.x - circle2.x) ^ 2 + (circle1.y - circle2.y) ^ 2 < (circle1.r + circle2.r) ^ 2
 end
