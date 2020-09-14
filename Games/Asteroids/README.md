@@ -4,6 +4,12 @@ Recreate the popular game, taking inspiration from the Game Boy version.
 
 ## Roadmap
 
+- suggestion: consider how to draw the player as if on a different layer, a separate canvas (translation/rotation affects everything rendered after the player)
+
+- feature: add sound
+
+- feature: add victory state, spawn one additional asteroid
+
 - bonus: design sprite sheet for asteroids and spaceship
 
 - bonus: add a random enemy, moving horizontally and occasionally firing toward the player; starting from a level with 4 asteroids, awarding 200 points

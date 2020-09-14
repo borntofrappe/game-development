@@ -27,6 +27,8 @@ function PauseState:update(dt)
 end
 
 function PauseState:render()
+  showStats(self.score, self.hiScore, self.lives)
+
   for k, asteroid in pairs(self.asteroids) do
     asteroid:render()
   end

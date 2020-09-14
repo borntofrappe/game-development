@@ -107,7 +107,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  self:showStats()
+  showStats(self.score, self.hiScore, self.lives)
 
   for k, asteroid in pairs(self.asteroids) do
     asteroid:render()
@@ -125,19 +125,4 @@ function PlayState:createLevel(n)
     table.insert(asteroids, Asteroid:create())
   end
   return asteroids
-end
-
-function PlayState:showStats()
-  love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
-  local x = math.floor(WINDOW_WIDTH / 4)
-  local y = 2
-  love.graphics.print(self.hiScore, x, y)
-
-  y = y + 20
-  love.graphics.printf(self.score, 0, y, x, "right")
-  x = x + 4
-  for life = 1, self.lives - 1 do
-    x = x + 8
-    love.graphics.polygon("fill", x, y + 4, x, y + 18, x - 5, y + 14)
-  end
 end

@@ -61,3 +61,18 @@ end
 function testAABB(circle1, circle2)
   return (circle1.x - circle2.x) ^ 2 + (circle1.y - circle2.y) ^ 2 < (circle1.r + circle2.r) ^ 2
 end
+
+function showStats(score, hiScore, lives)
+  love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
+  local x = math.floor(WINDOW_WIDTH / 4)
+  local y = 2
+  love.graphics.print(hiScore, x, y)
+
+  y = y + 20
+  love.graphics.printf(score, 0, y, x, "right")
+  x = x + 4
+  for life = 1, lives - 1 do
+    x = x + 8
+    love.graphics.polygon("fill", x, y + 4, x, y + 18, x - 5, y + 14)
+  end
+end
