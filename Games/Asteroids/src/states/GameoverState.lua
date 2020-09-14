@@ -1,5 +1,9 @@
 GameoverState = BaseState:create()
 
+function GameoverState:enter(params)
+  gSounds["gameover"]:play()
+end
+
 function GameoverState:update(dt)
   if love.keyboard.wasPressed("escape") then
     love.event.quit()

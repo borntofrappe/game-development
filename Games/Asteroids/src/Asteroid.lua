@@ -7,8 +7,12 @@ function Asteroid:create(x, y, size)
   local randomY =
     math.random(2) == 1 and math.random(0, WINDOW_HEIGHT / 3) or math.random(WINDOW_HEIGHT * 2 / 3, WINDOW_WIDTH)
 
-  local dx = math.random(2) == 1 and math.random(10, 40) or math.random(-10, -40)
-  local dy = math.random(2) == 1 and math.random(10, 40) or math.random(-10, -40)
+  local dx =
+    math.random(2) == 1 and math.random(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX) or
+    math.random(-ASTEROID_SPEED_MIN, -ASTEROID_SPEED_MAX)
+  local dy =
+    math.random(2) == 1 and math.random(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX) or
+    math.random(-ASTEROID_SPEED_MIN, -ASTEROID_SPEED_MAX)
 
   this = {
     x = x or randomX,

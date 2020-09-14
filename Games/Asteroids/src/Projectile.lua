@@ -2,8 +2,8 @@ Projectile = {}
 Projectile.__index = Projectile
 
 function Projectile:create(x, y, angle)
-  local dy = math.cos(math.rad(angle)) * PUSH_PROJECTILE * -1
-  local dx = math.sin(math.rad(angle)) * PUSH_PROJECTILE
+  local dy = math.cos(math.rad(angle)) * PROJECTILE_SPEED * -1
+  local dx = math.sin(math.rad(angle)) * PROJECTILE_SPEED
   this = {
     x = x,
     y = y,
@@ -21,7 +21,7 @@ end
 
 function Projectile:update(dt)
   self.timer = self.timer + dt
-  if self.timer >= TIMER_PROJECTILE then
+  if self.timer >= PROJECTILE_TIMEOUT then
     self.inPlay = false
   end
 

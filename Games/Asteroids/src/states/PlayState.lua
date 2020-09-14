@@ -38,6 +38,9 @@ function PlayState:update(dt)
   if love.keyboard.wasPressed("space") then
     local projectile = Projectile:create(self.player.x, self.player.y, self.player.angle)
     table.insert(self.projectiles, projectile)
+
+    gSounds["shoot"]:stop()
+    gSounds["shoot"]:play()
   end
 
   if love.keyboard.wasPressed("down") or love.keyboard.wasPressed("s") then
@@ -68,6 +71,7 @@ function PlayState:update(dt)
   for k, asteroid in pairs(self.asteroids) do
     asteroid:update(dt)
     if testAABB(self.player, asteroid) then
+      gSounds["hurt"]:play()
       self.lives = self.lives - 1
       self.player:reset()
       asteroid.inPlay = false
@@ -76,6 +80,7 @@ function PlayState:update(dt)
       end
     end
     if not asteroid.inPlay then
+      gSounds["destroy-" .. asteroid.size]:play()
       if asteroid.size > 1 then
         table.insert(self.asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
         table.insert(self.asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))

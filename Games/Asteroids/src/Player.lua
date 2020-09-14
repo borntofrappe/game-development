@@ -29,28 +29,28 @@ function Player:update(dt)
   self.isPushing = false
   if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
     self.isPushing = true
-    self.dy = math.cos(math.rad(self.angle)) * PUSH
-    self.dx = math.sin(math.rad(self.angle)) * PUSH
+    self.dy = math.cos(math.rad(self.angle)) * PLAYER_SPEED
+    self.dx = math.sin(math.rad(self.angle)) * PLAYER_SPEED
   end
 
   if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
-    self.angle = self.angle + PUSH_LATERAL
+    self.angle = self.angle + PLAYER_SPEED_LATERAL * dt
   end
 
   if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
-    self.angle = self.angle - PUSH_LATERAL
+    self.angle = self.angle - PLAYER_SPEED_LATERAL * dt
   end
 
   if self.dx < 0 then
-    self.dx = self.dx + FRICTION * dt
+    self.dx = self.dx + PLAYER_FRICTION * dt
   elseif self.dx > 0 then
-    self.dx = self.dx - FRICTION * dt
+    self.dx = self.dx - PLAYER_FRICTION * dt
   end
 
   if self.dy < 0 then
-    self.dy = self.dy + FRICTION * dt
+    self.dy = self.dy + PLAYER_FRICTION * dt
   elseif self.dy > 0 then
-    self.dy = self.dy - FRICTION * dt
+    self.dy = self.dy - PLAYER_FRICTION * dt
   end
 
   self.y = self.y - self.dy

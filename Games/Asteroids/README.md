@@ -1,14 +1,8 @@
 # Asteroids
 
-Recreate the popular game, taking inspiration from the Game Boy version.
+Recreate the popular game **Asteroid**, using the shape functions from the `love.graphics` module.
 
 ## Roadmap
-
-- update: use spritesheet in place of shapes
-
-- update: add audio files
-
-- feature: include "setup" state where the player blinks and cannot be manouvered/destroyed
 
 - gameplay:
 
@@ -19,10 +13,6 @@ Recreate the popular game, taking inspiration from the Game Boy version.
   - remove text in the pause and victory state
 
   - keep updating the asteroids in the gameover state
-
-- style: complete sounds with "setup", victory and gameover audio files
-
-- style: complete sprite sheet with multiple sprites for the asteroids
 
 - bonus: design and include a random enemy, moving horizontally and occasionally firing toward the player; starting from a level with 4 asteroids; awarding 200 points
 
@@ -38,14 +28,9 @@ The game is structured as follows:
 
 - the "src" folder contains any additional files. "main.lua" requires every single component by including "Dependencies.lua" at the top of the document. Itself, "Dependencies.lua" is used to require every other asset
 
-- the "res" folder provides images, audio files and the font used throughout the application. The font is [Audiowide](https://fonts.google.com/specimen/Audiowide), the audio files are created with Bfxr, and the sprites are designed with GIMP.
+- the "res" folder provides audio files and the font used throughout the application. The font is [Audiowide](https://fonts.google.com/specimen/Audiowide), while the audio files are created with Bfxr.
 
-| Sprite     | Width | Height |
-| ---------- | ----- | ------ |
-| Player     | 36    | 33     |
-| Asteroid-l | 45    | 42     |
-| Asteroid-m | 30    | 27     |
-| Asteroid-s | 21    | 18     |
+The folder also describes a spritesheet I designed with GIMP. Ultimately, I decided not to use the raster images, and rely on the shapes provided by Love2D instead.
 
 ### Object Oriented Programming
 
