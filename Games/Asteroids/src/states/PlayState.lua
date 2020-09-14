@@ -1,8 +1,6 @@
 PlayState = BaseState:create()
 
 function PlayState:enter(params)
-  self.difficulty = params.difficulty or 2
-
   self.points = {
     [3] = 20,
     [2] = 50,
@@ -15,7 +13,8 @@ function PlayState:enter(params)
 
   self.player = params.player or Player:create()
   self.projectiles = params.projectiles or {}
-  self.asteroids = params.asteroids or self:createLevel(self.difficulty * 2)
+  self.numberAsteroids = params.numberAsteroids or params.difficulty * 2
+  self.asteroids = params.asteroids or self:createLevel()
 end
 
 function PlayState:update(dt)
@@ -32,6 +31,7 @@ function PlayState:update(dt)
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
+        numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids
       }
     )
@@ -87,6 +87,18 @@ function PlayState:update(dt)
         self.hiScore = self.score
       end
       table.remove(self.asteroids, k)
+
+      if self:hasWon() then
+        gStateMachine:change(
+          "victory",
+          {
+            score = self.score,
+            hiScore = self.hiScore,
+            lives = self.lives,
+            numberAsteroids = self.numberAsteroids
+          }
+        )
+      end
     end
   end
 
@@ -119,10 +131,14 @@ function PlayState:render()
   self.player:render()
 end
 
-function PlayState:createLevel(n)
+function PlayState:createLevel()
   local asteroids = {}
-  for i = 1, n do
+  for i = 1, self.numberAsteroids do
     table.insert(asteroids, Asteroid:create())
   end
   return asteroids
+end
+
+function PlayState:hasWon()
+  return #self.asteroids == 0
 end

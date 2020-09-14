@@ -7,6 +7,7 @@ function PauseState:enter(params)
 
   self.player = params.player
   self.projectiles = params.projectiles
+  self.numberAsteroids = params.numberAsteroids
   self.asteroids = params.asteroids
 end
 
@@ -20,6 +21,7 @@ function PauseState:update(dt)
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
+        numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids
       }
     )
@@ -36,5 +38,7 @@ function PauseState:render()
   for k, projectile in pairs(self.projectiles) do
     projectile:render()
   end
-  self.player:render()
+
+  love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
+  love.graphics.printf(string.upper("Pause"), 0, WINDOW_HEIGHT / 2 - 8, WINDOW_WIDTH, "center")
 end
