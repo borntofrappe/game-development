@@ -58,23 +58,7 @@ function TeleportState:update(dt)
         if testAABB(projectile, asteroid) then
           projectile.inPlay = false
           asteroid.inPlay = false
-          self.score = self.score + gPoints[asteroid.size]
-          self.scoreLives = self.scoreLives + gPoints[asteroid.size]
-
-          if self.scoreLives > LIVES_THRESHOLD_EXTRA then
-            self.lives = self.lives + 1
-            gSounds["life"]:play()
-
-            self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
-          end
-
-          if self.score > gRecord then
-            if not self.hasRecord then
-              self.hasRecord = true
-              gSounds["record"]:play()
-            end
-            gRecord = self.score
-          end
+          self:scorePoints(gPoints[asteroid.size])
         end
       end
       if not projectile.inPlay then
@@ -144,4 +128,24 @@ function TeleportState:reposition()
   self.player.y = y
   self.player.dx = 0
   self.player.dy = 0
+end
+
+function TeleportState:scorePoints(points)
+  self.score = self.score + points
+  self.scoreLives = self.scoreLives + points
+
+  if self.scoreLives > LIVES_THRESHOLD_EXTRA then
+    self.lives = self.lives + 1
+    gSounds["life"]:play()
+
+    self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
+  end
+
+  if self.score > gRecord then
+    if not self.hasRecord then
+      self.hasRecord = true
+      gSounds["record"]:play()
+    end
+    gRecord = self.score
+  end
 end

@@ -90,50 +90,9 @@ function PlayState:update(dt)
     if testAABB(self.player, asteroid) then
       gSounds["hurt"]:play()
       asteroid.inPlay = false
-      self.lives = self.lives - 1
 
-      self.score = self.score + gPoints[asteroid.size]
-      self.scoreLives = self.scoreLives + gPoints[asteroid.size]
-
-      if self.scoreLives > LIVES_THRESHOLD_EXTRA then
-        self.lives = self.lives + 1
-        gSounds["life"]:play()
-
-        self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
-      end
-
-      if self.score > gRecord then
-        if not self.hasRecord then
-          self.hasRecord = true
-          gSounds["record"]:play()
-        end
-        gRecord = self.score
-      end
-
-      if self.lives == 0 then
-        gStateMachine:change(
-          "gameover",
-          {
-            score = self.score,
-            asteroids = self.asteroids
-          }
-        )
-      else
-        gStateMachine:change(
-          "setup",
-          {
-            score = self.score,
-            scoreLives = self.scoreLives,
-            lives = self.lives,
-            numberAsteroids = self.numberAsteroids,
-            hasRecord = self.hasRecord,
-            hasEnemy = self.hasEnemy,
-            projectiles = self.projectiles,
-            asteroids = self.asteroids,
-            enemy = self.enemy
-          }
-        )
-      end
+      self:scorePoints(gPoints[asteroid.size])
+      self:hit()
     end
 
     if not asteroid.inPlay then
@@ -169,22 +128,7 @@ function PlayState:update(dt)
         projectile.inPlay = false
         asteroid.inPlay = false
 
-        self.score = self.score + gPoints[asteroid.size]
-        self.scoreLives = self.scoreLives + gPoints[asteroid.size]
-        if self.scoreLives > LIVES_THRESHOLD_EXTRA then
-          self.lives = self.lives + 1
-          gSounds["life"]:play()
-
-          self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
-        end
-
-        if self.score > gRecord then
-          if not self.hasRecord then
-            self.hasRecord = true
-            gSounds["record"]:play()
-          end
-          gRecord = self.score
-        end
+        self:scorePoints(gPoints[asteroid.size])
       end
 
       if self.enemy and self.enemy.inPlay and testAABB(projectile, self.enemy) then
@@ -192,22 +136,7 @@ function PlayState:update(dt)
         projectile.inPlay = false
         self.enemy.inPlay = false
 
-        self.score = self.score + ENEMY_POINTS
-        self.scoreLives = self.scoreLives + ENEMY_POINTS
-        if self.scoreLives > LIVES_THRESHOLD_EXTRA then
-          self.lives = self.lives + 1
-          gSounds["life"]:play()
-
-          self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
-        end
-
-        if self.score > gRecord then
-          if not self.hasRecord then
-            self.hasRecord = true
-            gSounds["record"]:play()
-          end
-          gRecord = self.score
-        end
+        self:scorePoints(ENEMY_POINTS)
       end
     end
     if not projectile.inPlay then
@@ -223,50 +152,9 @@ function PlayState:update(dt)
       self.enemy.inPlay = false
 
       gSounds["hurt"]:play()
-      self.lives = self.lives - 1
 
-      self.score = self.score + ENEMY_POINTS
-      self.scoreLives = self.scoreLives + ENEMY_POINTS
-
-      if self.scoreLives > LIVES_THRESHOLD_EXTRA then
-        self.lives = self.lives + 1
-        gSounds["life"]:play()
-
-        self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
-      end
-
-      if self.score > gRecord then
-        if not self.hasRecord then
-          self.hasRecord = true
-          gSounds["record"]:play()
-        end
-        gRecord = self.score
-      end
-
-      if self.lives == 0 then
-        gStateMachine:change(
-          "gameover",
-          {
-            score = self.score,
-            asteroids = self.asteroids
-          }
-        )
-      else
-        gStateMachine:change(
-          "setup",
-          {
-            score = self.score,
-            scoreLives = self.scoreLives,
-            lives = self.lives,
-            numberAsteroids = self.numberAsteroids,
-            hasRecord = self.hasRecord,
-            hasEnemy = self.hasEnemy,
-            projectiles = self.projectiles,
-            asteroids = self.asteroids,
-            enemy = self.enemy
-          }
-        )
-      end
+      self:scorePoints(ENEMY_POINTS)
+      self:hit()
     end
   end
 
@@ -290,4 +178,52 @@ function PlayState:render()
   end
 
   self.player:render()
+end
+
+function PlayState:scorePoints(points)
+  self.score = self.score + points
+  self.scoreLives = self.scoreLives + points
+
+  if self.scoreLives > LIVES_THRESHOLD_EXTRA then
+    self.lives = self.lives + 1
+    gSounds["life"]:play()
+
+    self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
+  end
+
+  if self.score > gRecord then
+    if not self.hasRecord then
+      self.hasRecord = true
+      gSounds["record"]:play()
+    end
+    gRecord = self.score
+  end
+end
+
+function PlayState:hit()
+  self.lives = self.lives - 1
+
+  if self.lives == 0 then
+    gStateMachine:change(
+      "gameover",
+      {
+        score = self.score,
+        asteroids = self.asteroids
+      }
+    )
+  else
+    gStateMachine:change(
+      "setup",
+      {
+        score = self.score,
+        scoreLives = self.scoreLives,
+        lives = self.lives,
+        numberAsteroids = self.numberAsteroids,
+        hasRecord = self.hasRecord,
+        hasEnemy = self.hasEnemy,
+        asteroids = self.asteroids,
+        enemy = self.enemy
+      }
+    )
+  end
 end

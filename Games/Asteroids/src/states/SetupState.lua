@@ -37,6 +37,10 @@ function SetupState:update(dt)
       asteroid:update(dt)
     end
 
+    if self.enemy then
+      self.enemy:update(dt)
+    end
+
     self.player:update(dt)
   else
     self.player.alpha = 1
@@ -67,6 +71,10 @@ function SetupState:render()
 
   for k, asteroid in pairs(self.asteroids) do
     asteroid:render()
+  end
+
+  if self.enemy then
+    self.enemy:render()
   end
 
   self.player:render()

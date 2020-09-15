@@ -27,11 +27,11 @@ function Enemy:update(dt)
     self.dy = self.dy * -1
   end
 
-  if self.x < ENEMY_RADIUS or self.x > WINDOW_WIDTH + ENEMY_RADIUS then
+  if self.x < -ENEMY_RADIUS or self.x > WINDOW_WIDTH + ENEMY_RADIUS then
     self.inPlay = false
   end
 
-  if self.y < ENEMY_RADIUS then
+  if self.y < -ENEMY_RADIUS then
     self.y = WINDOW_HEIGHT + ENEMY_RADIUS
   end
 
