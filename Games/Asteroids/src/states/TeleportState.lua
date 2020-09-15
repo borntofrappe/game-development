@@ -14,6 +14,8 @@ function TeleportState:enter(params)
 
   self.hasRecord = params.hasRecord
 
+  self.enemy = params.enemy or nil
+
   gSounds["teleport"]:stop()
   gSounds["teleport"]:play()
 end
@@ -42,7 +44,8 @@ function TeleportState:update(dt)
               lives = self.lives,
               player = self.player,
               numberAsteroids = self.numberAsteroids,
-              hasRecord = self.hasRecord
+              hasRecord = self.hasRecord,
+              enemy = self.enemy
             }
           )
         end
@@ -90,7 +93,8 @@ function TeleportState:update(dt)
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
-        hasRecord = self.hasRecord
+        hasRecord = self.hasRecord,
+        enemy = self.enemy
       }
     )
   end
@@ -106,6 +110,10 @@ function TeleportState:render()
 
   for k, projectile in pairs(self.projectiles) do
     projectile:render()
+  end
+
+  if self.enemy then
+    self.enemy:render()
   end
 end
 

@@ -56,6 +56,6 @@ end
 function Asteroid:render()
   if self.inPlay then
     love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
-    love.graphics.circle("fill", self.x, self.y, self.r)
+    love.graphics.circle("fill", math.floor(self.x), math.floor(self.y), self.r)
   end
 end

@@ -11,6 +11,8 @@ function PauseState:enter(params)
   self.asteroids = params.asteroids
 
   self.hasRecord = params.hasRecord
+
+  self.enemy = params.enemy or nil
 end
 
 function PauseState:update(dt)
@@ -25,7 +27,8 @@ function PauseState:update(dt)
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
-        hasRecord = self.hasRecord
+        hasRecord = self.hasRecord,
+        enemy = self.enemy
       }
     )
   end
@@ -41,6 +44,10 @@ function PauseState:render()
 
   for k, projectile in pairs(self.projectiles) do
     projectile:render()
+  end
+
+  if self.enemy then
+    self.enemy:render()
   end
 
   self.player:render()

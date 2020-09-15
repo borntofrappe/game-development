@@ -3,6 +3,7 @@ require "src/constants"
 require "src/Player"
 require "src/Projectile"
 require "src/Asteroid"
+require "src/Enemy"
 
 require "src/StateMachine"
 require "src/states/BaseState"

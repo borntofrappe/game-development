@@ -75,7 +75,7 @@ function Player:update(dt)
 end
 
 function Player:render()
-  love.graphics.translate(self.x, self.y)
+  love.graphics.translate(math.floor(self.x), math.floor(self.y))
   love.graphics.rotate(math.rad(self.angle))
 
   if self.isPushing then
@@ -86,12 +86,36 @@ function Player:render()
       self.alpha
     )
     love.graphics.setLineWidth(1.5)
-    love.graphics.polygon("line", -self.r / 2, self.r, self.r / 2, self.r, 0, self.r * 3 / 2)
+    love.graphics.polygon(
+      "line",
+      math.floor(-self.r / 2),
+      math.floor(self.r),
+      math.floor(self.r / 2),
+      math.floor(self.r),
+      0,
+      math.floor(self.r * 3 / 2)
+    )
   end
 
   love.graphics.setColor(gColors["background"]["r"], gColors["background"]["g"], gColors["background"]["b"], self.alpha)
-  love.graphics.polygon("fill", 0, -self.r, self.r, self.r, -self.r, self.r)
+  love.graphics.polygon(
+    "fill",
+    0,
+    math.floor(-self.r),
+    math.floor(self.r),
+    math.floor(self.r),
+    math.floor(-self.r),
+    math.floor(self.r)
+  )
   love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"], self.alpha)
   love.graphics.setLineWidth(2)
-  love.graphics.polygon("line", 0, -self.r, self.r, self.r, -self.r, self.r)
+  love.graphics.polygon(
+    "line",
+    0,
+    math.floor(-self.r),
+    math.floor(self.r),
+    math.floor(self.r),
+    math.floor(-self.r),
+    math.floor(self.r)
+  )
 end

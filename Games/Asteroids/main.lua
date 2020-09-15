@@ -18,6 +18,7 @@ function love.load()
     ["destroy-3"] = love.audio.newSource("res/sounds/destroy-3.wav", "static"),
     ["destroy-2"] = love.audio.newSource("res/sounds/destroy-2.wav", "static"),
     ["destroy-1"] = love.audio.newSource("res/sounds/destroy-1.wav", "static"),
+    ["enemy"] = love.audio.newSource("res/sounds/enemy.wav", "static"),
     ["gameover"] = love.audio.newSource("res/sounds/gameover.wav", "static"),
     ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),
     ["life"] = love.audio.newSource("res/sounds/life.wav", "static"),

@@ -11,6 +11,8 @@ function VictoryState:enter(params)
 
   self.hasRecord = params.hasRecord
 
+  self.enemy = params.enemy or nil
+
   gSounds["victory"]:play()
 end
 
@@ -28,7 +30,8 @@ function VictoryState:update(dt)
         lives = self.lives,
         player = self.player,
         numberAsteroids = self.numberAsteroids + 1,
-        hasRecord = self.hasRecord
+        hasRecord = self.hasRecord,
+        enemy = self.enemy
       }
     )
   end
@@ -37,6 +40,10 @@ end
 function VictoryState:render()
   showRecord()
   showStats(self.score, self.lives)
+
+  if self.enemy then
+    self.enemy:render()
+  end
 
   self.player:render()
 end

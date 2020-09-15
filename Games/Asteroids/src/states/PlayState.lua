@@ -14,9 +14,20 @@ function PlayState:enter(params)
   self.asteroids = params.asteroids or createLevel(self.numberAsteroids)
 
   self.hasRecord = params.hasRecord
+
+  self.enemy = params.enemy or nil
 end
 
 function PlayState:update(dt)
+  if self.numberAsteroids >= ENEMY_ASTEROID_THRESHOLD and not self.enemy and math.random(ENEMY_ODDS) == 1 then
+    self.enemy = Enemy:create()
+    gSounds["enemy"]:play()
+  end
+
+  if self.enemy and not self.enemy.inPlay then
+    self.enemy = nil
+  end
+
   self.timer = self.timer + dt
   if self.timer >= self.interval then
     self.timer = self.timer % self.interval
@@ -38,7 +49,8 @@ function PlayState:update(dt)
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
-        hasRecord = self.hasRecord
+        hasRecord = self.hasRecord,
+        enemy = self.enemy
       }
     )
   end
@@ -62,7 +74,8 @@ function PlayState:update(dt)
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
-        hasRecord = self.hasRecord
+        hasRecord = self.hasRecord,
+        enemy = self.enemy
       }
     )
   end
@@ -110,11 +123,13 @@ function PlayState:update(dt)
             projectiles = self.projectiles,
             numberAsteroids = self.numberAsteroids,
             asteroids = self.asteroids,
-            hasRecord = self.hasRecord
+            hasRecord = self.hasRecord,
+            enemy = self.enemy
           }
         )
       end
     end
+
     if not asteroid.inPlay then
       gSounds["destroy-" .. asteroid.size]:play()
       if asteroid.size > 1 then
@@ -132,7 +147,8 @@ function PlayState:update(dt)
             lives = self.lives,
             player = self.player,
             numberAsteroids = self.numberAsteroids,
-            hasRecord = self.hasRecord
+            hasRecord = self.hasRecord,
+            enemy = self.enemy
           }
         )
       end
@@ -163,9 +179,86 @@ function PlayState:update(dt)
           gRecord = self.score
         end
       end
+
+      if self.enemy and self.enemy.inPlay and testAABB(projectile, self.enemy) then
+        gSounds["destroy-3"]:play()
+        projectile.inPlay = false
+        self.enemy.inPlay = false
+
+        self.score = self.score + ENEMY_POINTS
+        self.scoreLives = self.scoreLives + ENEMY_POINTS
+        if self.scoreLives > LIVES_THRESHOLD then
+          self.lives = self.lives + 1
+          gSounds["life"]:play()
+
+          self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+        end
+
+        if self.score > gRecord then
+          if not self.hasRecord then
+            self.hasRecord = true
+            gSounds["record"]:play()
+          end
+          gRecord = self.score
+        end
+      end
     end
     if not projectile.inPlay then
       table.remove(self.projectiles, k)
+    end
+  end
+
+  if self.enemy then
+    self.enemy:update(dt)
+
+    if self.enemy.inPlay and testAABB(self.player, self.enemy) then
+      gSounds["destroy-3"]:play()
+      self.enemy.inPlay = false
+
+      gSounds["hurt"]:play()
+      self.lives = self.lives - 1
+
+      self.score = self.score + ENEMY_POINTS
+      self.scoreLives = self.scoreLives + ENEMY_POINTS
+
+      if self.scoreLives > LIVES_THRESHOLD then
+        self.lives = self.lives + 1
+        gSounds["life"]:play()
+
+        self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+      end
+
+      if self.score > gRecord then
+        if not self.hasRecord then
+          self.hasRecord = true
+          gSounds["record"]:play()
+        end
+        gRecord = self.score
+      end
+
+      if self.lives == 0 then
+        gStateMachine:change(
+          "gameover",
+          {
+            score = self.score,
+            asteroids = self.asteroids
+          }
+        )
+      else
+        gStateMachine:change(
+          "setup",
+          {
+            score = self.score,
+            scoreLives = self.scoreLives,
+            lives = self.lives,
+            projectiles = self.projectiles,
+            numberAsteroids = self.numberAsteroids,
+            asteroids = self.asteroids,
+            hasRecord = self.hasRecord,
+            enemy = self.enemy
+          }
+        )
+      end
     end
   end
 
@@ -183,5 +276,10 @@ function PlayState:render()
   for k, projectile in pairs(self.projectiles) do
     projectile:render()
   end
+
+  if self.enemy then
+    self.enemy:render()
+  end
+
   self.player:render()
 end
