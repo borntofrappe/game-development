@@ -4,9 +4,12 @@ function VictoryState:enter(params)
   self.timeout = TIMEOUT_VICTORY
 
   self.score = params.score
+  self.scoreLives = params.scoreLives
   self.lives = params.lives
   self.player = params.player
   self.numberAsteroids = params.numberAsteroids
+
+  self.hasRecord = params.hasRecord
 
   gSounds["victory"]:play()
 end
@@ -21,9 +24,11 @@ function VictoryState:update(dt)
       "play",
       {
         score = self.score,
+        scoreLives = self.scoreLives,
         lives = self.lives,
         player = self.player,
-        numberAsteroids = self.numberAsteroids + 1
+        numberAsteroids = self.numberAsteroids + 1,
+        hasRecord = self.hasRecord
       }
     )
   end

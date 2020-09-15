@@ -2,10 +2,6 @@
 
 ## Roadmap
 
-- include special audio when surpassing the current record
-
-- award one life for each 10k points
-
 - design special collidable in the form of an alien; worth 200 points; moving mostly horizontally; firing randomly
 
 ## Project structure

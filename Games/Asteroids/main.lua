@@ -5,13 +5,8 @@ function love.load()
   love.window.setTitle("Asteroids")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  gRecord = 3500
-
-  gPoints = {
-    [3] = 20,
-    [2] = 50,
-    [1] = 100
-  }
+  gRecord = RECORD
+  gPoints = POINTS
 
   gColors = {
     ["background"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
@@ -25,6 +20,8 @@ function love.load()
     ["destroy-1"] = love.audio.newSource("res/sounds/destroy-1.wav", "static"),
     ["gameover"] = love.audio.newSource("res/sounds/gameover.wav", "static"),
     ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),
+    ["life"] = love.audio.newSource("res/sounds/life.wav", "static"),
+    ["record"] = love.audio.newSource("res/sounds/record.wav", "static"),
     ["setup"] = love.audio.newSource("res/sounds/setup.wav", "static"),
     ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static"),
     ["teleport"] = love.audio.newSource("res/sounds/teleport.wav", "static"),
@@ -110,10 +107,16 @@ function showStats(score, lives)
   local y = 22
 
   love.graphics.printf(score, 0, y, x, "right")
-  x = x + 4
-  for life = 1, lives - 1 do
-    x = x + 8
-    love.graphics.polygon("fill", x, y + 4, x, y + 18, x - 5, y + 14)
+  x = x + 12
+
+  if lives < 6 then
+    for life = 1, lives - 1 do
+      love.graphics.polygon("fill", x, y + 2, x, y + 18, x - 6, y + 14)
+      x = x + 8
+    end
+  else
+    love.graphics.polygon("fill", x, y + 2, x, y + 18, x - 6, y + 14)
+    love.graphics.print(" = " .. lives, x, y)
   end
 end
 

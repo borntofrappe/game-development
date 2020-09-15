@@ -2,17 +2,20 @@ SetupState = BaseState:create()
 
 function SetupState:enter(params)
   self.timer = 0
-  self.interval = 0.15
-  self.iterations = 10
+  self.interval = INTERVAL_SETUP
+  self.iterations = INTERVAL_SETUP_ITERATIONS
   self.alpha = 0
 
   self.score = params.score or 0
-  self.lives = params.lives or 3
+  self.scoreLives = params.scoreLives or self.score
+  self.lives = params.lives or LIVES
 
   self.player = params.player or Player:create()
   self.projectiles = params.projectiles or {}
-  self.numberAsteroids = params.numberAsteroids or params.difficulty * 2
+  self.numberAsteroids = params.numberAsteroids or params.difficulty * DIFFICULTY_MULTIPLIER
   self.asteroids = params.asteroids or createLevel(self.numberAsteroids)
+
+  self.hasRecord = params.hasRecord or false
 
   gSounds["setup"]:stop()
   gSounds["setup"]:play()
@@ -40,11 +43,13 @@ function SetupState:update(dt)
       "play",
       {
         score = self.score,
+        scoreLives = self.scoreLives,
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
-        asteroids = self.asteroids
+        asteroids = self.asteroids,
+        hasRecord = self.hasRecord
       }
     )
   end

@@ -4,12 +4,15 @@ function TeleportState:enter(params)
   self.timeout = TIMEOUT_TELEPORT
 
   self.score = params.score
+  self.scoreLives = params.scoreLives
   self.lives = params.lives
 
   self.player = params.player
   self.projectiles = params.projectiles
   self.numberAsteroids = params.numberAsteroids
   self.asteroids = params.asteroids
+
+  self.hasRecord = params.hasRecord
 
   gSounds["teleport"]:stop()
   gSounds["teleport"]:play()
@@ -27,10 +30,6 @@ function TeleportState:update(dt)
           table.insert(self.asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
           table.insert(self.asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
         end
-        self.score = self.score + gPoints[asteroid.size]
-        if self.score > gRecord then
-          gRecord = self.score
-        end
         table.remove(self.asteroids, k)
 
         if hasWon(self.asteroids) then
@@ -39,9 +38,11 @@ function TeleportState:update(dt)
             "victory",
             {
               score = self.score,
+              scoreLives = self.scoreLives,
               lives = self.lives,
               player = self.player,
-              numberAsteroids = self.numberAsteroids
+              numberAsteroids = self.numberAsteroids,
+              hasRecord = self.hasRecord
             }
           )
         end
@@ -54,6 +55,23 @@ function TeleportState:update(dt)
         if testAABB(projectile, asteroid) then
           projectile.inPlay = false
           asteroid.inPlay = false
+          self.score = self.score + gPoints[asteroid.size]
+          self.scoreLives = self.scoreLives + gPoints[asteroid.size]
+
+          if self.scoreLives > LIVES_THRESHOLD then
+            self.lives = self.lives + 1
+            gSounds["life"]:play()
+
+            self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+          end
+
+          if self.score > gRecord then
+            if not self.hasRecord then
+              self.hasRecord = true
+              gSounds["record"]:play()
+            end
+            gRecord = self.score
+          end
         end
       end
       if not projectile.inPlay then
@@ -71,7 +89,8 @@ function TeleportState:update(dt)
         player = self.player,
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
-        asteroids = self.asteroids
+        asteroids = self.asteroids,
+        hasRecord = self.hasRecord
       }
     )
   end

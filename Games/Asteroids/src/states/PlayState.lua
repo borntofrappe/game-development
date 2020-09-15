@@ -5,12 +5,15 @@ function PlayState:enter(params)
   self.timer = 0
 
   self.score = params.score
+  self.scoreLives = params.scoreLives
   self.lives = params.lives
 
   self.player = params.player
   self.projectiles = params.projectiles or {}
   self.numberAsteroids = params.numberAsteroids
   self.asteroids = params.asteroids or createLevel(self.numberAsteroids)
+
+  self.hasRecord = params.hasRecord
 end
 
 function PlayState:update(dt)
@@ -29,11 +32,13 @@ function PlayState:update(dt)
       "pause",
       {
         score = self.score,
+        scoreLives = self.scoreLives,
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
-        asteroids = self.asteroids
+        asteroids = self.asteroids,
+        hasRecord = self.hasRecord
       }
     )
   end
@@ -51,11 +56,13 @@ function PlayState:update(dt)
       "teleport",
       {
         score = self.score,
+        scoreLives = self.scoreLives,
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
-        asteroids = self.asteroids
+        asteroids = self.asteroids,
+        hasRecord = self.hasRecord
       }
     )
   end
@@ -66,6 +73,24 @@ function PlayState:update(dt)
       gSounds["hurt"]:play()
       asteroid.inPlay = false
       self.lives = self.lives - 1
+
+      self.score = self.score + gPoints[asteroid.size]
+      self.scoreLives = self.scoreLives + gPoints[asteroid.size]
+
+      if self.scoreLives > LIVES_THRESHOLD then
+        self.lives = self.lives + 1
+        gSounds["life"]:play()
+
+        self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+      end
+
+      if self.score > gRecord then
+        if not self.hasRecord then
+          self.hasRecord = true
+          gSounds["record"]:play()
+        end
+        gRecord = self.score
+      end
 
       if self.lives == 0 then
         gStateMachine:change(
@@ -80,10 +105,12 @@ function PlayState:update(dt)
           "setup",
           {
             score = self.score,
+            scoreLives = self.scoreLives,
             lives = self.lives,
             projectiles = self.projectiles,
             numberAsteroids = self.numberAsteroids,
-            asteroids = self.asteroids
+            asteroids = self.asteroids,
+            hasRecord = self.hasRecord
           }
         )
       end
@@ -94,10 +121,6 @@ function PlayState:update(dt)
         table.insert(self.asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
         table.insert(self.asteroids, Asteroid:create(asteroid.x, asteroid.y, asteroid.size - 1))
       end
-      self.score = self.score + gPoints[asteroid.size]
-      if self.score > gRecord then
-        gRecord = self.score
-      end
       table.remove(self.asteroids, k)
 
       if hasWon(self.asteroids) then
@@ -105,9 +128,11 @@ function PlayState:update(dt)
           "victory",
           {
             score = self.score,
+            scoreLives = self.scoreLives,
             lives = self.lives,
             player = self.player,
-            numberAsteroids = self.numberAsteroids
+            numberAsteroids = self.numberAsteroids,
+            hasRecord = self.hasRecord
           }
         )
       end
@@ -120,6 +145,23 @@ function PlayState:update(dt)
       if testAABB(projectile, asteroid) then
         projectile.inPlay = false
         asteroid.inPlay = false
+
+        self.score = self.score + gPoints[asteroid.size]
+        self.scoreLives = self.scoreLives + gPoints[asteroid.size]
+        if self.scoreLives > LIVES_THRESHOLD then
+          self.lives = self.lives + 1
+          gSounds["life"]:play()
+
+          self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+        end
+
+        if self.score > gRecord then
+          if not self.hasRecord then
+            self.hasRecord = true
+            gSounds["record"]:play()
+          end
+          gRecord = self.score
+        end
       end
     end
     if not projectile.inPlay then

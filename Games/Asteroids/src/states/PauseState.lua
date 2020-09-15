@@ -2,12 +2,15 @@ PauseState = BaseState:create()
 
 function PauseState:enter(params)
   self.score = params.score
+  self.scoreLives = params.scoreLives
   self.lives = params.lives
 
   self.player = params.player
   self.projectiles = params.projectiles
   self.numberAsteroids = params.numberAsteroids
   self.asteroids = params.asteroids
+
+  self.hasRecord = params.hasRecord
 end
 
 function PauseState:update(dt)
@@ -16,11 +19,13 @@ function PauseState:update(dt)
       "play",
       {
         score = self.score,
+        scoreLives = self.scoreLives,
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
-        asteroids = self.asteroids
+        asteroids = self.asteroids,
+        hasRecord = self.hasRecord
       }
     )
   end
