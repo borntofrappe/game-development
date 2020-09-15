@@ -6,16 +6,14 @@ function TeleportState:enter(params)
   self.score = params.score
   self.scoreLives = params.scoreLives
   self.lives = params.lives
+  self.numberAsteroids = params.numberAsteroids
+  self.hasRecord = params.hasRecord
+  self.hasEnemy = params.hasEnemy
 
   self.player = params.player
   self.projectiles = params.projectiles
-  self.numberAsteroids = params.numberAsteroids
   self.asteroids = params.asteroids
-
-  self.hasRecord = params.hasRecord
-
   self.enemy = params.enemy
-  self.hasEnemy = params.hasEnemy
 
   gSounds["teleport"]:stop()
   gSounds["teleport"]:play()
@@ -43,9 +41,10 @@ function TeleportState:update(dt)
               score = self.score,
               scoreLives = self.scoreLives,
               lives = self.lives,
-              player = self.player,
               numberAsteroids = self.numberAsteroids,
               hasRecord = self.hasRecord,
+              player = self.player,
+              projectiles = self.projectiles,
               enemy = self.enemy
             }
           )
@@ -62,11 +61,11 @@ function TeleportState:update(dt)
           self.score = self.score + gPoints[asteroid.size]
           self.scoreLives = self.scoreLives + gPoints[asteroid.size]
 
-          if self.scoreLives > LIVES_THRESHOLD then
+          if self.scoreLives > LIVES_THRESHOLD_EXTRA then
             self.lives = self.lives + 1
             gSounds["life"]:play()
 
-            self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+            self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
           end
 
           if self.score > gRecord then
@@ -91,13 +90,13 @@ function TeleportState:update(dt)
         score = self.score,
         scoreLives = self.scoreLives,
         lives = self.lives,
+        numberAsteroids = self.numberAsteroids,
+        hasRecord = self.hasRecord,
+        hasEnemy = self.hasEnemy,
         player = self.player,
         projectiles = self.projectiles,
-        numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
-        hasRecord = self.hasRecord,
-        enemy = self.enemy,
-        hasEnemy = self.hasEnemy
+        enemy = self.enemy
       }
     )
   end

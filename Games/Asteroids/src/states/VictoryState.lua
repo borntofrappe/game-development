@@ -6,11 +6,11 @@ function VictoryState:enter(params)
   self.score = params.score
   self.scoreLives = params.scoreLives
   self.lives = params.lives
-  self.player = params.player
   self.numberAsteroids = params.numberAsteroids
-
   self.hasRecord = params.hasRecord
 
+  self.player = params.player
+  self.projectiles = params.projectiles
   self.enemy = params.enemy or nil
 
   gSounds["victory"]:play()
@@ -20,6 +20,21 @@ function VictoryState:update(dt)
   if self.timeout > 0 then
     self.timeout = self.timeout - dt
 
+    for k, projectile in pairs(self.projectiles) do
+      projectile:update(dt)
+      if not projectile.inPlay then
+        table.remove(self.projectiles, k)
+      end
+    end
+
+    if self.enemy then
+      self.enemy:update(dt)
+    end
+
+    if self.enemy and not self.enemy.inPlay then
+      self.enemy = nil
+    end
+
     self.player:update(dt)
   else
     gStateMachine:change(
@@ -28,9 +43,10 @@ function VictoryState:update(dt)
         score = self.score,
         scoreLives = self.scoreLives,
         lives = self.lives,
-        player = self.player,
         numberAsteroids = self.numberAsteroids + 1,
         hasRecord = self.hasRecord,
+        player = self.player,
+        projectiles = self.projectiles,
         enemy = self.enemy
       }
     )

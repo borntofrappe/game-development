@@ -7,16 +7,14 @@ function PlayState:enter(params)
   self.score = params.score
   self.scoreLives = params.scoreLives
   self.lives = params.lives
+  self.numberAsteroids = params.numberAsteroids
+  self.hasRecord = params.hasRecord
+  self.hasEnemy = params.hasEnemy or false
 
   self.player = params.player
   self.projectiles = params.projectiles or {}
-  self.numberAsteroids = params.numberAsteroids
   self.asteroids = params.asteroids or createLevel(self.numberAsteroids)
-
-  self.hasRecord = params.hasRecord
-
   self.enemy = params.enemy or nil
-  self.hasEnemy = params.hasEnemy or false
 end
 
 function PlayState:update(dt)
@@ -50,13 +48,13 @@ function PlayState:update(dt)
         score = self.score,
         scoreLives = self.scoreLives,
         lives = self.lives,
+        numberAsteroids = self.numberAsteroids,
+        hasRecord = self.hasRecord,
+        hasEnemy = self.hasEnemy,
         player = self.player,
         projectiles = self.projectiles,
-        numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
-        hasRecord = self.hasRecord,
-        enemy = self.enemy,
-        hasEnemy = self.hasEnemy
+        enemy = self.enemy
       }
     )
   end
@@ -76,13 +74,13 @@ function PlayState:update(dt)
         score = self.score,
         scoreLives = self.scoreLives,
         lives = self.lives,
+        numberAsteroids = self.numberAsteroids,
+        hasRecord = self.hasRecord,
+        hasEnemy = self.hasEnemy,
         player = self.player,
         projectiles = self.projectiles,
-        numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
-        hasRecord = self.hasRecord,
-        enemy = self.enemy,
-        hasEnemy = self.hasEnemy
+        enemy = self.enem
       }
     )
   end
@@ -97,11 +95,11 @@ function PlayState:update(dt)
       self.score = self.score + gPoints[asteroid.size]
       self.scoreLives = self.scoreLives + gPoints[asteroid.size]
 
-      if self.scoreLives > LIVES_THRESHOLD then
+      if self.scoreLives > LIVES_THRESHOLD_EXTRA then
         self.lives = self.lives + 1
         gSounds["life"]:play()
 
-        self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+        self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
       end
 
       if self.score > gRecord then
@@ -127,12 +125,12 @@ function PlayState:update(dt)
             score = self.score,
             scoreLives = self.scoreLives,
             lives = self.lives,
-            projectiles = self.projectiles,
             numberAsteroids = self.numberAsteroids,
-            asteroids = self.asteroids,
             hasRecord = self.hasRecord,
-            enemy = self.enemy,
-            hasEnemy = self.hasEnemy
+            hasEnemy = self.hasEnemy,
+            projectiles = self.projectiles,
+            asteroids = self.asteroids,
+            enemy = self.enemy
           }
         )
       end
@@ -153,9 +151,10 @@ function PlayState:update(dt)
             score = self.score,
             scoreLives = self.scoreLives,
             lives = self.lives,
-            player = self.player,
             numberAsteroids = self.numberAsteroids,
             hasRecord = self.hasRecord,
+            player = self.player,
+            projectiles = self.projectiles,
             enemy = self.enemy
           }
         )
@@ -172,11 +171,11 @@ function PlayState:update(dt)
 
         self.score = self.score + gPoints[asteroid.size]
         self.scoreLives = self.scoreLives + gPoints[asteroid.size]
-        if self.scoreLives > LIVES_THRESHOLD then
+        if self.scoreLives > LIVES_THRESHOLD_EXTRA then
           self.lives = self.lives + 1
           gSounds["life"]:play()
 
-          self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+          self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
         end
 
         if self.score > gRecord then
@@ -195,11 +194,11 @@ function PlayState:update(dt)
 
         self.score = self.score + ENEMY_POINTS
         self.scoreLives = self.scoreLives + ENEMY_POINTS
-        if self.scoreLives > LIVES_THRESHOLD then
+        if self.scoreLives > LIVES_THRESHOLD_EXTRA then
           self.lives = self.lives + 1
           gSounds["life"]:play()
 
-          self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+          self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
         end
 
         if self.score > gRecord then
@@ -229,11 +228,11 @@ function PlayState:update(dt)
       self.score = self.score + ENEMY_POINTS
       self.scoreLives = self.scoreLives + ENEMY_POINTS
 
-      if self.scoreLives > LIVES_THRESHOLD then
+      if self.scoreLives > LIVES_THRESHOLD_EXTRA then
         self.lives = self.lives + 1
         gSounds["life"]:play()
 
-        self.scoreLives = self.scoreLives % LIVES_THRESHOLD
+        self.scoreLives = self.scoreLives % LIVES_THRESHOLD_EXTRA
       end
 
       if self.score > gRecord then
@@ -259,10 +258,11 @@ function PlayState:update(dt)
             score = self.score,
             scoreLives = self.scoreLives,
             lives = self.lives,
-            projectiles = self.projectiles,
             numberAsteroids = self.numberAsteroids,
-            asteroids = self.asteroids,
             hasRecord = self.hasRecord,
+            hasEnemy = self.hasEnemy,
+            projectiles = self.projectiles,
+            asteroids = self.asteroids,
             enemy = self.enemy
           }
         )

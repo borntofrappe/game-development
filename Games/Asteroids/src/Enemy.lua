@@ -9,7 +9,7 @@ function Enemy:create()
     y = math.random(WINDOW_HEIGHT / 4, WINDOW_HEIGHT * 3 / 4),
     r = ENEMY_RADIUS,
     dx = direction == "right" and math.random(ENEMY_SPEED_X_MIN, ENEMY_SPEED_X_MAX) or
-      math.random(-ENEMY_SPEED_X_MIN, -ENEMY_SPEED_X_MAX),
+      math.random(ENEMY_SPEED_X_MIN, ENEMY_SPEED_X_MAX) * -1,
     dy = math.random(ENEMY_SPEED_Y_MIN, ENEMY_SPEED_Y_MAX),
     inPlay = true
   }
@@ -58,6 +58,7 @@ function Enemy:render()
       math.floor(self.x - self.r * 3 / 2),
       math.floor(self.y)
     )
+
     love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
     love.graphics.polygon(
       "line",

@@ -36,5 +36,5 @@ function GameoverState:render()
 
   love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
   love.graphics.setFont(gFonts["large"])
-  love.graphics.printf(string.upper("Gameover"), 0, WINDOW_HEIGHT / 2 - 30, WINDOW_WIDTH, "center")
+  love.graphics.printf(string.upper("Gameover"), 0, WINDOW_HEIGHT / 2 - 36, WINDOW_WIDTH, "center")
 end

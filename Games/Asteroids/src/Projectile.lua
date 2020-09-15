@@ -7,7 +7,7 @@ function Projectile:create(x, y, angle)
   this = {
     x = x,
     y = y,
-    r = 2,
+    r = PROJECTILE_RADIUS,
     dx = dx,
     dy = dy,
     timer = 0,

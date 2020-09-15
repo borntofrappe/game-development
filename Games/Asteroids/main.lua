@@ -105,12 +105,12 @@ function showStats(score, lives)
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
   local x = math.floor(WINDOW_WIDTH / 4)
-  local y = 22
+  local y = 24
 
   love.graphics.printf(score, 0, y, x, "right")
   x = x + 12
 
-  if lives < 6 then
+  if lives < LIVES_THRESHOLD_TEXT then
     for life = 1, lives - 1 do
       love.graphics.polygon("fill", x, y + 2, x, y + 18, x - 6, y + 14)
       x = x + 8

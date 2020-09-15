@@ -4,16 +4,14 @@ function PauseState:enter(params)
   self.score = params.score
   self.scoreLives = params.scoreLives
   self.lives = params.lives
+  self.numberAsteroids = params.numberAsteroids
+  self.hasRecord = params.hasRecord
+  self.hasEnemy = params.hasEnemy
 
   self.player = params.player
   self.projectiles = params.projectiles
-  self.numberAsteroids = params.numberAsteroids
   self.asteroids = params.asteroids
-
-  self.hasRecord = params.hasRecord
-
   self.enemy = params.enemy
-  self.hasEnemy = params.hasEnemy
 end
 
 function PauseState:update(dt)
@@ -24,13 +22,13 @@ function PauseState:update(dt)
         score = self.score,
         scoreLives = self.scoreLives,
         lives = self.lives,
+        numberAsteroids = self.numberAsteroids,
+        hasRecord = self.hasRecord,
+        hasEnemy = self.hasEnemy,
         player = self.player,
         projectiles = self.projectiles,
-        numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
-        hasRecord = self.hasRecord,
-        enemy = self.enemy,
-        hasEnemy = self.hasEnemy
+        enemy = self.enemy
       }
     )
   end

@@ -18,14 +18,6 @@ function Player:create(x, y)
   return this
 end
 
-function Player:reset()
-  self.x = WINDOW_WIDTH / 2
-  self.y = WINDOW_HEIGHT / 2
-  self.dx = 0
-  self.dy = 0
-  self.angle = 0
-end
-
 function Player:update(dt)
   self.isPushing = false
   if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
@@ -79,6 +71,23 @@ function Player:render()
   love.graphics.rotate(math.rad(self.angle))
 
   if self.isPushing then
+    love.graphics.setColor(
+      gColors["background"]["r"],
+      gColors["background"]["g"],
+      gColors["background"]["b"],
+      self.alpha
+    )
+    love.graphics.setLineWidth(1.5)
+    love.graphics.polygon(
+      "line",
+      math.floor(-self.r / 2),
+      math.floor(self.r),
+      math.floor(self.r / 2),
+      math.floor(self.r),
+      0,
+      math.floor(self.r * 3 / 2)
+    )
+
     love.graphics.setColor(
       gColors["foreground"]["r"],
       gColors["foreground"]["g"],

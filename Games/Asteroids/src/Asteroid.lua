@@ -9,17 +9,17 @@ function Asteroid:create(x, y, size)
 
   local dx =
     math.random(2) == 1 and math.random(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX) or
-    math.random(-ASTEROID_SPEED_MIN, -ASTEROID_SPEED_MAX)
+    math.random(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX) * -1
   local dy =
     math.random(2) == 1 and math.random(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX) or
-    math.random(-ASTEROID_SPEED_MIN, -ASTEROID_SPEED_MAX)
+    math.random(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX) * -1
 
   this = {
     x = x or randomX,
     y = y or randomY,
     dx = dx,
     dy = dy,
-    size = size or 3,
+    size = size or ASTEROID_DEFAULT_SIZE,
     inPlay = true
   }
 
