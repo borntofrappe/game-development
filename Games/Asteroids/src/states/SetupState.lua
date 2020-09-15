@@ -12,7 +12,7 @@ function SetupState:enter(params)
   self.player = params.player or Player:create()
   self.projectiles = params.projectiles or {}
   self.numberAsteroids = params.numberAsteroids or params.difficulty * 2
-  self.asteroids = params.asteroids or self:createLevel()
+  self.asteroids = params.asteroids or createLevel(self.numberAsteroids)
 
   gSounds["setup"]:stop()
   gSounds["setup"]:play()
@@ -52,6 +52,7 @@ end
 
 function SetupState:render()
   showRecord()
+
   if self.alpha == 1 then
     showStats(self.score, self.lives)
   end
@@ -61,12 +62,4 @@ function SetupState:render()
   end
 
   self.player:render()
-end
-
-function SetupState:createLevel()
-  local asteroids = {}
-  for i = 1, self.numberAsteroids do
-    table.insert(asteroids, Asteroid:create())
-  end
-  return asteroids
 end

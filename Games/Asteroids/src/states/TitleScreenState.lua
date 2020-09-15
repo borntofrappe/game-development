@@ -1,7 +1,7 @@
 TitleScreenState = BaseState:create()
 
 function TitleScreenState:enter()
-  self.difficulty = 2
+  self.difficulty = DIFFICULTY_DEFAULT
 end
 
 function TitleScreenState:update(dt)
@@ -19,11 +19,11 @@ function TitleScreenState:update(dt)
   end
 
   if love.keyboard.wasPressed("right") or love.keyboard.wasPressed("d") then
-    self.difficulty = math.min(self.difficulty + 1, 3)
+    self.difficulty = math.min(self.difficulty + 1, DIFFICULTY_MAX)
   end
 
   if love.keyboard.wasPressed("left") or love.keyboard.wasPressed("a") then
-    self.difficulty = math.max(self.difficulty - 1, 1)
+    self.difficulty = math.max(self.difficulty - 1, DIFFICULTY_MIN)
   end
 end
 

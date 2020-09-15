@@ -1,7 +1,7 @@
 GameoverState = BaseState:create()
 
 function GameoverState:enter(params)
-  self.timeout = 5
+  self.timeout = TIMEOUT_GAMEOVER
 
   self.score = params.score
   self.asteroids = params.asteroids

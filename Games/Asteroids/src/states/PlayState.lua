@@ -1,16 +1,16 @@
 PlayState = BaseState:create()
 
 function PlayState:enter(params)
-  self.interval = 3
+  self.interval = INTERVAL_NOISE
   self.timer = 0
 
   self.score = params.score
   self.lives = params.lives
 
   self.player = params.player
-  self.projectiles = params.projectiles
+  self.projectiles = params.projectiles or {}
   self.numberAsteroids = params.numberAsteroids
-  self.asteroids = params.asteroids
+  self.asteroids = params.asteroids or createLevel(self.numberAsteroids)
 end
 
 function PlayState:update(dt)

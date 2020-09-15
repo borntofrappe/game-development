@@ -1,7 +1,7 @@
 VictoryState = BaseState:create()
 
 function VictoryState:enter(params)
-  self.timeout = 2
+  self.timeout = TIMEOUT_VICTORY
 
   self.score = params.score
   self.lives = params.lives
@@ -30,6 +30,7 @@ function VictoryState:update(dt)
 end
 
 function VictoryState:render()
+  showRecord()
   showStats(self.score, self.lives)
 
   self.player:render()

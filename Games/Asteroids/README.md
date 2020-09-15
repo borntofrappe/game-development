@@ -1,6 +1,12 @@
 # Asteroids
 
-Recreate the popular game **Asteroid**, using the shape functions from the `love.graphics` module.
+## Roadmap
+
+- include special audio when surpassing the current record
+
+- award one life for each 10k points
+
+- design special collidable in the form of an alien; worth 200 points; moving mostly horizontally; firing randomly
 
 ## Project structure
 
@@ -8,9 +14,9 @@ The game is structured as follows:
 
 - "main.lua" works as the entry point for the application
 
-- the "src" folder contains any additional `.lua` file developing the game. "main.lua" requires every single component by including "Dependencies.lua" at the top of the document. Itself, "Dependencies.lua" is used to require every other asset
+- the "src" folder contains any additional `.lua` file developing the game. "main.lua" requires every single component by including "Dependencies.lua" at the top of the script. Itself, "Dependencies.lua" is used to require every other asset
 
-- the "res" folder provides audio files and the font used throughout the application. The font is [Audiowide](https://fonts.google.com/specimen/Audiowide), while the audio files are created with Bfxr.
+- the "res" folder provides the resources (font, audio files) used in the game. The font is [Audiowide](https://fonts.google.com/specimen/Audiowide), while the audio files are created with Bfxr.
 
 The "graphics" folder also describes a spritesheet I designed with GIMP. Ultimately, I decided not to use the raster image, and rely on the shapes provided by Love2D instead.
 

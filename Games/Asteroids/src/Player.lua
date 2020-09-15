@@ -9,7 +9,7 @@ function Player:create(x, y)
     dy = 0,
     angle = 0,
     isPushing = false,
-    r = 8,
+    r = PLAYER_RADIUS,
     alpha = 1
   }
 

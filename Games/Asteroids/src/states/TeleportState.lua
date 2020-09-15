@@ -1,7 +1,7 @@
 TeleportState = BaseState:create()
 
 function TeleportState:enter(params)
-  self.timeout = 1
+  self.timeout = TIMEOUT_TELEPORT
 
   self.score = params.score
   self.lives = params.lives

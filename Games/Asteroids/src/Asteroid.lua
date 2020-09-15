@@ -23,7 +23,7 @@ function Asteroid:create(x, y, size)
     inPlay = true
   }
 
-  this.r = this.size * 4
+  this.r = this.size * ASTEROID_SIZE_MULTIPLIER
 
   setmetatable(this, self)
 

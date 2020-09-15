@@ -120,3 +120,12 @@ end
 function hasWon(asteroids)
   return #asteroids == 0
 end
+
+function createLevel(n)
+  local asteroids = {}
+  local asteroids = {}
+  for i = 1, n do
+    table.insert(asteroids, Asteroid:create())
+  end
+  return asteroids
+end
