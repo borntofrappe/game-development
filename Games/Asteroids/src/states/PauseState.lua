@@ -12,7 +12,8 @@ function PauseState:enter(params)
 
   self.hasRecord = params.hasRecord
 
-  self.enemy = params.enemy or nil
+  self.enemy = params.enemy
+  self.hasEnemy = params.hasEnemy
 end
 
 function PauseState:update(dt)
@@ -28,7 +29,8 @@ function PauseState:update(dt)
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
         hasRecord = self.hasRecord,
-        enemy = self.enemy
+        enemy = self.enemy,
+        hasEnemy = self.hasEnemy
       }
     )
   end

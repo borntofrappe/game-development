@@ -16,10 +16,15 @@ function PlayState:enter(params)
   self.hasRecord = params.hasRecord
 
   self.enemy = params.enemy or nil
+  self.hasEnemy = params.hasEnemy or false
 end
 
 function PlayState:update(dt)
-  if self.numberAsteroids >= ENEMY_ASTEROID_THRESHOLD and not self.enemy and math.random(ENEMY_ODDS) == 1 then
+  if
+    self.numberAsteroids >= ENEMY_ASTEROID_THRESHOLD and not self.hasEnemy and not self.enemy and
+      math.random(ENEMY_ODDS) == 1
+   then
+    self.hasEnemy = true
     self.enemy = Enemy:create()
     gSounds["enemy"]:play()
   end
@@ -50,7 +55,8 @@ function PlayState:update(dt)
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
         hasRecord = self.hasRecord,
-        enemy = self.enemy
+        enemy = self.enemy,
+        hasEnemy = self.hasEnemy
       }
     )
   end
@@ -75,7 +81,8 @@ function PlayState:update(dt)
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
         hasRecord = self.hasRecord,
-        enemy = self.enemy
+        enemy = self.enemy,
+        hasEnemy = self.hasEnemy
       }
     )
   end
@@ -124,7 +131,8 @@ function PlayState:update(dt)
             numberAsteroids = self.numberAsteroids,
             asteroids = self.asteroids,
             hasRecord = self.hasRecord,
-            enemy = self.enemy
+            enemy = self.enemy,
+            hasEnemy = self.hasEnemy
           }
         )
       end

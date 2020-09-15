@@ -14,7 +14,8 @@ function TeleportState:enter(params)
 
   self.hasRecord = params.hasRecord
 
-  self.enemy = params.enemy or nil
+  self.enemy = params.enemy
+  self.hasEnemy = params.hasEnemy
 
   gSounds["teleport"]:stop()
   gSounds["teleport"]:play()
@@ -88,13 +89,15 @@ function TeleportState:update(dt)
       "play",
       {
         score = self.score,
+        scoreLives = self.scoreLives,
         lives = self.lives,
         player = self.player,
         projectiles = self.projectiles,
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
         hasRecord = self.hasRecord,
-        enemy = self.enemy
+        enemy = self.enemy,
+        hasEnemy = self.hasEnemy
       }
     )
   end

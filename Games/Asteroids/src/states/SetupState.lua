@@ -18,6 +18,7 @@ function SetupState:enter(params)
   self.hasRecord = params.hasRecord or false
 
   self.enemy = params.enemy or nil
+  self.hasEnemy = params.hasEnemy or false
 
   gSounds["setup"]:stop()
   gSounds["setup"]:play()
@@ -52,7 +53,8 @@ function SetupState:update(dt)
         numberAsteroids = self.numberAsteroids,
         asteroids = self.asteroids,
         hasRecord = self.hasRecord,
-        enemy = self.enemy
+        enemy = self.enemy,
+        hasEnemy = self.hasEnemy
       }
     )
   end
