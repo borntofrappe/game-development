@@ -9,7 +9,8 @@ function Player:create(x, y)
     dy = 0,
     angle = 0,
     isPushing = false,
-    r = 8
+    r = 8,
+    alpha = 1
   }
 
   setmetatable(this, self)
@@ -78,14 +79,19 @@ function Player:render()
   love.graphics.rotate(math.rad(self.angle))
 
   if self.isPushing then
-    love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
+    love.graphics.setColor(
+      gColors["foreground"]["r"],
+      gColors["foreground"]["g"],
+      gColors["foreground"]["b"],
+      self.alpha
+    )
     love.graphics.setLineWidth(1.5)
     love.graphics.polygon("line", -self.r / 2, self.r, self.r / 2, self.r, 0, self.r * 3 / 2)
   end
 
-  love.graphics.setColor(gColors["background"]["r"], gColors["background"]["g"], gColors["background"]["b"])
+  love.graphics.setColor(gColors["background"]["r"], gColors["background"]["g"], gColors["background"]["b"], self.alpha)
   love.graphics.polygon("fill", 0, -self.r, self.r, self.r, -self.r, self.r)
-  love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
+  love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"], self.alpha)
   love.graphics.setLineWidth(2)
   love.graphics.polygon("line", 0, -self.r, self.r, self.r, -self.r, self.r)
 end

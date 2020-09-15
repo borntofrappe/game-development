@@ -1,8 +1,10 @@
 GameoverState = BaseState:create()
 
 function GameoverState:enter(params)
-  self.asteroids = params.asteroids
   self.timeout = 5
+
+  self.score = params.score
+  self.asteroids = params.asteroids
 
   gSounds["gameover"]:play()
 end
@@ -25,6 +27,9 @@ function GameoverState:update(dt)
 end
 
 function GameoverState:render()
+  showRecord()
+  showStats(self.score)
+
   for k, asteroid in pairs(self.asteroids) do
     asteroid:render()
   end

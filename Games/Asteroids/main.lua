@@ -7,9 +7,15 @@ function love.load()
 
   gRecord = 3500
 
+  gPoints = {
+    [3] = 20,
+    [2] = 50,
+    [1] = 100
+  }
+
   gColors = {
     ["background"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
-    ["foreground"] = {["r"] = 0, ["g"] = 0, ["b"] = 0}
+    ["foreground"] = {["r"] = 0.05, ["g"] = 0.05, ["b"] = 0.05}
   }
 
   gSounds = {
@@ -38,8 +44,14 @@ function love.load()
       ["title"] = function()
         return TitleScreenState:create()
       end,
+      ["setup"] = function()
+        return SetupState:create()
+      end,
       ["play"] = function()
         return PlayState:create()
+      end,
+      ["teleport"] = function()
+        return TeleportState:create()
       end,
       ["pause"] = function()
         return PauseState:create()
@@ -80,17 +92,31 @@ function testAABB(circle1, circle2)
   return (circle1.x - circle2.x) ^ 2 + (circle1.y - circle2.y) ^ 2 < (circle1.r + circle2.r) ^ 2
 end
 
-function showStats(score, lives)
+function showRecord()
+  love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
   local x = math.floor(WINDOW_WIDTH / 4)
   local y = 2
   love.graphics.print(gRecord, x, y)
+end
 
-  y = y + 20
+function showStats(score, lives)
+  local score = score or 0
+  local lives = lives or 0
+
+  love.graphics.setFont(gFonts["normal"])
+  love.graphics.setColor(gColors["foreground"]["r"], gColors["foreground"]["g"], gColors["foreground"]["b"])
+  local x = math.floor(WINDOW_WIDTH / 4)
+  local y = 22
+
   love.graphics.printf(score, 0, y, x, "right")
   x = x + 4
   for life = 1, lives - 1 do
     x = x + 8
     love.graphics.polygon("fill", x, y + 4, x, y + 18, x - 5, y + 14)
   end
+end
+
+function hasWon(asteroids)
+  return #asteroids == 0
 end
