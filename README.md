@@ -1,8 +1,4 @@
-The goal of this repo starts out simple: follow [this introduction course](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) to learn about game development.
-
-In the numbered folders, I follow the course to recreate the presented games.
-
-In the _Games_ folder, I repeat the concepts by creating either a variant of the proposed games, or new games altogether.
+**Goal**: Go through the games in [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) to learn about game development.
 
 ## Topics
 
@@ -12,23 +8,35 @@ In the _Games_ folder, I repeat the concepts by creating either a variant of the
 
 - the game engine [**Love2D**](https://love2d.org/)
 
-## Project structure
+## How to run a game
 
-- _Game \*_ folders develop the games one feature at a time. Each _README.md_ file describes how the code changes, and the lessons learned throughout.
-
-- _Game — Final_ summaries the game at the end of the course
-
-- _Game — Assignment_ adds the features requested for the game's assignment
-
-## Launch games
-
-Provided you have installed love2d, you can launch the games from the command line
+Provided you have installed love2D, launch the games from the command line with the following instruction:
 
 ```bash
 "C:\Program Files\LOVE\love.exe" "C:\Games\Space Invaders"
 ```
 
-The first string describes the location of the executable behind love2d, the second string details the folder with the necessary entry point in "main.lua".
+The first string describes the location of the executable behind love2D, and the second string details the folder with the customary "main.lua" file.
+
+You can also drag and drop the folder on top of the file describing the executable itself.
+
+## Repo structure
+
+### XY — Game
+
+In the numbered folders, I follow the course to recreate the presented games. Following the lecturer's example, the games are developed one feature at a time, and are explained by a dedicated markdown file.
+
+Each game also includes at least two additional folders:
+
+1. "Game — Final"
+
+2. "Game — Assignment"
+
+The first one describes the state of the game at the end of each lecture, while the second one adds the features listed in the lecture's assignment.
+
+### Games
+
+In the "Games" folder, I try to solidify the concepts introduced in the course by developing additional games. These can be a variant of the proposed game — refer to "2 Player Pong" and "Bouncing Android" — or different games altogether — see "Whirlybird" and "Space Invaders".
 
 ## Resources
 
