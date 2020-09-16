@@ -1,11 +1,10 @@
-require 'Pipe'
+require "Pipe"
 
-PipePair = Class{}
+PipePair = Class {}
 
 local PAIR_SCROLL = -50
 local PIPE_WIDTH = Pipe().width
 local PIPE_HEIGHT = Pipe().height
-
 
 function PipePair:init(y)
     self.x = VIRTUAL_WIDTH
@@ -13,18 +12,17 @@ function PipePair:init(y)
     self.width = PIPE_WIDTH
     self.gap = math.random(70, 90)
     self.pipes = {
-        upper = Pipe(self.x, self.y - self.gap - PIPE_HEIGHT, 'top'),
-        lower = Pipe(self.x, self.y, 'bottom')
+        upper = Pipe(self.x, self.y - self.gap - PIPE_HEIGHT, "top"),
+        lower = Pipe(self.x, self.y, "bottom")
     }
 
     self.scored = false
     self.remove = false
 end
 
-
 function PipePair:update(dt)
     self.x = self.x + PAIR_SCROLL * dt
-    for k, pipe in pairs(self.pipes) do 
+    for k, pipe in pairs(self.pipes) do
         pipe.x = self.x
     end
 
@@ -33,9 +31,8 @@ function PipePair:update(dt)
     end
 end
 
-
 function PipePair:render()
-    for k, pipe in pairs(self.pipes) do 
+    for k, pipe in pairs(self.pipes) do
         pipe:render()
     end
 end

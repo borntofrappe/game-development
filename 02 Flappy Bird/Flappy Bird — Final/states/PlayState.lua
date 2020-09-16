@@ -1,4 +1,4 @@
-PlayState = Class{__includes = BaseState}
+PlayState = Class {__includes = BaseState}
 
 function PlayState:init()
     self.bird = Bird()
@@ -17,7 +17,7 @@ function PlayState:update(dt)
 
         table.insert(self.pipePairs, PipePair(self.y))
         following_y = self.y + math.random(Y_CHANGE, Y_CHANGE * -1)
-        self.y = math.min(math.max(THRESHOLD_UPPER, following_y), THRESHOLD_LOWER)        
+        self.y = math.min(math.max(THRESHOLD_UPPER, following_y), THRESHOLD_LOWER)
     end
 
     self.bird:update(dt)
@@ -26,11 +26,14 @@ function PlayState:update(dt)
 
         for l, pipe in pairs(pipePair.pipes) do
             if self.bird:collides(pipe) then
-                sounds['lose']:play()
-                sounds['hit']:play()
-                gStateMachine:change('score', {
-                    score = self.score
-                })
+                sounds["lose"]:play()
+                sounds["hit"]:play()
+                gStateMachine:change(
+                    "score",
+                    {
+                        score = self.score
+                    }
+                )
             end
         end
 
@@ -39,17 +42,20 @@ function PlayState:update(dt)
         end
 
         if not pipePair.scored and self.bird.x > pipePair.x + pipePair.width then
-            sounds['score']:play()
+            sounds["score"]:play()
             pipePair.scored = true
             self.score = self.score + 1
         end
     end
 
     if self.bird.y > VIRTUAL_HEIGHT - 16 then
-        sounds['lose']:play()
-        gStateMachine:change('score', {
-            score = self.score
-        })
+        sounds["lose"]:play()
+        gStateMachine:change(
+            "score",
+            {
+                score = self.score
+            }
+        )
     end
 end
 
@@ -61,5 +67,5 @@ function PlayState:render()
     self.bird:render()
 
     love.graphics.setFont(font_normal)
-    love.graphics.print('Score: ' .. self.score, 10, 10)
+    love.graphics.print("Score: " .. self.score, 10, 10)
 end
