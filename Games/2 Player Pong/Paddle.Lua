@@ -9,7 +9,7 @@ function Paddle:init(cx, cy)
     paddle.speed = 350
 
     paddle.points = 5
-    
+
     paddle.dx = 0
     paddle.dr = 8
     paddle.dspeed = 25
@@ -29,7 +29,7 @@ function Paddle:reset(dt)
 end
 
 function Paddle:ready()
-    sounds['select']:play()
+    sounds["select"]:play()
     self.is_ready = true
 end
 
@@ -44,7 +44,7 @@ function Paddle:score()
 end
 
 function Paddle:win()
-    sounds['victory']:play()
+    sounds["victory"]:play()
     self.r = 0
 end
 
@@ -57,5 +57,5 @@ function Paddle:update(dt)
 end
 
 function Paddle:render()
-    love.graphics.circle('fill', self.cx, self.cy, self.r)
+    love.graphics.circle("fill", self.cx, self.cy, self.r)
 end

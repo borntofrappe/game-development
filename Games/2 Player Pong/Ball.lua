@@ -32,7 +32,7 @@ end
 
 function Ball:update(dt)
     if self.cx > WINDOW_WIDTH - self.r or self.cx < self.r then
-        sounds['wall_hit']:play()
+        sounds["wall_hit"]:play()
         self.dx = self.dx * -1.1
     end
 
@@ -41,5 +41,5 @@ function Ball:update(dt)
 end
 
 function Ball:render()
-    love.graphics.circle('fill', self.cx, self.cy, self.r)
+    love.graphics.circle("fill", self.cx, self.cy, self.r)
 end
