@@ -14,7 +14,7 @@ function LockedBrick:init(x, y)
   self.inPlay = true
   self.isLocked = true
 
-  self.hasPowerup = true
+  self.showPowerup = true
   self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2, 10)
 
   self.particleSystem = love.graphics.newParticleSystem(gTextures["particle"], 80)
@@ -52,7 +52,7 @@ end
 
 function LockedBrick:render()
   if self.inPlay then
-    if self.hasPowerup and self.powerup.inPlay then
+    if self.showPowerup and self.powerup.inPlay then
       self.powerup:render()
     end
 
