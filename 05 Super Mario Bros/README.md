@@ -1,5 +1,11 @@
 The fifth video covers a 2D platformer inspired by Super Mario Bros.
 
+## TODO
+
+The project is actively under development. As I found bugs/missing features, I'll list them here for future consideration
+
+- update demos in the "Prep" folder to consider the new height of the background image
+
 ## Topics
 
 - tile maps
