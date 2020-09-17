@@ -28,7 +28,7 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.isDown("right") then
-    self.player.x = math.min(self.width * TILE_SIZE - self.player.x, self.player.x + CHARACTER_MOVEMENT_SPEED * dt)
+    self.player.x = math.min(self.width * TILE_SIZE - self.player.width, self.player.x + CHARACTER_MOVEMENT_SPEED * dt)
     self.player.direction = "right"
     if not self.player.isJumping then
       self.player.currentAnimation = self.player.movingAnimation
