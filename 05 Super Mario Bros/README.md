@@ -4,6 +4,8 @@ The fifth video covers a 2D platformer inspired by Super Mario Bros.
 
 The project is actively under development. As I found bugs/missing features, I'll list them here for future consideration:
 
+- player can't move to the very end of the level — stuck in the middle. Issue: Super Mario Bros 0 uses `self.player.x` to limit the movement instead of `self.player.width`
+
 - ~update demos in the "Prep" folder to consider the new height of the background image~
 
 ## Topics
