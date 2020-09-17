@@ -4,11 +4,11 @@ Generate a level with random backgrounds, tiles and tile tops.
 
 Before diving in how to generate different elvels every time the game is launched, the update considers the spritesheet for the backgrounds, tiles and tiles' tops to render a more realistic world.
 
-For the backgrounds, the png image offers three varieties in 256\*128 rectangles. Fabricating the quads is therefore straightfoward.
+For the backgrounds, the png image offers three varieties in 256\*144 rectangles. Fabricating the quads is therefore straightfoward.
 
 ```lua
 gFrames = {
-  ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], 256, 128),
+  ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], 256, 144),
 }
 ```
 

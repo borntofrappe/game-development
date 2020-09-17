@@ -17,7 +17,7 @@ function love.load()
   gFrames = {
     ["tiles"] = GenerateQuadsTiles(gTextures["tiles"]),
     ["tops"] = GenerateQuadsTileTops(gTextures["tops"]),
-    ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], 256, 128),
+    ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], VIRTUAL_WIDTH, VIRTUAL_HEIGHT),
     ["character"] = GenerateQuads(gTextures["character"], CHARACTER_WIDTH, CHARACTER_HEIGHT)
   }
 

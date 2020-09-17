@@ -17,7 +17,7 @@ function love.load()
   gFrames = {
     ["tiles"] = GenerateQuadsTiles(gTextures["tiles"]),
     ["tops"] = GenerateQuadsTileTops(gTextures["tops"]),
-    ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], 256, 128),
+    ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], VIRTUAL_WIDTH, VIRTUAL_HEIGHT),
     ["character"] = GenerateQuads(gTextures["character"], CHARACTER_WIDTH, CHARACTER_HEIGHT)
   }
 
@@ -182,7 +182,7 @@ function GenerateLevel(width, height)
         rows_sky = rows_sky - 2
       end
     end
-    
+
     for y = 1, height do
       local tile = {
         id = y < rows_sky and TILE_SKY or TILE_GROUND,
