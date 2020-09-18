@@ -4,6 +4,10 @@ The fifth video covers a 2D platformer inspired by Super Mario Bros.
 
 The project is actively under development. As I found bugs/missing features, I'll list them here for future consideration:
 
+- audio; music in `love.load`
+
+- tile; in the render function I use a hard-coded value to pick the sprite of the tile top. The lecturer uses instead the `id`. Something to reconsider as the game increases in complexity, but to render the top of a regular tile, the first quad of each table is enough
+
 ### Done
 
 - player can't move to the very end of the level. Solved: Super Mario Bros 0 uses `self.player.x` to limit the movement instead of `self.player.width`
