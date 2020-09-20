@@ -6,3 +6,5 @@ OPTIONS = {
   vsync = true,
   resizable = false
 }
+
+CELL_SIZE = 20

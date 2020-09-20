@@ -1,0 +1,44 @@
+PlayerJumpState = Class({__includes = BaseState})
+
+function PlayerJumpState:init(player)
+  self.player = player
+  self.gravity = GRAVITY
+
+  self.animation =
+    Animation(
+    {
+      frames = {3},
+      interval = 1
+    }
+  )
+  self.player.currentAnimation = self.animation
+
+  self.player.dy = -PLAYER_JUMP_SPEED
+end
+
+function PlayerJumpState:update(dt)
+  self.player.dy = self.player.dy + GRAVITY
+  self.player.y = self.player.y + (self.player.dy * dt)
+
+  if self.player.dy >= 0 then
+    self.player:changeState("falling")
+  end
+
+  if love.keyboard.isDown("left") then
+    self.player.direction = "left"
+    self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+    self.player:checkLeftCollision()
+  elseif love.keyboard.isDown("right") then
+    self.player.direction = "right"
+    self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+    self.player:checkRightCollision()
+  end
+
+  for k, object in pairs(self.player.level.objects) do
+    if object:collides(self.player) and object.isSolid then
+      self.player.y = (object.y - 1) * TILE_SIZE + object.height
+      self.player.dy = 0
+      self.player:changeState("falling")
+    end
+  end
+end
