@@ -1,14 +1,33 @@
 require "src/Dependencies"
 
 function love.load()
-  showGrid = true
-
   love.window.setTitle("Snake")
-
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
+
+  gFonts = {
+    ["title"] = love.graphics.newFont("res/fonts/font-bold.ttf", 64),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+  }
+
+  gStatMachine =
+    StateMachine:create(
+    {
+      ["title"] = function()
+        return TitleScreenState:create()
+      end,
+      ["play"] = function()
+        return PlayState:create()
+      end
+    }
+  )
+
+  gStatMachine:change("title")
+
+  love.keyboard.keyPressed = {}
 end
 
 function love.keypressed(key)
+  love.keyboard.keyPressed[key] = true
   if key == "escape" then
     love.event.quit()
   end
@@ -18,22 +37,16 @@ function love.keypressed(key)
   end
 end
 
-function love.draw()
-  love.graphics.clear(0.035, 0.137, 0.298, 1)
-
-  if showGrid then
-    renderGrid()
-  end
+function love.keyboard.wasPressed(key)
+  return love.keyboard.keyPressed[key]
 end
 
-function renderGrid()
-  local columns = WINDOW_WIDTH / CELL_SIZE
-  local rows = WINDOW_HEIGHT / CELL_SIZE
+function love.update(dt)
+  gStatMachine:update(dt)
+  love.keyboard.keyPressed = {}
+end
 
-  love.graphics.setColor(0.224, 0.824, 0.604)
-  for x = 1, columns do
-    for y = 1, rows do
-      love.graphics.rectangle("line", (x - 1) * CELL_SIZE, (y - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-    end
-  end
+function love.draw()
+  love.graphics.clear(0.035, 0.137, 0.298, 1)
+  gStatMachine:render()
 end

@@ -1,1 +1,8 @@
 require "src/constants"
+
+require "src/Snake"
+
+require "src/StateMachine"
+require "src/states/BaseState"
+require "src/states/TitleScreenState"
+require "src/states/PlayState"
