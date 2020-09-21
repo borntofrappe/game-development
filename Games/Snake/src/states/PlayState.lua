@@ -1,7 +1,8 @@
 PlayState = BaseState:create()
 
 function PlayState:enter()
-  self.toggleGrid = true
+  self.toggleGrid = false
+  self.snake = Snake:create(1, 1)
 end
 
 function PlayState:update(dt)
@@ -15,6 +16,8 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
+  self.snake:render()
+
   if self.toggleGrid then
     love.graphics.clear(0.035, 0.137, 0.298, 1)
     self:renderGrid()

@@ -16,5 +16,11 @@ end
 
 function Snake:render()
   love.graphics.clear(0.035, 0.137, 0.298, 1)
-  love.graphics.rectangle("fill", self.x * TILE_SIZE, self.y * TILE_SIZE, self.width, self.height)
+  love.graphics.rectangle(
+    "fill",
+    math.floor((self.x - 1) * CELL_SIZE),
+    math.floor((self.y - 1) * CELL_SIZE),
+    self.width,
+    self.height
+  )
 end

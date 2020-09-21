@@ -9,7 +9,7 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
   }
 
-  gStatMachine =
+  gStateMachine =
     StateMachine:create(
     {
       ["title"] = function()
@@ -21,7 +21,7 @@ function love.load()
     }
   )
 
-  gStatMachine:change("title")
+  gStateMachine:change("title")
 
   love.keyboard.keyPressed = {}
 end
@@ -42,11 +42,11 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
-  gStatMachine:update(dt)
+  gStateMachine:update(dt)
   love.keyboard.keyPressed = {}
 end
 
 function love.draw()
   love.graphics.clear(0.035, 0.137, 0.298, 1)
-  gStatMachine:render()
+  gStateMachine:render()
 end
