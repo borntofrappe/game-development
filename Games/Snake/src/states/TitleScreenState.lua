@@ -1,6 +1,7 @@
 TitleScreenState = BaseState:create()
 
 function TitleScreenState:enter()
+  self.snake = Snake:create()
 end
 
 function TitleScreenState:update(dt)
@@ -11,9 +12,13 @@ function TitleScreenState:update(dt)
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
     gStateMachine:change("play")
   end
+
+  self.snake:update(dt)
 end
 
 function TitleScreenState:render()
+  self.snake:render()
+
   love.graphics.setColor(0.224, 0.824, 0.604)
   love.graphics.setFont(gFonts["title"])
   love.graphics.printf(string.upper("Snake"), 0, WINDOW_HEIGHT / 2 - 64, WINDOW_WIDTH, "center")

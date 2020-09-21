@@ -1,6 +1,7 @@
 require "src/Dependencies"
 
 function love.load()
+  math.randomseed(os.time())
   love.window.setTitle("Snake")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
@@ -24,16 +25,15 @@ function love.load()
   gStateMachine:change("title")
 
   love.keyboard.keyPressed = {}
+
+  toggleGrid = true
 end
 
 function love.keypressed(key)
   love.keyboard.keyPressed[key] = true
-  if key == "escape" then
-    love.event.quit()
-  end
 
-  if key == "g" then
-    showGrid = not showGrid
+  if key == "g" or key == "G" then
+    toggleGrid = not toggleGrid
   end
 end
 
@@ -47,6 +47,24 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.clear(0.035, 0.137, 0.298, 1)
+  love.graphics.setColor(0.035, 0.137, 0.298, 1)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+
   gStateMachine:render()
+
+  if toggleGrid then
+    renderGrid()
+  end
+end
+
+function renderGrid()
+  local columns = math.floor(WINDOW_WIDTH / CELL_SIZE)
+  local rows = math.floor(WINDOW_HEIGHT / CELL_SIZE)
+
+  love.graphics.setColor(0.224, 0.824, 0.604)
+  for x = 1, columns do
+    for y = 1, rows do
+      love.graphics.rectangle("line", (x - 1) * CELL_SIZE, (y - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+    end
+  end
 end
