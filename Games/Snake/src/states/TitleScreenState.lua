@@ -19,8 +19,8 @@ end
 function TitleScreenState:render()
   self.snake:render()
 
-  love.graphics.setColor(0.224, 0.824, 0.604)
-  love.graphics.setFont(gFonts["title"])
+  love.graphics.setColor(gColors["foreground"].r, gColors["foreground"].g, gColors["foreground"].b)
+  love.graphics.setFont(gFonts["large"])
   love.graphics.printf(string.upper("Snake"), 0, WINDOW_HEIGHT / 2 - 64, WINDOW_WIDTH, "center")
 
   love.graphics.setFont(gFonts["normal"])

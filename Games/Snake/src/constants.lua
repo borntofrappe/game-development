@@ -10,7 +10,7 @@ OPTIONS = {
 DIRECTIONS = {"top", "right", "bottom", "left"}
 
 CELL_SIZE = 20
-CELL_MOVEMENT_SPEED = 60
+CELL_MOVEMENT_SPEED = 100
 CELL_DIRECTION_SPEED = {
   ["top"] = {
     x = 0,

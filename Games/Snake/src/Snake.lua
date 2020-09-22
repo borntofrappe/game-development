@@ -19,8 +19,8 @@ function Snake:update(dt, userInput)
   if userInput then
   else
     if CELL_DIRECTION_SPEED[self.direction].x == 0 then
-      self.y = self.y + CELL_DIRECTION_SPEED[self.direction].y * CELL_MOVEMENT_SPEED * dt
-      if math.floor(self.y * 100) % CELL_SIZE == 0 then
+      self.y = self.y + CELL_DIRECTION_SPEED[self.direction].y * math.floor(CELL_MOVEMENT_SPEED * dt)
+      if self.y % CELL_SIZE == 0 then
         self.changeDirection = math.random(5) == 1
         if self.changeDirection then
           self.direction = DIRECTIONS[math.random(#DIRECTIONS)]
@@ -33,8 +33,8 @@ function Snake:update(dt, userInput)
         self.y = -CELL_SIZE
       end
     else
-      self.x = self.x + CELL_DIRECTION_SPEED[self.direction].x * CELL_MOVEMENT_SPEED * dt
-      if math.floor(self.x * 100) % CELL_SIZE == 0 then
+      self.x = self.x + CELL_DIRECTION_SPEED[self.direction].x * math.floor(CELL_MOVEMENT_SPEED * dt)
+      if self.x % CELL_SIZE == 0 then
         self.changeDirection = math.random(5) == 1
         if self.changeDirection then
           self.direction = DIRECTIONS[math.random(#DIRECTIONS)]
@@ -51,6 +51,6 @@ function Snake:update(dt, userInput)
 end
 
 function Snake:render()
-  love.graphics.setColor(0.224, 0.824, 0.604)
+  love.graphics.setColor(gColors["snake"].r, gColors["snake"].g, gColors["snake"].b)
   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 end

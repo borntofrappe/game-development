@@ -6,8 +6,26 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
   gFonts = {
-    ["title"] = love.graphics.newFont("res/fonts/font-bold.ttf", 64),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+    ["large"] = love.graphics.newFont("res/font.ttf", 64),
+    ["normal"] = love.graphics.newFont("res/font.ttf", 24)
+  }
+
+  gColors = {
+    ["background"] = {
+      ["r"] = 0,
+      ["g"] = 0.14,
+      ["b"] = 0.3
+    },
+    ["foreground"] = {
+      ["r"] = 0.22,
+      ["g"] = 0.82,
+      ["b"] = 0.6
+    },
+    ["snake"] = {
+      ["r"] = 0.4,
+      ["g"] = 0.9,
+      ["b"] = 0.7
+    }
   }
 
   gStateMachine =
@@ -47,7 +65,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0.035, 0.137, 0.298, 1)
+  love.graphics.setColor(gColors["background"].r, gColors["background"].g, gColors["background"].b)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
   gStateMachine:render()
@@ -61,7 +79,7 @@ function renderGrid()
   local columns = math.floor(WINDOW_WIDTH / CELL_SIZE)
   local rows = math.floor(WINDOW_HEIGHT / CELL_SIZE)
 
-  love.graphics.setColor(0.224, 0.824, 0.604)
+  love.graphics.setColor(gColors["foreground"].r, gColors["foreground"].g, gColors["foreground"].b)
   for x = 1, columns do
     for y = 1, rows do
       love.graphics.rectangle("line", (x - 1) * CELL_SIZE, (y - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
