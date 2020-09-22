@@ -23,16 +23,25 @@ function PlayerWalkingState:update(dt)
     local tileBottomRight =
       self.player.level.tileMap:pointToTile(self.player.x + self.player.width - 2, self.player.y + self.player.height)
 
-    if (tileBottomLeft and tileBottomRight) and (tileBottomLeft.id == TILE_SKY and tileBottomRight.id == TILE_SKY) then
+    local collidedObjects = self.player:checkObjectCollision()
+
+    if
+      #collidedObjects == 0 and (tileBottomLeft and tileBottomRight) and
+        (tileBottomLeft.id == TILE_SKY and tileBottomRight.id == TILE_SKY)
+     then
       self.player:changeState("falling")
     elseif love.keyboard.isDown("left") then
       self.player.direction = "left"
       self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
-      self.player:checkLeftCollision()
+      self.player.y = self.player.y - 1
+      self.player:checkLeftCollision(dt)
+      self.player.y = self.player.y + 1
     elseif love.keyboard.isDown("right") then
       self.player.direction = "right"
       self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
-      self.player:checkRightCollision()
+      self.player.y = self.player.y - 1
+      self.player:checkRightCollision(dt)
+      self.player.y = self.player.y + 1
     end
   end
 
