@@ -1,4 +1,4 @@
-WINDOW_WIDTH = 500
+WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 500
 
 OPTIONS = {
@@ -7,11 +7,10 @@ OPTIONS = {
   resizable = false
 }
 
-DIRECTIONS = {"top", "right", "bottom", "left"}
-
-CELL_SIZE = 20
-CELL_MOVEMENT_SPEED = 100
-CELL_DIRECTION_SPEED = {
+CELL_SIZE = 25
+CELL_MOVEMENT_SPEED = 2
+CELL_DIRECTIONS = {"top", "right", "bottom", "left"}
+CELL_DIRECTIONS_SPEED = {
   ["top"] = {
     x = 0,
     y = -1

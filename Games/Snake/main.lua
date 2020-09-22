@@ -22,9 +22,9 @@ function love.load()
       ["b"] = 0.6
     },
     ["snake"] = {
-      ["r"] = 0.4,
+      ["r"] = 0.5,
       ["g"] = 0.9,
-      ["b"] = 0.7
+      ["b"] = 0.75
     }
   }
 
@@ -44,7 +44,7 @@ function love.load()
 
   love.keyboard.keyPressed = {}
 
-  toggleGrid = true
+  toggleGrid = false
 end
 
 function love.keypressed(key)
