@@ -4,6 +4,14 @@ The fifth video covers a 2D platformer inspired by Super Mario Bros.
 
 The project is actively under development. As I found bugs/missing features, I'll list them here for future consideration:
 
+- move creatures
+
+- add music, and other audio files
+
+- produce a gameover — move to the start state — when falling in a chasm
+
+- add timer library to animate the gem
+
 ### Done
 
 - player can't move to the very end of the level. Solved: Super Mario Bros 0 uses `self.player.x` to limit the movement instead of `self.player.width`
