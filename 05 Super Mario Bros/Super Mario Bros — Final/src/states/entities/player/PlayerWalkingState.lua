@@ -49,6 +49,13 @@ function PlayerWalkingState:update(dt)
     self.player:changeState("jump")
   end
 
+  for k, object in pairs(self.player.level.objects) do
+    if object.isConsumable and object:collides(self.player) then
+      object.onConsume(object, self.player)
+      table.remove(self.player.level.objects, k)
+    end
+  end
+
   for k, entity in pairs(self.player.level.entities) do
     if entity:collides(self.player) then
       gSounds["death"]:play()
