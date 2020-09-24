@@ -10,11 +10,12 @@ function PlayState:init()
   self.camX = 0
   self.camY = 0
 
+  local tile = self:getSafeTile()
   self.player =
     Player(
     {
-      x = VIRTUAL_WIDTH / 2 - PLAYER_WIDTH / 2,
-      y = TILE_SIZE * (ROWS_SKY - 1) - PLAYER_HEIGHT,
+      x = (tile.x - 1) * TILE_SIZE,
+      y = -PLAYER_HEIGHT,
       width = PLAYER_WIDTH,
       height = PLAYER_HEIGHT,
       texture = "character",
@@ -38,7 +39,7 @@ function PlayState:init()
     }
   )
 
-  self.player:changeState("idle")
+  self.player:changeState("falling")
 
   self:addCreaturesState()
 end
@@ -98,5 +99,16 @@ function PlayState:addCreaturesState()
     )
 
     entity:changeState("idle")
+  end
+end
+
+function PlayState:getSafeTile()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local tile = self.level.tileMap.tiles[x][y]
+      if tile.id == TILE_GROUND then
+        return tile
+      end
+    end
   end
 end

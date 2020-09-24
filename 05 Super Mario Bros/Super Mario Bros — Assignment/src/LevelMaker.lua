@@ -17,7 +17,7 @@ function LevelMaker.generate(width, height)
 
     local isChasm = math.random(8) == 1
     if isChasm then
-      rows_sky = height
+      rows_sky = height + 1
     else
       local isPillar = math.random(8) == 1
       if isPillar then
