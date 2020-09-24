@@ -4,7 +4,7 @@ The fifth video covers a 2D platformer inspired by Super Mario Bros.
 
 The project is actively under development. As I found bugs/missing features, I'll list them here for future consideration:
 
-- move creatures
+- have the player jump — bounce — when falling on a creature
 
 - add music, and other audio files
 
