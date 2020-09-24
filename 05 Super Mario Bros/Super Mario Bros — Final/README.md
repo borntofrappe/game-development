@@ -1,5 +1,3 @@
-- bug: walking state doesn't consume gems
-
 Finalize the progress achieved with "Super Mario Bros 9" with minor changes.
 
 ## Bounce
