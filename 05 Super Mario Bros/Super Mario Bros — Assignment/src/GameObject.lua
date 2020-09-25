@@ -17,6 +17,9 @@ function GameObject:init(def)
 
   self.isConsumable = def.isConsumable
   self.onConsume = def.onConsume
+
+  self.isLock = def.isLock
+  self.isKey = def.isKey
 end
 
 function GameObject:collides(target)

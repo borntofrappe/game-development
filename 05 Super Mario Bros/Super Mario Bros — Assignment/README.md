@@ -74,9 +74,119 @@ rows_sky = height
 
 With this update, the column doesn't contain anything but sky tiles, and the `getSafeTile` function is able to move to the column which follows.
 
-## Key and lock block
+## Key and lock
 
 > In `LevelMaker.lua`, generate a random-colored key and lock block (taken from `keys_and_locks.png` in the `graphics` folder of the distro). The key should unlock the block when the player collides with it, triggering the block to disappear
+
+### Utils
+
+It is first necessary to build a table for the quads describing the locks and the keys. `keys_and_locks.png` provides the keys and the locks in four colors. I've modified the original image to show the colors in rows instead of columns, so to benefit from the logic of the `GenerateQuadsObjects`. The only difference is semantic and in terms of what _varieties_ are in the resulting 2D table. For each nested table, the first variety refers to the key, while the second refers to the lock with a matching color.
+
+```lua
+gFrames["keys_and_locks"][1][1] -- yellow key
+gFrames["keys_and_locks"][1][2] -- yellow lock
+```
+
+### LevelMaker — booleans
+
+The idea is to include only one lock and key per level. This is achieved by having a boolean refer to whether or not the level already has a lock, whether or not it has a key.
+
+```lua
+local hasLock = false
+local hasKey = false
+```
+
+In the loop creating the level, the idea is to position the lock and key with a certain degree of randomness. Since it is however necessary to ensure that a lock and key will be included, relying solely on `math.random()` is potentially problematic, with a level possibly spawning only one of the two assets. To this end I modified the condition to show a lock or key and tie the boolean to the level's width.
+
+```lua
+local showLock = math.random(50) == 1 or x > width * 2 / 5
+local showKey = math.random(50) == 1 or x > width * 3 / 5
+```
+
+In this fashion, a lock will be spawned, at most after two fifths of the level. A key will be spawned, at most after three fifths.
+
+### LevelMaker — GameObject
+
+The lock is included in the `objects` table in the same fashion as jump blocks: a game object with `isSolid` and an `onCollide` function. This last one is used to simply play the empty block sound — although a different sound byte might be preferable.
+
+```lua
+onCollide = function(obj)
+  gSounds["empty-block"]:play()
+end
+```
+
+I've also decided to include a boolean to differentiate the lock. This is useful in the moment the player consumes a key, and the game needs to remove the specific object.
+
+```lua
+isLock = true,
+onCollide = function(obj)
+  gSounds["empty-block"]:play()
+end
+```
+
+The key is included in the `objects` table similarly to a gem. The `onConsume` function is modified to provide a bigger number of points, but the two share much of their logic.
+
+```lua
+onConsume = function(obj, player)
+  gSounds["pickup"]:play()
+  player.score = player.score + 200
+end
+```
+
+Once again to differentiate the object however, the object includes another boolean to describe that the object is indeed a key.
+
+```lua
+isKey = true,
+onConsume = function(obj, player)
+  gSounds["pickup"]:play()
+  player.score = player.score + 200
+end
+```
+
+In this fashion, the idea is to have the player consume the object, and remove the lock if the consumed object is a key.
+
+### Player states
+
+As mentioned in the previous section, the idea is to modify the logic of the different states — walking, jumping, falling — when the player consumes an object.
+
+```lua
+if object.isConsumable then
+  object.onConsume(object, self.player)
+end
+```
+
+Once the `onConsume` function is called, the script checks if the object is a key.
+
+```lua
+if object.isConsumable then
+  object.onConsume(object, self.player)
+  if object.isKey then
+
+  end
+end
+```
+
+If so, it loops once more through the objects table, in order to remove the existing lock.
+
+```lua
+for j, obj in pairs(self.player.level.objects) do
+  if obj.isLock then
+    table.remove(self.player.level.objects, j)
+    break
+  end
+end
+```
+
+### GameObject
+
+This is something that tricked me considerably. The new boolean `isLock` or `isKey` mean nothing if they are not themselves set in the definition of the game object.
+
+```lua
+function GameObject:init(def)
+  self.isLock = def.isLock
+  self.isKey = def.isKey
+end
+```
 
 ## Goal post
 

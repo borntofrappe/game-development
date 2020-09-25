@@ -45,7 +45,8 @@ gTextures = {
   ["bushes_and_cacti"] = love.graphics.newImage("res/graphics/bushes_and_cacti.png"),
   ["gems"] = love.graphics.newImage("res/graphics/gems.png"),
   ["jump_blocks"] = love.graphics.newImage("res/graphics/jump_blocks.png"),
-  ["creatures"] = love.graphics.newImage("res/graphics/creatures.png")
+  ["creatures"] = love.graphics.newImage("res/graphics/creatures.png"),
+  ["keys_and_locks"] = love.graphics.newImage("res/graphics/keys_and_locks.png")
 }
 
 gFrames = {
@@ -56,7 +57,8 @@ gFrames = {
   ["bushes_and_cacti"] = GenerateQuadsObjects(gTextures["bushes_and_cacti"], TILE_SIZE, TILE_SIZE),
   ["gems"] = GenerateQuadsObjects(gTextures["gems"], TILE_SIZE, TILE_SIZE),
   ["jump_blocks"] = GenerateQuadsObjects(gTextures["jump_blocks"], TILE_SIZE, TILE_SIZE),
-  ["creatures"] = GenerateQuadsCreatures(gTextures["creatures"], TILE_SIZE, TILE_SIZE)
+  ["creatures"] = GenerateQuadsCreatures(gTextures["creatures"], TILE_SIZE, TILE_SIZE),
+  ["keys_and_locks"] = GenerateQuadsObjects(gTextures["keys_and_locks"], TILE_SIZE, TILE_SIZE)
 }
 
 gSounds = {
