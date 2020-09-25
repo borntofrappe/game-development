@@ -13,6 +13,7 @@ function LevelMaker.generate(width, height)
   local hasLock = false
   local hasKey = false
   local colorKeyAndLock = math.random(#gFrames["keys_and_locks"])
+  local colorFlag = colorKeyAndLock
 
   for x = 1, width do
     tiles[x] = {}
@@ -28,14 +29,47 @@ function LevelMaker.generate(width, height)
         GameObject(
         {
           x = x,
-          y = rows_sky - 3,
+          y = rows_sky - 1,
           texture = "keys_and_locks",
           color = colorKeyAndLock,
           variety = 2,
           isSolid = true,
           isLock = true,
-          onCollide = function(obj)
-            gSounds["empty-block"]:play()
+          onCollide = function()
+          end,
+          onDisappear = function(obj)
+            gSounds["powerup-reveal"]:play()
+
+            local flag =
+              GameObject(
+              {
+                x = obj.x + 0.5,
+                y = obj.y - 2,
+                width = FLAG_WIDTH,
+                height = FLAG_HEIGHT,
+                texture = "flags",
+                color = colorFlag,
+                variety = 1
+              }
+            )
+            table.insert(objects, flag)
+
+            local pole =
+              GameObject(
+              {
+                x = obj.x,
+                y = obj.y - 2,
+                width = POLE_WIDTH,
+                height = POLE_HEIGHT,
+                texture = "poles",
+                color = colorFlag,
+                variety = 1,
+                isSolid = true,
+                onCollide = function()
+                end
+              }
+            )
+            table.insert(objects, pole)
           end
         }
       )

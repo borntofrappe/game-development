@@ -17,6 +17,7 @@ function GameObject:init(def)
 
   self.isConsumable = def.isConsumable
   self.onConsume = def.onConsume
+  self.onDisappear = def.onDisappear
 
   self.isLock = def.isLock
   self.isKey = def.isKey
@@ -38,7 +39,7 @@ function GameObject:render()
   love.graphics.draw(
     gTextures[self.texture],
     gFrames[self.texture][self.color][self.variety],
-    (self.x - 1) * self.width,
-    (self.y - 1) * self.height
+    (self.x - 1) * TILE_SIZE,
+    (self.y - 1) * TILE_SIZE
   )
 end

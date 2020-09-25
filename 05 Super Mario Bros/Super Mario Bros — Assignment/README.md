@@ -188,10 +188,168 @@ function GameObject:init(def)
 end
 ```
 
+### Bonus
+
+This is not expected from the assignment, but I've decided to experiment further with the way the key is provided to the player. Picking up from the way gems are included, by hitting a block, the idea is to have a jump block which exclusively spawns the key.
+
+```lua
+local isKeyHidden = math.random(2) == 1
+if isKeyHidden then
+  -- spawn a block
+end
+```
+
+The difference is that the block spawns the key without any doubt.
+
+```lua
+onCollide = function(obj)
+  if not obj.wasHit then
+    obj.wasHit = true
+    gSounds["powerup-reveal"]:play()
+    local key =
+      GameObject(
+      {
+        -- attributes
+      }
+    )
+    table.insert(objects, key)
+  else
+    gSounds["empty-block"]:play()
+  end
+end
+```
+
+`wasHit` is still necessary to differentiate the audio played when colliding with the block.
+
 ## Goal post
 
-> Once the lock has disappeared, trigger a goal post to spawn at the end of the level. Goal posts can be found in `flags.png`; feel free to use whichever one you’d like! Note that the flag and the pole are separated, so you’ll have to spawn a `GameObject` for each segment of the flag and one for the flag itself.
+> Once the lock has disappeared, trigger a goal post to spawn at the end of the level. Goal posts can be found in `flags.png`. Note that the flag and the pole are separated, so you’ll have to spawn a `GameObject` for each segment of the flag and one for the flag itself.
+
+### Utils
+
+`flags.png` previously described both the flags and the accompanying flag poles. I've decided to modify the raster image to reuse the logic of `GenerateQuadsObjects`, and have the flags/poles sorted in rows of different colors.
+
+The only difference is that the poles are taller, and this is detailed by two additional constants in `constants.lua`.
+
+```lua
+POLE_WIDTH = 16
+POLE_HEIGHT = 48
+```
+
+### LevelMaker
+
+Since the goal post is shown only after the lock has disappeared, it makes sense to have the object appear exactly where the lock was. To this end, I decided to have the lock shown at ground level, instead of two rows above solid ground.
+
+```diff
+-y = rows_sky - 3,
++y = rows_sky - 1,
+```
+
+In this situation, the `onCollide` function becomes superfluous, but I decided to keep its logic. This to avoid a situation in which the function is called, but is not available.
+
+```lua
+onCollide = function() end
+```
+
+With a different anonymous function, the idea is to have the goal post spawn with two game objects.
+
+```lua
+onDisappear = function() end
+```
+
+The function is called right before the lock is removed, in the different states for the player.
+
+```lua
+obj.onDisappear(obj)
+table.remove(self.player.level.objects, j)
+```
+
+The game objects pick from the `flags` and `poles` tables.
+
+```lua
+local flag = GameObject({
+  texture = "flags"
+})
+table.insert(objects, flag)
+
+local pole = GameObject({
+  texture = "poles"
+})
+table.insert(objects, pole)
+```
+
+The two are positioned horizontally where the lock was, and vertically to have the pole sit on solid ground.
+
+```lua
+local pole =
+  GameObject(
+  {
+    x = obj.x,
+    y = obj.y - 2,
+  }
+```
+
+For the flag however, the horizontal coordinate is incremented by half. This to have the flag centered in the pole.
+
+```lua
+local pole =
+  GameObject(
+  {
+    x = obj.x + 0.5,
+    y = obj.y - 2,
+  }
+```
+
+### GameObject
+
+Remember to add the new field `onDisappear` when defining a game object.
+
+```lua
+function GameObject:init(def)
+  -- other attributes
+
+  self.onDisappear = def.onDisappear
+end
+```
 
 ## New level
 
 > When the player touches this goal post, we should regenerate the level, spawn the player at the beginning of it again (this can all be done via just reloading `PlayState`), and make it a little longer than it was before. You’ll need to introduce `params` to the `PlayState:enter` function that keeps track of the current level and persists the player’s score for this to work properly.
+
+## Additional Notes
+
+> things I realize mid-way through
+
+### table.remove
+
+When I remove the key _and_ the accompanying lock, there is a potential issue in removing the appropriate elements from the `objects` table.
+
+```lua
+if object.isConsumable then
+  if object.isKey then
+    for j, obj in pairs(self.player.level.objects) do
+      if obj.isLock then
+        table.remove(self.player.level.objects, j)
+        break
+      end
+    end
+  end
+  table.remove(self.player.level.objects, k)
+end
+```
+
+In this instance, the risk is that `self.player.objects` changes by removing the `j`-th element before the `k`-th element. With this in mind, I decided to immediately remove the `k`-th element, the key, and then remove the `j`-th element, the lock, looping through the now-updated table.
+
+```lua
+if object.isConsumable then
+  table.remove(self.player.level.objects, k)
+  if object.isKey then
+    for j, obj in pairs(self.player.level.objects) do
+      if obj.isLock then
+        table.remove(self.player.level.objects, j)
+        break
+      end
+    end
+  end
+end
+```
