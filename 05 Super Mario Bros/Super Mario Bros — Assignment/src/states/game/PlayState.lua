@@ -1,14 +1,17 @@
 PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
-  self.width = 100
-  self.height = 10
-  self.level = LevelMaker.generate(self.width, self.height)
-
   self.background = math.random(#gFrames.backgrounds)
 
   self.camX = 0
   self.camY = 0
+end
+
+function PlayState:enter(params)
+  self.width = params and params.width or 60
+  self.height = 10
+
+  self.level = LevelMaker.generate(self.width, self.height)
 
   local tile = self:getSafeTile()
   self.player =
@@ -35,7 +38,8 @@ function PlayState:init()
           end
         }
       ),
-      level = self.level
+      level = self.level,
+      score = params and params.score or 0
     }
   )
 

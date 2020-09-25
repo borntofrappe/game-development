@@ -49,6 +49,15 @@ function PlayerFallingState:update(dt)
   for k, object in pairs(self.player.level.objects) do
     if object:collides(self.player) then
       if object.isSolid then
+        if object.isGoal then
+          gStateMachine:change(
+            "play",
+            {
+              width = self.player.level.tileMap.width + 10,
+              score = self.player.score
+            }
+          )
+        end
         self.player.y = (object.y - 1) * TILE_SIZE - self.player.height
         self.player.dy = 0
         if love.keyboard.isDown("left") or love.keyboard.isDown("right") then

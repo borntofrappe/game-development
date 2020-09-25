@@ -316,6 +316,103 @@ end
 
 > When the player touches this goal post, we should regenerate the level, spawn the player at the beginning of it again (this can all be done via just reloading `PlayState`), and make it a little longer than it was before. You’ll need to introduce `params` to the `PlayState:enter` function that keeps track of the current level and persists the player’s score for this to work properly.
 
+### isGoal
+
+In order to create a new level, it is first necessary to establish when the player collides with the goal post. This is achieved by adding a boolean to the game object describing the pole.
+
+```lua
+local pole = GameObject(
+  {
+    -- other attributes
+    isGoal = true,
+    onCollide = function()
+    end
+  }
+)
+```
+
+Just remember to add the boolean in the class definition.
+
+```lua
+function GameObject:init(def)
+  -- other attributes
+  self.isGoal = def.isGoal
+end
+```
+
+### State
+
+In the different states for the player — jumping and falling — the game is already equipped to consider a collision with solid objects. By adding an additional if statement, the idea is to use the global `gStateMachine` to create a new level by going (once more) to the `PlayState`.
+
+```lua
+if object.isSolid then
+  if object.isGoal then
+    gStateMachine:change("play")
+  end
+end
+```
+
+For the walking state, the logic is a tad different. When the player walks, it uses the `checkObjectCollision` function to avoid moving beyond solid objects. In light of this, looping through the objects in the `WalkingState` would not work, as the player would never be allowed to collide with any object.
+
+The change in state is therefore introduced in the `checkObjectCollision` function itself.
+
+### Params
+
+When moving to the new state, the idea is to preserve the score and increase the length of the level. To this end, the function changing the state machine includes as a second argument a table specifying both values.
+
+For the width, it's possible to access the value by looking at the `width` attributed to the tileMap. For the score, this is stored in the instance of the player class.
+
+```lua
+gStateMachine:change("play", {
+  width = self.player.tileMap.width + 10,
+  score = self.player.score
+})
+```
+
+Once the function specifies the table, it is finally necessary to update the `PlayState` so that it receives the parameters in `PlayState:enter()`. The idea is to here migrate to the function the code previously described in `:init`, but now dependent on the input parameters.
+
+```lua
+function PlayState:enter(params)
+  self.width = 60
+  self.height = 10
+
+  self.level = LevelMaker.generate(self.width, self.height)
+
+  local tile = self:getSafeTile()
+  self.player =
+    Player(
+    {
+      -- other attributes
+      score = 0
+    }
+  )
+
+  -- .. creatures
+end
+```
+
+When such parameters are provided, the idea is to then use the received values to build the level, and subsequently create the player.
+
+```lua
+function PlayState:enter(params)
+  self.width = params and params.width or 60
+  self.height = 10
+
+  self.level = LevelMaker.generate(self.width, self.height)
+
+  local tile = self:getSafeTile()
+  self.player =
+    Player(
+    {
+      -- other attributes
+      score = params and params.score or 0
+    }
+  )
+
+  -- .. creatures
+end
+```
+
 ## Additional Notes
 
 > things I realize mid-way through

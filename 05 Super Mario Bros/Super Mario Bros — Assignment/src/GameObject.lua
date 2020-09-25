@@ -21,6 +21,7 @@ function GameObject:init(def)
 
   self.isLock = def.isLock
   self.isKey = def.isKey
+  self.isGoal = def.isGoal
 end
 
 function GameObject:collides(target)

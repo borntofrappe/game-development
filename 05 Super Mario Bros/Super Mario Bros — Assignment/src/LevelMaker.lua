@@ -65,6 +65,7 @@ function LevelMaker.generate(width, height)
                 color = colorFlag,
                 variety = 1,
                 isSolid = true,
+                isGoal = true,
                 onCollide = function()
                 end
               }

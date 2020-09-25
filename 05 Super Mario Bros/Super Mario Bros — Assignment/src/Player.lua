@@ -2,7 +2,7 @@ Player = Class({__includes = Entity})
 
 function Player:init(def)
   Entity.init(self, def)
-  self.score = 0
+  self.score = def.score
 end
 
 function Player:update(dt)
@@ -48,6 +48,16 @@ function Player:checkObjectCollision()
 
   for k, object in pairs(self.level.objects) do
     if object.isSolid and object:collides(self) then
+      if object.isGoal then
+        gStateMachine:change(
+          "play",
+          {
+            width = self.level.tileMap.width + 10,
+            score = self.score
+          }
+        )
+        break
+      end
       table.insert(collidedObjects, object)
     end
   end

@@ -24,9 +24,11 @@ The game is introduced by a series of demos discussing specific topics. These ar
 
 3. _Level_, how to generate a level with different features
 
-From these demos, there is a considerable learning curve to develop the full game, and therefore I decided to develop a few updates to incorporate the lecturer's code.
+From these demos, there is a considerable learning curve to develop the full game, and the different _Super Mario Bros \*_ demos are my way to build the game in increments.
 
-In _Super Mario Bros — Final_ find the version of the game summing up these changes
+In _Super Mario Bros — Final_ find the version of the game most closely resembling the one introduced in the video.
+
+In _Super Mario Bros — Assignment_ find the final version of the game, incorporating the assignment as well.
 
 ## Resources
 
