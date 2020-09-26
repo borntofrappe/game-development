@@ -25,7 +25,7 @@ function GameObject:init(def)
 end
 
 function GameObject:collides(target)
-  if target.x + target.width < (self.x - 1) * TILE_SIZE or target.x > (self.x - 1) * TILE_SIZE + self.width then
+  if target.x + target.width < (self.x - 1) * TILE_SIZE + 1 or target.x > (self.x - 1) * TILE_SIZE + self.width - 1 then
     return false
   end
 
