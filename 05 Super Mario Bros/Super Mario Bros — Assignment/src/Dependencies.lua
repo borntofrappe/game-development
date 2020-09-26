@@ -69,9 +69,12 @@ gSounds = {
   ["chasm"] = love.audio.newSource("res/sounds/chasm.wav", "static"),
   ["death"] = love.audio.newSource("res/sounds/death.wav", "static"),
   ["empty-block"] = love.audio.newSource("res/sounds/empty-block.wav", "static"),
+  ["flag-reveal"] = love.audio.newSource("res/sounds/flag-reveal.wav", "static"),
+  ["gem-reveal"] = love.audio.newSource("res/sounds/gem-reveal.wav", "static"),
   ["jump"] = love.audio.newSource("res/sounds/jump.wav", "static"),
+  ["key-reveal"] = love.audio.newSource("res/sounds/key-reveal.wav", "static"),
   ["kill"] = love.audio.newSource("res/sounds/kill.wav", "static"),
   ["music"] = love.audio.newSource("res/sounds/music.wav", "static"),
-  ["pickup"] = love.audio.newSource("res/sounds/pickup.wav", "static"),
-  ["powerup-reveal"] = love.audio.newSource("res/sounds/powerup-reveal.wav", "static")
+  ["new-level"] = love.audio.newSource("res/sounds/new-level.wav", "static"),
+  ["pickup"] = love.audio.newSource("res/sounds/pickup.wav", "static")
 }

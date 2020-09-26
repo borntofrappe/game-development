@@ -43,6 +43,7 @@ function PlayerJumpState:update(dt)
     if object:collides(self.player) then
       if object.isSolid then
         if object.isGoal then
+          gSounds["new-level"]:play()
           gStateMachine:change(
             "play",
             {

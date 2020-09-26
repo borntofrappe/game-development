@@ -49,6 +49,7 @@ function Player:checkObjectCollision()
   for k, object in pairs(self.level.objects) do
     if object.isSolid and object:collides(self) then
       if object.isGoal then
+        gSounds["new-level"]:play()
         gStateMachine:change(
           "play",
           {

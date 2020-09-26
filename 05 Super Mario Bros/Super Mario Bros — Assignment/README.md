@@ -415,7 +415,7 @@ end
 
 ## Additional Notes
 
-> things I realize mid-way through
+> unscheduled updates
 
 ### table.remove
 

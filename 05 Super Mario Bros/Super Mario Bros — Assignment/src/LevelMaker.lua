@@ -38,7 +38,7 @@ function LevelMaker.generate(width, height)
           onCollide = function()
           end,
           onDisappear = function(obj)
-            gSounds["powerup-reveal"]:play()
+            gSounds["flag-reveal"]:play()
 
             local flag =
               GameObject(
@@ -93,7 +93,7 @@ function LevelMaker.generate(width, height)
               onCollide = function(obj)
                 if not obj.wasHit then
                   obj.wasHit = true
-                  gSounds["powerup-reveal"]:play()
+                  gSounds["key-reveal"]:play()
                   local key =
                     GameObject(
                     {
@@ -217,7 +217,7 @@ function LevelMaker.generate(width, height)
                         }
                       )
                       table.insert(objects, gem)
-                      gSounds["powerup-reveal"]:play()
+                      gSounds["gem-reveal"]:play()
                     else
                       gSounds["empty-block"]:play()
                     end
