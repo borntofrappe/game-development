@@ -3,6 +3,8 @@ PlayState = BaseState:create()
 function PlayState:enter()
   self.toggleGrid = false
   self.snake = Snake:create()
+
+  self.fruit = Fruit:create()
 end
 
 function PlayState:update(dt)
@@ -11,8 +13,13 @@ function PlayState:update(dt)
   end
 
   self.snake:update(dt, true)
+
+  if testAABB(self.snake, self.fruit) then
+    self.fruit = Fruit:create()
+  end
 end
 
 function PlayState:render()
   self.snake:render()
+  self.fruit:render()
 end
