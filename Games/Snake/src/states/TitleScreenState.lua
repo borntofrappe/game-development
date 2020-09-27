@@ -2,6 +2,7 @@ TitleScreenState = BaseState:create()
 
 function TitleScreenState:enter()
   self.snake = Snake:create()
+  self.snake.direction = CELL_DIRECTIONS[math.random(#CELL_DIRECTIONS)]
 end
 
 function TitleScreenState:update(dt)

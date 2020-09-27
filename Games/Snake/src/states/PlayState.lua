@@ -3,7 +3,6 @@ PlayState = BaseState:create()
 function PlayState:enter()
   self.toggleGrid = false
   self.snake = Snake:create()
-  self.snake.direction = nil
 end
 
 function PlayState:update(dt)
