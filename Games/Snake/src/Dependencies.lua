@@ -1,6 +1,7 @@
 require "src/constants"
 
 require "src/Snake"
+require "src/Appendage"
 require "src/Fruit"
 
 require "src/StateMachine"

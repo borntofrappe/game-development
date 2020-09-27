@@ -14,7 +14,7 @@ function TitleScreenState:update(dt)
     gStateMachine:change("play")
   end
 
-  self.snake:update(dt)
+  self.snake:randomUpdate(dt)
 end
 
 function TitleScreenState:render()
