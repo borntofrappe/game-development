@@ -5,6 +5,9 @@ require "src/states/BaseState"
 require "src/states/StartState"
 require "src/states/PlayState"
 
+require "src/states/Snake"
+require "src/states/Fruit"
+
 gFonts = {
   ["large"] = love.graphics.newFont("res/font.ttf", 64),
   ["normal"] = love.graphics.newFont("res/font.ttf", 24)

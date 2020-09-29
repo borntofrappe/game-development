@@ -1,8 +1,5 @@
 StartState = BaseState:create()
 
-function StartState:enter()
-end
-
 function StartState:update(dt)
   if love.keyboard.wasPressed("escape") then
     love.event.quit()

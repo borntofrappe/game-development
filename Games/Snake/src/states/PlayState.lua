@@ -1,16 +1,29 @@
 PlayState = BaseState:create()
 
+function PlayState:enter()
+  self.snake = Snake:create()
+  self.fruit = Fruit:create()
+end
+
 function PlayState:update(dt)
   if love.keyboard.wasPressed("escape") then
     gStateMachine:change("start")
   end
+
+  if love.keyboard.wasPressed("r") or love.keyboard.wasPressed("R") then
+    self:reposition()
+  end
 end
 
 function PlayState:render()
-  love.graphics.setColor(gColors["foreground"].r, gColors["foreground"].g, gColors["foreground"].b)
-  love.graphics.setFont(gFonts["large"])
-  love.graphics.printf(string.upper("PlayState"), 0, WINDOW_HEIGHT / 2 - 64, WINDOW_WIDTH, "center")
+  self.snake:render()
+  self.fruit:render()
+end
 
-  love.graphics.setFont(gFonts["normal"])
-  love.graphics.printf(string.upper("Press escape"), 0, WINDOW_HEIGHT / 2 + 20, WINDOW_WIDTH, "center")
+function PlayState:reposition()
+  self.snake.column = math.random(COLUMNS)
+  self.snake.row = math.random(ROWS)
+
+  self.fruit.column = math.random(COLUMNS)
+  self.fruit.row = math.random(ROWS)
 end
