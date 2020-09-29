@@ -61,16 +61,6 @@ function renderGrid()
   end
 end
 
---[[
-  function testAABB(box1, box2)
-    if box1.x + box1.width < box2.x + 1 or box1.x > box2.x + box2.width - 1 then
-      return false
-    end
-  
-    if box1.y + box1.height < box2.y + 1 or box1.y > box2.y + box2.height - 1 then
-      return false
-    end
-  
-    return true
-  end
-]]
+function testAABB(box1, box2)
+  return box1.column == box2.column and box1.row == box2.row
+end

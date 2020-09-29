@@ -9,3 +9,23 @@ OPTIONS = {
   vsync = true,
   resizable = false
 }
+
+DIRECTIONS = {"top", "right", "bottom", "left"}
+DIRECTIONS_CHANGE = {
+  ["top"] = {
+    ["dx"] = 0,
+    ["dy"] = -1
+  },
+  ["right"] = {
+    ["dx"] = 1,
+    ["dy"] = 0
+  },
+  ["bottom"] = {
+    ["dx"] = 0,
+    ["dy"] = 1
+  },
+  ["left"] = {
+    ["dx"] = -1,
+    ["dy"] = 0
+  }
+}

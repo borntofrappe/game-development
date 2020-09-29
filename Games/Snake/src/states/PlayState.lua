@@ -13,6 +13,11 @@ function PlayState:update(dt)
   if love.keyboard.wasPressed("r") or love.keyboard.wasPressed("R") then
     self:reposition()
   end
+
+  self.snake:update(dt)
+  if testAABB(self.snake, self.fruit) then
+    self.fruit = Fruit:create()
+  end
 end
 
 function PlayState:render()
