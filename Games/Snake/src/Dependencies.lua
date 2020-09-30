@@ -15,6 +15,11 @@ gFonts = {
   ["normal"] = love.graphics.newFont("res/font.ttf", 24)
 }
 
+gSounds = {
+  ["gameover"] = love.audio.newSource("res/gameover.wav", "static"),
+  ["score"] = love.audio.newSource("res/score.wav", "static")
+}
+
 gColors = {
   ["background"] = {
     ["r"] = 130 / 255,
@@ -22,16 +27,6 @@ gColors = {
     ["b"] = 131 / 255
   },
   ["foreground"] = {
-    ["r"] = 38 / 255,
-    ["g"] = 37 / 255,
-    ["b"] = 41 / 255
-  },
-  ["snake"] = {
-    ["r"] = 38 / 255,
-    ["g"] = 37 / 255,
-    ["b"] = 41 / 255
-  },
-  ["fruit"] = {
     ["r"] = 38 / 255,
     ["g"] = 37 / 255,
     ["b"] = 41 / 255

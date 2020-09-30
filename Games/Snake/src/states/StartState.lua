@@ -33,6 +33,10 @@ function StartState:update(dt)
     self.snake.direction = DIRECTIONS[math.random(#DIRECTIONS)]
   end
 
+  if self.snake:eatsTail() then
+    self.snake.tail = {}
+  end
+
   if testAABB(self.snake, self.fruit) then
     self.snake:growTail()
     self.fruit = Fruit:spawn(self.snake)

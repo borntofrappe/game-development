@@ -15,17 +15,19 @@ function PlayState:update(dt)
   end
 
   self.snake:update(dt)
-  if self.snake:outOfBounds() then
+  if self.snake:outOfBounds() or self.snake:eatsTail() then
     gStateMachine:change(
       "gameover",
       {
         score = #self.snake.tail * 5
       }
     )
+    gSounds["gameover"]:play()
   end
   if testAABB(self.snake, self.fruit) then
     self.snake:growTail()
     self.fruit = Fruit:spawn(self.snake)
+    gSounds["score"]:play()
   end
 end
 

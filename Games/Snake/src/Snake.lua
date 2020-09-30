@@ -50,10 +50,6 @@ function Snake:update(dt)
 
       self.column = column
       self.row = row
-
-      if self:eatsTail() then
-        self.tail = {}
-      end
     end
   end
 end
@@ -73,7 +69,7 @@ function Snake:isDirectionValid(direction)
 end
 
 function Snake:render()
-  love.graphics.setColor(gColors["snake"].r, gColors["snake"].g, gColors["snake"].b)
+  love.graphics.setColor(gColors["foreground"].r, gColors["foreground"].g, gColors["foreground"].b)
   love.graphics.rectangle("fill", (self.column - 1) * CELL_SIZE, (self.row - 1) * CELL_SIZE, self.width, self.height)
 
   for k, tail in pairs(self.tail) do

@@ -42,7 +42,7 @@ function Fruit:spawn(snake)
 end
 
 function Fruit:render()
-  love.graphics.setColor(gColors["fruit"].r, gColors["fruit"].g, gColors["fruit"].b)
+  love.graphics.setColor(gColors["foreground"].r, gColors["foreground"].g, gColors["foreground"].b)
   love.graphics.rectangle(
     "fill",
     (self.column - 1) * CELL_SIZE + self.padding,
