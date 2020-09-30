@@ -4,7 +4,7 @@ function StartState:enter()
   self.snake = Snake:create()
   self.snake.interval = 0.2
   self.snake.direction = DIRECTIONS[math.random(#DIRECTIONS)]
-  self.fruit = Fruit:create()
+  self.fruit = Fruit:spawn(self.snake)
 end
 
 function StartState:update(dt)
@@ -28,13 +28,13 @@ function StartState:update(dt)
 
   self.snake:update(dt)
   if testAABB(self.snake, self.fruit) then
-    self.fruit = Fruit:create()
     self.snake:growTail()
+    self.fruit = Fruit:spawn(self.snake)
   end
 
   if math.random(100) == 1 then
     local direction = DIRECTIONS[math.random(#DIRECTIONS)]
-    if isDirectionValid(self.snake, direction) then
+    if self.snake:isDirectionValid(direction) then
       self.snake.direction = direction
     end
   end

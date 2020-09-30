@@ -2,7 +2,7 @@ PlayState = BaseState:create()
 
 function PlayState:enter(params)
   self.snake = params.snake or Snake:create()
-  self.fruit = params.fruit or Fruit:create()
+  self.fruit = params.fruit or Fruit:spawn(self.snake)
 end
 
 function PlayState:update(dt)
@@ -16,8 +16,8 @@ function PlayState:update(dt)
 
   self.snake:update(dt)
   if testAABB(self.snake, self.fruit) then
-    self.fruit = Fruit:create()
     self.snake:growTail()
+    self.fruit = Fruit:spawn(self.snake)
   end
 end
 

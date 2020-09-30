@@ -9,7 +9,7 @@ function Snake:create()
     height = CELL_SIZE,
     direction = nil,
     timer = 0,
-    interval = 0.15,
+    interval = 0.1,
     tail = {}
   }
 
@@ -18,13 +18,13 @@ function Snake:create()
 end
 
 function Snake:update(dt)
-  if love.keyboard.wasPressed("up") and isDirectionValid(self, "top") then
+  if love.keyboard.wasPressed("up") and self:isDirectionValid("top") then
     self.direction = "top"
-  elseif love.keyboard.wasPressed("right") and isDirectionValid(self, "right") then
+  elseif love.keyboard.wasPressed("right") and self:isDirectionValid("right") then
     self.direction = "right"
-  elseif love.keyboard.wasPressed("down") and isDirectionValid(self, "bottom") then
+  elseif love.keyboard.wasPressed("down") and self:isDirectionValid("bottom") then
     self.direction = "bottom"
-  elseif love.keyboard.wasPressed("left") and isDirectionValid(self, "left") then
+  elseif love.keyboard.wasPressed("left") and self:isDirectionValid("left") then
     self.direction = "left"
   end
 
@@ -70,6 +70,16 @@ function Snake:update(dt)
       self.row = 1
     end
   end
+end
+
+function Snake:isDirectionValid(direction)
+  local constraints = {
+    ["top"] = "bottom",
+    ["right"] = "left",
+    ["bottom"] = "top",
+    ["left"] = "right"
+  }
+  return #self.tail == 0 or constraints[self.direction] ~= direction
 end
 
 function Snake:render()
