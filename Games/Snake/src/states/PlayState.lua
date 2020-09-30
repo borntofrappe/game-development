@@ -17,6 +17,7 @@ function PlayState:update(dt)
   self.snake:update(dt)
   if testAABB(self.snake, self.fruit) then
     self.fruit = Fruit:create()
+    self.snake:growTail()
   end
 end
 

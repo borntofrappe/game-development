@@ -6,6 +6,7 @@ require "src/states/StartState"
 require "src/states/PlayState"
 
 require "src/states/Snake"
+require "src/states/Tail"
 require "src/states/Fruit"
 
 gFonts = {
