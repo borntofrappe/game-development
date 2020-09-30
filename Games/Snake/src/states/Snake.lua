@@ -39,6 +39,10 @@ function Snake:update(dt)
 
     self.column = column
     self.row = row
+
+    if self:eatsTail() then
+      self.tail = {}
+    end
   end
 
   if love.keyboard.wasPressed("up") then
@@ -82,4 +86,13 @@ function Snake:growTail()
   local row = reference.row + DIRECTIONS_CHANGE[direction].dy * -1
   local tail = Tail:create(column, row, direction)
   table.insert(self.tail, tail)
+end
+
+function Snake:eatsTail()
+  for k, tail in pairs(self.tail) do
+    if testAABB(self, tail) then
+      return true
+    end
+  end
+  return false
 end
