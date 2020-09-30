@@ -3,7 +3,7 @@ require "src/Dependencies"
 function love.load()
   math.randomseed(os.time())
   love.window.setTitle("Snake")
-  love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
+  love.window.setMode(WINDOW_WIDTH + PADDING * 2 + MARGIN * 2, WINDOW_HEIGHT + PADDING * 2 + MARGIN * 2, OPTIONS)
 
   gStateMachine =
     StateMachine:create(
@@ -13,6 +13,9 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState:create()
+      end,
+      ["gameover"] = function()
+        return GameoverState:create()
       end
     }
   )
@@ -43,8 +46,19 @@ end
 
 function love.draw()
   love.graphics.setColor(gColors["background"].r, gColors["background"].g, gColors["background"].b)
-  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+  love.graphics.rectangle(
+    "fill",
+    0,
+    0,
+    WINDOW_WIDTH + PADDING * 2 + MARGIN * 2,
+    WINDOW_HEIGHT + PADDING * 2 + MARGIN * 2
+  )
 
+  love.graphics.translate(MARGIN, MARGIN)
+  love.graphics.setColor(gColors["foreground"].r, gColors["foreground"].g, gColors["foreground"].b)
+  love.graphics.rectangle("line", 0, 0, WINDOW_WIDTH + PADDING * 2, WINDOW_HEIGHT + PADDING * 2)
+
+  love.graphics.translate(PADDING, PADDING)
   gStateMachine:render()
 
   if toggleGrid then

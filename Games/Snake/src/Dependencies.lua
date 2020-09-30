@@ -4,10 +4,11 @@ require "src/StateMachine"
 require "src/states/BaseState"
 require "src/states/StartState"
 require "src/states/PlayState"
+require "src/states/GameoverState"
 
-require "src/states/Snake"
-require "src/states/Tail"
-require "src/states/Fruit"
+require "src/Snake"
+require "src/Tail"
+require "src/Fruit"
 
 gFonts = {
   ["large"] = love.graphics.newFont("res/font.ttf", 64),
@@ -16,23 +17,23 @@ gFonts = {
 
 gColors = {
   ["background"] = {
-    ["r"] = 13 / 255,
-    ["g"] = 13 / 255,
-    ["b"] = 13 / 255
+    ["r"] = 130 / 255,
+    ["g"] = 163 / 255,
+    ["b"] = 131 / 255
   },
   ["foreground"] = {
-    ["r"] = 212 / 255,
-    ["g"] = 185 / 255,
-    ["b"] = 141 / 255
+    ["r"] = 38 / 255,
+    ["g"] = 37 / 255,
+    ["b"] = 41 / 255
   },
   ["snake"] = {
-    ["r"] = 113 / 255,
-    ["g"] = 159 / 255,
-    ["b"] = 160 / 255
+    ["r"] = 38 / 255,
+    ["g"] = 37 / 255,
+    ["b"] = 41 / 255
   },
   ["fruit"] = {
-    ["r"] = 222 / 255,
-    ["g"] = 99 / 255,
-    ["b"] = 78 / 255
+    ["r"] = 38 / 255,
+    ["g"] = 37 / 255,
+    ["b"] = 41 / 255
   }
 }

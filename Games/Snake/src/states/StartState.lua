@@ -27,6 +27,12 @@ function StartState:update(dt)
   end
 
   self.snake:update(dt)
+  if self.snake:outOfBounds() then
+    self.snake = Snake:create()
+    self.snake.interval = 0.2
+    self.snake.direction = DIRECTIONS[math.random(#DIRECTIONS)]
+  end
+
   if testAABB(self.snake, self.fruit) then
     self.snake:growTail()
     self.fruit = Fruit:spawn(self.snake)

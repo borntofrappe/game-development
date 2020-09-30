@@ -6,7 +6,8 @@ function Fruit:create()
     column = math.random(COLUMNS),
     row = math.random(ROWS),
     width = CELL_SIZE,
-    height = CELL_SIZE
+    height = CELL_SIZE,
+    padding = math.floor(CELL_SIZE / 8)
   }
 
   this.x = r
@@ -42,5 +43,11 @@ end
 
 function Fruit:render()
   love.graphics.setColor(gColors["fruit"].r, gColors["fruit"].g, gColors["fruit"].b)
-  love.graphics.rectangle("fill", (self.column - 1) * CELL_SIZE, (self.row - 1) * CELL_SIZE, self.width, self.height)
+  love.graphics.rectangle(
+    "fill",
+    (self.column - 1) * CELL_SIZE + self.padding,
+    (self.row - 1) * CELL_SIZE + self.padding,
+    self.width - self.padding * 2,
+    self.height - self.padding * 2
+  )
 end

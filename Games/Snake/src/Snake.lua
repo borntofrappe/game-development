@@ -9,7 +9,7 @@ function Snake:create()
     height = CELL_SIZE,
     direction = nil,
     timer = 0,
-    interval = 0.1,
+    interval = 0.15,
     tail = {}
   }
 
@@ -55,21 +55,11 @@ function Snake:update(dt)
         self.tail = {}
       end
     end
-
-    if self.column < 1 then
-      self.column = COLUMNS
-    end
-    if self.column > COLUMNS then
-      self.column = 1
-    end
-
-    if self.row < 1 then
-      self.row = ROWS
-    end
-    if self.row > ROWS then
-      self.row = 1
-    end
   end
+end
+
+function Snake:outOfBounds()
+  return self.column < 1 or self.column > COLUMNS or self.row < 1 or self.row > ROWS
 end
 
 function Snake:isDirectionValid(direction)
