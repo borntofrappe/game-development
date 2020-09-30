@@ -1,8 +1,8 @@
 PlayState = BaseState:create()
 
-function PlayState:enter()
-  self.snake = Snake:create()
-  self.fruit = Fruit:create()
+function PlayState:enter(params)
+  self.snake = params.snake or Snake:create()
+  self.fruit = params.fruit or Fruit:create()
 end
 
 function PlayState:update(dt)

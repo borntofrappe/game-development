@@ -65,12 +65,12 @@ function testAABB(box1, box2)
   return box1.column == box2.column and box1.row == box2.row
 end
 
-function isDirectionValid(previous, current)
+function isDirectionValid(snake, direction)
   local constraints = {
     ["top"] = "bottom",
     ["right"] = "left",
     ["bottom"] = "top",
     ["left"] = "right"
   }
-  return constraints[current] ~= previous
+  return #snake.tail == 0 or constraints[snake.direction] ~= direction
 end

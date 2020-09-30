@@ -18,13 +18,13 @@ function Snake:create()
 end
 
 function Snake:update(dt)
-  if love.keyboard.wasPressed("up") and isDirectionValid(self.direction, "top") then
+  if love.keyboard.wasPressed("up") and isDirectionValid(self, "top") then
     self.direction = "top"
-  elseif love.keyboard.wasPressed("right") and isDirectionValid(self.direction, "right") then
+  elseif love.keyboard.wasPressed("right") and isDirectionValid(self, "right") then
     self.direction = "right"
-  elseif love.keyboard.wasPressed("down") and isDirectionValid(self.direction, "bottom") then
+  elseif love.keyboard.wasPressed("down") and isDirectionValid(self, "bottom") then
     self.direction = "bottom"
-  elseif love.keyboard.wasPressed("left") and isDirectionValid(self.direction, "left") then
+  elseif love.keyboard.wasPressed("left") and isDirectionValid(self, "left") then
     self.direction = "left"
   end
 

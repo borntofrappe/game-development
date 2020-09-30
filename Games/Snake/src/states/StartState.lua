@@ -13,7 +13,17 @@ function StartState:update(dt)
   end
 
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
-    gStateMachine:change("play")
+    if love.keyboard.isDown("c") then
+      gStateMachine:change(
+        "play",
+        {
+          snake = self.snake,
+          fruit = self.fruit
+        }
+      )
+    else
+      gStateMachine:change("play", {})
+    end
   end
 
   self.snake:update(dt)
@@ -24,7 +34,7 @@ function StartState:update(dt)
 
   if math.random(100) == 1 then
     local direction = DIRECTIONS[math.random(#DIRECTIONS)]
-    if isDirectionValid(self.snake.direction, direction) then
+    if isDirectionValid(self.snake, direction) then
       self.snake.direction = direction
     end
   end
@@ -39,7 +49,7 @@ function StartState:render()
 
   love.graphics.setColor(gColors["foreground"].r, gColors["foreground"].g, gColors["foreground"].b)
   love.graphics.setFont(gFonts["large"])
-  love.graphics.printf(string.upper("StartState"), 0, WINDOW_HEIGHT / 2 - 64, WINDOW_WIDTH, "center")
+  love.graphics.printf(string.upper("Snake"), 0, WINDOW_HEIGHT / 2 - 64, WINDOW_WIDTH, "center")
 
   love.graphics.setFont(gFonts["normal"])
   love.graphics.printf(string.upper("Press enter"), 0, WINDOW_HEIGHT / 2 + 20, WINDOW_WIDTH, "center")
