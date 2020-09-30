@@ -1,6 +1,7 @@
 ROWS = 15
 COLUMNS = 20
 CELL_SIZE = 25
+
 WINDOW_WIDTH = COLUMNS * CELL_SIZE
 WINDOW_HEIGHT = ROWS * CELL_SIZE
 
@@ -16,19 +17,19 @@ OPTIONS = {
 DIRECTIONS = {"top", "right", "bottom", "left"}
 DIRECTIONS_CHANGE = {
   ["top"] = {
-    ["dx"] = 0,
-    ["dy"] = -1
+    ["column"] = 0,
+    ["row"] = -1
   },
   ["right"] = {
-    ["dx"] = 1,
-    ["dy"] = 0
+    ["column"] = 1,
+    ["row"] = 0
   },
   ["bottom"] = {
-    ["dx"] = 0,
-    ["dy"] = 1
+    ["column"] = 0,
+    ["row"] = 1
   },
   ["left"] = {
-    ["dx"] = -1,
-    ["dy"] = 0
+    ["column"] = -1,
+    ["row"] = 0
   }
 }

@@ -33,8 +33,8 @@ function Snake:update(dt)
     if self.timer > self.interval then
       self.timer = self.timer % self.interval
 
-      column = self.column + DIRECTIONS_CHANGE[self.direction].dx
-      row = self.row + DIRECTIONS_CHANGE[self.direction].dy
+      column = self.column + DIRECTIONS_CHANGE[self.direction].column
+      row = self.row + DIRECTIONS_CHANGE[self.direction].row
 
       for i = #self.tail, 1, -1 do
         if i == 1 then
@@ -80,8 +80,8 @@ end
 function Snake:growTail()
   local reference = self.tail[#self.tail] or self
   local direction = reference.direction
-  local column = reference.column + DIRECTIONS_CHANGE[direction].dx * -1
-  local row = reference.row + DIRECTIONS_CHANGE[direction].dy * -1
+  local column = reference.column + DIRECTIONS_CHANGE[direction].column * -1
+  local row = reference.row + DIRECTIONS_CHANGE[direction].row * -1
   local tail = Tail:create(column, row, direction)
   table.insert(self.tail, tail)
 end
