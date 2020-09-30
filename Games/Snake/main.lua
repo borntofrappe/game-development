@@ -64,3 +64,13 @@ end
 function testAABB(box1, box2)
   return box1.column == box2.column and box1.row == box2.row
 end
+
+function isDirectionValid(previous, current)
+  local constraints = {
+    ["top"] = "bottom",
+    ["right"] = "left",
+    ["bottom"] = "top",
+    ["left"] = "right"
+  }
+  return constraints[current] ~= previous
+end

@@ -7,7 +7,7 @@ function Snake:create()
     row = math.random(ROWS),
     width = CELL_SIZE,
     height = CELL_SIZE,
-    direction = DIRECTIONS[math.random(#DIRECTIONS)],
+    direction = nil,
     timer = 0,
     interval = 0.15,
     tail = {}
@@ -18,55 +18,57 @@ function Snake:create()
 end
 
 function Snake:update(dt)
-  self.timer = self.timer + dt
-  if self.timer > self.interval then
-    self.timer = self.timer % self.interval
-
-    column = self.column + DIRECTIONS_CHANGE[self.direction].dx
-    row = self.row + DIRECTIONS_CHANGE[self.direction].dy
-
-    for i = #self.tail, 1, -1 do
-      if i == 1 then
-        self.tail[i].column = self.column
-        self.tail[i].row = self.row
-        self.tail[i].direction = self.direction
-      else
-        self.tail[i].column = self.tail[i - 1].column
-        self.tail[i].row = self.tail[i - 1].row
-        self.tail[i].direction = self.tail[i - 1].direction
-      end
-    end
-
-    self.column = column
-    self.row = row
-
-    if self:eatsTail() then
-      self.tail = {}
-    end
-  end
-
-  if love.keyboard.wasPressed("up") and self.direction ~= "bottom" then
+  if love.keyboard.wasPressed("up") and isDirectionValid(self.direction, "top") then
     self.direction = "top"
-  elseif love.keyboard.wasPressed("right") and self.direction ~= "left" then
+  elseif love.keyboard.wasPressed("right") and isDirectionValid(self.direction, "right") then
     self.direction = "right"
-  elseif love.keyboard.wasPressed("down") and self.direction ~= "top" then
+  elseif love.keyboard.wasPressed("down") and isDirectionValid(self.direction, "bottom") then
     self.direction = "bottom"
-  elseif love.keyboard.wasPressed("left") and self.direction ~= "right" then
+  elseif love.keyboard.wasPressed("left") and isDirectionValid(self.direction, "left") then
     self.direction = "left"
   end
 
-  if self.column < 1 then
-    self.column = COLUMNS
-  end
-  if self.column > COLUMNS then
-    self.column = 1
-  end
+  if self.direction then
+    self.timer = self.timer + dt
+    if self.timer > self.interval then
+      self.timer = self.timer % self.interval
 
-  if self.row < 1 then
-    self.row = ROWS
-  end
-  if self.row > ROWS then
-    self.row = 1
+      column = self.column + DIRECTIONS_CHANGE[self.direction].dx
+      row = self.row + DIRECTIONS_CHANGE[self.direction].dy
+
+      for i = #self.tail, 1, -1 do
+        if i == 1 then
+          self.tail[i].column = self.column
+          self.tail[i].row = self.row
+          self.tail[i].direction = self.direction
+        else
+          self.tail[i].column = self.tail[i - 1].column
+          self.tail[i].row = self.tail[i - 1].row
+          self.tail[i].direction = self.tail[i - 1].direction
+        end
+      end
+
+      self.column = column
+      self.row = row
+
+      if self:eatsTail() then
+        self.tail = {}
+      end
+    end
+
+    if self.column < 1 then
+      self.column = COLUMNS
+    end
+    if self.column > COLUMNS then
+      self.column = 1
+    end
+
+    if self.row < 1 then
+      self.row = ROWS
+    end
+    if self.row > ROWS then
+      self.row = 1
+    end
   end
 end
 
