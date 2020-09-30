@@ -45,13 +45,13 @@ function Snake:update(dt)
     end
   end
 
-  if love.keyboard.wasPressed("up") then
+  if love.keyboard.wasPressed("up") and self.direction ~= "bottom" then
     self.direction = "top"
-  elseif love.keyboard.wasPressed("right") then
+  elseif love.keyboard.wasPressed("right") and self.direction ~= "left" then
     self.direction = "right"
-  elseif love.keyboard.wasPressed("down") then
+  elseif love.keyboard.wasPressed("down") and self.direction ~= "top" then
     self.direction = "bottom"
-  elseif love.keyboard.wasPressed("left") then
+  elseif love.keyboard.wasPressed("left") and self.direction ~= "right" then
     self.direction = "left"
   end
 
