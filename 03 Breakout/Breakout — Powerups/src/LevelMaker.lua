@@ -21,9 +21,9 @@ function LevelMaker.createMap(level)
           tier = math.random(1, maxTier)
           color = math.random(1, maxColor)
 
-          powerupFlag = math.random(1, 3) == 1
+          powerupFlag = math.random(1, 5) == 1
 
-          brick = Brick((col - 1) * 32 + (VIRTUAL_WIDTH - cols * 32) / 2, row * 16, tier, color, true)
+          brick = Brick((col - 1) * 32 + (VIRTUAL_WIDTH - cols * 32) / 2, row * 16, tier, color, powerupFlag)
           table.insert(bricks, brick)
         end
       end

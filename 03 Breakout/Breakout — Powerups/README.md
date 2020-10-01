@@ -1,4 +1,14 @@
-This project starts from _Breakout — Assignment_ to contemplate every powerup as included in the last row.
+This project starts from _Breakout — Assignment_ to contemplate every powerup as included in the last row of the `breakout.png` graphic.
+
+## Powerups
+
+The powerups are included with a certain probability in the `LevelMaker` class.
+
+```lua
+powerupFlag = math.random(1, 5) == 1
+```
+
+In terms of gameplay, they introduce more variety by modifying the game as in the following table.
 
 | Number | Effect             | Change             |
 | ------ | ------------------ | ------------------ |
@@ -13,3 +23,5 @@ This project starts from _Breakout — Assignment_ to contemplate every powerup 
 | 9      | Add ball           | Balls table        |
 
 The tenth powerup is reserved for the `LockedBrick` class, but otherwise, the `Powerup` class initializes a random powerup between the mentioned nine.
+
+It is worth mentioning that the change in the size of the paddle, or the change in the number of hearts, this change is now tied to a powerup and not to the score or losing a life, as described by the assignment.
