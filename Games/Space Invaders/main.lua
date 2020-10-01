@@ -30,7 +30,8 @@ function love.load()
     ["move"] = love.audio.newSource("res/sounds/move.wav", "static"),
     ["pause"] = love.audio.newSource("res/sounds/pause.wav", "static"),
     ["record"] = love.audio.newSource("res/sounds/record.wav", "static"),
-    ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static")
+    ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static"),
+    ["spawn"] = love.audio.newSource("res/sounds/spawn.wav", "static")
   }
 
   gStateMachine =

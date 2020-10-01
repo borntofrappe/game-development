@@ -150,8 +150,7 @@ function PlayState:update(dt)
           end
 
           if not self.bonus and math.random(10) == 1 then
-            -- temporary audio file
-            gSounds["record"]:play()
+            gSounds["spawn"]:play()
             self.bonus = AlienBonus()
           end
 

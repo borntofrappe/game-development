@@ -1,8 +1,6 @@
 Recreate the popular game _Space Invaders_.
 
-## Updates
-
-- fix: add audio file for the bonus alien
+## Wishlist
 
 - style: change the design for the aliens' bullets
 

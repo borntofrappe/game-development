@@ -19,7 +19,7 @@ function AlienBonus:update(dt)
     if self.direction == 1 and self.x > WINDOW_WIDTH then
       self.inPlay = false
     end
-    if self.direction == -1 and self.x < self.width then
+    if self.direction == -1 and self.x < -self.width then
       self.inPlay = false
     end
   end
