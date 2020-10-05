@@ -10,7 +10,7 @@ Seventh episode in the continuing saga is a physics-based game inspired by Angry
 
 The game is developed through several folders. In addition to those dedicated to the game as proposed in the video, you find additional demos to practice with the physics module and the box2d library.
 
-In the `res` folder finally, you find the resources used in the game. The graphics are modified from the original set provided in the assignment page to have the aliens and pieces of wood positioned in a more orderly fashion.
+In the `res` folder finally, you find the resources used in the game. The graphics are modified from the original set provided in the assignment page to have the aliens and pieces of wood positioned in a more orderly fashion. The background images are also modified to have a width/height matching the measure provided by `VIRTUAL_WIDTH` and `VIRTUAL_HEIGHT`.
 
 ## Resources
 
