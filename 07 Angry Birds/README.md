@@ -1,5 +1,9 @@
 Seventh episode in the continuing saga is a physics-based game inspired by Angry Birds.
 
+## TODO
+
+- consider updating the alien graphics to have the sprite `36*36`. The sprites are `35*35`, which creates a pixel error/approximation when rendering the quads in the game.
+
 ## Topics
 
 - physics and box2d
