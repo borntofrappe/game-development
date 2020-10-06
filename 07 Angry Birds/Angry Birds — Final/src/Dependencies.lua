@@ -15,12 +15,14 @@ require "src/states/PlayState"
 gTextures = {
   ["aliens"] = love.graphics.newImage("res/graphics/aliens.png"),
   ["background"] = love.graphics.newImage("res/graphics/background.png"),
+  ["ground"] = love.graphics.newImage("res/graphics/ground.png"),
   ["obstacles"] = love.graphics.newImage("res/graphics/obstacles.png")
 }
 
 gFrames = {
   ["aliens"] = GenerateQuadsAliens(gTextures["aliens"]),
-  ["background"] = GenerateQuadsBackground(gTextures["background"]),
+  ["background"] = GenerateQuads(gTextures["background"], VIRTUAL_WIDTH, VIRTUAL_HEIGHT),
+  ["ground"] = GenerateQuads(gTextures["ground"], 35, 35),
   ["obstacles"] = GenerateQuadsObstacles(gTextures["obstacles"])
 }
 

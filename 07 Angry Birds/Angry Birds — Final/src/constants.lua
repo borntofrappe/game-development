@@ -12,8 +12,9 @@ OPTIONS = {
 
 GRAVITY_X = 0
 GRAVITY_Y = 400
-ALIEN_WIDTH = 35
-ALIEN_HEIGHT = 35
+TILE_SIZE = 35
+ALIEN_WIDTH = 36
+ALIEN_HEIGHT = 36
 VELOCITY_DESTROY = 170
 VELOCITY_RESET = 5
 COUNTDOWN_TIMER = 4
@@ -33,9 +34,9 @@ EDGES = {
   },
   ["bottom"] = {
     x1 = 0,
-    y1 = VIRTUAL_HEIGHT,
+    y1 = VIRTUAL_HEIGHT - TILE_SIZE / 2,
     x2 = VIRTUAL_WIDTH,
-    y2 = VIRTUAL_HEIGHT
+    y2 = VIRTUAL_HEIGHT - TILE_SIZE / 2
   },
   ["left"] = {
     x1 = 0,
@@ -67,28 +68,28 @@ LEVELS = {
   {
     ["player"] = {
       x = VIRTUAL_WIDTH / 4,
-      y = VIRTUAL_HEIGHT * 3 / 4
+      y = VIRTUAL_HEIGHT * 3 / 4 - 17.5
     },
     ["target"] = {
       x = VIRTUAL_WIDTH * 3 / 4,
-      y = VIRTUAL_HEIGHT - ALIEN_HEIGHT / 2
+      y = VIRTUAL_HEIGHT - ALIEN_HEIGHT / 2 - 17.5
     },
     ["obstacles"] = {
       {
         x = VIRTUAL_WIDTH * 3 / 4 - 55,
-        y = VIRTUAL_HEIGHT - 55,
+        y = VIRTUAL_HEIGHT - 55 - 17.5,
         direction = "vertical",
         type = 1
       },
       {
         x = VIRTUAL_WIDTH * 3 / 4 + 55,
-        y = VIRTUAL_HEIGHT - 55,
+        y = VIRTUAL_HEIGHT - 55 - 17.5,
         direction = "vertical",
         type = 1
       },
       {
         x = VIRTUAL_WIDTH * 3 / 4,
-        y = VIRTUAL_HEIGHT - 110 - 17.5,
+        y = VIRTUAL_HEIGHT - 110 - 17.5 - 17.5,
         direction = "horizontal",
         type = 1
       }
@@ -97,34 +98,34 @@ LEVELS = {
   {
     ["player"] = {
       x = VIRTUAL_WIDTH * 3 / 4,
-      y = VIRTUAL_HEIGHT * 5 / 7
+      y = VIRTUAL_HEIGHT * 3 / 4 - 17.5
     },
     ["target"] = {
       x = VIRTUAL_WIDTH / 4 - 75,
-      y = VIRTUAL_HEIGHT - ALIEN_HEIGHT / 2
+      y = VIRTUAL_HEIGHT - ALIEN_HEIGHT / 2 - 17.5
     },
     ["obstacles"] = {
       {
         x = VIRTUAL_WIDTH / 2,
-        y = VIRTUAL_HEIGHT - 35,
+        y = VIRTUAL_HEIGHT - 35 - 17.5,
         direction = "vertical",
         type = 3
       },
       {
         x = VIRTUAL_WIDTH / 4,
-        y = VIRTUAL_HEIGHT - 55,
+        y = VIRTUAL_HEIGHT - 55 - 17.5,
         direction = "vertical",
         type = 1
       },
       {
         x = VIRTUAL_WIDTH / 2 + 10,
-        y = VIRTUAL_HEIGHT - 70 - 35,
+        y = VIRTUAL_HEIGHT - 70 - 35 - 17.5,
         direction = "horizontal",
         type = 5
       },
       {
         x = VIRTUAL_WIDTH / 2 - 10,
-        y = VIRTUAL_HEIGHT - 70 - 70 - 55,
+        y = VIRTUAL_HEIGHT - 70 - 70 - 55 - 17.5,
         direction = "vertical",
         type = 2
       }

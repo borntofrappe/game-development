@@ -70,7 +70,16 @@ end
 function love.draw()
   push:start()
 
+  love.graphics.setColor(1, 1, 1, 1)
   love.graphics.draw(gTextures["background"], gFrames["background"][backgroundVariety], 0, 0)
+  for i = 1, math.floor(VIRTUAL_WIDTH / TILE_SIZE) + 1 do
+    love.graphics.draw(
+      gTextures["ground"],
+      gFrames["ground"][backgroundVariety],
+      (i - 1) * TILE_SIZE,
+      VIRTUAL_HEIGHT - TILE_SIZE / 2
+    )
+  end
 
   gStateMachine:render()
 

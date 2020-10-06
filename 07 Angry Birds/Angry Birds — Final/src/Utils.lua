@@ -1,3 +1,21 @@
+function GenerateQuads(atlas, tileWidth, tileHeight)
+  local sheetWidth = atlas:getWidth() / tileWidth
+  local sheetHeight = atlas:getHeight() / tileHeight
+
+  local counter = 1
+  local spritesheet = {}
+
+  for y = 0, sheetHeight - 1 do
+    for x = 0, sheetWidth - 1 do
+      local sprite = love.graphics.newQuad(x * tileWidth, y * tileHeight, tileWidth, tileHeight, atlas:getDimensions())
+      spritesheet[counter] = sprite
+      counter = counter + 1
+    end
+  end
+
+  return spritesheet
+end
+
 function GenerateQuadsAliens(atlas)
   local width = ALIEN_WIDTH
   local height = ALIEN_HEIGHT
@@ -18,17 +36,6 @@ function GenerateQuadsAliens(atlas)
     x = x + width
   end
 
-  return quads
-end
-
-function GenerateQuadsBackground(atlas)
-  local width = VIRTUAL_WIDTH
-  local height = VIRTUAL_HEIGHT
-  local varieties = math.floor(atlas:getHeight() / height)
-  local quads = {}
-  for i = 1, varieties do
-    quads[i] = love.graphics.newQuad(0, height * (i - 1), width, height, atlas:getDimensions())
-  end
   return quads
 end
 

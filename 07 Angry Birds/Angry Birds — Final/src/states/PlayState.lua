@@ -19,6 +19,7 @@ function PlayState:init()
     }
   )
   self.player.fixture:setRestitution(0.8)
+  self.player.body:setAngularDamping(1)
 
   self.target =
     Alien(
@@ -128,23 +129,28 @@ function PlayState:update(dt)
 
   if not self.isUpdating and self.isDragging then
     local x, y = push:toGame(love.mouse.getPosition())
-    self.player.body:setPosition(x, y)
+    if math.abs(x - self.player.x) < VIRTUAL_WIDTH / 4 - ALIEN_WIDTH / 2 then
+      self.player.body:setX(x)
+    end
+    if y + ALIEN_WIDTH / 2 < VIRTUAL_HEIGHT - TILE_SIZE / 2 then
+      self.player.body:setY(y)
+    end
   end
 
   if love.mouse.wasReleased(1) then
     if not self.isUpdating and self.isDragging then
       local x, y = push:toGame(love.mouse.getPosition())
 
-      if math.abs(x - self.player.x) < ALIEN_WIDTH and math.abs(y - self.player.y) < ALIEN_WIDTH then
+      if (math.abs(x - self.player.x) < ALIEN_WIDTH and math.abs(y - self.player.y) < ALIEN_WIDTH) then
         self.player.body:setPosition(self.player.x, self.player.y)
       else
         local dx = self.player.x - x
         local dy = self.player.y - y
         self.player.body:setLinearVelocity(dx * 5, dy * 5)
 
-        self.isDragging = false
         self.isUpdating = true
       end
+      self.isDragging = false
     end
   end
 
@@ -195,18 +201,21 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  love.graphics.setColor(1, 1, 1, 0.5)
-  love.graphics.circle("fill", self.player.x, self.player.y, ALIEN_WIDTH)
+  if not self.isUpdating then
+    love.graphics.setColor(0, 0, 0, 0.25)
+    love.graphics.circle("fill", self.player.x, self.player.y, ALIEN_WIDTH)
+  end
 
   love.graphics.setColor(1, 1, 1, 1)
+
+  for k, obstacle in pairs(self.obstacles) do
+    obstacle:render()
+  end
+
   self.player:render()
 
   if self.target then
     self.target:render()
-  end
-
-  for k, obstacle in pairs(self.obstacles) do
-    obstacle:render()
   end
 
   if self.hasWon then
