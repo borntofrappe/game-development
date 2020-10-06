@@ -1,9 +1,5 @@
 Seventh episode in the continuing saga is a physics-based game inspired by Angry Birds.
 
-## TODO
-
-- consider updating the alien graphics to have the sprite `36*36`. The sprites are `35*35`, which creates a pixel error/approximation when rendering the quads in the game.
-
 ## Topics
 
 - physics and box2d
@@ -12,9 +8,13 @@ Seventh episode in the continuing saga is a physics-based game inspired by Angry
 
 ## Project structure
 
-The game is developed through several folders. In addition to those dedicated to the game as proposed in the video, you find additional demos to practice with the physics module and the box2d library.
+The game is developed through several folders. In addition to those dedicated to the game as proposed in the video, you find additional demos to practice with the physics module and the box2d library (`Physics`, `Physics Collision` and `Ball Pit`).
 
-In the `res` folder finally, you find the resources used in the game. The graphics are modified from the original set provided in the assignment page to have the aliens and pieces of wood positioned in a more orderly fashion. The background images are also modified to have a width/height matching the measure provided by `VIRTUAL_WIDTH` and `VIRTUAL_HEIGHT`.
+After the incremental folders (labeled `Angry Birds n`), you finally find two versions describing the complete game:
+
+- `Angry Birds — Final` details the game as presented in the course
+
+- `Angry Birds — Assignment` adds the features requested by the assignment
 
 ## Resources
 
