@@ -7,6 +7,9 @@ function PlayState:init()
   self.hasWon = false
   self.timer = 0
 
+  self.hasCollided = false
+  self.copies = {}
+
   self.level = LEVELS[math.random(#LEVELS)]
 
   self.player =
@@ -61,6 +64,8 @@ function PlayState:init()
     userData[f2:getUserData()] = true
 
     if (userData["Player"] and userData["Obstacle"]) or (userData["Player"] and userData["Target"]) then
+      self.hasCollided = true
+
       if f1:getUserData() == "Player" then
         local vX, vY = f1:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
@@ -156,6 +161,29 @@ function PlayState:update(dt)
 
   if self.isUpdating then
     self.world:update(dt)
+
+    if not self.hasCollided and #self.copies == 0 and love.keyboard.wasPressed("space") then
+      local x, y = self.player.body:getPosition()
+      local vX, vY = self.player.body:getLinearVelocity()
+      local color = self.player.color
+      for i = 1, 2 do
+        local copy =
+          Alien(
+          {
+            world = self.world,
+            x = vX > 0 and x - ALIEN_WIDTH / 2 or x + ALIEN_WIDTH / 2,
+            y = i == 1 and y - ALIEN_HEIGHT / 2 or y + ALIEN_HEIGHT / 2,
+            type = "circle",
+            color = color
+          }
+        )
+        copy.fixture:setRestitution(0.8)
+        copy.body:setAngularDamping(1)
+        copy.body:setLinearVelocity(vX, vY)
+        table.insert(self.copies, copy)
+      end
+    end
+
     if #self.destroyedObjects > 0 then
       for k, body in pairs(self.destroyedObjects) do
         if not body:isDestroyed() then
@@ -186,8 +214,25 @@ function PlayState:update(dt)
     local vX, vY = self.player.body:getLinearVelocity()
     local vSum = math.abs(vX) + math.abs(vY)
     if vSum < VELOCITY_RESET then
-      self.player.body:setPosition(self.player.x, self.player.y)
-      self.isUpdating = false
+      local isCopyMoving = false
+      for k, copy in pairs(self.copies) do
+        local vX, vY = copy.body:getLinearVelocity()
+        local vSum = math.abs(vX) + math.abs(vY)
+        if vSum > VELOCITY_RESET then
+          isCopyMoving = true
+          break
+        end
+      end
+
+      if not isCopyMoving then
+        self.player.body:setPosition(self.player.x, self.player.y)
+        self.isUpdating = false
+        self.hasCollided = false
+        for k, copy in pairs(self.copies) do
+          copy.body:destroy()
+        end
+        self.copies = {}
+      end
     end
   end
 
@@ -213,6 +258,9 @@ function PlayState:render()
   end
 
   self.player:render()
+  for k, copy in pairs(self.copies) do
+    copy:render()
+  end
 
   if self.target then
     self.target:render()
