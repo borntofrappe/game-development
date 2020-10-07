@@ -12,7 +12,7 @@ require "src/states/PlayState"
 gTextures = {
   ["aliens"] = love.graphics.newImage("res/graphics/aliens.png"),
   ["background"] = love.graphics.newImage("res/graphics/background.png"),
-  ["wood"] = love.graphics.newImage("res/graphics/wood.png")
+  ["obstacles"] = love.graphics.newImage("res/graphics/obstacles.png")
 }
 
 gFrames = {

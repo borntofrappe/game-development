@@ -10,8 +10,8 @@ OPTIONS = {
   resizable = true
 }
 
-ALIEN_WIDTH = 35
-ALIEN_HEIGHT = 35
+ALIEN_WIDTH = 36
+ALIEN_HEIGHT = 36
 
 EDGES = {
   ["top"] = {
