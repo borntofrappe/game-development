@@ -4,10 +4,6 @@ The eight title in the course introduces the genre of RPGs by looking at the Pok
 
 - [feature] add audio
 
-- [refactor] tiles to level class
-
-- [style] consider modifying the sprites by removing the shadows
-
 ## Topics
 
 - state stacks, an alternative to state machines
