@@ -2,9 +2,9 @@ The eight title in the course introduces the genre of RPGs by looking at the Pok
 
 ## To dos
 
-- [style] consider modifying the sprites by removing the shadows
+- [feature] add audio
 
-- [code] refactor dialogue state to receive text in its init function
+- [style] consider modifying the sprites by removing the shadows
 
 ## Topics
 
