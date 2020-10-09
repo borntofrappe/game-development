@@ -1,13 +1,14 @@
 PlayState = Class({__includes = BaseState})
 
 function PlayState:init(pokemon)
-  self.tiles = PlayState:initTiles()
+  self.level = Level()
 
   self.player =
     Player(
     {
       column = 3,
       row = 6,
+      level = self.level,
       pokemon = pokemon,
       stateMachine = StateMachine(
         {
@@ -62,24 +63,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  for k, tile in pairs(self.tiles) do
-    tile:render()
-  end
+  self.level:render()
 
   self.player:render()
-end
-
-function PlayState:initTiles()
-  local tiles = {}
-
-  for column = 1, COLUMNS do
-    for row = 1, ROWS do
-      table.insert(tiles, Tile(column, row, TILE_IDS["background"]))
-      if row > ROWS - ROWS_GRASS then
-        table.insert(tiles, Tile(column, row, TILE_IDS["tall-grass"]))
-      end
-    end
-  end
-
-  return tiles
 end

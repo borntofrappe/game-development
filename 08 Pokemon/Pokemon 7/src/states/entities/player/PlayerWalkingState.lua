@@ -29,7 +29,9 @@ function PlayerWalkingState:update(dt)
       }
     ):finish(
       function()
-        local foundEncounter = self.player.row > ROWS - ROWS_GRASS and math.random(10) == 1
+        local foundEncounter =
+          self.player.level.tallGrassTiles[self.player.column][self.player.row].id == TILE_IDS["tall-grass"] and
+          math.random(10) == 1
         if foundEncounter then
           gStateStack:push(
             FadeState(

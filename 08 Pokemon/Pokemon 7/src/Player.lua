@@ -12,6 +12,7 @@ function Player:init(def)
 
   self.stateMachine = def.stateMachine
   self.pokemon = def.pokemon
+  self.level = def.level
 end
 
 function Player:update(dt)

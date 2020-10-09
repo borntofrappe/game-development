@@ -6,6 +6,7 @@ require "res/lib/Animation"
 require "src/constants"
 require "src/Utils"
 
+require "src/Level"
 require "src/Tile"
 
 require "src/Player"

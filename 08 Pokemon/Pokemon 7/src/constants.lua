@@ -17,7 +17,8 @@ POKEDEX = {"aardart", "agnite", "anoleaf", "bamboon", "cardiwing"}
 TILE_SIZE = 16
 TILE_IDS = {
   ["background"] = 46,
-  ["tall-grass"] = 42
+  ["tall-grass"] = 42,
+  ["empty"] = 101
 }
 
 COLUMNS = math.floor(VIRTUAL_WIDTH / TILE_SIZE)
