@@ -7,9 +7,10 @@ function Player:init(def)
   self.x = (self.column - 1) * TILE_SIZE
   self.y = (self.row - 1) * TILE_SIZE
 
-  self.stateMachine = def.stateMachine
   self.sprite = def.sprite or 1
   self.direction = def.direction or "down"
+
+  self.stateMachine = def.stateMachine
 end
 
 function Player:update(dt)
@@ -25,6 +26,6 @@ function Player:render()
     gTextures["entities"],
     gFrames["entities"][self.sprite][self.direction][self.currentAnimation:getCurrentFrame()],
     self.x,
-    self.y
+    self.y - TILE_SIZE / 4
   )
 end

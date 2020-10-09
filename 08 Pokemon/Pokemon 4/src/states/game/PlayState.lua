@@ -25,6 +25,7 @@ end
 
 function PlayState:update(dt)
   Timer.update(dt)
+
   if love.keyboard.wasPressed("escape") then
     gStateStack:push(
       FadeState(

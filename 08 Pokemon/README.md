@@ -1,5 +1,11 @@
 The eight title in the course introduces the genre of RPGs by looking at the Pokemon series.
 
+## To dos
+
+- [style] consider modifying the sprites by removing the shadows
+
+- [code] refactor dialogue state to receive text in its init function
+
 ## Topics
 
 - state stacks, an alternative to state machines
@@ -11,6 +17,10 @@ The eight title in the course introduces the genre of RPGs by looking at the Pok
 - graphical user interfaces, or GUIs, presenting information in panels, text boxes
 
 - RPG mechanics, like damage, experience points
+
+## Project structure
+
+The game is developed in increments, but the folder describes other demos to introduce relevant concepts. Consider for instance `StateStack`.
 
 ## Resources
 
