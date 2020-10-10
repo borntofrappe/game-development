@@ -1,4 +1,4 @@
-Player = Class()
+Player = Class {}
 
 function Player:init(def)
   self.column = def.column

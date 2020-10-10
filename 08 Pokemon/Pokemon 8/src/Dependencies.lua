@@ -11,6 +11,8 @@ require "src/Tile"
 
 require "src/gui/TextBox"
 require "src/gui/Panel"
+require "src/gui/ProgressBar"
+require "src/gui/Selection"
 
 require "src/Player"
 require "src/Pokemon"
@@ -51,7 +53,8 @@ gTextures = {
     }
   },
   ["sheet"] = love.graphics.newImage("res/graphics/sheet.png"),
-  ["entities"] = love.graphics.newImage("res/graphics/entities.png")
+  ["entities"] = love.graphics.newImage("res/graphics/entities.png"),
+  ["cursor"] = love.graphics.newImage("res/graphics/cursor.png")
 }
 
 gFrames = {
@@ -62,5 +65,6 @@ gFrames = {
 gFonts = {
   ["big"] = love.graphics.newFont("res/fonts/font.ttf", 48),
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24),
-  ["small"] = love.graphics.newFont("res/fonts/font.ttf", 16)
+  ["small"] = love.graphics.newFont("res/fonts/font.ttf", 16),
+  ["x-small"] = love.graphics.newFont("res/fonts/font.ttf", 8)
 }

@@ -10,10 +10,6 @@ OPTIONS = {
   vsync = true
 }
 
-POKEMON_WIDTH = 64
-POKEMON_HEIGHT = 64
-POKEDEX = {"aardart", "agnite", "anoleaf", "bamboon", "cardiwing"}
-
 TILE_SIZE = 16
 TILE_IDS = {
   ["background"] = 46,
@@ -24,3 +20,10 @@ TILE_IDS = {
 COLUMNS = math.floor(VIRTUAL_WIDTH / TILE_SIZE)
 ROWS = math.floor(VIRTUAL_HEIGHT / TILE_SIZE)
 ROWS_GRASS = 5
+
+POKEMON_WIDTH = 64
+POKEMON_HEIGHT = 64
+POKEDEX = {"aardart", "agnite", "anoleaf", "bamboon", "cardiwing"}
+
+CURSOR_WIDTH = 14
+CURSOR_HEIGHT = 12

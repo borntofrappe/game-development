@@ -1,6 +1,7 @@
-Panel = Class()
+Panel = Class {}
 
 function Panel:init(def)
+  local def = def or {}
   self.x = def.x or 4
   self.y = def.y or 4
   self.width = def.width or VIRTUAL_WIDTH - 8
@@ -16,6 +17,7 @@ function Panel:init(def)
       ["g"] = 1,
       ["b"] = 1
     }
+
   self.fillColor =
     def.fillColor or
     {

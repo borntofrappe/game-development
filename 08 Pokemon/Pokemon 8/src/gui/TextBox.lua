@@ -1,6 +1,8 @@
-TextBox = Class()
+TextBox = Class {}
 
 function TextBox:init(def)
+  local def = def or {}
+
   self.text = def.text or "MISSING TEXT"
 
   self.x = def.x or 4

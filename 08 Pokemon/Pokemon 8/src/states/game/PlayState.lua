@@ -7,7 +7,7 @@ function PlayState:init(pokemon)
     Player(
     {
       column = 3,
-      row = 6,
+      row = 10,
       level = self.level,
       pokemon = pokemon,
       stateMachine = StateMachine(

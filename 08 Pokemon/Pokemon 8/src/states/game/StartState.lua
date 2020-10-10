@@ -83,7 +83,7 @@ function StartState:update(dt)
 end
 
 function StartState:render()
-  love.graphics.clear(0.97, 0.97, 1)
+  love.graphics.clear(0.95, 0.95, 97)
 
   love.graphics.setFont(gFonts["big"])
   love.graphics.setColor(0, 0, 0)
