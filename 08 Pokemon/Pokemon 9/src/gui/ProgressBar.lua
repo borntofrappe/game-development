@@ -26,8 +26,9 @@ function ProgressBar:init(def)
       ["b"] = 0.18
     }
 
-  local fillPercentage = def.fillPercentage or 100
-  self.fillWidth = self.width / 100 * fillPercentage
+  self.max = def.max or 100
+  self.value = def.value or 100
+  self.fillWidth = self.width / self.max * self.value
 end
 
 function ProgressBar:render()
@@ -36,4 +37,12 @@ function ProgressBar:render()
   love.graphics.setLineWidth(self.lineWidth)
   love.graphics.setColor(self.lineColor.r, self.lineColor.g, self.lineColor.b)
   love.graphics.rectangle("line", self.x, self.y, self.width, self.height, self.rx)
+end
+
+function ProgressBar:setValue(value)
+  self.value = value
+end
+
+function ProgressBar:setMax(max)
+  self.max = max
 end

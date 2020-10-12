@@ -1,23 +1,24 @@
 DialogueState = Class({__includes = BaseState})
 
-function DialogueState:init(text)
+function DialogueState:init(...)
   self.textBox =
     TextBox(
     {
-      text = text,
+      text = {...},
       x = 4,
       y = 4,
       padding = 4,
       width = VIRTUAL_WIDTH - 8,
-      height = self.height
+      height = self.height,
+      callback = function()
+        gStateStack:pop()
+      end
     }
   )
 end
 
 function DialogueState:update(dt)
-  if love.keyboard.wasPressed("escape") or love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
-    gStateStack:pop()
-  end
+  self.textBox:update(dt)
 end
 
 function DialogueState:render()

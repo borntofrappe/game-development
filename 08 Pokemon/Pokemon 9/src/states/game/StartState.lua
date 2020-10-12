@@ -60,9 +60,15 @@ function StartState:update(dt)
             gStateStack:push(PlayState(pokemon))
             gStateStack:push(
               DialogueState(
-                "Welcome to a wonderful world populated by\n" ..
-                  #POKEDEX .. " feisty creatures.\nCan you find them all?",
-                "Good luck!"
+                {
+                  ["text"] = {
+                    "Welcome to a wonderful world populated by\n" ..
+                      #POKEDEX .. " feisty creatures.\nCan you find them all?"
+                  },
+                  ["callback"] = function()
+                    gStateStack:pop()
+                  end
+                }
               )
             )
             gStateStack:push(

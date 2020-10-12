@@ -1,6 +1,9 @@
 BattleMenuState = Class({__includes = BaseState})
 
 function BattleMenuState:init(def)
+  self.callback = def.callback or function()
+      gStateStack:pop()
+    end
   self.selection =
     Selection(
     {
@@ -31,8 +34,7 @@ function BattleMenuState:init(def)
                           opacity = 1,
                           callback = function()
                             gStateStack:pop()
-                            gStateStack:pop()
-                            gStateStack:pop()
+                            self.callback()
                             gStateStack:push(
                               FadeState(
                                 {

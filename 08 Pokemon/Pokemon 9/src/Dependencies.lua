@@ -24,6 +24,7 @@ require "src/states/game/StartState"
 require "src/states/game/PlayState"
 require "src/states/game/DialogueState"
 require "src/states/game/BattleState"
+require "src/states/game/BattleMenuState"
 
 require "src/StateMachine"
 require "src/states/entities/player/PlayerIdleState"

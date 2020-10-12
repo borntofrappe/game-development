@@ -3,7 +3,12 @@ TextBox = Class {}
 function TextBox:init(def)
   local def = def or {}
 
-  self.text = def.text or "MISSING TEXT"
+  self.text = def.text or {"MISSING TEXT"}
+  self.chunk = def.chunk or 1
+
+  self.callback = def.callback or function()
+      self:hide()
+    end
 
   self.x = def.x or 4
   self.y = def.y or 4
@@ -13,11 +18,17 @@ function TextBox:init(def)
   self.height = def.height
 
   if not self.height then
-    local lines = 1
-    for n in string.gmatch(self.text, "\n") do
-      lines = lines + 1
+    local maxLines = 1
+    for i, t in ipairs(self.text) do
+      local lines = 1
+      for n in string.gmatch(t, "\n") do
+        lines = lines + 1
+      end
+      if lines > maxLines then
+        maxLines = lines
+      end
     end
-    self.height = 16 * lines + 8
+    self.height = 16 * maxLines + 8
   end
 
   self.font = def.font or gFonts["small"]
@@ -38,12 +49,39 @@ function TextBox:init(def)
       height = self.height
     }
   )
+
+  self.showTextBox = true
+end
+
+function TextBox:next()
+  if self.chunk == #self.text then
+    self.callback()
+  else
+    self.chunk = self.chunk + 1
+  end
+end
+
+function TextBox:update(dt)
+  if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
+    self:next()
+  end
 end
 
 function TextBox:render()
-  self.panel:render()
+  if self.showTextBox then
+    self.panel:render()
 
-  love.graphics.setFont(self.font)
-  love.graphics.setColor(self.color.r, self.color.g, self.color.b)
-  love.graphics.print(self.text, self.x + self.padding, self.y + self.padding)
+    love.graphics.setFont(self.font)
+    love.graphics.setColor(self.color.r, self.color.g, self.color.b)
+    love.graphics.print(self.text[self.chunk], self.x + self.padding, self.y + self.padding)
+  end
+end
+
+function TextBox:show()
+  self.chunk = 1
+  self.showTextBox = true
+end
+
+function TextBox:hide()
+  self.showTextBox = false
 end

@@ -61,7 +61,8 @@ function StartState:update(dt)
             gStateStack:push(
               DialogueState(
                 "Welcome to a wonderful world populated by\n" ..
-                  #POKEDEX .. " feisty creatures.\nCan you find them all?"
+                  #POKEDEX .. " feisty creatures.\nCan you find them all?",
+                "Good luck!"
               )
             )
             gStateStack:push(

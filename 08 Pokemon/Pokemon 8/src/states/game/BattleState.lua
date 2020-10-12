@@ -42,11 +42,24 @@ function BattleState:init(player)
     }
   )
 
+  self.panel =
+    Panel(
+    {
+      ["x"] = 4,
+      ["y"] = VIRTUAL_HEIGHT - 56 - 4,
+      ["width"] = VIRTUAL_WIDTH - 8,
+      ["height"] = 56
+    }
+  )
+
   self.textBox =
     TextBox(
     {
-      ["text"] = "A wild " ..
-        string.sub(self.wildPokemon.name, 1, 1):upper() .. string.sub(self.wildPokemon.name, 2, -1) .. " appeared!",
+      ["text"] = {
+        "A wild " ..
+          string.sub(self.wildPokemon.name, 1, 1):upper() .. string.sub(self.wildPokemon.name, 2, -1) .. " appeared!",
+        string.sub(self.playerPokemon.name, 1, 1):upper() .. string.sub(self.playerPokemon.name, 2, -1) .. " attacks!"
+      },
       ["x"] = 4,
       ["y"] = VIRTUAL_HEIGHT - 56 - 4,
       ["padding"] = 4,
@@ -75,7 +88,9 @@ end
 function BattleState:update(dt)
   Timer.update(dt)
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
-    if self.option == 2 then
+    if self.option == 1 then
+      self.textBox:next()
+    elseif self.option == 2 then
       gStateStack:push(
         FadeState(
           {
@@ -141,6 +156,7 @@ function BattleState:render()
   )
   love.graphics.print("LV 5", self.playerPokemonHealth.x + 2, self.playerPokemonHealth.y - 2 - 8)
 
+  self.panel:render()
   self.textBox:render()
   self.selection:render()
 end

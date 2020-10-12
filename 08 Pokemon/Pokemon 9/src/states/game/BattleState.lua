@@ -3,6 +3,8 @@ BattleState = Class({__includes = BaseState})
 function BattleState:init(player)
   self.player = player
 
+  self.battleStart = false
+
   self.playerPokemon = self.player.pokemon
   self.playerPokemon.x = -POKEMON_WIDTH * 2
   self.playerPokemon.y = VIRTUAL_HEIGHT - 56 - 4 - POKEMON_HEIGHT
@@ -38,66 +40,18 @@ function BattleState:init(player)
         ["g"] = 0.18,
         ["b"] = 0.82
       },
-      ["fillPercentage"] = 25
+      ["max"] = 20,
+      ["value"] = 5
     }
   )
 
-  self.textBox =
-    TextBox(
+  self.panel =
+    Panel(
     {
-      ["text"] = {
-        "A wild " ..
-          string.sub(self.wildPokemon.name, 1, 1):upper() .. string.sub(self.wildPokemon.name, 2, -1) .. " appeared!",
-        string.sub(self.playerPokemon.name, 1, 1):upper() .. string.sub(self.playerPokemon.name, 2, -1) .. " attacks!"
-      },
       ["x"] = 4,
       ["y"] = VIRTUAL_HEIGHT - 56 - 4,
-      ["padding"] = 4,
       ["width"] = VIRTUAL_WIDTH - 8,
       ["height"] = 56
-    }
-  )
-
-  self.selection =
-    Selection(
-    {
-      ["options"] = {
-        {
-          ["text"] = "Fight",
-          ["callback"] = function()
-            self.textBox:next()
-          end
-        },
-        {
-          ["text"] = "Run",
-          ["callback"] = function()
-            gStateStack:push(
-              FadeState(
-                {
-                  color = {["r"] = 1, ["g"] = 1, ["b"] = 1},
-                  duration = 0.5,
-                  opacity = 1,
-                  callback = function()
-                    gStateStack:pop()
-                    gStateStack:push(
-                      FadeState(
-                        {
-                          color = {["r"] = 1, ["g"] = 1, ["b"] = 1},
-                          duration = 0.5,
-                          opacity = 0,
-                          callback = function()
-                          end
-                        }
-                      )
-                    )
-                  end
-                }
-              )
-            )
-          end
-        }
-      },
-      ["option"] = 1
     }
   )
 
@@ -107,12 +61,47 @@ function BattleState:init(player)
       [self.playerPokemon] = {x = 8 + POKEMON_WIDTH / 2},
       [self.wildPokemon] = {x = VIRTUAL_WIDTH - POKEMON_WIDTH * 3 / 2 - 8}
     }
+  ):finish(
+    function()
+      self.battleStart = true
+
+      gStateStack:push(
+        DialogueState(
+          {
+            ["text"] = {
+              "A wild " ..
+                string.sub(self.wildPokemon.name, 1, 1):upper() ..
+                  string.sub(self.wildPokemon.name, 2, -1) .. " appeared!",
+              "Go, " ..
+                string.sub(self.playerPokemon.name, 1, 1):upper() .. string.sub(self.playerPokemon.name, 2, -1) .. "!"
+            },
+            ["x"] = 4,
+            ["y"] = VIRTUAL_HEIGHT - 56 - 4,
+            ["padding"] = 4,
+            ["width"] = VIRTUAL_WIDTH - 8,
+            ["height"] = 56,
+            ["callback"] = function()
+              gStateStack:pop()
+              gStateStack:push(
+                BattleMenuState(
+                  {
+                    ["callback"] = function()
+                      gStateStack:pop()
+                      gStateStack:pop()
+                    end
+                  }
+                )
+              )
+            end
+          }
+        )
+      )
+    end
   )
 end
 
 function BattleState:update(dt)
   Timer.update(dt)
-  self.selection:update(dt)
 end
 
 function BattleState:render()
@@ -137,19 +126,19 @@ function BattleState:render()
   self.wildPokemon:render()
   self.playerPokemon:render()
 
-  self.wildPokemonHealth:render()
-  self.playerPokemonHealth:render()
-  self.playerPokemonExperience:render()
+  self.panel:render()
 
-  love.graphics.setColor(0.1, 0.1, 0.1)
-  love.graphics.setFont(gFonts["x-small"])
-  love.graphics.print(
-    "LV 5",
-    self.wildPokemonHealth.x + 2,
-    self.wildPokemonHealth.y + self.wildPokemonHealth.height + 2
-  )
-  love.graphics.print("LV 5", self.playerPokemonHealth.x + 2, self.playerPokemonHealth.y - 2 - 8)
-
-  self.textBox:render()
-  self.selection:render()
+  if self.battleStart then
+    self.wildPokemonHealth:render()
+    self.playerPokemonHealth:render()
+    self.playerPokemonExperience:render()
+    love.graphics.setColor(0.1, 0.1, 0.1)
+    love.graphics.setFont(gFonts["x-small"])
+    love.graphics.print(
+      "LV 5",
+      self.wildPokemonHealth.x + 2,
+      self.wildPokemonHealth.y + self.wildPokemonHealth.height + 2
+    )
+    love.graphics.print("LV 5", self.playerPokemonHealth.x + 2, self.playerPokemonHealth.y - 2 - 8)
+  end
 end

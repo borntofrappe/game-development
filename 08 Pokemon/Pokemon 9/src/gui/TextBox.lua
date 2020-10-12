@@ -7,6 +7,7 @@ function TextBox:init(def)
   self.chunk = def.chunk or 1
 
   self.callback = def.callback or function()
+      self:hide()
     end
 
   self.x = def.x or 4
@@ -48,6 +49,8 @@ function TextBox:init(def)
       height = self.height
     }
   )
+
+  self.showTextBox = true
 end
 
 function TextBox:next()
@@ -58,10 +61,27 @@ function TextBox:next()
   end
 end
 
-function TextBox:render()
-  self.panel:render()
+function TextBox:update(dt)
+  if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
+    self:next()
+  end
+end
 
-  love.graphics.setFont(self.font)
-  love.graphics.setColor(self.color.r, self.color.g, self.color.b)
-  love.graphics.print(self.text[self.chunk], self.x + self.padding, self.y + self.padding)
+function TextBox:render()
+  if self.showTextBox then
+    self.panel:render()
+
+    love.graphics.setFont(self.font)
+    love.graphics.setColor(self.color.r, self.color.g, self.color.b)
+    love.graphics.print(self.text[self.chunk], self.x + self.padding, self.y + self.padding)
+  end
+end
+
+function TextBox:show()
+  self.chunk = 1
+  self.showTextBox = true
+end
+
+function TextBox:hide()
+  self.showTextBox = false
 end

@@ -2,8 +2,6 @@ The eight title in the course introduces the genre of RPGs by looking at the Pok
 
 ## To dos
 
-- [refactor] reconsider GUIs and states
-
 - [feature] add audio
 
 ## Topics
