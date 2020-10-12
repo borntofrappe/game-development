@@ -11,7 +11,17 @@ function BattleMenuState:init(def)
         {
           ["text"] = "Fight",
           ["callback"] = function()
-            -- battle
+            gStateStack:push(
+              DialogueState(
+                {
+                  ["chunks"] = {"Here your pokemon should attack."},
+                  ["x"] = 4,
+                  ["y"] = VIRTUAL_HEIGHT - 56 - 4,
+                  ["width"] = VIRTUAL_WIDTH - 8,
+                  ["height"] = 56
+                }
+              )
+            )
           end
         },
         {
@@ -20,7 +30,7 @@ function BattleMenuState:init(def)
             gStateStack:push(
               DialogueState(
                 {
-                  ["text"] = {"You run away safely."},
+                  ["chunks"] = {"You run away safely."},
                   ["x"] = 4,
                   ["y"] = VIRTUAL_HEIGHT - 56 - 4,
                   ["width"] = VIRTUAL_WIDTH - 8,

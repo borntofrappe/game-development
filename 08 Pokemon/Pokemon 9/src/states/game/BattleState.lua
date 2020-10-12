@@ -40,8 +40,7 @@ function BattleState:init(player)
         ["g"] = 0.18,
         ["b"] = 0.82
       },
-      ["max"] = 20,
-      ["value"] = 5
+      ["value"] = 0
     }
   )
 
@@ -68,7 +67,7 @@ function BattleState:init(player)
       gStateStack:push(
         DialogueState(
           {
-            ["text"] = {
+            ["chunks"] = {
               "A wild " ..
                 string.sub(self.wildPokemon.name, 1, 1):upper() ..
                   string.sub(self.wildPokemon.name, 2, -1) .. " appeared!",

@@ -7,7 +7,7 @@ function Selection:init(def)
   self.width = def.width or 72 + 2
   self.height = def.height or 56
 
-  local options = def.options or {"Fight", "Run"}
+  local options = def.options or {"if", "else"}
   self.option = def.option or 1
   self.options = {}
   for i, option in ipairs(options) do

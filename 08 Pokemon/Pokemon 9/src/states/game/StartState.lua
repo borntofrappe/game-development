@@ -61,7 +61,7 @@ function StartState:update(dt)
             gStateStack:push(
               DialogueState(
                 {
-                  ["text"] = {
+                  ["chunks"] = {
                     "Welcome to a wonderful world populated by\n" ..
                       #POKEDEX .. " feisty creatures.\nCan you find them all?"
                   },

@@ -3,7 +3,7 @@ DialogueState = Class({__includes = BaseState})
 function DialogueState:init(def)
   local def = def or {}
 
-  self.text = def.text or {"MISSING TEXT"}
+  self.chunks = def.chunks or {"MISSING CHUNK"}
   self.chunk = def.chunk or 1
 
   self.callback = def.callback or function()
@@ -19,7 +19,7 @@ function DialogueState:init(def)
 
   if not self.height then
     local maxLines = 1
-    for i, t in ipairs(self.text) do
+    for i, t in ipairs(self.chunks) do
       local lines = 1
       for n in string.gmatch(t, "\n") do
         lines = lines + 1
@@ -34,7 +34,7 @@ function DialogueState:init(def)
   self.textBox =
     TextBox(
     {
-      ["text"] = self.text,
+      ["chunks"] = self.chunks,
       ["x"] = self.x,
       ["y"] = self.y,
       ["padding"] = self.padding,

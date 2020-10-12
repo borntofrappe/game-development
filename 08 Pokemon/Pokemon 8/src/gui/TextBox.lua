@@ -3,7 +3,7 @@ TextBox = Class {}
 function TextBox:init(def)
   local def = def or {}
 
-  self.text = def.text or {"MISSING TEXT"}
+  self.chunks = def.chunks or {"MISSING CHUNK"}
   self.chunk = def.chunk or 1
 
   self.callback = def.callback or function()
@@ -19,7 +19,7 @@ function TextBox:init(def)
 
   if not self.height then
     local maxLines = 1
-    for i, t in ipairs(self.text) do
+    for i, t in ipairs(self.chunks) do
       local lines = 1
       for n in string.gmatch(t, "\n") do
         lines = lines + 1
@@ -54,7 +54,7 @@ function TextBox:init(def)
 end
 
 function TextBox:next()
-  if self.chunk == #self.text then
+  if self.chunk == #self.chunks then
     self.callback()
   else
     self.chunk = self.chunk + 1
@@ -73,7 +73,7 @@ function TextBox:render()
 
     love.graphics.setFont(self.font)
     love.graphics.setColor(self.color.r, self.color.g, self.color.b)
-    love.graphics.print(self.text[self.chunk], self.x + self.padding, self.y + self.padding)
+    love.graphics.print(self.chunks[self.chunk], self.x + self.padding, self.y + self.padding)
   end
 end
 

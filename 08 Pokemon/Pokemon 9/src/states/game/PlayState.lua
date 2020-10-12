@@ -59,7 +59,7 @@ function PlayState:update(dt)
     gStateStack:push(
       DialogueState(
         {
-          ["text"] = {"Your pokemon has been healed.\nKeep on fighting!"}
+          ["chunks"] = {"Your pokemon has been healed.\nKeep on fighting!"}
         }
       )
     )

@@ -4,13 +4,13 @@ function DialogueState:init(...)
   self.textBox =
     TextBox(
     {
-      text = {...},
-      x = 4,
-      y = 4,
-      padding = 4,
-      width = VIRTUAL_WIDTH - 8,
-      height = self.height,
-      callback = function()
+      ["chunks"] = {...},
+      ["x"] = 4,
+      ["y"] = 4,
+      ["padding"] = 4,
+      ["width"] = VIRTUAL_WIDTH - 8,
+      ["height"] = self.height,
+      ["callback"] = function()
         gStateStack:pop()
       end
     }

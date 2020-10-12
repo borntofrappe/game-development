@@ -55,7 +55,7 @@ function BattleState:init(player)
   self.textBox =
     TextBox(
     {
-      ["text"] = {
+      ["chunks"] = {
         "A wild " ..
           string.sub(self.wildPokemon.name, 1, 1):upper() .. string.sub(self.wildPokemon.name, 2, -1) .. " appeared!",
         string.sub(self.playerPokemon.name, 1, 1):upper() .. string.sub(self.playerPokemon.name, 2, -1) .. " attacks!"
@@ -72,6 +72,7 @@ function BattleState:init(player)
   self.selection =
     Selection(
     {
+      ["options"] = {"Fight", "Run"},
       ["option"] = self.option
     }
   )
