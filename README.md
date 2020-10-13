@@ -36,7 +36,7 @@ Here's a short table describing each title with a word or two.
 Provided you have installed love2D, launch the games from the command line with the following instruction:
 
 ```bash
-"C:\Program Files\LOVE\love.exe" "C:\Games\Space Invaders"
+"C:\Program Files\LOVE\love.exe" "C:\Users\Gabriele\Desktop\Publish\game-development\08 Pokemon\Pokemon 10"
 ```
 
 The first string describes the location of the executable behind love2D, and the second string details the folder with the customary "main.lua" file.

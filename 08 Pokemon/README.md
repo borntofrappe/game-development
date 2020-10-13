@@ -4,6 +4,8 @@ The eight title in the course introduces the genre of RPGs by looking at the Pok
 
 - [feature] add audio
 
+- [visual bug] move the selection 2px to the right, to have the menu overlap with the underlying panel
+
 ## Topics
 
 - state stacks, an alternative to state machines
