@@ -2,9 +2,22 @@ The eight title in the course introduces the genre of RPGs by looking at the Pok
 
 ## To dos
 
-- [feature] add audio
+- feature | add audio
 
-- [visual bug] move the selection 2px to the right, to have the menu overlap with the underlying panel
+- visual bug | have the selection overlap with the underlying panel
+
+  ```diff
+  -self.width = def.width or 72 + 2
+  +self.width = def.width or 72 + 4
+  ```
+
+  _Note_: this was fixed with `Pokemon 10`
+
+- secret | add the possibility to change the sprite of the player, picking at random from the available entities
+
+  ```lua
+  self.player.sprite = math.random(#gFrames["entities"])
+  ```
 
 ## Topics
 
