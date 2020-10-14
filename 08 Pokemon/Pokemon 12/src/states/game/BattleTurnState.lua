@@ -143,7 +143,6 @@ function BattleTurnState:checkSide(p)
                   ["chunks"] = {"You earned " .. exp .. " experience points!"},
                   ["callback"] = function()
                     self.player.pokemon.exp = math.min(self.player.pokemon.exp + exp, self.player.pokemon.expToLevel)
-
                     self.pExp:setValue(self.player.pokemon.exp)
 
                     Timer.tween(

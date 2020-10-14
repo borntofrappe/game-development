@@ -51,9 +51,13 @@ function Pokemon:levelUp()
 
   for k, IV in pairs(self.IVs) do
     for i = 1, 3 do
-      local rollDice = math.random(1, 6)
-      if IV > rollDice then
-        self.stats[k] = self.stats[k] + 1
+      local diceRoll = math.random(1, 6)
+      if IV > diceRoll then
+        if k == "hp" then
+          self.baseStats[k] = self.baseStats[k] + 1
+        else
+          self.stats[k] = self.stats[k] + 1
+        end
         break
       end
     end
