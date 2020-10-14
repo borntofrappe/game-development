@@ -1,24 +1,5 @@
 The eight title in the course introduces the genre of RPGs by looking at the Pokemon series.
 
-## To dos
-
-- feature | add audio
-
-- visual bug | have the selection overlap with the underlying panel
-
-  ```diff
-  -self.width = def.width or 72 + 2
-  +self.width = def.width or 72 + 4
-  ```
-
-  _Note_: this was fixed with `Pokemon 10`
-
-- secret | add the possibility to change the sprite of the player, picking at random from the available entities
-
-  ```lua
-  self.player.sprite = math.random(#gFrames["entities"])
-  ```
-
 ## Topics
 
 - state stacks, an alternative to state machines
@@ -33,7 +14,9 @@ The eight title in the course introduces the genre of RPGs by looking at the Pok
 
 ## Project structure
 
-The game is developed in increments, but the folder describes other demos to introduce relevant concepts. Consider for instance `StateStack`.
+The game is developed in increments, but start from `StateStack`. This folder describes the concept of the stack used throughout the game.
+
+In `Pokemon — Final` you find a working demo closely resembling the one proposed in the video. Be warned, the way I developed some of the features differs considerably from the lecturer's implementation.
 
 ## Resources
 
