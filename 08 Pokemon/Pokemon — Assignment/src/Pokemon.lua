@@ -8,7 +8,7 @@ function Pokemon:init(def)
   self.name = entry.name
 
   self.level = 5
-  self.exp = 15
+  self.exp = 0
   self.expToLevel = math.floor(self.level * self.level * 0.75)
 
   self.baseStats = {}

@@ -245,7 +245,7 @@ function BattleTurnState:checkSide(p)
                                         local stat = levelUpIncrement.stat
                                         local valueIncrement = levelUpIncrement.value
                                         local valueStat =
-                                          sat == "hp" and self.player.pokemon.baseStats[stat] or
+                                          stat == "hp" and self.player.pokemon.baseStats[stat] or
                                           self.player.pokemon.stats[stat]
 
                                         table.insert(
