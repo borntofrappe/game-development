@@ -233,40 +233,65 @@ function BattleTurnState:checkSide(p)
                         ):finish(
                           function()
                             if self.player.pokemon.exp == self.player.pokemon.expToLevel then
-                              self.player.pokemon:levelUp()
-
                               gSounds["levelup"]:play()
+                              local levelUpIncrements = self.player.pokemon:levelUp()
                               gStateStack:push(
                                 BattleMessageState(
                                   {
                                     ["chunks"] = {"Congratulations! Level up!"},
                                     ["callback"] = function()
-                                      gSounds["victory"]:stop()
-                                      gSounds["field_music"]:play()
+                                      local levelUpMessage = {}
+                                      for i, levelUpIncrement in ipairs(levelUpIncrements) do
+                                        local stat = levelUpIncrement.stat
+                                        local valueIncrement = levelUpIncrement.value
+                                        local valueStat =
+                                          sat == "hp" and self.player.pokemon.baseStats[stat] or
+                                          self.player.pokemon.stats[stat]
+
+                                        table.insert(
+                                          levelUpMessage,
+                                          stat:upper() ..
+                                            ": " ..
+                                              valueStat - valueIncrement ..
+                                                " + " .. valueIncrement .. " = " .. valueStat
+                                        )
+                                      end
                                       gStateStack:push(
-                                        FadeState(
-                                          {
-                                            ["color"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
-                                            ["duration"] = 0.5,
-                                            ["opacity"] = 1,
+                                        BattleMessageState(
+                                          ({
+                                            ["chunks"] = levelUpMessage,
                                             ["callback"] = function()
-                                              gStateStack:pop()
-                                              gStateStack:pop()
-                                              gStateStack:pop()
-                                              gStateStack:pop()
-                                              gStateStack:pop()
-                                              self.callback()
+                                              gSounds["victory"]:stop()
+                                              gSounds["field_music"]:play()
                                               gStateStack:push(
                                                 FadeState(
                                                   {
                                                     ["color"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
                                                     ["duration"] = 0.5,
-                                                    ["opacity"] = 0
+                                                    ["opacity"] = 1,
+                                                    ["callback"] = function()
+                                                      gStateStack:pop()
+                                                      gStateStack:pop()
+                                                      gStateStack:pop()
+                                                      gStateStack:pop()
+                                                      gStateStack:pop()
+                                                      gStateStack:pop()
+                                                      self.callback()
+                                                      gStateStack:push(
+                                                        FadeState(
+                                                          {
+                                                            ["color"] = {["r"] = 1, ["g"] = 1, ["b"] = 1},
+                                                            ["duration"] = 0.5,
+                                                            ["opacity"] = 0
+                                                          }
+                                                        )
+                                                      )
+                                                    end
                                                   }
                                                 )
                                               )
                                             end
-                                          }
+                                          })
                                         )
                                       )
                                     end

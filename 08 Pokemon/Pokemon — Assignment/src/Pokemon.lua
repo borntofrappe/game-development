@@ -8,7 +8,7 @@ function Pokemon:init(def)
   self.name = entry.name
 
   self.level = 5
-  self.exp = 0
+  self.exp = 15
   self.expToLevel = math.floor(self.level * self.level * 0.75)
 
   self.baseStats = {}
@@ -49,17 +49,29 @@ function Pokemon:levelUp()
   self.exp = 0
   self.expToLevel = math.floor(self.level * self.level * 0.75)
 
-  for k, IV in pairs(self.IVs) do
-    for i = 1, 3 do
+  local stats = {"hp", "attack", "defense", "speed"}
+  local increments = {}
+
+  for i = 1, #stats do
+    local stat = stats[i]
+    increments[i] = {
+      ["stat"] = stat,
+      ["value"] = 0
+    }
+
+    for j = 1, 3 do
       local diceRoll = math.random(1, 6)
-      if IV > diceRoll then
-        if k == "hp" then
-          self.baseStats[k] = self.baseStats[k] + 1
+      if self.IVs[stat] > diceRoll then
+        increments[i].value = 1
+        if stat == "hp" then
+          self.baseStats[stat] = self.baseStats[stat] + 1
         else
-          self.stats[k] = self.stats[k] + 1
+          self.stats[stat] = self.stats[stat] + 1
         end
         break
       end
     end
   end
+
+  return increments
 end
