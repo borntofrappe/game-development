@@ -29,42 +29,97 @@ function BattleTurnState:init(def)
   self.p1Health = def.p1Health
   self.p2Health = def.p2Health
 
+  local tweenDirection = self.p1 == self.player.pokemon and 1 or -1
+  local tweenOffset = 10
+
   local damage = math.max(1, self.p1.stats.attack - self.p2.stats.defense)
   self.p2.stats.hp = math.max(0, self.p2.stats.hp - damage)
   self.p2Health:setValue(self.p2.stats.hp)
 
-  gSounds["hit"]:play()
   Timer.tween(
-    1,
+    0.08,
     {
-      [self.p2Health] = {fillWidth = self.p2Health.width / self.p2Health.max * self.p2Health.value}
+      [self.p1] = {x = self.p1.x + tweenOffset * tweenDirection}
     }
   ):finish(
     function()
-      if self.p2.stats.hp == 0 then
-        self:checkSide(self.p2)
-      else
-        self.textBox:next()
-        local damage = math.max(1, self.p2.stats.attack - self.p1.stats.defense)
-        self.p1.stats.hp = math.max(0, self.p1.stats.hp - damage)
-        self.p1Health:setValue(self.p1.stats.hp)
+      gSounds["hit"]:play()
+      Timer.tween(
+        0.08,
+        {
+          [self.p1] = {x = self.p1.x + tweenOffset * tweenDirection * -1},
+          [self.p2] = {x = self.p2.x + tweenOffset * tweenDirection}
+        }
+      ):finish(
+        function()
+          Timer.tween(
+            0.08,
+            {
+              [self.p2] = {x = self.p2.x + tweenOffset * tweenDirection * 1 * -1}
+            }
+          )
+          Timer.tween(
+            0.8,
+            {
+              [self.p2Health] = {fillWidth = self.p2Health.width / self.p2Health.max * self.p2Health.value}
+            }
+          ):finish(
+            function()
+              if self.p2.stats.hp == 0 then
+                self:checkSide(self.p2)
+              else
+                self.textBox:next()
+                local damage = math.max(1, self.p2.stats.attack - self.p1.stats.defense)
+                self.p1.stats.hp = math.max(0, self.p1.stats.hp - damage)
+                self.p1Health:setValue(self.p1.stats.hp)
 
-        gSounds["hit"]:play()
-        Timer.tween(
-          1,
-          {
-            [self.p1Health] = {fillWidth = self.p1Health.width / self.p1Health.max * self.p1Health.value}
-          }
-        ):finish(
-          function()
-            if self.p1.stats.hp == 0 then
-              self:checkSide(self.p1)
-            else
-              self.callback()
+                Timer.tween(
+                  0.08,
+                  {
+                    [self.p2] = {x = self.p2.x + tweenOffset * tweenDirection * -1}
+                  }
+                ):finish(
+                  function()
+                    gSounds["hit"]:play()
+                    Timer.tween(
+                      0.08,
+                      {
+                        [self.p2] = {x = self.p2.x + tweenOffset * tweenDirection},
+                        [self.p1] = {x = self.p1.x + tweenOffset * tweenDirection * -1}
+                      }
+                    ):finish(
+                      function()
+                        Timer.tween(
+                          0.08,
+                          {
+                            [self.p1] = {x = self.p1.x + tweenOffset * tweenDirection}
+                          }
+                        )
+                        Timer.tween(
+                          0.8,
+                          {
+                            [self.p1Health] = {
+                              fillWidth = self.p1Health.width / self.p1Health.max * self.p1Health.value
+                            }
+                          }
+                        ):finish(
+                          function()
+                            if self.p1.stats.hp == 0 then
+                              self:checkSide(self.p1)
+                            else
+                              self.callback()
+                            end
+                          end
+                        )
+                      end
+                    )
+                  end
+                )
+              end
             end
-          end
-        )
-      end
+          )
+        end
+      )
     end
   )
 end
@@ -80,9 +135,9 @@ end
 function BattleTurnState:checkSide(p)
   if p == self.player.pokemon then
     Timer.tween(
-      0.2,
+      0.05,
       {
-        [self.player.pokemon] = {y = VIRTUAL_HEIGHT - 56}
+        [self.player.pokemon] = {x = -self.player.pokemon.width}
       }
     ):finish(
       function()
@@ -141,9 +196,9 @@ function BattleTurnState:checkSide(p)
     )
   else
     Timer.tween(
-      0.2,
+      0.05,
       {
-        [p] = {y = VIRTUAL_HEIGHT - 56}
+        [p] = {x = VIRTUAL_WIDTH}
       }
     ):finish(
       function()

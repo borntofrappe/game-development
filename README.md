@@ -13,7 +13,7 @@ Here's a reference table charting the progress in this direction.
 | Super Mario Bros    |   x   |     x      |
 | The Legend of Zelda |       |            |
 | Angry Birds         |   x   |     x      |
-| Pokemon             |       |            |
+| Pokemon             |   x   |            |
 | Helicopter          |       |            |
 | Dreadhall           |       |            |
 | Portal              |       |            |
