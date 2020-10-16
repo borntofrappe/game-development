@@ -1,35 +1,37 @@
 # Game Development
 
-The goal of this repo was to originally go through the games in the [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz), in order to learn game development.
+The goal of this repo is two-fold:
 
-Here's a reference table charting the progress in this direction.
+- go through the games in the [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) recreating the demos and completing the assignment
 
-| Video               | Final | Assignment |
-| ------------------- | :---: | :--------: |
-| Pong                |   x   |     x      |
-| Flappy Bird         |   x   |     x      |
-| Breakout            |   x   |     x      |
-| Match 3             |   x   |     x      |
-| Super Mario Bros    |   x   |     x      |
-| The Legend of Zelda |       |            |
-| Angry Birds         |   x   |     x      |
-| Pokemon             |   x   |     x      |
-| Helicopter          |       |            |
-| Dreadhall           |       |            |
-| Portal              |       |            |
+  Here's a reference table charting the progress in this direction.
 
-With the `Games` folder, however, it has gained a wider purpose to just experiment with game development, creating different experiences from the one proposed in the course.
+  | Video               | Final | Assignment |
+  | ------------------- | :---: | :--------: |
+  | Pong                |   x   |     x      |
+  | Flappy Bird         |   x   |     x      |
+  | Breakout            |   x   |     x      |
+  | Match 3             |   x   |     x      |
+  | Super Mario Bros    |   x   |     x      |
+  | The Legend of Zelda |       |            |
+  | Angry Birds         |   x   |     x      |
+  | Pokemon             |   x   |     x      |
+  | Helicopter          |       |            |
+  | Dreadhall           |       |            |
+  | Portal              |       |            |
 
-Here's a short table describing each title with a word or two.
+- solidify the lessons learned with additonal games. These are developed in the `Games` folder, taking inspiration from previous titles and actual games
 
-| Game             | Brief                                                        |
-| ---------------- | ------------------------------------------------------------ |
-| 2 Player Pong    | Pong with a mobile interface and mouse controls              |
-| Asteroids        | Asteroids with shapes from `love.graphics`                   |
-| Bouncing Android | Flappy Bird inspired by the Lollipop OS                      |
-| Snake            | Snake with blocks and step animation                         |
-| Space Invaders   | Space invaders inspired by title on the Game Boy Color       |
-| Whirly Bird      | Doodle jump concept which comes pre-installed on Google Play |
+  Here's a reference table listing the games in the order in which they are developed.
+
+  | Game             | Brief                                                        |
+  | ---------------- | ------------------------------------------------------------ |
+  | 2 Player Pong    | Pong with a mobile interface and mouse controls              |
+  | Bouncing Android | Flappy Bird inspired by the Lollipop OS                      |
+  | Space Invaders   | Space invaders inspired by title on the Game Boy Color       |
+  | Whirly Bird      | Doodle jump concept which comes pre-installed on Google Play |
+  | Asteroids        | Asteroids with shapes from `love.graphics`                   |
+  | Snake            | Snake with blocks and step animation                         |
 
 ## How to run a game
 
