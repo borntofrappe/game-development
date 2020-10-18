@@ -1,5 +1,5 @@
-WINDOW_WIDTH = 620
-WINDOW_HEIGHT = 480
+WINDOW_WIDTH = 680
+WINDOW_HEIGHT = 500
 
 OPTIONS = {
   fullscreen = false,
@@ -11,4 +11,5 @@ gFonts = {
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
 }
 
-CELL_SIZE = 20
+GRID_SIZE = 200
+GRID_PADDING = 80
