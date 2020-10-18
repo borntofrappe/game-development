@@ -3,11 +3,15 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Picross")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
+
+  level = Level()
 end
 
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
+  elseif key == "space" then
+    level = Level()
   end
 end
 
@@ -16,11 +20,8 @@ function love.draw()
 
   love.graphics.setColor(0.9, 0.9, 0.95)
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.printf(
-    "There are " .. #LEVELS .. " levels waiting to be programmed.",
-    0,
-    WINDOW_HEIGHT / 2 - 12,
-    WINDOW_WIDTH,
-    "center"
-  )
+  love.graphics.printf(level.name, 0, 8, WINDOW_WIDTH, "center")
+  love.graphics.printf("Press space to draw another level", 0, WINDOW_HEIGHT - 36, WINDOW_WIDTH, "center")
+
+  level:render()
 end

@@ -10,3 +10,5 @@ OPTIONS = {
 gFonts = {
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
 }
+
+CELL_SIZE = 20

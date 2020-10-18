@@ -60,3 +60,46 @@ level = string.gsub(level, "%A", "")
 -- space characters
 level = string.gsub(level, "%s", "")
 ```
+
+## Level
+
+The class builds the grid starting from the string introduced in the previous section.
+
+```lua
+function Level:init(n)
+  self.name = LEVELS[n].name
+  self.level = LEVELS[n].level
+  self.levelString = string.gsub(self.level, "[^xo]", "")
+end
+```
+
+From this starting point, the `buildGrid` function populates a table detailing the grid structure.
+
+```lua
+function Level:init(n)
+  self.grid = {}
+  self:buildGrid()
+end
+```
+
+The grid is built looping through the string, and considering for each index the matching column and row.
+
+```lua
+function Level:buildGrid()
+  local len = #self.levelString
+  local side = math.floor(math.sqrt(len))
+
+  for i = 0, len - 1 do
+    local column = (i % side) + 1
+    local row = math.floor(i / side) + 1
+  end
+end
+```
+
+I use the square root of the length since the levels describe a square matrices of `x`s and `o`s. I use `math.floor` to ensure integer values.
+
+_Please note_: the for loop doesn't follow the Lua convention of starting at `1`, because I found zero-based indexing to be move convenient when using integer division and the modulo operator.
+
+## Cell
+
+The class works as a utility to draw a shape based on its column, row and ultimately value. In this specific update, it works to draw a rectangle if the value matches the character `o`.
