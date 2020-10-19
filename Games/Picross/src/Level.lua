@@ -1,10 +1,17 @@
 Level = Class {}
 
-function Level:init(n)
-  local n = n or math.random(#LEVELS)
+function Level:init(def)
+  local def =
+    def or
+    {
+      number = math.random(#LEVELS)
+    }
 
-  self.name = LEVELS[n].name
-  self.level = LEVELS[n].level
+  self.number = def.number
+  self.hideHints = def.hideHints
+
+  self.name = LEVELS[self.number].name
+  self.level = LEVELS[self.number].level
   self.levelString = string.gsub(self.level, "[^xo]", "")
 
   self.levelStringLength = #self.levelString
@@ -24,21 +31,29 @@ function Level:render()
   love.graphics.setColor(0.9, 0.9, 0.95)
   love.graphics.setFont(gFonts["normal"])
 
-  love.graphics.translate(WINDOW_WIDTH - GRID_PADDING - GRID_SIZE, WINDOW_HEIGHT - GRID_PADDING - GRID_SIZE)
+  love.graphics.translate(-GRID_SIZE / 2, -GRID_SIZE / 2)
 
-  for y, hintRow in ipairs(self.hints.rows) do
-    for x, hint in ipairs(hintRow) do
-      love.graphics.print(
-        hint,
-        -8 - 24 * #hintRow + 24 * (x - 1),
-        self.cellSize / 2 - gFonts["normal"]:getHeight() / 2 + self.cellSize * (y - 1)
-      )
+  if not self.hideHints then
+    for y, hintRow in ipairs(self.hints.rows) do
+      for x, hint in ipairs(hintRow) do
+        love.graphics.print(
+          hint,
+          -8 - 24 * #hintRow + 24 * (x - 1),
+          self.cellSize / 2 - gFonts["normal"]:getHeight() / 2 + self.cellSize * (y - 1)
+        )
+      end
     end
-  end
 
-  for x, hintColumn in ipairs(self.hints.columns) do
-    for y, hint in ipairs(hintColumn) do
-      love.graphics.printf(hint, self.cellSize * (x - 1), -8 - 24 * #hintColumn + 24 * (y - 1), self.cellSize, "center")
+    for x, hintColumn in ipairs(self.hints.columns) do
+      for y, hint in ipairs(hintColumn) do
+        love.graphics.printf(
+          hint,
+          self.cellSize * (x - 1),
+          -8 - 24 * #hintColumn + 24 * (y - 1),
+          self.cellSize,
+          "center"
+        )
+      end
     end
   end
 

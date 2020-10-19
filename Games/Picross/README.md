@@ -8,7 +8,9 @@ Create a demo developing the concept of picross, a puzzle game in which the play
 
 - levels based on data, similarly to _Angry Birds_. The idea is to have a table collect the design of the levels through `x`s and `o`s, and have the script create the associated grid at startup
 
-## Levels
+## Development
+
+### Levels
 
 As mentioned, the levels are designed with `x`s and `o`s. `Levels.lua` describes these structure using Lua's format for long strings.
 
@@ -66,7 +68,7 @@ _Nifty_: you can achieve a similar result using different [patterns](https://www
   level = string.gsub(level, "%s", "")
   ```
 
-## Level
+### Level
 
 The class builds the grid starting from the string introduced in the previous section.
 
@@ -117,7 +119,37 @@ I use the square root of the length since the levels describe a square matrices 
 
 _Please note_: the for loop doesn't follow the Lua convention of starting at `1`, because I found zero-based indexing to be move convenient when using integer division and the modulo operator.
 
-## Cell
+#### Update
+
+The init function is modified to receive a table, and to hide the hints if a flag is explicitly specified.
+
+```lua
+function Level:init(def)
+  local def =
+    def or
+    {
+      number = math.random(#LEVELS)
+    }
+end
+```
+
+Based on this input value:
+
+- `self.number` collects the number of the level, picking up the default random value
+
+  ```lua
+  self.number = def.number
+  ```
+
+- `self.hideHints` considers the flag. By default, this is set to `nil` as the `def` table doesn't add a matching field
+
+  ```lua
+  self.hideHints = def.hideHints
+  ```
+
+The flag is then used to conditionally show the hints in the `render` function. It is not however used in the build function. In this manner the hints are still computed, just not shown.
+
+### Cell
 
 The class works as a utility to draw a shape based on its column, row and ultimately value and size.
 
@@ -144,7 +176,7 @@ love.graphics.translate(WINDOW_WIDTH - GRID_PADDING - GRID_SIZE, WINDOW_HEIGHT -
 
 _Please note_: the point detailed by the translation represents the top left corner of the grid. This is important as the hints are then drawn away from the grid itself.
 
-## Hints
+### Hints
 
 The idea is to built two separate tables, sporting the hints for the columns and rows.
 

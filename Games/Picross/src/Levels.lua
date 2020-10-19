@@ -1,4 +1,16 @@
 LEVELS = {
+  [0] = {
+    ["name"] = "?",
+    ["level"] = [[
+      xooooox
+      xoxxxox
+      xxxooox
+      xxxoxxx
+      xxxxxxx
+      xxxoxxx
+      xxxxxxx
+    ]]
+  },
   [1] = {
     ["name"] = "star",
     ["level"] = [[
