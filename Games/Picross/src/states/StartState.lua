@@ -68,13 +68,11 @@ function StartState:update(dt)
 end
 
 function StartState:render()
-  love.graphics.clear(1, 1, 1)
-
-  love.graphics.setColor(0.07, 0.07, 0.2)
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.setFont(gFonts["big"])
   love.graphics.printf("Picross", 0, WINDOW_HEIGHT / 2 - gFonts["big"]:getHeight(), WINDOW_WIDTH, "center")
 
-  love.graphics.setColor(0.05, 0.05, 0.15, 0.2)
+  love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
   love.graphics.setLineWidth(4)
   love.graphics.rectangle(
     "line",
@@ -84,7 +82,7 @@ function StartState:render()
     gFonts["normal"]:getHeight() + 16
   )
 
-  love.graphics.setColor(0.07, 0.07, 0.2)
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.setLineWidth(2)
   love.graphics.rectangle(
     "line",
@@ -94,7 +92,7 @@ function StartState:render()
     gFonts["normal"]:getHeight() + 16
   )
 
-  love.graphics.setColor(0.05, 0.05, 0.15, self.button.alpha)
+  love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, self.button.alpha)
 
   love.graphics.rectangle(
     "fill",
@@ -105,7 +103,7 @@ function StartState:render()
   )
 
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.setColor(0.05, 0.05, 0.15, 0.25)
+  love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
   love.graphics.printf(
     "Levels",
     2,
@@ -114,6 +112,6 @@ function StartState:render()
     "center"
   )
 
-  love.graphics.setColor(0.07, 0.07, 0.2)
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.printf("Levels", 0, WINDOW_HEIGHT * 3 / 4 - gFonts["normal"]:getHeight() / 2, WINDOW_WIDTH, "center")
 end

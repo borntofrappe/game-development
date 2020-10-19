@@ -28,7 +28,7 @@ function Level:init(def)
 end
 
 function Level:render()
-  love.graphics.setColor(0.9, 0.9, 0.95)
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.setFont(gFonts["normal"])
 
   love.graphics.translate(-GRID_SIZE / 2, -GRID_SIZE / 2)

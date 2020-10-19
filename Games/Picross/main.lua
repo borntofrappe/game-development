@@ -39,5 +39,8 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.draw(gTextures["background"], 0, 0)
+
   gStateMachine:render()
 end
