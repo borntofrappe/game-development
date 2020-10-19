@@ -1,5 +1,5 @@
-WINDOW_WIDTH = 680
-WINDOW_HEIGHT = 500
+WINDOW_WIDTH = 520
+WINDOW_HEIGHT = 360
 
 OPTIONS = {
   fullscreen = false,
@@ -7,5 +7,5 @@ OPTIONS = {
   resizable = false
 }
 
-GRID_SIZE = 200
-GRID_PADDING = 80
+GRID_SIZE = 160
+GRID_PADDING = 60

@@ -1,4 +1,5 @@
 Class = require "res/lib/class"
+Timer = require "res/lib/timer"
 
 require "src/Levels"
 require "src/Level"

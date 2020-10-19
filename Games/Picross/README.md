@@ -253,3 +253,20 @@ In its first version, the game is scheduled to have three states:
 - `PlayState`: display an empty grid, accompanied only by the hints.
 
   This is where the bulk of the game happens.
+
+### StartState
+
+The button moving the game to the select state is animated with the `timer` library. The idea is to have the animation on the button being focused, but since there's only one, there is no need to further introduce a variable to keep track of the current option. This might change in a future update.
+
+The animation itself involves the opacity of the fill describing the button's background. It plays immediately, and then at an interval. To have the alpha value recede back to its original value, the `tween` animation takes half the duration of the interval. The interval, however, is further specified to last a bit more. 25 percent more.
+
+```lua
+self.interval =
+  Timer.every(
+  self.animationDuration * 1.25,
+  function()
+    -- tween animation
+  end
+  )
+end
+```
