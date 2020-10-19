@@ -16,12 +16,14 @@ function SelectState:init()
 
   self.padding = 92
   self.spacing = (WINDOW_WIDTH - self.padding * 2) / (#self.levels - 1)
+end
 
+function SelectState:enter(params)
   self.button = {
     ["alpha"] = 0.15,
     ["min"] = 0.15,
     ["max"] = 0.45,
-    ["selection"] = 1
+    ["selection"] = params and params.selection or 1
   }
 
   self.animationDuration = 1
@@ -75,7 +77,12 @@ function SelectState:update(dt)
 
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
     self.interval:remove()
-    gStateMachine:change("play")
+    gStateMachine:change(
+      "play",
+      {
+        ["selection"] = self.button.selection
+      }
+    )
   end
 
   if love.keyboard.wasPressed("right") then

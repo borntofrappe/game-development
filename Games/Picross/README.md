@@ -2,6 +2,12 @@
 
 Create a demo developing the concept of picross, a puzzle game in which the player fills a grid based on the instructions given on the side of each row and column, and in order to draw a stylized picture.
 
+## TODO
+
+- touch controls
+
+- show a question mark in the selection screen. The idea is to ultimately show the grid behind the levels only for the completed variants
+
 ## Topics
 
 - keyboard and touch input, similarly to _Match Three_
@@ -121,7 +127,7 @@ _Please note_: the for loop doesn't follow the Lua convention of starting at `1`
 
 #### Update
 
-The init function is modified to receive a table, and to hide the hints if a flag is explicitly specified.
+The `init` function is modified to receive a table, and to hide the hints if a flag is explicitly specified. Moreover, the class receives a value for the size of the grid. This is useful in the moment the game needs to display the levels in the selection state, with a considerably smaller size.
 
 ```lua
 function Level:init(def)
@@ -147,7 +153,13 @@ Based on this input value:
   self.hideHints = def.hideHints
   ```
 
-The flag is then used to conditionally show the hints in the `render` function. It is not however used in the build function. In this manner the hints are still computed, just not shown.
+  The flag is then used to conditionally show the hints in the `render` function. It is not however used in the build function. In this manner the hints are still computed, just not shown.
+
+- `self.size` details the size of the grid, and is ultimately used to compute the size of the individual cells
+
+  ```lua
+  self.size = def.size or GRID_SIZE
+  ```
 
 ### Cell
 
@@ -269,4 +281,10 @@ end
 
 Currently, the number is low enough to have every level side by side. In a situation where the game adds more levels, the selection screen should consider a more complex solution, involving perhaps a grid, or pagination, showing `x` levels per page.
 
-The state repeats the animation introduced in the `StartState`, but the alpha channel is modified only for the selected level. The selection is then updated with arrow keys. (subject to change as the game then considers mouse input).
+The state repeats the animation introduced in the `StartState`, but the alpha channel is modified only for the selected level. The selection is then updated with arrow keys.
+
+### PlayState
+
+The idea is to show a timer next to a menu, which allows to pick between pencil and eraser.
+
+The gameplay is included in a future update, and currently, the game considers the UI only. The `timer` library is still being used, but not to highlight the button being selected. This selection is instead shown through scale and a different color for the background.

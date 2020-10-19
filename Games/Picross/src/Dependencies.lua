@@ -15,6 +15,7 @@ require "src/states/PlayState"
 
 gFonts = {
   ["big"] = love.graphics.newFont("res/fonts/font.ttf", 72),
+  ["medium"] = love.graphics.newFont("res/fonts/font.ttf", 28),
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
 }
 
@@ -24,5 +25,17 @@ gTextures = {
 
 gColors = {
   ["text"] = {["r"] = 0.07, ["g"] = 0.07, ["b"] = 0.2, ["a"] = 1},
-  ["shadow"] = {["r"] = 0.05, ["g"] = 0.05, ["b"] = 0.15, ["a"] = 0.2}
+  ["shadow"] = {["r"] = 0.05, ["g"] = 0.05, ["b"] = 0.15, ["a"] = 0.2},
+  ["highlight"] = {["r"] = 0.95, ["g"] = 0.84, ["b"] = 0.07, ["a"] = 1}
 }
+
+function formatTimer(seconds)
+  local minutes = math.floor(seconds / 60)
+  local seconds = seconds % 60
+
+  local h = "00"
+  local m = minutes >= 10 and minutes or 0 .. minutes
+  local s = seconds >= 10 and seconds or 0 .. seconds
+
+  return h .. ":" .. m .. ":" .. s
+end
