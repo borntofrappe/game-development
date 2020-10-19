@@ -9,6 +9,7 @@ function Level:init(def)
 
   self.number = def.number
   self.hideHints = def.hideHints
+  self.size = def.size or GRID_SIZE
 
   self.name = LEVELS[self.number].name
   self.level = LEVELS[self.number].level
@@ -16,7 +17,7 @@ function Level:init(def)
 
   self.levelStringLength = #self.levelString
   self.gridSide = math.floor(math.sqrt(self.levelStringLength))
-  self.cellSize = math.floor(GRID_SIZE / self.gridSide)
+  self.cellSize = math.floor(self.size / self.gridSide)
 
   self.grid = {}
   self.hints = {
@@ -31,7 +32,7 @@ function Level:render()
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.setFont(gFonts["normal"])
 
-  love.graphics.translate(-GRID_SIZE / 2, -GRID_SIZE / 2)
+  love.graphics.translate(-self.size / 2, -self.size / 2)
 
   if not self.hideHints then
     for y, hintRow in ipairs(self.hints.rows) do
@@ -62,6 +63,8 @@ function Level:render()
       cell:render()
     end
   end
+
+  love.graphics.translate(self.size / 2, self.size / 2)
 end
 
 function Level:buildGrid()

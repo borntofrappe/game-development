@@ -21,7 +21,7 @@ function love.load()
 
   love.keyboard.keyPressed = {}
 
-  gStateMachine:change("start")
+  gStateMachine:change("select")
 end
 
 function love.keypressed(key)

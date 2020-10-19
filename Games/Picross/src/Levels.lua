@@ -4,11 +4,11 @@ LEVELS = {
     ["level"] = [[
       xooooox
       xoxxxox
+      xoxxxox
       xxxooox
       xxxoxxx
       xxxxxxx
       xxxoxxx
-      xxxxxxx
     ]]
   },
   [1] = {

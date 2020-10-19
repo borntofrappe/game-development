@@ -244,15 +244,9 @@ In its first version, the game is scheduled to have three states:
 
 - `StartState`: show the name of the game above a single button, with the string 'Levels'
 
-- `SelectState`: show the levels in a grid.
+- `SelectState`: show the levels side by side, and allow to select a particular one
 
-  Currently, the number is low enough to have them readily available in one screen, but in a more complex demo you might add pagination, with the idea of showing `x` levels per page.
-
-  For each level, show a question mark using the instructions behind `LEVELS[0]`. The idea is to then have a flag for completed levels, and show the completed structure instead of this default.
-
-- `PlayState`: display an empty grid, accompanied only by the hints.
-
-  This is where the bulk of the game happens.
+- `PlayState`: play the selected level, starting with an empty grid and the accompanying hints
 
 ### StartState
 
@@ -270,3 +264,9 @@ self.interval =
   )
 end
 ```
+
+### SelectState
+
+Currently, the number is low enough to have every level side by side. In a situation where the game adds more levels, the selection screen should consider a more complex solution, involving perhaps a grid, or pagination, showing `x` levels per page.
+
+The state repeats the animation introduced in the `StartState`, but the alpha channel is modified only for the selected level. The selection is then updated with arrow keys. (subject to change as the game then considers mouse input).
