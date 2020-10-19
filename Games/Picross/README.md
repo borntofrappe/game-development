@@ -237,3 +237,19 @@ _Please note_: as mentioned, the logic is repeated for the rows, but considering
 ### print and printf
 
 Once the `hints` tables are populated, `Level:render` draws the digits using the `print` and `printf` functions. This last one is necessary to have the hints for the columns centered in the matching cell.
+
+## Design
+
+In its first version, the game is scheduled to have three states:
+
+- `StartState`: show the name of the game above a single button, with the string 'Levels'
+
+- `SelectState`: show the levels in a grid.
+
+  Currently, the number is low enough to have them readily available in one screen, but in a more complex demo you might add pagination, with the idea of showing `x` levels per page.
+
+  For each level, show a question mark using the instructions behind `LEVELS[0]`. The idea is to then have a flag for completed levels, and show the completed structure instead of this default.
+
+- `PlayState`: display an empty grid, accompanied only by the hints.
+
+  This is where the bulk of the game happens.

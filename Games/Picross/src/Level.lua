@@ -49,7 +49,7 @@ function Level:render()
         love.graphics.printf(
           hint,
           self.cellSize * (x - 1),
-          -8 - 24 * #hintColumn + 24 * (y - 1),
+          -8 - 24 * #hintColumn + gFonts["normal"]:getHeight() * (y - 1),
           self.cellSize,
           "center"
         )

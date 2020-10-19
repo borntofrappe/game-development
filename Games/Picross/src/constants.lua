@@ -7,9 +7,5 @@ OPTIONS = {
   resizable = false
 }
 
-gFonts = {
-  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
-}
-
 GRID_SIZE = 200
 GRID_PADDING = 80

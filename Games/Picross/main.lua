@@ -4,31 +4,40 @@ function love.load()
   love.window.setTitle("Picross")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  level =
-    Level(
+  gStateMachine =
+    StateMachine(
     {
-      ["number"] = 0,
-      ["hideHints"] = true
+      ["start"] = function()
+        return StartState()
+      end,
+      ["select"] = function()
+        return SelectState()
+      end,
+      ["play"] = function()
+        return PlayState()
+      end
     }
   )
+
+  love.keyboard.keyPressed = {}
+
+  gStateMachine:change("start")
 end
 
 function love.keypressed(key)
-  if key == "escape" then
-    love.event.quit()
-  elseif key == "space" then
-    level = Level()
-  end
+  love.keyboard.keyPressed[key] = true
+end
+
+function love.keyboard.wasPressed(key)
+  return love.keyboard.keyPressed[key]
+end
+
+function love.update(dt)
+  gStateMachine:update(dt)
+
+  love.keyboard.keyPressed = {}
 end
 
 function love.draw()
-  love.graphics.clear(0.05, 0.05, 0.05)
-
-  love.graphics.setColor(0.9, 0.9, 0.95)
-  love.graphics.setFont(gFonts["normal"])
-  love.graphics.printf(level.name, 0, 8, WINDOW_WIDTH, "center")
-  love.graphics.printf("Press space to draw another level", 0, WINDOW_HEIGHT - 36, WINDOW_WIDTH, "center")
-
-  love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-  level:render()
+  gStateMachine:render()
 end
