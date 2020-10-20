@@ -1,24 +1,16 @@
 # [Picross](https://github.com/borntofrappe/game-development/projects/2)
 
-Create a demo developing the concept of picross, a puzzle game in which the player fills a grid based on the instructions given on the side of each row and column, and in order to draw a stylized picture.
-
-## TODO
-
-- touch controls
-
-- show a question mark in the selection screen. The idea is to ultimately show the grid behind the levels only for the completed variants
+Develop the basics of the game picross, a puzzle game in which the player fills a grid based on the instructions given on the side of each row and column. The goal is to ultimately draw a stylized picture based on the pixelated structure.
 
 ## Topics
 
-- keyboard and touch input, similarly to _Match Three_
+- keyboard and mouse controls, similarly to _Match Three_
 
-- levels based on data, similarly to _Angry Birds_. The idea is to have a table collect the design of the levels through `x`s and `o`s, and have the script create the associated grid at startup
+- levels based on data, similarly to _Angry Birds_. The idea is to have a file dedicated to the design of the levels, and have the game develop the grid starting from this design
 
-## Development
+## Levels
 
-### Levels
-
-As mentioned, the levels are designed with `x`s and `o`s. `Levels.lua` describes these structure using Lua's format for long strings.
+The levels are designed with `x`s and `o`s, using Lua's format for long strings. See `Levels.lua` for a reference.
 
 ```lua
 [[
@@ -44,7 +36,7 @@ level = [[
 print(level:len()) -- 40
 ```
 
-The length considers the whitespace and new line characters. This is problematic in the moment you eventually want to build the grid in which the `x`s and `o`s are slotted in rows and columns. One fix I found is to use `string.gsub`, and replace every character that is not one of the two accepted literals with an empty string.
+The length considers the whitespace and new line characters. This is problematic in the moment you eventually want to compute the number of rows and columns. One fix I found is to use `string.gsub`, and replace every character that is not one of the two accepted literals with an empty string.
 
 ```lua
 level = [[
@@ -76,17 +68,7 @@ _Nifty_: you can achieve a similar result using different [patterns](https://www
 
 ### Level
 
-The class builds the grid starting from the string introduced in the previous section.
-
-```lua
-function Level:init(n)
-  self.name = LEVELS[n].name
-  self.level = LEVELS[n].level
-  self.levelString = string.gsub(
-end
-```
-
-From this starting point, the `buildGrid` function populates a table detailing the grid structure.
+The class builds the grid starting from the string introduced in the previous section. From this starting point, the `buildGrid` function populates a table detailing the grid structure.
 
 ```lua
 function Level:init(n)
@@ -95,22 +77,7 @@ function Level:init(n)
 end
 ```
 
----
-
-_Update_: in the `init()` function I decided to immediately specify the length of the string, as well as the length of the grid's side and the size of the individual length. These values can be computed in `buildGrid`, but they are useful to position the hints as well.
-
-```lua
-function Level:init(n)
-  -- previous attributes
-  self.levelStringLength = #self.levelString
-  self.gridSide = math.floor(math.sqrt(self.levelStringLength))
-  self.cellSize = math.floor(GRID_SIZE / self.gridSide)
-end
-```
-
----
-
-The grid is built looping through the string, and considering for each index the matching column and row.
+The grid is built looping through the string, and considering for each index the respective column and row.
 
 ```lua
 function Level:buildGrid()
@@ -125,43 +92,7 @@ I use the square root of the length since the levels describe a square matrices 
 
 _Please note_: the for loop doesn't follow the Lua convention of starting at `1`, because I found zero-based indexing to be move convenient when using integer division and the modulo operator.
 
-#### Update
-
-The `init` function is modified to receive a table, and to hide the hints if a flag is explicitly specified. Moreover, the class receives a value for the size of the grid. This is useful in the moment the game needs to display the levels in the selection state, with a considerably smaller size.
-
-```lua
-function Level:init(def)
-  local def =
-    def or
-    {
-      number = math.random(#LEVELS)
-    }
-end
-```
-
-Based on this input value:
-
-- `self.number` collects the number of the level, picking up the default random value
-
-  ```lua
-  self.number = def.number
-  ```
-
-- `self.hideHints` considers the flag. By default, this is set to `nil` as the `def` table doesn't add a matching field
-
-  ```lua
-  self.hideHints = def.hideHints
-  ```
-
-  The flag is then used to conditionally show the hints in the `render` function. It is not however used in the build function. In this manner the hints are still computed, just not shown.
-
-- `self.size` details the size of the grid, and is ultimately used to compute the size of the individual cells
-
-  ```lua
-  self.size = def.size or GRID_SIZE
-  ```
-
-### Cell
+## Cell
 
 The class works as a utility to draw a shape based on its column, row and ultimately value and size.
 
@@ -182,15 +113,11 @@ end
 
 The rectangle's position is based solely on its column and row. I decided to have `Level:render` translate the entire structure using `love.graphics.translate`.
 
-```lua
-love.graphics.translate(WINDOW_WIDTH - GRID_PADDING - GRID_SIZE, WINDOW_HEIGHT - GRID_PADDING - GRID_SIZE)
-```
-
 _Please note_: the point detailed by the translation represents the top left corner of the grid. This is important as the hints are then drawn away from the grid itself.
 
-### Hints
+## Hints
 
-The idea is to built two separate tables, sporting the hints for the columns and rows.
+The idea is to built two separate tables, describing the hints for the columns and rows.
 
 ```lua
 function Level:init(n)
@@ -203,7 +130,7 @@ function Level:init(n)
 end
 ```
 
-The tables are populated in `Level:buildGrid`, considering the value of the cells and the concept that the hint should describe the number of contiguous `o`s in the respective row or column.
+The tables are populated in `Level:buildGrid`, considering the value of the cells and the concept that the hints should describe the number of contiguous `o`s in the respective row or column.
 
 Taking for instance the logic applied to the hints' columns.
 
@@ -234,7 +161,7 @@ Taking for instance the logic applied to the hints' columns.
   end
   ```
 
-This works to create a table of hints. With one considerable issue: the table retains the `0` if added as a last item. The UI should however display `0` only if there are no squares, no `o`s in the entire column. Outside of the for loop, the idea is to therefore remove the last item if necessary.
+This works to create a table of hints, with one considerable issue: the table retains the counter variable `0` if added as a last item. The UI should however display `0` only if there are no squares, no `o`s in the entire column. Outside of the for loop, the idea is to therefore remove the last item if necessary.
 
 ```lua
 for i, hintColumn in ipairs(self.hints.columns) do
@@ -250,9 +177,9 @@ _Please note_: as mentioned, the logic is repeated for the rows, but considering
 
 Once the `hints` tables are populated, `Level:render` draws the digits using the `print` and `printf` functions. This last one is necessary to have the hints for the columns centered in the matching cell.
 
-## Design
+## States
 
-In its first version, the game is scheduled to have three states:
+The game is programmed to have three states:
 
 - `StartState`: show the name of the game above a single button, with the string 'Levels'
 
@@ -262,7 +189,7 @@ In its first version, the game is scheduled to have three states:
 
 ### StartState
 
-The button moving the game to the select state is animated with the `timer` library. The idea is to have the animation on the button being focused, but since there's only one, there is no need to further introduce a variable to keep track of the current option. This might change in a future update.
+The button moving the game to the select state is animated with the `timer` library. The idea is to have the animation on the button being focused, but since there's only one, there is no need to further introduce a variable to keep track of the current option. (This might change in a future update)
 
 The animation itself involves the opacity of the fill describing the button's background. It plays immediately, and then at an interval. To have the alpha value recede back to its original value, the `tween` animation takes half the duration of the interval. The interval, however, is further specified to last a bit more. 25 percent more.
 
@@ -271,7 +198,11 @@ self.interval =
   Timer.every(
   self.animationDuration * 1.25,
   function()
-    -- tween animation
+    Timer.tween(self.animationDuration / 2, {
+
+    }):finish(function()
+        Timer.tween(self.animationDuration / 2, {})
+      end)
   end
   )
 end
@@ -279,12 +210,32 @@ end
 
 ### SelectState
 
-Currently, the number is low enough to have every level side by side. In a situation where the game adds more levels, the selection screen should consider a more complex solution, involving perhaps a grid, or pagination, showing `x` levels per page.
+Currently, the number of levels is low enough to have all positioned side by side. With additional titles, the selection screen should consider a more complex solution, involving perhaps a grid, or pagination, showing `x` levels per page.
 
 The state repeats the animation introduced in the `StartState`, but the alpha channel is modified only for the selected level. The selection is then updated with arrow keys.
 
 ### PlayState
 
-The idea is to show a timer next to a menu, which allows to pick between pencil and eraser.
+The gameplay is included in a future update, and currently, the game considers the UI only. The `timer` library is still being used, but not to highlight the button being selected. This selection is instead shown through scale and a different color for the background. `Timer.every` is used instead to update a counter variable describing the timer.
 
-The gameplay is included in a future update, and currently, the game considers the UI only. The `timer` library is still being used, but not to highlight the button being selected. This selection is instead shown through scale and a different color for the background.
+```lua
+self.timer = 0
+self.interval =
+  Timer.every(
+  1,
+  function()
+    self.timer = self.timer + 1
+  end
+)
+```
+
+The value is not used directly in the UI, and is processed first through a function describing the format.
+
+```lua
+love.graphics.printf(
+  formatTimer(self.timer)
+  -- other attributes
+)
+```
+
+The idea is to show six digits, for the hours, minutes and seconds. All separated by a colon character and showing always two digits: `hh:mm:ss`.

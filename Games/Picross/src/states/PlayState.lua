@@ -44,7 +44,7 @@ function PlayState:update(dt)
     if self.button.tool ~= "pencil" then
       self.button.tool = "pencil"
       Timer.tween(
-        0.2,
+        0.15,
         {
           [self.button.scale] = {
             pencil = 1.25,
@@ -57,7 +57,7 @@ function PlayState:update(dt)
     if self.button.tool ~= "eraser" then
       self.button.tool = "eraser"
       Timer.tween(
-        0.2,
+        0.15,
         {
           [self.button.scale] = {
             pencil = 0.9,
@@ -74,13 +74,23 @@ function PlayState:render()
   self.level:render()
   love.graphics.translate(-WINDOW_WIDTH * 5 / 7, -WINDOW_HEIGHT * 9 / 14)
 
+  love.graphics.setFont(gFonts["small"])
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 94, WINDOW_HEIGHT / 4 - 7, 140, 12 + gFonts["normal"]:getHeight())
+  love.graphics.print(
+    "Level " .. self.selection,
+    WINDOW_WIDTH / 4 - 90,
+    WINDOW_HEIGHT / 4 - 7 - 8 - gFonts["small"]:getHeight()
+  )
+
+  love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
+  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 86, WINDOW_HEIGHT / 4 - 3, 140, 12 + gFonts["normal"]:getHeight())
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 90, WINDOW_HEIGHT / 4 - 7, 140, 12 + gFonts["normal"]:getHeight())
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(gColors["highlight"].r, gColors["highlight"].g, gColors["highlight"].b, gColors["highlight"].a)
-  love.graphics.printf(formatTimer(self.timer), WINDOW_WIDTH / 4 - 88, WINDOW_HEIGHT / 4, 128, "right")
+  love.graphics.printf(formatTimer(self.timer), WINDOW_WIDTH / 4 - 84, WINDOW_HEIGHT / 4, 128, "right")
 
-  love.graphics.translate(WINDOW_WIDTH / 4 + 20, WINDOW_HEIGHT / 2)
+  love.graphics.translate(WINDOW_WIDTH / 4, WINDOW_HEIGHT / 2)
   love.graphics.scale(self.button.scale.pencil, self.button.scale.pencil)
   if self.button.tool == "pencil" then
     love.graphics.setColor(
