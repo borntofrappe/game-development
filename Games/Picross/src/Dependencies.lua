@@ -14,9 +14,8 @@ require "src/states/SelectState"
 require "src/states/PlayState"
 
 gFonts = {
-  ["big"] = love.graphics.newFont("res/fonts/font.ttf", 72),
-  ["medium"] = love.graphics.newFont("res/fonts/font.ttf", 28),
-  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+  ["big"] = love.graphics.newFont("res/fonts/font.ttf", 48),
+  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
 }
 
 gTextures = {

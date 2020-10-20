@@ -39,7 +39,7 @@ function Level:render()
       for x, hint in ipairs(hintRow) do
         love.graphics.print(
           hint,
-          -8 - 24 * #hintRow + 24 * (x - 1),
+          -8 - gFonts["normal"]:getHeight() * 1.5 * #hintRow + gFonts["normal"]:getHeight() * 1.5 * (x - 1),
           self.cellSize / 2 - gFonts["normal"]:getHeight() / 2 + self.cellSize * (y - 1)
         )
       end
@@ -50,7 +50,7 @@ function Level:render()
         love.graphics.printf(
           hint,
           self.cellSize * (x - 1),
-          -8 - 24 * #hintColumn + gFonts["normal"]:getHeight() * (y - 1),
+          -8 - gFonts["normal"]:getHeight() * 1.5 * #hintColumn + gFonts["normal"]:getHeight() * 1.5 * (y - 1),
           self.cellSize,
           "center"
         )
