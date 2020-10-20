@@ -2,12 +2,18 @@ PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
   self.button = {
-    ["tool"] = "pencil",
+    ["tool"] = "pen",
     ["scale"] = {
-      ["pencil"] = 1.25,
+      ["pen"] = 1.25,
       ["eraser"] = 0.9
     }
   }
+
+  self.cell = {
+    ["column"] = 1,
+    ["row"] = 1
+  }
+
   self.timer = 0
   self.interval =
     Timer.every(
@@ -26,6 +32,10 @@ function PlayState:enter(params)
       ["number"] = self.selection
     }
   )
+
+  self.size = self.level.size
+  self.gridSide = self.level.gridSide
+  self.cellSize = self.level.cellSize
 end
 
 function PlayState:update(dt)
@@ -41,14 +51,14 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.wasPressed("p") or love.keyboard.wasPressed("P") then
-    if self.button.tool ~= "pencil" then
-      self.button.tool = "pencil"
+    if self.button.tool ~= "pen" then
+      self.button.tool = "pen"
       Timer.tween(
         0.15,
         {
           [self.button.scale] = {
-            pencil = 1.25,
-            eraser = 0.9
+            ["pen"] = 1.25,
+            ["eraser"] = 0.9
           }
         }
       )
@@ -60,18 +70,81 @@ function PlayState:update(dt)
         0.15,
         {
           [self.button.scale] = {
-            pencil = 0.9,
-            eraser = 1.25
+            ["pen"] = 0.9,
+            ["eraser"] = 1.25
           }
         }
       )
     end
   end
+
+  if love.keyboard.wasPressed("tab") then
+    self.button.tool = self.button.tool == "eraser" and "pen" or "eraser"
+    Timer.tween(
+      0.15,
+      {
+        [self.button.scale] = {
+          ["pen"] = self.button.tool == "pen" and 1.25 or 0.9,
+          ["eraser"] = self.button.tool == "eraser" and 1.25 or 0.9
+        }
+      }
+    )
+  end
+
+  if love.keyboard.wasPressed("up") then
+    self.cell.row = math.max(1, self.cell.row - 1)
+  elseif love.keyboard.wasPressed("down") then
+    self.cell.row = math.min(self.gridSide, self.cell.row + 1)
+  elseif love.keyboard.wasPressed("right") then
+    self.cell.column = math.min(self.gridSide, self.cell.column + 1)
+  elseif love.keyboard.wasPressed("left") then
+    self.cell.column = math.max(1, self.cell.column - 1)
+  end
 end
 
 function PlayState:render()
   love.graphics.translate(WINDOW_WIDTH * 5 / 7, WINDOW_HEIGHT * 9 / 14)
+  love.graphics.setColor(gColors["highlight"].r, gColors["highlight"].g, gColors["highlight"].b, gColors["highlight"].a)
+  love.graphics.rectangle("fill", -self.size / 2, -self.size / 2, self.size, self.size)
   self.level:render()
+  love.graphics.setColor(gColors["highlight"].r, gColors["highlight"].g, gColors["highlight"].b, gColors["highlight"].a)
+  love.graphics.rectangle("fill", -self.size / 2, -self.size / 2, self.size, self.size)
+
+  love.graphics.setLineWidth(1)
+  love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
+  for i = 1, self.gridSide + 1 do
+    love.graphics.line(
+      -self.size / 2 + (i - 1) * self.cellSize,
+      -self.size / 2,
+      -self.size / 2 + (i - 1) * self.cellSize,
+      self.size / 2
+    )
+    love.graphics.line(
+      -self.size / 2,
+      -self.size / 2 + (i - 1) * self.cellSize,
+      self.size / 2,
+      -self.size / 2 + (i - 1) * self.cellSize
+    )
+  end
+
+  love.graphics.setLineWidth(2)
+  love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
+  love.graphics.rectangle(
+    "fill",
+    -self.size / 2 + (self.cell.column - 1) * self.cellSize,
+    -self.size / 2 + (self.cell.row - 1) * self.cellSize,
+    self.cellSize,
+    self.cellSize
+  )
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+  love.graphics.rectangle(
+    "line",
+    -self.size / 2 + (self.cell.column - 1) * self.cellSize,
+    -self.size / 2 + (self.cell.row - 1) * self.cellSize,
+    self.cellSize,
+    self.cellSize
+  )
+
   love.graphics.translate(-WINDOW_WIDTH * 5 / 7, -WINDOW_HEIGHT * 9 / 14)
 
   love.graphics.setFont(gFonts["small"])
@@ -91,8 +164,8 @@ function PlayState:render()
   love.graphics.printf(formatTimer(self.timer), WINDOW_WIDTH / 4 - 84, WINDOW_HEIGHT / 4, 128, "right")
 
   love.graphics.translate(WINDOW_WIDTH / 4, WINDOW_HEIGHT / 2)
-  love.graphics.scale(self.button.scale.pencil, self.button.scale.pencil)
-  if self.button.tool == "pencil" then
+  love.graphics.scale(self.button.scale.pen, self.button.scale.pen)
+  if self.button.tool == "pen" then
     love.graphics.setColor(
       gColors["highlight"].r,
       gColors["highlight"].g,
@@ -107,7 +180,7 @@ function PlayState:render()
   love.graphics.setLineWidth(2)
   love.graphics.circle("line", 0, 0, 20)
   love.graphics.polygon("fill", 4, -9.5, -8, 2.5, -8, 7.5, -3, 7.5, 9, -4.5)
-  love.graphics.scale(2 - self.button.scale.pencil, 2 - self.button.scale.pencil)
+  love.graphics.scale(2 - self.button.scale.pen, 2 - self.button.scale.pen)
 
   love.graphics.translate(-40, 40)
   love.graphics.scale(self.button.scale.eraser, self.button.scale.eraser)
@@ -125,7 +198,11 @@ function PlayState:render()
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.setLineWidth(2)
   love.graphics.circle("line", 0, 0, 20)
-  love.graphics.line(-6, -6, 6, 6)
-  love.graphics.line(-6, 6, 6, -6)
+  love.graphics.setLineWidth(3)
+  love.graphics.line(-5.5, -5.5, 5.5, 5.5)
+  love.graphics.line(-5.5, 5.5, 5.5, -5.5)
   love.graphics.scale(2 - self.button.scale.eraser, 2 - self.button.scale.eraser)
+end
+
+function PlayState:buildGrid()
 end

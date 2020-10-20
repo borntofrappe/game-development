@@ -7,7 +7,7 @@ function SelectState:init()
     self.levels[i] =
       Level(
       {
-        ["number"] = i,
+        ["number"] = 0,
         ["hideHints"] = true,
         ["size"] = 36
       }

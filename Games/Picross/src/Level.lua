@@ -58,6 +58,7 @@ function Level:render()
     end
   end
 
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   for i, row in ipairs(self.grid) do
     for i, cell in ipairs(row) do
       cell:render()

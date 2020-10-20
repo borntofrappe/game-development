@@ -2,7 +2,7 @@
 
 Develop the basics of the game picross, a puzzle game in which the player fills a grid based on the instructions given on the side of each row and column. The goal is to ultimately draw a stylized picture based on the pixelated structure.
 
-## Topics
+In the process, I plan to implement the following features:
 
 - keyboard and mouse controls, similarly to _Match Three_
 
@@ -239,3 +239,15 @@ love.graphics.printf(
 ```
 
 The idea is to show six digits, for the hours, minutes and seconds. All separated by a colon character and showing always two digits: `hh:mm:ss`.
+
+## Gameplay
+
+In `PlayState`, the idea is to have the level in between two surfaces:
+
+- a rectangle to provide a background
+
+- a grid of squares to hide the level, and give the opportunity to the player to fill the larger structure following the surrounding suggestions
+
+As the player selects a cell, the overlayed grid is filled with dark-blue squares, dark-blue crosses. In the moment the squares match the structure of the underlying level, the game finally ends by removing the overlay itself. This works as a quick way to remove the crosses and show the final solution.
+
+_Please note_: the background layer can be included in the level class, but provides a less then flexible default. Consider for instance when the levels are used in the selection screen; in this situation, the background is more of a distraction than a helpful visual.
