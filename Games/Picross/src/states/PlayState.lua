@@ -4,7 +4,7 @@ function PlayState:init()
   self.button = {
     ["tool"] = "pencil",
     ["scale"] = {
-      ["pencil"] = 1.2,
+      ["pencil"] = 1.25,
       ["eraser"] = 0.9
     }
   }
@@ -47,7 +47,7 @@ function PlayState:update(dt)
         0.2,
         {
           [self.button.scale] = {
-            pencil = 1.2,
+            pencil = 1.25,
             eraser = 0.9
           }
         }
@@ -61,7 +61,7 @@ function PlayState:update(dt)
         {
           [self.button.scale] = {
             pencil = 0.9,
-            eraser = 1.2
+            eraser = 1.25
           }
         }
       )
@@ -75,10 +75,10 @@ function PlayState:render()
   love.graphics.translate(-WINDOW_WIDTH * 5 / 7, -WINDOW_HEIGHT * 9 / 14)
 
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 92, WINDOW_HEIGHT / 4 - 5, 136, 8 + gFonts["normal"]:getHeight())
+  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 94, WINDOW_HEIGHT / 4 - 7, 140, 12 + gFonts["normal"]:getHeight())
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(gColors["highlight"].r, gColors["highlight"].g, gColors["highlight"].b, gColors["highlight"].a)
-  love.graphics.printf(formatTimer(self.timer), WINDOW_WIDTH / 4 - 87, WINDOW_HEIGHT / 4, 128, "right")
+  love.graphics.printf(formatTimer(self.timer), WINDOW_WIDTH / 4 - 88, WINDOW_HEIGHT / 4, 128, "right")
 
   love.graphics.translate(WINDOW_WIDTH / 4 + 20, WINDOW_HEIGHT / 2)
   love.graphics.scale(self.button.scale.pencil, self.button.scale.pencil)

@@ -29,10 +29,13 @@ gColors = {
 }
 
 function formatTimer(seconds)
+  local seconds = seconds
+  local hours = math.floor(seconds / 3600)
+  seconds = seconds - hours * 3600
   local minutes = math.floor(seconds / 60)
-  local seconds = seconds % 60
+  seconds = seconds - minutes * 60
 
-  local h = "00"
+  local h = hours >= 10 and hours or 0 .. hours
   local m = minutes >= 10 and minutes or 0 .. minutes
   local s = seconds >= 10 and seconds or 0 .. seconds
 
