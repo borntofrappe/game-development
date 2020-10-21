@@ -179,13 +179,15 @@ Once the `hints` tables are populated, `Level:render` draws the digits using the
 
 ## States
 
-The game is programmed to have three states:
+The game is programmed to have four states:
 
 - `StartState`: show the name of the game above a single button, with the string 'Levels'
 
 - `SelectState`: show the levels side by side, and allow to select a particular one
 
 - `PlayState`: play the selected level, starting with an empty grid and the accompanying hints
+
+- `VictoryState`: show the completed level, before moving back to the selection screen
 
 ### StartState
 

@@ -1,13 +1,14 @@
 SelectState = Class({__includes = BaseState})
 
 function SelectState:init()
+  -- fade-in
   self.overlay = {
     ["r"] = 1,
     ["g"] = 1,
     ["b"] = 1,
     ["a"] = 1
   }
-  self.transitionDuration = 0.5
+  self.transitionDuration = TRANSITION_DURATION / 2
   self.isTransitioning = true
 
   Timer.tween(
@@ -23,10 +24,16 @@ function SelectState:init()
 end
 
 function SelectState:enter(params)
+  --[[
+    params
+      - levels, a table describing the available levels
+      - completedLevels, a table describing the completed levels through booleans
+  ]]
   self.levels = {}
   self.completedLevels = params and params.completedLevels or {}
 
   for i = 1, #LEVELS do
+    -- default to 0 for the grid describing the question mark
     local number = self.completedLevels[i] and i or 0
     self.levels[i] =
       Level(
@@ -42,14 +49,18 @@ function SelectState:enter(params)
   self.spacing = (WINDOW_WIDTH - self.padding * 2) / (#self.levels - 1)
 
   self.button = {
+    ["y"] = WINDOW_HEIGHT / 2 - 28,
+    ["width"] = 56,
+    ["height"] = 56,
     ["alpha"] = 0.15,
     ["min"] = 0.15,
     ["max"] = 0.45,
     ["selection"] = params and params.selection or 1
   }
 
-  self.animationDuration = 1
-
+  -- opacity animation
+  self.animationDuration = ANIMATION_DURATION
+  -- immediate
   Timer.tween(
     self.animationDuration / 2,
     {
@@ -65,7 +76,7 @@ function SelectState:enter(params)
       )
     end
   )
-
+  -- at an interval
   self.interval =
     Timer.every(
     self.animationDuration * 1.25,
@@ -92,82 +103,13 @@ end
 function SelectState:update(dt)
   Timer.update(dt)
 
-  local x, y = love.mouse:getPosition()
-  if y > WINDOW_HEIGHT / 2 - 28 and y < WINDOW_HEIGHT / 2 + 28 then
-    for i = 1, #self.levels do
-      if x > self.padding - 28 + (i - 1) * (self.spacing) and x < self.padding - 28 + (i - 1) * (self.spacing) + 56 then
-        self.button.selection = i
-        break
-      end
-    end
-  end
-
-  if love.mouse.wasPressed(1) and not self.isTransitioning then
-    local x, y = love.mouse:getPosition()
-    if y > WINDOW_HEIGHT / 2 - 28 and y < WINDOW_HEIGHT / 2 + 28 then
-      for i = 1, #self.levels do
-        if x > self.padding - 28 + (i - 1) * (self.spacing) and x < self.padding - 28 + (i - 1) * (self.spacing) + 56 then
-          self.isTransitioning = true
-
-          Timer.tween(
-            self.transitionDuration,
-            {
-              [self.overlay] = {a = 1}
-            }
-          ):finish(
-            function()
-              self.interval:remove()
-              gStateMachine:change(
-                "play",
-                {
-                  ["selection"] = self.button.selection,
-                  ["completedLevels"] = self.completedLevels
-                }
-              )
-            end
-          )
-          break
-        end
-      end
-    end
-  end
-
+  -- keyboard input
   if love.keyboard.wasPressed("escape") and not self.isTransitioning then
-    self.isTransitioning = true
-
-    Timer.tween(
-      self.transitionDuration,
-      {
-        [self.overlay] = {a = 1}
-      }
-    ):finish(
-      function()
-        self.interval:remove()
-        gStateMachine:change("start")
-      end
-    )
+    self:goToStartState()
   end
 
   if (love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return")) and not self.isTransitioning then
-    self.isTransitioning = true
-
-    Timer.tween(
-      self.transitionDuration,
-      {
-        [self.overlay] = {a = 1}
-      }
-    ):finish(
-      function()
-        self.interval:remove()
-        gStateMachine:change(
-          "play",
-          {
-            ["selection"] = self.button.selection,
-            ["completedLevels"] = self.completedLevels
-          }
-        )
-      end
-    )
+    self:goToPlayState()
   end
 
   if love.keyboard.wasPressed("right") then
@@ -175,33 +117,96 @@ function SelectState:update(dt)
   elseif love.keyboard.wasPressed("left") then
     self.button.selection = self.button.selection == 1 and #self.levels or self.button.selection - 1
   end
+
+  -- mouse input
+  -- update selection on mouseover
+  local x, y = love.mouse:getPosition()
+  if y > self.button.y and y < self.button.y + self.button.height then
+    for i = 1, #self.levels do
+      if
+        x > self.padding - self.button.width / 2 + (i - 1) * (self.spacing) and
+          x < self.padding - self.button.width / 2 + (i - 1) * (self.spacing) + self.button.width
+       then
+        self.button.selection = i
+        break
+      end
+    end
+  end
+
+  -- move to play state on mouseclick
+  -- only if the cursor resides on a level
+  if love.mouse.wasPressed(1) and not self.isTransitioning then
+    local x, y = love.mouse:getPosition()
+    if y > self.button.y and y < self.button.y + self.button.height then
+      for i = 1, #self.levels do
+        if
+          x > self.padding - self.button.width / 2 + (i - 1) * (self.spacing) and
+            x < self.padding - self.button.width / 2 + (i - 1) * (self.spacing) + self.button.width
+         then
+          self:goToPlayState()
+          break
+        end
+      end
+    end
+  end
 end
 
 function SelectState:render()
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.setFont(gFonts["normal"])
+  -- show the name of the level if completed
   if self.completedLevels[self.button.selection] then
-    love.graphics.printf(self.levels[self.button.selection].name, 0, WINDOW_HEIGHT * 3 / 4, WINDOW_WIDTH, "center")
+    love.graphics.printf(
+      self.levels[self.button.selection].name,
+      0,
+      WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2,
+      WINDOW_WIDTH,
+      "center"
+    )
   else
-    love.graphics.printf("Level " .. self.button.selection, 0, WINDOW_HEIGHT * 3 / 4, WINDOW_WIDTH, "center")
+    love.graphics.printf(
+      "Level " .. self.button.selection,
+      0,
+      WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2,
+      WINDOW_WIDTH,
+      "center"
+    )
   end
 
-  love.graphics.translate(self.padding - self.spacing, WINDOW_HEIGHT / 2)
-
+  love.graphics.translate(self.padding - self.spacing, self.button.y + self.button.height / 2)
   love.graphics.setLineWidth(2)
   for i, level in ipairs(self.levels) do
     love.graphics.translate(self.spacing, 0)
 
+    -- animate the background of the selection
     if i == self.button.selection then
       love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, self.button.alpha)
     else
       love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
     end
-    love.graphics.rectangle("fill", -28, -28, 56, 56)
+    love.graphics.rectangle(
+      "fill",
+      -self.button.width / 2,
+      -self.button.height / 2,
+      self.button.width,
+      self.button.height
+    )
     love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
-    love.graphics.rectangle("line", -26, -26, 56, 56)
+    love.graphics.rectangle(
+      "line",
+      -self.button.width / 2,
+      -self.button.height / 2,
+      self.button.width,
+      self.button.height
+    )
     love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-    love.graphics.rectangle("line", -28, -28, 56, 56)
+    love.graphics.rectangle(
+      "line",
+      -self.button.width / 2,
+      -self.button.height / 2,
+      self.button.width,
+      self.button.height
+    )
 
     level:render()
   end
@@ -210,4 +215,42 @@ function SelectState:render()
 
   love.graphics.setColor(self.overlay.r, self.overlay.g, self.overlay.b, self.overlay.a)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+end
+
+function SelectState:goToStartState()
+  self.isTransitioning = true
+
+  Timer.tween(
+    self.transitionDuration,
+    {
+      [self.overlay] = {a = 1}
+    }
+  ):finish(
+    function()
+      self.interval:remove()
+      gStateMachine:change("start")
+    end
+  )
+end
+
+function SelectState:goToPlayState()
+  self.isTransitioning = true
+
+  Timer.tween(
+    self.transitionDuration,
+    {
+      [self.overlay] = {a = 1}
+    }
+  ):finish(
+    function()
+      self.interval:remove()
+      gStateMachine:change(
+        "play",
+        {
+          ["selection"] = self.button.selection,
+          ["completedLevels"] = self.completedLevels
+        }
+      )
+    end
+  )
 end

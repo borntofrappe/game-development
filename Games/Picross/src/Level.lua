@@ -16,8 +16,8 @@ function Level:init(def)
   self.levelString = string.gsub(self.level, "[^xo]", "")
 
   self.levelStringLength = #self.levelString
-  self.gridSide = math.floor(math.sqrt(self.levelStringLength))
-  self.cellSize = math.floor(self.size / self.gridSide)
+  self.gridDimension = math.floor(math.sqrt(self.levelStringLength))
+  self.cellSize = math.floor(self.size / self.gridDimension)
 
   self.grid = {}
   self.hints = {
@@ -69,8 +69,8 @@ end
 
 function Level:buildGrid()
   for i = 0, self.levelStringLength - 1 do
-    local column = (i % self.gridSide) + 1
-    local row = math.floor(i / self.gridSide) + 1
+    local column = (i % self.gridDimension) + 1
+    local row = math.floor(i / self.gridDimension) + 1
     local value = string.sub(self.levelString, i + 1, i + 1)
     local size = self.cellSize
 
