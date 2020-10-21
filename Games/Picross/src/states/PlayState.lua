@@ -126,21 +126,14 @@ function PlayState:update(dt)
 
       if self:checkVictory() then
         self.interval:remove()
-        self.isComplete = true
-        self.level.hideHints = true
-        self.completedLevels[self.selection] = true
-
-        Timer.after(
-          3,
-          function()
-            gStateMachine:change(
-              "select",
-              {
-                ["selection"] = self.selection,
-                ["completedLevels"] = self.completedLevels
-              }
-            )
-          end
+        gStateMachine:change(
+          "victory",
+          {
+            ["completedLevels"] = self.completedLevels,
+            ["selection"] = self.selection,
+            ["level"] = self.level,
+            ["timer"] = self.timer
+          }
         )
       end
     else
@@ -156,104 +149,88 @@ function PlayState:render()
 
   self.level:render()
 
-  if self.isComplete then
-    love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-    love.graphics.printf(
-      self.level.name,
+  love.graphics.setColor(gColors["highlight"].r, gColors["highlight"].g, gColors["highlight"].b, gColors["highlight"].a)
+  love.graphics.rectangle("fill", -self.size / 2, -self.size / 2, self.size, self.size)
+
+  for i, cell in ipairs(self.grid) do
+    if cell.value == "o" then
+      love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+      love.graphics.rectangle(
+        "fill",
+        -self.size / 2 + (cell.column - 1) * self.cellSize,
+        -self.size / 2 + (cell.row - 1) * self.cellSize,
+        self.cellSize,
+        self.cellSize
+      )
+    elseif cell.value == "x" then
+      love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+      love.graphics.line(
+        -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize / 4,
+        -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize / 4,
+        -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize * 3 / 4,
+        -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize * 3 / 4
+      )
+      love.graphics.line(
+        -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize * 3 / 4,
+        -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize / 4,
+        -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize / 4,
+        -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize * 3 / 4
+      )
+    end
+  end
+
+  love.graphics.setLineWidth(1)
+  love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
+  for i = 1, self.gridSide + 1 do
+    love.graphics.line(
+      -self.size / 2 + (i - 1) * self.cellSize,
       -self.size / 2,
-      -self.size / 2 - 16 - gSizes["height-font-normal"],
-      self.size,
-      "center"
+      -self.size / 2 + (i - 1) * self.cellSize,
+      self.size / 2
     )
-  else
-    love.graphics.setColor(
-      gColors["highlight"].r,
-      gColors["highlight"].g,
-      gColors["highlight"].b,
-      gColors["highlight"].a
-    )
-    love.graphics.rectangle("fill", -self.size / 2, -self.size / 2, self.size, self.size)
-
-    for i, cell in ipairs(self.grid) do
-      if cell.value == "o" then
-        love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-        love.graphics.rectangle(
-          "fill",
-          -self.size / 2 + (cell.column - 1) * self.cellSize,
-          -self.size / 2 + (cell.row - 1) * self.cellSize,
-          self.cellSize,
-          self.cellSize
-        )
-      elseif cell.value == "x" then
-        love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-        love.graphics.line(
-          -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize / 4,
-          -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize / 4,
-          -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize * 3 / 4,
-          -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize * 3 / 4
-        )
-        love.graphics.line(
-          -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize * 3 / 4,
-          -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize / 4,
-          -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize / 4,
-          -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize * 3 / 4
-        )
-      end
-    end
-
-    love.graphics.setLineWidth(1)
-    love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
-    for i = 1, self.gridSide + 1 do
-      love.graphics.line(
-        -self.size / 2 + (i - 1) * self.cellSize,
-        -self.size / 2,
-        -self.size / 2 + (i - 1) * self.cellSize,
-        self.size / 2
-      )
-      love.graphics.line(
-        -self.size / 2,
-        -self.size / 2 + (i - 1) * self.cellSize,
-        self.size / 2,
-        -self.size / 2 + (i - 1) * self.cellSize
-      )
-    end
-
-    love.graphics.setLineWidth(2)
-    love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
-    love.graphics.rectangle(
-      "fill",
-      -self.size / 2 + (self.cell.column - 1) * self.cellSize,
-      -self.size / 2 - 8 - #self.level.hints.columns[self.cell.column] * gSizes["height-font-normal"] * 1.5 -
-        gSizes["height-font-normal"] / 2,
-      self.cellSize,
-      8 + #self.level.hints.columns[self.cell.column] * gSizes["height-font-normal"] * 1.5 +
-        gSizes["height-font-normal"] / 2
-    )
-    love.graphics.rectangle(
-      "fill",
-      -self.size / 2 - 8 - #self.level.hints.rows[self.cell.row] * gSizes["height-font-normal"] * 1.5 -
-        gSizes["height-font-normal"] / 2,
-      -self.size / 2 + (self.cell.row - 1) * self.cellSize,
-      8 + #self.level.hints.rows[self.cell.row] * gSizes["height-font-normal"] * 1.5 + gSizes["height-font-normal"] / 2,
-      self.cellSize
-    )
-
-    love.graphics.rectangle(
-      "fill",
-      -self.size / 2 + (self.cell.column - 1) * self.cellSize,
-      -self.size / 2 + (self.cell.row - 1) * self.cellSize,
-      self.cellSize,
-      self.cellSize
-    )
-    love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-    love.graphics.rectangle(
-      "line",
-      -self.size / 2 + (self.cell.column - 1) * self.cellSize,
-      -self.size / 2 + (self.cell.row - 1) * self.cellSize,
-      self.cellSize,
-      self.cellSize
+    love.graphics.line(
+      -self.size / 2,
+      -self.size / 2 + (i - 1) * self.cellSize,
+      self.size / 2,
+      -self.size / 2 + (i - 1) * self.cellSize
     )
   end
+
+  love.graphics.setLineWidth(2)
+  love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
+  love.graphics.rectangle(
+    "fill",
+    -self.size / 2 + (self.cell.column - 1) * self.cellSize,
+    -self.size / 2 - 8 - #self.level.hints.columns[self.cell.column] * gSizes["height-font-normal"] * 1.5 -
+      gSizes["height-font-normal"] / 2,
+    self.cellSize,
+    8 + #self.level.hints.columns[self.cell.column] * gSizes["height-font-normal"] * 1.5 +
+      gSizes["height-font-normal"] / 2
+  )
+  love.graphics.rectangle(
+    "fill",
+    -self.size / 2 - 8 - #self.level.hints.rows[self.cell.row] * gSizes["height-font-normal"] * 1.5 -
+      gSizes["height-font-normal"] / 2,
+    -self.size / 2 + (self.cell.row - 1) * self.cellSize,
+    8 + #self.level.hints.rows[self.cell.row] * gSizes["height-font-normal"] * 1.5 + gSizes["height-font-normal"] / 2,
+    self.cellSize
+  )
+
+  love.graphics.rectangle(
+    "fill",
+    -self.size / 2 + (self.cell.column - 1) * self.cellSize,
+    -self.size / 2 + (self.cell.row - 1) * self.cellSize,
+    self.cellSize,
+    self.cellSize
+  )
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+  love.graphics.rectangle(
+    "line",
+    -self.size / 2 + (self.cell.column - 1) * self.cellSize,
+    -self.size / 2 + (self.cell.row - 1) * self.cellSize,
+    self.cellSize,
+    self.cellSize
+  )
 
   love.graphics.translate(-WINDOW_WIDTH * 5 / 7, -WINDOW_HEIGHT * 9 / 14)
 
@@ -262,7 +239,7 @@ function PlayState:render()
   love.graphics.print(
     "Level " .. self.selection,
     WINDOW_WIDTH / 4 - 90,
-    WINDOW_HEIGHT / 4 - 7 - 8 - gFonts["small"]:getHeight()
+    WINDOW_HEIGHT / 4 - 7 - 8 - gSizes["height-font-small"]
   )
 
   love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)

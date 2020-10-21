@@ -15,6 +15,9 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState()
+      end,
+      ["victory"] = function()
+        return VictoryState()
       end
     }
   )
