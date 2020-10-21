@@ -35,7 +35,7 @@ function VictoryState:enter(params)
   }
 
   Timer.tween(
-    1,
+    0.75,
     {
       [self.background] = {a = 0},
       [self.message] = {a = 1}

@@ -178,21 +178,21 @@ function PlayState:update(dt)
     local i = column + (row - 1) * self.gridSide
     if self.button.tool == "pen" then
       self.grid[i].value = self.grid[i].value == "x" and "" or "o"
-
-      if self:checkVictory() then
-        self.interval:remove()
-        gStateMachine:change(
-          "victory",
-          {
-            ["completedLevels"] = self.completedLevels,
-            ["selection"] = self.selection,
-            ["level"] = self.level,
-            ["timer"] = self.timer
-          }
-        )
-      end
     elseif self.button.tool == "eraser" then
       self.grid[i].value = self.grid[i].value == "o" and "" or "x"
+    end
+
+    if self:checkVictory() then
+      self.interval:remove()
+      gStateMachine:change(
+        "victory",
+        {
+          ["completedLevels"] = self.completedLevels,
+          ["selection"] = self.selection,
+          ["level"] = self.level,
+          ["timer"] = self.timer
+        }
+      )
     end
   end
 end
@@ -353,6 +353,9 @@ end
 function PlayState:checkVictory()
   for i = 1, #self.grid do
     if self.level.grid[i].value == "o" and self.grid[i].value ~= self.level.grid[i].value then
+      return false
+    end
+    if self.grid[i].value == "o" and self.level.grid[i].value ~= "o" then
       return false
     end
   end
