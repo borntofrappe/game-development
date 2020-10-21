@@ -101,7 +101,7 @@ function VictoryState:render()
   love.graphics.printf(
     self.message.text,
     0,
-    WINDOW_HEIGHT * 9 / 14 + self.size / 2 - gSizes["height-font-medium"],
+    WINDOW_HEIGHT * 9 / 14 - gSizes["height-font-medium"] / 2,
     WINDOW_WIDTH * 5 / 7 - self.size / 2,
     "center"
   )

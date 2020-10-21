@@ -88,6 +88,27 @@ function StartState:update(dt)
       end
     )
   end
+  if love.mouse.wasPressed(1) and not self.isTransitioning then
+    local x, y = love.mouse:getPosition()
+    if
+      x > WINDOW_WIDTH / 2 - 68 and x < WINDOW_WIDTH / 2 - 68 + 136 and
+        y > WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2 - 8 and
+        y < WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2 - 8 + gSizes["height-font-normal"] + 16
+     then
+      self.isTransitioning = true
+      Timer.tween(
+        self.transitionDuration,
+        {
+          [self.overlay] = {a = 1}
+        }
+      ):finish(
+        function()
+          self.interval:remove()
+          gStateMachine:change("select")
+        end
+      )
+    end
+  end
 end
 
 function StartState:render()

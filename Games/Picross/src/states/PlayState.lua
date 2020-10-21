@@ -86,6 +86,102 @@ end
 
 function PlayState:update(dt)
   Timer.update(dt)
+
+  local x, y = love.mouse:getPosition()
+  if
+    x > WINDOW_WIDTH * 5 / 7 - self.size / 2 and x < WINDOW_WIDTH * 5 / 7 + self.size / 2 and
+      y > WINDOW_HEIGHT * 9 / 14 - self.size / 2 and
+      y < WINDOW_HEIGHT * 9 / 14 + self.size / 2
+   then
+    local column = math.floor((x - (WINDOW_WIDTH * 5 / 7 - self.size / 2)) / self.cellSize) + 1
+    local row = math.floor((y - (WINDOW_HEIGHT * 9 / 14 - self.size / 2)) / self.cellSize) + 1
+
+    self.cell.column = column
+    self.cell.row = row
+
+    if love.mouse.isDown(1) then
+      local column = self.cell.column
+      local row = self.cell.row
+      local i = column + (row - 1) * self.gridSide
+      if self.button.tool == "pen" then
+        self.grid[i].value = self.grid[i].value == "x" and "" or "o"
+      elseif self.button.tool == "eraser" then
+        self.grid[i].value = self.grid[i].value == "o" and "" or "x"
+      end
+
+      if self:checkVictory() then
+        self.interval:remove()
+        gStateMachine:change(
+          "victory",
+          {
+            ["completedLevels"] = self.completedLevels,
+            ["selection"] = self.selection,
+            ["level"] = self.level,
+            ["timer"] = self.timer
+          }
+        )
+      end
+    end
+  end
+
+  if love.mouse.wasPressed(1) then
+    local x, y = love.mouse:getPosition()
+
+    if
+      x > WINDOW_WIDTH * 5 / 7 - self.size / 2 and x < WINDOW_WIDTH * 5 / 7 + self.size / 2 and
+        y > WINDOW_HEIGHT * 9 / 14 - self.size / 2 and
+        y < WINDOW_HEIGHT * 9 / 14 + self.size / 2
+     then
+      local column = self.cell.column
+      local row = self.cell.row
+      local i = column + (row - 1) * self.gridSide
+      if self.button.tool == "pen" then
+        self.grid[i].value = self.grid[i].value == "x" and "" or "o"
+      elseif self.button.tool == "eraser" then
+        self.grid[i].value = self.grid[i].value == "o" and "" or "x"
+      end
+
+      if self:checkVictory() then
+        self.interval:remove()
+        gStateMachine:change(
+          "victory",
+          {
+            ["completedLevels"] = self.completedLevels,
+            ["selection"] = self.selection,
+            ["level"] = self.level,
+            ["timer"] = self.timer
+          }
+        )
+      end
+    end
+
+    if ((x - WINDOW_WIDTH / 4) ^ 2 + (y - WINDOW_HEIGHT / 2) ^ 2) ^ 0.5 < 20 then
+      self.button.tool = "pen"
+      Timer.tween(
+        0.15,
+        {
+          [self.button.scale] = {
+            ["pen"] = 1.25,
+            ["eraser"] = 0.9
+          }
+        }
+      )
+    end
+
+    if ((x - (WINDOW_WIDTH / 4 - 40)) ^ 2 + (y - (WINDOW_HEIGHT / 2 + 40)) ^ 2) ^ 0.5 < 20 then
+      self.button.tool = "eraser"
+      Timer.tween(
+        0.15,
+        {
+          [self.button.scale] = {
+            ["pen"] = 0.9,
+            ["eraser"] = 1.25
+          }
+        }
+      )
+    end
+  end
+
   if love.keyboard.wasPressed("escape") and not self.isTransitioning then
     self.isTransitioning = true
 
@@ -170,6 +266,10 @@ function PlayState:update(dt)
     self.cell.column = math.min(self.gridSide, self.cell.column + 1)
   elseif love.keyboard.wasPressed("left") then
     self.cell.column = math.max(1, self.cell.column - 1)
+  end
+
+  if love.mouse.wasPressed(1) then
+  --
   end
 
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then

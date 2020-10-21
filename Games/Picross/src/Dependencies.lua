@@ -16,7 +16,7 @@ require "src/states/VictoryState"
 
 gFonts = {
   ["big"] = love.graphics.newFont("res/fonts/font.ttf", 52),
-  ["medium"] = love.graphics.newFont("res/fonts/font.ttf", 20),
+  ["medium"] = love.graphics.newFont("res/fonts/font.ttf", 28),
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16),
   ["small"] = love.graphics.newFont("res/fonts/font.ttf", 12)
 }

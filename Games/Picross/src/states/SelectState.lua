@@ -92,6 +92,46 @@ end
 function SelectState:update(dt)
   Timer.update(dt)
 
+  local x, y = love.mouse:getPosition()
+  if y > WINDOW_HEIGHT / 2 - 28 and y < WINDOW_HEIGHT / 2 + 28 then
+    for i = 1, #self.levels do
+      if x > self.padding - 28 + (i - 1) * (self.spacing) and x < self.padding - 28 + (i - 1) * (self.spacing) + 56 then
+        self.button.selection = i
+        break
+      end
+    end
+  end
+
+  if love.mouse.wasPressed(1) and not self.isTransitioning then
+    local x, y = love.mouse:getPosition()
+    if y > WINDOW_HEIGHT / 2 - 28 and y < WINDOW_HEIGHT / 2 + 28 then
+      for i = 1, #self.levels do
+        if x > self.padding - 28 + (i - 1) * (self.spacing) and x < self.padding - 28 + (i - 1) * (self.spacing) + 56 then
+          self.isTransitioning = true
+
+          Timer.tween(
+            self.transitionDuration,
+            {
+              [self.overlay] = {a = 1}
+            }
+          ):finish(
+            function()
+              self.interval:remove()
+              gStateMachine:change(
+                "play",
+                {
+                  ["selection"] = self.button.selection,
+                  ["completedLevels"] = self.completedLevels
+                }
+              )
+            end
+          )
+          break
+        end
+      end
+    end
+  end
+
   if love.keyboard.wasPressed("escape") and not self.isTransitioning then
     self.isTransitioning = true
 
