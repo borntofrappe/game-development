@@ -29,18 +29,18 @@ function Level:init(def)
 end
 
 function Level:render()
-  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-  love.graphics.setFont(gFonts["normal"])
-
   love.graphics.translate(-self.size / 2, -self.size / 2)
 
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+
   if not self.hideHints then
+    love.graphics.setFont(gFonts["normal"])
     for y, hintRow in ipairs(self.hints.rows) do
       for x, hint in ipairs(hintRow) do
         love.graphics.print(
           hint,
-          -8 - gFonts["normal"]:getHeight() * 1.5 * #hintRow + gFonts["normal"]:getHeight() * 1.5 * (x - 1),
-          self.cellSize / 2 - gFonts["normal"]:getHeight() / 2 + self.cellSize * (y - 1)
+          -8 - gSizes["height-font-normal"] * 1.5 * #hintRow + gSizes["height-font-normal"] * 1.5 * (x - 1),
+          self.cellSize / 2 - gSizes["height-font-normal"] / 2 + self.cellSize * (y - 1)
         )
       end
     end
@@ -50,7 +50,7 @@ function Level:render()
         love.graphics.printf(
           hint,
           self.cellSize * (x - 1),
-          -8 - gFonts["normal"]:getHeight() * 1.5 * #hintColumn + gFonts["normal"]:getHeight() * 1.5 * (y - 1),
+          -8 - gSizes["height-font-normal"] * 1.5 * #hintColumn + gSizes["height-font-normal"] * 1.5 * (y - 1),
           self.cellSize,
           "center"
         )
@@ -58,11 +58,10 @@ function Level:render()
     end
   end
 
-  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-  for i, row in ipairs(self.grid) do
-    for i, cell in ipairs(row) do
-      cell:render()
-    end
+  for i, cell in ipairs(self.grid) do
+    -- for i, cell in ipairs(row) do
+    cell:render()
+    -- end
   end
 
   love.graphics.translate(self.size / 2, self.size / 2)
@@ -76,11 +75,12 @@ function Level:buildGrid()
     local size = self.cellSize
 
     local cell = Cell(column, row, size, value)
-    if self.grid[row] then
-      table.insert(self.grid[row], cell)
-    else
-      table.insert(self.grid, {cell})
-    end
+    table.insert(self.grid, cell)
+    -- if self.grid[row] then
+    --   table.insert(self.grid[row], cell)
+    -- else
+    --   table.insert(self.grid, {cell})
+    -- end
 
     if not self.hints.columns[column] then
       self.hints.columns[column] = {0}

@@ -70,16 +70,16 @@ end
 function StartState:render()
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.setFont(gFonts["big"])
-  love.graphics.printf("Picross", 0, WINDOW_HEIGHT / 2 - gFonts["big"]:getHeight(), WINDOW_WIDTH, "center")
+  love.graphics.printf("Picross", 0, WINDOW_HEIGHT / 2 - gSizes["height-font-big"], WINDOW_WIDTH, "center")
 
   love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
   love.graphics.setLineWidth(4)
   love.graphics.rectangle(
     "line",
     WINDOW_WIDTH / 2 - 68 + 2,
-    WINDOW_HEIGHT * 3 / 4 - gFonts["normal"]:getHeight() / 2 - 8 + 2,
+    WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2 - 8 + 2,
     136,
-    gFonts["normal"]:getHeight() + 16
+    gSizes["height-font-normal"] + 16
   )
 
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
@@ -87,9 +87,9 @@ function StartState:render()
   love.graphics.rectangle(
     "line",
     WINDOW_WIDTH / 2 - 68,
-    WINDOW_HEIGHT * 3 / 4 - gFonts["normal"]:getHeight() / 2 - 8,
+    WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2 - 8,
     136,
-    gFonts["normal"]:getHeight() + 16
+    gSizes["height-font-normal"] + 16
   )
 
   love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, self.button.alpha)
@@ -97,9 +97,9 @@ function StartState:render()
   love.graphics.rectangle(
     "fill",
     WINDOW_WIDTH / 2 - 68,
-    WINDOW_HEIGHT * 3 / 4 - gFonts["normal"]:getHeight() / 2 - 8,
+    WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2 - 8,
     136,
-    gFonts["normal"]:getHeight() + 16
+    gSizes["height-font-normal"] + 16
   )
 
   love.graphics.setFont(gFonts["normal"])
@@ -107,11 +107,11 @@ function StartState:render()
   love.graphics.printf(
     "Levels",
     2,
-    WINDOW_HEIGHT * 3 / 4 - gFonts["normal"]:getHeight() / 2 + 2,
+    WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2 + 2,
     WINDOW_WIDTH,
     "center"
   )
 
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-  love.graphics.printf("Levels", 0, WINDOW_HEIGHT * 3 / 4 - gFonts["normal"]:getHeight() / 2, WINDOW_WIDTH, "center")
+  love.graphics.printf("Levels", 0, WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2, WINDOW_WIDTH, "center")
 end

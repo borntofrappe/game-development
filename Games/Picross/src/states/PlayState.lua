@@ -40,15 +40,15 @@ function PlayState:enter(params)
   self.cellSize = self.level.cellSize
 
   self.grid = {}
-  for i, row in ipairs(self.level.grid) do
-    self.grid[i] = {}
-    for j, cell in ipairs(row) do
-      self.grid[i][j] = {
+  for i, cell in ipairs(self.level.grid) do
+    table.insert(
+      self.grid,
+      {
         ["column"] = cell.column,
         ["row"] = cell.row,
         ["value"] = ""
       }
-    end
+    )
   end
 end
 
@@ -116,9 +116,11 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
+    local column = self.cell.column
+    local row = self.cell.row
+    local i = column + (row - 1) * self.gridSide
     if self.button.tool == "pen" then
-      self.grid[self.cell.row][self.cell.column].value =
-        self.grid[self.cell.row][self.cell.column].value == "x" and "" or "o"
+      self.grid[i].value = self.grid[i].value == "x" and "" or "o"
 
       if self:checkVictory() then
         self.interval:remove()
@@ -138,8 +140,7 @@ function PlayState:update(dt)
         )
       end
     else
-      self.grid[self.cell.row][self.cell.column].value =
-        self.grid[self.cell.row][self.cell.column].value == "o" and "" or "x"
+      self.grid[i].value = self.grid[i].value == "o" and "" or "x"
     end
   end
 end
@@ -160,32 +161,30 @@ function PlayState:render()
     )
     love.graphics.rectangle("fill", -self.size / 2, -self.size / 2, self.size, self.size)
 
-    for i, row in ipairs(self.grid) do
-      for i, cell in ipairs(row) do
-        if cell.value == "o" then
-          love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-          love.graphics.rectangle(
-            "fill",
-            -self.size / 2 + (cell.column - 1) * self.cellSize,
-            -self.size / 2 + (cell.row - 1) * self.cellSize,
-            self.cellSize,
-            self.cellSize
-          )
-        elseif cell.value == "x" then
-          love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-          love.graphics.line(
-            -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize / 4,
-            -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize / 4,
-            -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize * 3 / 4,
-            -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize * 3 / 4
-          )
-          love.graphics.line(
-            -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize * 3 / 4,
-            -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize / 4,
-            -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize / 4,
-            -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize * 3 / 4
-          )
-        end
+    for i, cell in ipairs(self.grid) do
+      if cell.value == "o" then
+        love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+        love.graphics.rectangle(
+          "fill",
+          -self.size / 2 + (cell.column - 1) * self.cellSize,
+          -self.size / 2 + (cell.row - 1) * self.cellSize,
+          self.cellSize,
+          self.cellSize
+        )
+      elseif cell.value == "x" then
+        love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+        love.graphics.line(
+          -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize / 4,
+          -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize / 4,
+          -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize * 3 / 4,
+          -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize * 3 / 4
+        )
+        love.graphics.line(
+          -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize * 3 / 4,
+          -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize / 4,
+          -self.size / 2 + (cell.column - 1) * self.cellSize + self.cellSize / 4,
+          -self.size / 2 + (cell.row - 1) * self.cellSize + self.cellSize * 3 / 4
+        )
       end
     end
 
@@ -211,18 +210,18 @@ function PlayState:render()
     love.graphics.rectangle(
       "fill",
       -self.size / 2 + (self.cell.column - 1) * self.cellSize,
-      -self.size / 2 - 8 - #self.level.hints.columns[self.cell.column] * gFonts["normal"]:getHeight() * 1.5 -
-        gFonts["normal"]:getHeight() / 2,
+      -self.size / 2 - 8 - #self.level.hints.columns[self.cell.column] * gSizes["height-font-normal"] * 1.5 -
+        gSizes["height-font-normal"] / 2,
       self.cellSize,
-      8 + #self.level.hints.columns[self.cell.column] * gFonts["normal"]:getHeight() * 1.5 +
-        gFonts["normal"]:getHeight() / 2
+      8 + #self.level.hints.columns[self.cell.column] * gSizes["height-font-normal"] * 1.5 +
+        gSizes["height-font-normal"] / 2
     )
     love.graphics.rectangle(
       "fill",
-      -self.size / 2 - 8 - #self.level.hints.rows[self.cell.row] * gFonts["normal"]:getHeight() * 1.5 -
-        gFonts["normal"]:getHeight() / 2,
+      -self.size / 2 - 8 - #self.level.hints.rows[self.cell.row] * gSizes["height-font-normal"] * 1.5 -
+        gSizes["height-font-normal"] / 2,
       -self.size / 2 + (self.cell.row - 1) * self.cellSize,
-      8 + #self.level.hints.rows[self.cell.row] * gFonts["normal"]:getHeight() * 1.5 + gFonts["normal"]:getHeight() / 2,
+      8 + #self.level.hints.rows[self.cell.row] * gSizes["height-font-normal"] * 1.5 + gSizes["height-font-normal"] / 2,
       self.cellSize
     )
 
@@ -254,9 +253,9 @@ function PlayState:render()
   )
 
   love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
-  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 86, WINDOW_HEIGHT / 4 - 3, 140, 12 + gFonts["normal"]:getHeight())
+  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 86, WINDOW_HEIGHT / 4 - 3, 140, 12 + gSizes["height-font-normal"])
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 90, WINDOW_HEIGHT / 4 - 7, 140, 12 + gFonts["normal"]:getHeight())
+  love.graphics.rectangle("fill", WINDOW_WIDTH / 4 - 90, WINDOW_HEIGHT / 4 - 7, 140, 12 + gSizes["height-font-normal"])
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(gColors["highlight"].r, gColors["highlight"].g, gColors["highlight"].b, gColors["highlight"].a)
   love.graphics.printf(formatTimer(self.timer), WINDOW_WIDTH / 4 - 84, WINDOW_HEIGHT / 4, 128, "right")
@@ -303,11 +302,9 @@ function PlayState:render()
 end
 
 function PlayState:checkVictory()
-  for y = 1, self.gridSide do
-    for x = 1, self.gridSide do
-      if self.level.grid[y][x].value == "o" and self.grid[y][x].value ~= self.level.grid[y][x].value then
-        return false
-      end
+  for i = 1, #self.grid do
+    if self.level.grid[i].value == "o" and self.grid[i].value ~= self.level.grid[i].value then
+      return false
     end
   end
 

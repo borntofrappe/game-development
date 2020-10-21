@@ -19,13 +19,19 @@ gFonts = {
   ["small"] = love.graphics.newFont("res/fonts/font.ttf", 12)
 }
 
+gSizes = {
+  ["height-font-big"] = gFonts["big"]:getHeight(),
+  ["height-font-normal"] = gFonts["normal"]:getHeight(),
+  ["height-font-small"] = gFonts["small"]:getHeight()
+}
+
 gTextures = {
   ["background"] = love.graphics.newImage("res/graphics/background.png")
 }
 
 gColors = {
   ["text"] = {["r"] = 0.07, ["g"] = 0.07, ["b"] = 0.2, ["a"] = 1},
-  ["shadow"] = {["r"] = 0.05, ["g"] = 0.05, ["b"] = 0.15, ["a"] = 0.2},
+  ["shadow"] = {["r"] = 0.05, ["g"] = 0.05, ["b"] = 0.15, ["a"] = 0.15},
   ["highlight"] = {["r"] = 0.98, ["g"] = 0.85, ["b"] = 0.05, ["a"] = 1}
 }
 
