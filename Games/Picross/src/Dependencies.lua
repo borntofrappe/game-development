@@ -16,6 +16,7 @@ require "src/states/VictoryState"
 
 gFonts = {
   ["big"] = love.graphics.newFont("res/fonts/font.ttf", 52),
+  ["medium"] = love.graphics.newFont("res/fonts/font.ttf", 20),
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16),
   ["small"] = love.graphics.newFont("res/fonts/font.ttf", 12)
 }
@@ -23,6 +24,7 @@ gFonts = {
 gSizes = {
   ["height-font-big"] = gFonts["big"]:getHeight(),
   ["height-font-normal"] = gFonts["normal"]:getHeight(),
+  ["height-font-medium"] = gFonts["medium"]:getHeight(),
   ["height-font-small"] = gFonts["small"]:getHeight()
 }
 

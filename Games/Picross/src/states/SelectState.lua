@@ -1,5 +1,27 @@
 SelectState = Class({__includes = BaseState})
 
+function SelectState:init()
+  self.overlay = {
+    ["r"] = 1,
+    ["g"] = 1,
+    ["b"] = 1,
+    ["a"] = 1
+  }
+  self.transitionDuration = 0.5
+  self.isTransitioning = true
+
+  Timer.tween(
+    self.transitionDuration,
+    {
+      [self.overlay] = {a = 0}
+    }
+  ):finish(
+    function()
+      self.isTransitioning = false
+    end
+  )
+end
+
 function SelectState:enter(params)
   self.levels = {}
   self.completedLevels = params and params.completedLevels or {}
@@ -70,19 +92,41 @@ end
 function SelectState:update(dt)
   Timer.update(dt)
 
-  if love.keyboard.wasPressed("escape") then
-    self.interval:remove()
-    gStateMachine:change("start")
+  if love.keyboard.wasPressed("escape") and not self.isTransitioning then
+    self.isTransitioning = true
+
+    Timer.tween(
+      self.transitionDuration,
+      {
+        [self.overlay] = {a = 1}
+      }
+    ):finish(
+      function()
+        self.interval:remove()
+        gStateMachine:change("start")
+      end
+    )
   end
 
-  if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
-    self.interval:remove()
-    gStateMachine:change(
-      "play",
+  if (love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return")) and not self.isTransitioning then
+    self.isTransitioning = true
+
+    Timer.tween(
+      self.transitionDuration,
       {
-        ["selection"] = self.button.selection,
-        ["completedLevels"] = self.completedLevels
+        [self.overlay] = {a = 1}
       }
+    ):finish(
+      function()
+        self.interval:remove()
+        gStateMachine:change(
+          "play",
+          {
+            ["selection"] = self.button.selection,
+            ["completedLevels"] = self.completedLevels
+          }
+        )
+      end
     )
   end
 
@@ -121,4 +165,9 @@ function SelectState:render()
 
     level:render()
   end
+
+  love.graphics.translate(-self.padding - self.spacing * (#self.levels - 1), -WINDOW_HEIGHT / 2)
+
+  love.graphics.setColor(self.overlay.r, self.overlay.g, self.overlay.b, self.overlay.a)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 end

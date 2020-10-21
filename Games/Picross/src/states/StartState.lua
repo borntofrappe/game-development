@@ -1,13 +1,6 @@
 StartState = Class({__includes = BaseState})
 
 function StartState:init()
-  self.level =
-    Level(
-    {
-      ["number"] = 0,
-      ["hideHints"] = true
-    }
-  )
   self.button = {
     ["alpha"] = 0.15,
     ["min"] = 0.15,
@@ -53,17 +46,47 @@ function StartState:init()
       )
     end
   )
+
+  self.overlay = {
+    ["r"] = 1,
+    ["g"] = 1,
+    ["b"] = 1,
+    ["a"] = 1
+  }
+  self.transitionDuration = 0.5
+  self.isTransitioning = true
+
+  Timer.tween(
+    self.transitionDuration,
+    {
+      [self.overlay] = {a = 0}
+    }
+  ):finish(
+    function()
+      self.isTransitioning = false
+    end
+  )
 end
 
 function StartState:update(dt)
   Timer.update(dt)
-  if love.keyboard.wasPressed("escape") then
+  if love.keyboard.wasPressed("escape") and not self.isTransitioning then
     love.event.quit()
   end
 
-  if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
-    self.interval:remove()
-    gStateMachine:change("select")
+  if (love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return")) and not self.isTransitioning then
+    self.isTransitioning = true
+    Timer.tween(
+      self.transitionDuration,
+      {
+        [self.overlay] = {a = 1}
+      }
+    ):finish(
+      function()
+        self.interval:remove()
+        gStateMachine:change("select")
+      end
+    )
   end
 end
 
@@ -114,4 +137,7 @@ function StartState:render()
 
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.printf("Levels", 0, WINDOW_HEIGHT * 3 / 4 - gSizes["height-font-normal"] / 2, WINDOW_WIDTH, "center")
+
+  love.graphics.setColor(self.overlay.r, self.overlay.g, self.overlay.b, self.overlay.a)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 end

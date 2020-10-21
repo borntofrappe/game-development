@@ -1,5 +1,15 @@
 VictoryState = Class({__includes = BaseState})
 
+function VictoryState:init()
+  self.overlay = {
+    ["r"] = 1,
+    ["g"] = 1,
+    ["b"] = 1,
+    ["a"] = 0
+  }
+  self.transitionDuration = 0.5
+end
+
 function VictoryState:enter(params)
   self.completedLevels = params.completedLevels
   self.selection = params.selection
@@ -33,14 +43,23 @@ function VictoryState:enter(params)
   ):finish(
     function()
       Timer.after(
-        3,
+        2.5,
         function()
-          gStateMachine:change(
-            "select",
+          Timer.tween(
+            self.transitionDuration,
             {
-              ["selection"] = self.selection,
-              ["completedLevels"] = self.completedLevels
+              [self.overlay] = {a = 1}
             }
+          ):finish(
+            function()
+              gStateMachine:change(
+                "select",
+                {
+                  ["selection"] = self.selection,
+                  ["completedLevels"] = self.completedLevels
+                }
+              )
+            end
           )
         end
       )
@@ -59,16 +78,6 @@ function VictoryState:render()
 
   self.level:render()
 
-  love.graphics.setFont(gFonts["small"])
-  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, self.message.a)
-  love.graphics.printf(
-    self.message.text,
-    -self.size / 2,
-    -self.size / 2 - 16 - gSizes["height-font-small"],
-    self.size,
-    "center"
-  )
-
   love.graphics.translate(-WINDOW_WIDTH * 5 / 7, -WINDOW_HEIGHT * 9 / 14)
 
   love.graphics.setFont(gFonts["small"])
@@ -86,4 +95,17 @@ function VictoryState:render()
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(gColors["highlight"].r, gColors["highlight"].g, gColors["highlight"].b, gColors["highlight"].a)
   love.graphics.printf(formatTimer(self.timer), WINDOW_WIDTH / 4 - 84, WINDOW_HEIGHT / 4, 128, "right")
+
+  love.graphics.setFont(gFonts["medium"])
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, self.message.a)
+  love.graphics.printf(
+    self.message.text,
+    0,
+    WINDOW_HEIGHT * 9 / 14 + self.size / 2 - gSizes["height-font-medium"],
+    WINDOW_WIDTH * 5 / 7 - self.size / 2,
+    "center"
+  )
+
+  love.graphics.setColor(self.overlay.r, self.overlay.g, self.overlay.b, self.overlay.a)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 end

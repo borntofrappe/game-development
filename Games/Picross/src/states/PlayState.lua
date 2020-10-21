@@ -2,10 +2,10 @@ PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
   self.button = {
-    ["tool"] = "pen",
+    ["tool"] = "",
     ["scale"] = {
-      ["pen"] = 1.25,
-      ["eraser"] = 0.9
+      ["pen"] = 1,
+      ["eraser"] = 1
     }
   }
 
@@ -15,15 +15,46 @@ function PlayState:init()
   }
 
   self.timer = 0
-  self.interval =
-    Timer.every(
-    1,
+
+  self.overlay = {
+    ["r"] = 1,
+    ["g"] = 1,
+    ["b"] = 1,
+    ["a"] = 1
+  }
+  self.transitionDuration = 0.5
+  self.isTransitioning = true
+
+  Timer.tween(
+    self.transitionDuration,
+    {
+      [self.overlay] = {a = 0}
+    }
+  ):finish(
     function()
-      self.timer = self.timer + 1
+      Timer.tween(
+        0.15,
+        {
+          [self.button.scale] = {
+            ["pen"] = 1.25,
+            ["eraser"] = 0.9
+          }
+        }
+      ):finish(
+        function()
+          self.button.tool = "pen"
+          self.interval =
+            Timer.every(
+            1,
+            function()
+              self.timer = self.timer + 1
+            end
+          )
+        end
+      )
+      self.isTransitioning = false
     end
   )
-
-  self.isComplete = false
 end
 
 function PlayState:enter(params)
@@ -55,14 +86,38 @@ end
 
 function PlayState:update(dt)
   Timer.update(dt)
-  if love.keyboard.wasPressed("escape") then
-    self.interval:remove()
-    gStateMachine:change(
-      "select",
+  if love.keyboard.wasPressed("escape") and not self.isTransitioning then
+    self.isTransitioning = true
+
+    self.button.tool = ""
+    Timer.tween(
+      0.15,
       {
-        ["selection"] = self.selection,
-        ["completedLevels"] = self.completedLevels
+        [self.button.scale] = {
+          ["pen"] = 1,
+          ["eraser"] = 1
+        }
       }
+    ):finish(
+      function()
+        Timer.tween(
+          self.transitionDuration,
+          {
+            [self.overlay] = {a = 1}
+          }
+        ):finish(
+          function()
+            self.interval:remove()
+            gStateMachine:change(
+              "select",
+              {
+                ["selection"] = self.selection,
+                ["completedLevels"] = self.completedLevels
+              }
+            )
+          end
+        )
+      end
     )
   end
 
@@ -136,7 +191,7 @@ function PlayState:update(dt)
           }
         )
       end
-    else
+    elseif self.button.tool == "eraser" then
       self.grid[i].value = self.grid[i].value == "o" and "" or "x"
     end
   end
@@ -289,6 +344,10 @@ function PlayState:render()
   love.graphics.line(-5.5, -5.5, 5.5, 5.5)
   love.graphics.line(-5.5, 5.5, 5.5, -5.5)
   love.graphics.scale(2 - self.button.scale.eraser, 2 - self.button.scale.eraser)
+
+  love.graphics.translate(-WINDOW_WIDTH / 4 + 40, -WINDOW_HEIGHT / 2 - 40)
+  love.graphics.setColor(self.overlay.r, self.overlay.g, self.overlay.b, self.overlay.a)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 end
 
 function PlayState:checkVictory()
