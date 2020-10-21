@@ -11,7 +11,7 @@ function Level:init(def)
   self.hideHints = def.hideHints
   self.size = def.size or GRID_SIZE
 
-  self.name = LEVELS[self.number].name
+  self.name = string.sub(LEVELS[self.number].name, 1, 1):upper() .. string.sub(LEVELS[self.number].name, 2, -1)
   self.level = LEVELS[self.number].level
   self.levelString = string.gsub(self.level, "[^xo]", "")
 

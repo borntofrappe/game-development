@@ -28,6 +28,7 @@ end
 
 function PlayState:enter(params)
   self.selection = params and params.selection or math.random(#LEVELS)
+  self.completedLevels = params and params.completedLevels or {}
   self.level =
     Level(
     {
@@ -59,7 +60,8 @@ function PlayState:update(dt)
     gStateMachine:change(
       "select",
       {
-        ["selection"] = self.selection
+        ["selection"] = self.selection,
+        ["completedLevels"] = self.completedLevels
       }
     )
   end
@@ -126,6 +128,7 @@ function PlayState:update(dt)
         self.interval:remove()
         self.isComplete = true
         self.level.hideHints = true
+        self.completedLevels[self.selection] = true
 
         Timer.after(
           3,
@@ -133,7 +136,8 @@ function PlayState:update(dt)
             gStateMachine:change(
               "select",
               {
-                ["selection"] = self.selection
+                ["selection"] = self.selection,
+                ["completedLevels"] = self.completedLevels
               }
             )
           end
@@ -152,7 +156,16 @@ function PlayState:render()
 
   self.level:render()
 
-  if not self.isComplete then
+  if self.isComplete then
+    love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+    love.graphics.printf(
+      self.level.name,
+      -self.size / 2,
+      -self.size / 2 - 16 - gSizes["height-font-normal"],
+      self.size,
+      "center"
+    )
+  else
     love.graphics.setColor(
       gColors["highlight"].r,
       gColors["highlight"].g,

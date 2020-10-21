@@ -1,13 +1,15 @@
 SelectState = Class({__includes = BaseState})
 
-function SelectState:init()
+function SelectState:enter(params)
   self.levels = {}
+  self.completedLevels = params and params.completedLevels or {}
 
   for i = 1, #LEVELS do
+    local number = self.completedLevels[i] and i or 0
     self.levels[i] =
       Level(
       {
-        ["number"] = 0,
+        ["number"] = number,
         ["hideHints"] = true,
         ["size"] = 36
       }
@@ -16,9 +18,7 @@ function SelectState:init()
 
   self.padding = 92
   self.spacing = (WINDOW_WIDTH - self.padding * 2) / (#self.levels - 1)
-end
 
-function SelectState:enter(params)
   self.button = {
     ["alpha"] = 0.15,
     ["min"] = 0.15,
@@ -80,7 +80,8 @@ function SelectState:update(dt)
     gStateMachine:change(
       "play",
       {
-        ["selection"] = self.button.selection
+        ["selection"] = self.button.selection,
+        ["completedLevels"] = self.completedLevels
       }
     )
   end
@@ -95,7 +96,11 @@ end
 function SelectState:render()
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.printf("Level " .. self.button.selection, 0, WINDOW_HEIGHT * 3 / 4, WINDOW_WIDTH, "center")
+  if self.completedLevels[self.button.selection] then
+    love.graphics.printf(self.levels[self.button.selection].name, 0, WINDOW_HEIGHT * 3 / 4, WINDOW_WIDTH, "center")
+  else
+    love.graphics.printf("Level " .. self.button.selection, 0, WINDOW_HEIGHT * 3 / 4, WINDOW_WIDTH, "center")
+  end
 
   love.graphics.translate(self.padding - self.spacing, WINDOW_HEIGHT / 2)
 
