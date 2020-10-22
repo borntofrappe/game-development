@@ -39,6 +39,12 @@ function PlayState:init()
 
   self.cellMouseDown = nil
 
+  self.mouseInputButton = {
+    ["x"] = 0,
+    ["y"] = 0,
+    ["r"] = 32
+  }
+
   -- fade in
   self.overlay = {
     ["r"] = 1,
@@ -130,22 +136,7 @@ function PlayState:update(dt)
 
   -- keyboard input
   if love.keyboard.wasPressed("escape") and not self.isTransitioning then
-    -- move to the select state only after the scale of the buttons is reset
-    self.isTransitioning = true
-    self.button.tool = ""
-    Timer.tween(
-      0.15,
-      {
-        [self.button.scale] = {
-          ["pen"] = 1,
-          ["eraser"] = 1
-        }
-      }
-    ):finish(
-      function()
-        self:goToSelectState()
-      end
-    )
+    self:goToSelectState()
   end
 
   if (love.keyboard.wasPressed("p") or love.keyboard.wasPressed("P")) and self.button.tool ~= "pen" then
@@ -215,6 +206,11 @@ function PlayState:update(dt)
 
     if ((x - self.button.position.eraser.x) ^ 2 + (y - self.button.position.eraser.y) ^ 2) ^ 0.5 < self.button.r then
       self:updateButton("eraser")
+    end
+
+    -- in the back button go to the select state
+    if ((x - self.mouseInputButton.x) ^ 2 + (y - self.mouseInputButton.y) ^ 2) ^ 0.5 < self.mouseInputButton.r then
+      self:goToSelectState()
     end
   end
 
@@ -337,7 +333,30 @@ function PlayState:render()
   love.graphics.setColor(gColors["highlight"].r, gColors["highlight"].g, gColors["highlight"].b, gColors["highlight"].a)
   love.graphics.printf(formatTimer(self.timer.value), self.timer.x, self.timer.y, self.timer.width, "right")
 
-  -- buttons tools
+  -- button
+  if gMouseInput then
+    love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+    love.graphics.setLineWidth(2)
+    love.graphics.circle("line", self.mouseInputButton.x, self.mouseInputButton.y, self.mouseInputButton.r)
+    love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
+    love.graphics.circle("fill", self.mouseInputButton.x, self.mouseInputButton.y, self.mouseInputButton.r)
+    love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+    love.graphics.setLineWidth(3)
+    love.graphics.line(
+      self.mouseInputButton.x + 5,
+      self.mouseInputButton.y + 7,
+      self.mouseInputButton.x + 15,
+      self.mouseInputButton.y + 17
+    )
+    love.graphics.line(
+      self.mouseInputButton.x + 15,
+      self.mouseInputButton.y + 7,
+      self.mouseInputButton.x + 5,
+      self.mouseInputButton.y + 17
+    )
+  end
+
+  -- tools
   love.graphics.translate(self.button.position.pen.x, self.button.position.pen.y)
   love.graphics.scale(self.button.scale.pen, self.button.scale.pen)
   if self.button.tool == "pen" then
@@ -432,22 +451,35 @@ function PlayState:updateGrid()
 end
 
 function PlayState:goToSelectState()
+  -- move to the select state only after the scale of the buttons is reset
   self.isTransitioning = true
-
+  self.button.tool = ""
   Timer.tween(
-    self.transitionDuration,
+    0.15,
     {
-      [self.overlay] = {a = 1}
+      [self.button.scale] = {
+        ["pen"] = 1,
+        ["eraser"] = 1
+      }
     }
   ):finish(
     function()
-      self.interval:remove()
-      gStateMachine:change(
-        "select",
+      Timer.tween(
+        self.transitionDuration,
         {
-          ["selection"] = self.button.selection,
-          ["completedLevels"] = self.completedLevels
+          [self.overlay] = {a = 1}
         }
+      ):finish(
+        function()
+          self.interval:remove()
+          gStateMachine:change(
+            "select",
+            {
+              ["selection"] = self.button.selection,
+              ["completedLevels"] = self.completedLevels
+            }
+          )
+        end
       )
     end
   )

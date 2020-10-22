@@ -22,6 +22,8 @@ function love.load()
     }
   )
 
+  gMouseInput = false
+
   love.keyboard.keyPressed = {}
   love.mouse.buttonPressed = {}
   love.mouse.buttonReleased = {}
@@ -38,6 +40,7 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.mousepressed(x, y, button)
+  gMouseInput = true
   love.mouse.buttonPressed[button] = true
 end
 

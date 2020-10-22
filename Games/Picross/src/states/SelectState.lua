@@ -11,6 +11,12 @@ function SelectState:init()
   self.transitionDuration = TRANSITION_DURATION / 2
   self.isTransitioning = true
 
+  self.mouseInputButton = {
+    ["x"] = 0,
+    ["y"] = 0,
+    ["r"] = 32
+  }
+
   Timer.tween(
     self.transitionDuration,
     {
@@ -24,11 +30,6 @@ function SelectState:init()
 end
 
 function SelectState:enter(params)
-  --[[
-    params
-      - levels, a table describing the available levels
-      - completedLevels, a table describing the completed levels through booleans
-  ]]
   self.levels = {}
   self.completedLevels = params and params.completedLevels or {}
 
@@ -119,8 +120,8 @@ function SelectState:update(dt)
   end
 
   -- mouse input
-  -- update selection on mouseover
   local x, y = love.mouse:getPosition()
+  -- update selection on mouseover
   if y > self.button.y and y < self.button.y + self.button.height then
     for i = 1, #self.levels do
       if
@@ -133,10 +134,10 @@ function SelectState:update(dt)
     end
   end
 
-  -- move to play state on mouseclick
-  -- only if the cursor resides on a level
+  -- update the state on mouseclick
   if love.mouse.wasPressed(1) and not self.isTransitioning then
     local x, y = love.mouse:getPosition()
+    -- move to the selected level if overlapping one of the buttons
     if y > self.button.y and y < self.button.y + self.button.height then
       for i = 1, #self.levels do
         if
@@ -147,6 +148,10 @@ function SelectState:update(dt)
           break
         end
       end
+    end
+    -- move to the start screen if overlapping the back button
+    if ((x - self.mouseInputButton.x) ^ 2 + (y - self.mouseInputButton.y) ^ 2) ^ 0.5 < self.mouseInputButton.r then
+      self:goToStartState()
     end
   end
 end
@@ -212,6 +217,28 @@ function SelectState:render()
   end
 
   love.graphics.translate(-self.padding - self.spacing * (#self.levels - 1), -WINDOW_HEIGHT / 2)
+
+  if gMouseInput then
+    love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+    love.graphics.setLineWidth(2)
+    love.graphics.circle("line", self.mouseInputButton.x, self.mouseInputButton.y, self.mouseInputButton.r)
+    love.graphics.setColor(gColors["shadow"].r, gColors["shadow"].g, gColors["shadow"].b, gColors["shadow"].a)
+    love.graphics.circle("fill", self.mouseInputButton.x, self.mouseInputButton.y, self.mouseInputButton.r)
+    love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
+    love.graphics.setLineWidth(3)
+    love.graphics.line(
+      self.mouseInputButton.x + 5,
+      self.mouseInputButton.y + 7,
+      self.mouseInputButton.x + 15,
+      self.mouseInputButton.y + 17
+    )
+    love.graphics.line(
+      self.mouseInputButton.x + 15,
+      self.mouseInputButton.y + 7,
+      self.mouseInputButton.x + 5,
+      self.mouseInputButton.y + 17
+    )
+  end
 
   love.graphics.setColor(self.overlay.r, self.overlay.g, self.overlay.b, self.overlay.a)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
