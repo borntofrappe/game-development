@@ -37,6 +37,8 @@ function PlayState:init()
     ["row"] = 1
   }
 
+  self.cellMouseDown = nil
+
   -- fade in
   self.overlay = {
     ["r"] = 1,
@@ -180,6 +182,15 @@ function PlayState:update(dt)
 
     self.cell.column = column
     self.cell.row = row
+
+    if love.mouse.isDown(1) and self.cellMouseDown then
+      if self.cellMouseDown.column ~= column or self.cellMouseDown.row ~= row then
+        self:updateGrid()
+
+        self.cellMouseDown.column = column
+        self.cellMouseDown.row = row
+      end
+    end
   end
 
   -- on mouseclick consider input in the grid vs. input in the buttons
@@ -188,6 +199,13 @@ function PlayState:update(dt)
     -- in the grid update the cell with the current tool
     if x > self.grid.x and x < self.grid.x + self.grid.size and y > self.grid.y and y < self.grid.y + self.grid.size then
       self:updateGrid()
+
+      local column = math.floor((x - (self.grid.x)) / self.grid.cellSize) + 1
+      local row = math.floor((y - (self.grid.y)) / self.grid.cellSize) + 1
+      self.cellMouseDown = {
+        ["column"] = column,
+        ["row"] = row
+      }
     end
 
     -- in the buttons update the current tool
@@ -198,6 +216,10 @@ function PlayState:update(dt)
     if ((x - self.button.position.eraser.x) ^ 2 + (y - self.button.position.eraser.y) ^ 2) ^ 0.5 < self.button.r then
       self:updateButton("eraser")
     end
+  end
+
+  if love.mouse.wasReleased(1) then
+    self.cellMouseDown = nil
   end
 end
 
