@@ -22,6 +22,10 @@ function love.load()
     }
   )
 
+  gSounds["music"]:setLooping(true)
+  gSounds["music"]:setVolume(0.1)
+  gSounds["music"]:play()
+
   gMouseInput = false
 
   love.keyboard.keyPressed = {}

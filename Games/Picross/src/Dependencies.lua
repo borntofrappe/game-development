@@ -38,6 +38,15 @@ gColors = {
   ["highlight"] = {["r"] = 0.98, ["g"] = 0.85, ["b"] = 0.05, ["a"] = 1}
 }
 
+gSounds = {
+  ["confirm"] = love.audio.newSource("res/sounds/confirm.wav", "static"),
+  ["eraser"] = love.audio.newSource("res/sounds/eraser.wav", "static"),
+  ["pen"] = love.audio.newSource("res/sounds/pen.wav", "static"),
+  ["select"] = love.audio.newSource("res/sounds/select.wav", "static"),
+  ["victory"] = love.audio.newSource("res/sounds/victory.wav", "static"),
+  ["music"] = love.audio.newSource("res/sounds/music.mp3", "static")
+}
+
 function formatTimer(seconds)
   local seconds = seconds
   local hours = math.floor(seconds / 3600)

@@ -1,4 +1,4 @@
-# [Picross](https://github.com/borntofrappe/game-development/projects/2)
+# Picross
 
 Develop the basics of the game picross, a puzzle game in which the player fills a grid based on the instructions given on the side of each row and column. The goal is to ultimately draw a stylized picture based on the pixelated structure.
 

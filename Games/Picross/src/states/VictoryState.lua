@@ -1,6 +1,8 @@
 VictoryState = Class({__includes = BaseState})
 
 function VictoryState:init()
+  gSounds["victory"]:play()
+
   self.overlay = {
     ["r"] = 1,
     ["g"] = 1,

@@ -140,13 +140,19 @@ function PlayState:update(dt)
   end
 
   if (love.keyboard.wasPressed("p") or love.keyboard.wasPressed("P")) and self.button.tool ~= "pen" then
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
     self:updateButton("pen")
   elseif (love.keyboard.wasPressed("e") or love.keyboard.wasPressed("E")) and self.button.tool ~= "eraser" then
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
     self:updateButton("eraser")
   end
 
   if love.keyboard.wasPressed("tab") or love.keyboard.wasPressed("x") or love.keyboard.wasPressed("X") then
     local tool = self.button.tool == "eraser" and "pen" or "eraser"
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
     self:updateButton(tool)
   end
 
@@ -221,15 +227,20 @@ function PlayState:update(dt)
 
     -- in the buttons update the current tool
     if ((x - self.button.position.pen.x) ^ 2 + (y - self.button.position.pen.y) ^ 2) ^ 0.5 < self.button.r then
+      gSounds["select"]:stop()
+      gSounds["select"]:play()
       self:updateButton("pen")
     end
 
     if ((x - self.button.position.eraser.x) ^ 2 + (y - self.button.position.eraser.y) ^ 2) ^ 0.5 < self.button.r then
+      gSounds["select"]:stop()
+      gSounds["select"]:play()
       self:updateButton("eraser")
     end
 
     -- in the back button go to the select state
     if ((x - self.mouseInputButton.x) ^ 2 + (y - self.mouseInputButton.y) ^ 2) ^ 0.5 < self.mouseInputButton.r then
+      gSounds["confirm"]:play()
       self:goToSelectState()
     end
   end
@@ -461,8 +472,12 @@ function PlayState:updateGrid()
 
   if self.button.tool == "pen" then
     self.grid.cells[i].value = self.grid.cells[i].value == "x" and "" or "o"
+    gSounds["pen"]:stop()
+    gSounds["pen"]:play()
   elseif self.button.tool == "eraser" then
     self.grid.cells[i].value = self.grid.cells[i].value == "o" and "" or "x"
+    gSounds["eraser"]:stop()
+    gSounds["eraser"]:play()
   end
 
   if self:checkVictory() then

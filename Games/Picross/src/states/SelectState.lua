@@ -106,16 +106,22 @@ function SelectState:update(dt)
 
   -- keyboard input
   if love.keyboard.wasPressed("escape") and not self.isTransitioning then
+    gSounds["confirm"]:play()
     self:goToStartState()
   end
 
   if (love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return")) and not self.isTransitioning then
+    gSounds["confirm"]:play()
     self:goToPlayState()
   end
 
   if love.keyboard.wasPressed("right") then
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
     self.button.selection = self.button.selection == #self.levels and 1 or self.button.selection + 1
   elseif love.keyboard.wasPressed("left") then
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
     self.button.selection = self.button.selection == 1 and #self.levels or self.button.selection - 1
   end
 
@@ -125,9 +131,11 @@ function SelectState:update(dt)
   if y > self.button.y and y < self.button.y + self.button.height then
     for i = 1, #self.levels do
       if
-        x > self.padding - self.button.width / 2 + (i - 1) * (self.spacing) and
+        i ~= self.button.selection and x > self.padding - self.button.width / 2 + (i - 1) * (self.spacing) and
           x < self.padding - self.button.width / 2 + (i - 1) * (self.spacing) + self.button.width
        then
+        gSounds["select"]:stop()
+        gSounds["select"]:play()
         self.button.selection = i
         break
       end
@@ -144,6 +152,7 @@ function SelectState:update(dt)
           x > self.padding - self.button.width / 2 + (i - 1) * (self.spacing) and
             x < self.padding - self.button.width / 2 + (i - 1) * (self.spacing) + self.button.width
          then
+          gSounds["confirm"]:play()
           self:goToPlayState()
           break
         end
@@ -151,6 +160,7 @@ function SelectState:update(dt)
     end
     -- move to the start screen if overlapping the back button
     if ((x - self.mouseInputButton.x) ^ 2 + (y - self.mouseInputButton.y) ^ 2) ^ 0.5 < self.mouseInputButton.r then
+      gSounds["confirm"]:play()
       self:goToStartState()
     end
   end

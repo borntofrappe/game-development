@@ -128,6 +128,7 @@ function StartState:render()
 end
 
 function StartState:goToSelectState()
+  gSounds["confirm"]:play()
   self.isTransitioning = true
 
   -- fade-out
