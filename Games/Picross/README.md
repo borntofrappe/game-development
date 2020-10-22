@@ -66,7 +66,7 @@ _Nifty_: you can achieve a similar result using different [patterns](https://www
   level = string.gsub(level, "%s", "")
   ```
 
-### Level
+## Level
 
 The class builds the grid starting from the string introduced in the previous section. From this starting point, the `buildGrid` function populates a table detailing the grid structure.
 
@@ -189,67 +189,28 @@ The game is programmed to have four states:
 
 - `VictoryState`: show the completed level, before moving back to the selection screen
 
-### StartState
+## Input
 
-The button moving the game to the select state is animated with the `timer` library. The idea is to have the animation on the button being focused, but since there's only one, there is no need to further introduce a variable to keep track of the current option. (This might change in a future update)
-
-The animation itself involves the opacity of the fill describing the button's background. It plays immediately, and then at an interval. To have the alpha value recede back to its original value, the `tween` animation takes half the duration of the interval. The interval, however, is further specified to last a bit more. 25 percent more.
+The game considers both keyboard and mouse input. In `love.load`, the script maintains a reference to a boolean to also describe whether or not the player uses mouse input — see `gMouseInput`.
 
 ```lua
-self.interval =
-  Timer.every(
-  self.animationDuration * 1.25,
-  function()
-    Timer.tween(self.animationDuration / 2, {
+function love.load()
+  gMouseInput = false
+end
 
-    }):finish(function()
-        Timer.tween(self.animationDuration / 2, {})
-      end)
-  end
-  )
+function love.mousepressed(x, y, button)
+  gMouseInput = true
 end
 ```
 
-### SelectState
-
-Currently, the number of levels is low enough to have all positioned side by side. With additional titles, the selection screen should consider a more complex solution, involving perhaps a grid, or pagination, showing `x` levels per page.
-
-The state repeats the animation introduced in the `StartState`, but the alpha channel is modified only for the selected level. The selection is then updated with arrow keys.
-
-### PlayState
-
-The gameplay is included in a future update, and currently, the game considers the UI only. The `timer` library is still being used, but not to highlight the button being selected. This selection is instead shown through scale and a different color for the background. `Timer.every` is used instead to update a counter variable describing the timer.
+This boolean is used to include helper graphics to signal, highlight how the game can be updated — see the `x` allowing to move back to the previous state, in the top left corner.
 
 ```lua
-self.timer = 0
-self.interval =
-  Timer.every(
-  1,
-  function()
-    self.timer = self.timer + 1
+function SelectState:render()
+  if gMouseInput then
+
   end
-)
+end
 ```
 
-The value is not used directly in the UI, and is processed first through a function describing the format.
-
-```lua
-love.graphics.printf(
-  formatTimer(self.timer)
-  -- other attributes
-)
-```
-
-The idea is to show six digits, for the hours, minutes and seconds. All separated by a colon character and showing always two digits: `hh:mm:ss`.
-
-## Gameplay
-
-In `PlayState`, the idea is to have the level in between two surfaces:
-
-- a rectangle to provide a background
-
-- a grid of squares to hide the level, and give the opportunity to the player to fill the larger structure following the surrounding suggestions
-
-As the player selects a cell, the overlayed grid is filled with dark-blue squares, dark-blue crosses. In the moment the squares match the structure of the underlying level, the game finally ends by removing the overlay itself. This works as a quick way to remove the crosses and show the final solution.
-
-_Please note_: the background layer can be included in the level class, but provides a less then flexible default. Consider for instance when the levels are used in the selection screen; in this situation, the background is more of a distraction than a helpful visual.
+_Please note_: the purpose of the boolean is purely aesthetic. The `update` function always consider mouse-based input, and the graphics signal, stress the existing features.
