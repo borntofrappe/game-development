@@ -151,13 +151,33 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.wasPressed("up") then
-    self.cell.row = math.max(1, self.cell.row - 1)
+    if self.cell.row > 1 then
+      self.cell.row = self.cell.row - 1
+      if love.keyboard.isDown("return") then
+        self:updateGrid()
+      end
+    end
   elseif love.keyboard.wasPressed("down") then
-    self.cell.row = math.min(self.grid.dimension, self.cell.row + 1)
+    if self.cell.row < self.grid.dimension then
+      self.cell.row = self.cell.row + 1
+      if love.keyboard.isDown("return") then
+        self:updateGrid()
+      end
+    end
   elseif love.keyboard.wasPressed("right") then
-    self.cell.column = math.min(self.grid.dimension, self.cell.column + 1)
+    if self.cell.column < self.grid.dimension then
+      self.cell.column = self.cell.column + 1
+      if love.keyboard.isDown("return") then
+        self:updateGrid()
+      end
+    end
   elseif love.keyboard.wasPressed("left") then
-    self.cell.column = math.max(1, self.cell.column - 1)
+    if self.cell.column > 1 then
+      self.cell.column = self.cell.column - 1
+      if love.keyboard.isDown("return") then
+        self:updateGrid()
+      end
+    end
   end
 
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
