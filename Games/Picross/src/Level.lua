@@ -9,7 +9,7 @@ function Level:init(def)
 
   self.number = def.number
   self.hideHints = def.hideHints
-  self.size = def.size or GRID_SIZE
+  self.gridSize = def.gridSize or GRID_SIZE
 
   self.name = string.sub(LEVELS[self.number].name, 1, 1):upper() .. string.sub(LEVELS[self.number].name, 2, -1)
   self.level = LEVELS[self.number].level
@@ -17,7 +17,7 @@ function Level:init(def)
 
   self.levelStringLength = #self.levelString
   self.gridDimension = math.floor(math.sqrt(self.levelStringLength))
-  self.cellSize = math.floor(self.size / self.gridDimension)
+  self.cellSize = math.floor(self.gridSize / self.gridDimension)
 
   self.grid = {}
   self.hints = {
@@ -29,7 +29,7 @@ function Level:init(def)
 end
 
 function Level:render()
-  love.graphics.translate(-self.size / 2, -self.size / 2)
+  love.graphics.translate(-self.gridSize / 2, -self.gridSize / 2)
 
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
 
@@ -59,12 +59,10 @@ function Level:render()
   end
 
   for i, cell in ipairs(self.grid) do
-    -- for i, cell in ipairs(row) do
     cell:render()
-    -- end
   end
 
-  love.graphics.translate(self.size / 2, self.size / 2)
+  love.graphics.translate(self.gridSize / 2, self.gridSize / 2)
 end
 
 function Level:buildGrid()
@@ -72,15 +70,10 @@ function Level:buildGrid()
     local column = (i % self.gridDimension) + 1
     local row = math.floor(i / self.gridDimension) + 1
     local value = string.sub(self.levelString, i + 1, i + 1)
-    local size = self.cellSize
+    local gridSize = self.cellSize
 
-    local cell = Cell(column, row, size, value)
+    local cell = Cell(column, row, gridSize, value)
     table.insert(self.grid, cell)
-    -- if self.grid[row] then
-    --   table.insert(self.grid[row], cell)
-    -- else
-    --   table.insert(self.grid, {cell})
-    -- end
 
     if not self.hints.columns[column] then
       self.hints.columns[column] = {0}

@@ -40,7 +40,7 @@ function SelectState:enter(params)
       {
         ["number"] = number,
         ["hideHints"] = true,
-        ["size"] = 36
+        ["gridSize"] = 36
       }
     )
   end
