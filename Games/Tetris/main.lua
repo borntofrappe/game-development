@@ -13,6 +13,19 @@ function love.load()
   showGrid = false
 
   tetriminos = Tetriminos:new()
+
+  score =
+    DescriptionList:new(
+    {
+      ["term"] = "Score",
+      ["description"] = 0,
+      ["x"] = TILE_SIZE * 3 + TILE_SIZE * grid.columns,
+      ["y"] = 16,
+      ["width"] = TILE_SIZE * 5,
+      ["height"] = TILE_SIZE * 3,
+      ["padding"] = 8
+    }
+  )
   love.keyboard.keyPressed = {}
 end
 
@@ -46,8 +59,9 @@ function love.draw()
     )
   end
 
-  love.graphics.translate(grid.cellSize, 0)
+  score:render()
 
+  love.graphics.translate(grid.cellSize, 0)
   if showGrid then
     love.graphics.setLineWidth(1)
     love.graphics.setColor(0.1, 0.1, 0.1, 0.25)

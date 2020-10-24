@@ -3,6 +3,9 @@ require "src/Utils"
 
 require "src/Tetriminos"
 
+require "src/Panel"
+require "src/DescriptionList"
+
 gTextures = {
   ["tiles"] = love.graphics.newImage("res/tilesheet.png")
 }
@@ -12,7 +15,6 @@ gFrames = {
 }
 
 gFonts = {
-  ["big"] = love.graphics.newFont("res/font.ttf", 36),
-  ["normal"] = love.graphics.newFont("res/font.ttf", 20),
-  ["small"] = love.graphics.newFont("res/font.ttf", 14)
+  ["normal"] = love.graphics.newFont("res/font.ttf", 14),
+  ["small"] = love.graphics.newFont("res/font.ttf", 12)
 }
