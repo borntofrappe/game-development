@@ -25,8 +25,8 @@ end
 
 function Panel:render()
   love.graphics.setLineWidth(6)
-  love.graphics.setColor(0.07, 0.05, 0)
+  love.graphics.setColor(0.07, 0.07, 0.07)
   love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 8)
-  love.graphics.setColor(0.15, 0.1, 0.08)
+  love.graphics.setColor(0.71, 0.43, 0.28)
   love.graphics.rectangle("fill", self.x + 2, self.y + 2, self.width - 4, self.height - 4, 8)
 end

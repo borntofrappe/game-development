@@ -36,7 +36,7 @@ function DescriptionList:render()
   self.panel:render()
 
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.setColor(0.98, 0.9, 0.9)
+  love.graphics.setColor(0.07, 0.07, 0.07)
   love.graphics.print(self.term, self.x + self.padding, self.y + self.padding)
 
   love.graphics.printf(
