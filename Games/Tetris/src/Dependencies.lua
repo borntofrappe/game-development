@@ -1,6 +1,8 @@
 require "src/constants"
 require "src/Utils"
 
+require "src/Tetriminos"
+
 gTextures = {
   ["tiles"] = love.graphics.newImage("res/tilesheet.png")
 }

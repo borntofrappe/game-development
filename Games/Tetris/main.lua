@@ -12,6 +12,7 @@ function love.load()
   }
   showGrid = false
 
+  tetriminos = Tetriminos:new()
   love.keyboard.keyPressed = {}
 end
 
@@ -49,7 +50,7 @@ function love.draw()
 
   if showGrid then
     love.graphics.setLineWidth(1)
-    love.graphics.setColor(0.9, 0.9, 0.9)
+    love.graphics.setColor(0.1, 0.1, 0.1, 0.25)
     for x = 1, grid.columns + 1 do
       love.graphics.line((x - 1) * grid.cellSize, 0, (x - 1) * grid.cellSize, grid.rows * grid.cellSize)
     end
@@ -59,8 +60,5 @@ function love.draw()
   end
 
   love.graphics.setColor(1, 1, 1)
-  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], 0, 0)
-  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], grid.cellSize, 0)
-  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], grid.cellSize * 2, 0)
-  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], grid.cellSize, grid.cellSize)
+  tetriminos:render()
 end
