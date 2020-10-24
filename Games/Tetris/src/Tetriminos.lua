@@ -18,7 +18,7 @@ function Tetriminos:new(def)
       {3, 1},
       {2, 2}
     },
-    ["color"] = math.random(#gFrames["tiles"])
+    ["color"] = math.random(#gFrames["tiles"] - 1)
   }
 
   setmetatable(this, self)

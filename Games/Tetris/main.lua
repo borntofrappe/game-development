@@ -4,7 +4,7 @@ function love.load()
   math.randomseed(os.time())
   love.window.setTitle("Tetris")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.98, 0.92, 0.87)
+  love.graphics.setBackgroundColor(0.97, 0.9, 0.9)
 
   grid = {
     ["columns"] = COLUMNS,
@@ -80,6 +80,8 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(1, 1, 1, 1)
+
   for y = 1, grid.rows + 1 do
     love.graphics.draw(gTextures["tiles"], gFrames["tiles"][TILE_BACKGROUND], 0, (y - 1) * grid.cellSize)
     love.graphics.draw(
