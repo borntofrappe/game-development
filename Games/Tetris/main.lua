@@ -3,7 +3,7 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Tetris")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.07, 0.1, 0.12)
+  love.graphics.setBackgroundColor(0.98, 0.92, 0.87)
 
   grid = {
     ["columns"] = COLUMNS,
@@ -35,7 +35,17 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.translate(TILE_SIZE, 0)
+  for y = 1, grid.rows + 1 do
+    love.graphics.draw(gTextures["tiles"], gFrames["tiles"][TILE_BACKGROUND], 0, (y - 1) * grid.cellSize)
+    love.graphics.draw(
+      gTextures["tiles"],
+      gFrames["tiles"][TILE_BACKGROUND],
+      grid.cellSize + grid.columns * grid.cellSize,
+      (y - 1) * grid.cellSize
+    )
+  end
+
+  love.graphics.translate(grid.cellSize, 0)
 
   if showGrid then
     love.graphics.setLineWidth(1)
@@ -50,7 +60,7 @@ function love.draw()
 
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], 0, 0)
-  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], TILE_SIZE, 0)
-  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], TILE_SIZE * 2, 0)
-  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], TILE_SIZE, TILE_SIZE)
+  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], grid.cellSize, 0)
+  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], grid.cellSize * 2, 0)
+  love.graphics.draw(gTextures["tiles"], gFrames["tiles"][2], grid.cellSize, grid.cellSize)
 end
