@@ -62,7 +62,8 @@ function love.load()
     ["next"] = Tetriminos:new(
       {
         ["column"] = 5.5 + grid.columns,
-        ["row"] = 10.5
+        ["row"] = 10.5,
+        ["center"] = true
       }
     )
   }
@@ -92,7 +93,7 @@ function love.update(dt)
 
   if love.keyboard.wasPressed("space") then
     tetriminoses.current.variant =
-      tetriminoses.current.variant == #tetriminoses.current.tiles and 1 or tetriminoses.current.variant + 1
+      tetriminoses.current.variant == #tetriminoses.current.bricks and 1 or tetriminoses.current.variant + 1
   end
 
   if love.keyboard.wasPressed("t") then
@@ -108,7 +109,8 @@ function love.update(dt)
       Tetriminos:new(
       {
         ["column"] = 5.5 + grid.columns,
-        ["row"] = 10.5
+        ["row"] = 10.5,
+        ["center"] = true
       }
     )
   end
