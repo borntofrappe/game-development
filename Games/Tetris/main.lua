@@ -13,7 +13,8 @@ function love.load()
 
   grid = {
     ["columns"] = COLUMNS,
-    ["rows"] = ROWS
+    ["rows"] = ROWS,
+    ["bricks"] = {}
   }
 
   showGrid = false
@@ -55,8 +56,9 @@ function love.load()
   tetriminoses = {
     ["current"] = Tetriminos:new(
       {
-        ["column"] = 5,
-        ["row"] = 4
+        ["column"] = math.floor(grid.columns / 2),
+        ["row"] = 1,
+        ["grid"] = grid
       }
     ),
     ["next"] = Tetriminos:new(
@@ -67,6 +69,9 @@ function love.load()
       }
     )
   }
+
+  timer = 0
+  interval = 1
 
   love.keyboard.keyPressed = {}
 end
@@ -80,15 +85,21 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
-  if love.keyboard.wasPressed("escape") then
-    love.event.quit()
-  end
-  if love.keyboard.wasPressed("g") then
-    showGrid = not showGrid
+  if tetriminoses.current.inPlay then
+    timer = timer + dt
+    if timer > interval then
+      timer = timer % interval
+      tetriminoses.current:move("down")
+    end
   end
 
-  if love.keyboard.wasPressed("c") then
-    tetriminoses.current.color = math.random(#gFrames["tiles"] - 1)
+  if love.keyboard.wasPressed("right") then
+    tetriminoses.current:move("right")
+  elseif love.keyboard.wasPressed("left") then
+    tetriminoses.current:move("left")
+  elseif love.keyboard.wasPressed("down") then
+    tetriminoses.current:move("down")
+    timer = 0
   end
 
   if love.keyboard.wasPressed("space") then
@@ -96,33 +107,12 @@ function love.update(dt)
       tetriminoses.current.variant == #tetriminoses.current.bricks and 1 or tetriminoses.current.variant + 1
   end
 
-  if love.keyboard.wasPressed("t") then
-    tetriminoses.current =
-      Tetriminos:new(
-      {
-        ["column"] = 5,
-        ["row"] = 4
-      }
-    )
-
-    tetriminoses.next =
-      Tetriminos:new(
-      {
-        ["column"] = 5.5 + grid.columns,
-        ["row"] = 10.5,
-        ["center"] = true
-      }
-    )
+  if love.keyboard.wasPressed("escape") then
+    love.event.quit()
   end
 
-  if love.keyboard.wasPressed("up") then
-    tetriminoses.current.row = tetriminoses.current.row - 1
-  elseif love.keyboard.wasPressed("right") then
-    tetriminoses.current.column = tetriminoses.current.column + 1
-  elseif love.keyboard.wasPressed("down") then
-    tetriminoses.current.row = tetriminoses.current.row + 1
-  elseif love.keyboard.wasPressed("left") then
-    tetriminoses.current.column = tetriminoses.current.column - 1
+  if love.keyboard.wasPressed("g") then
+    showGrid = not showGrid
   end
 
   love.keyboard.keyPressed = {}
@@ -142,7 +132,6 @@ function love.draw()
   score:render()
   lines:render()
   panel:render()
-  tetriminoses.current:render()
   tetriminoses.next:render()
 
   if showGrid then
@@ -156,4 +145,7 @@ function love.draw()
     end
     love.graphics.setColor(1, 1, 1, 1)
   end
+
+  love.graphics.translate(TILE_SIZE, 0)
+  tetriminoses.current:render()
 end
