@@ -9,15 +9,13 @@ function Tetriminos:new(def)
       ["row"] = 0
     }
 
+  local tiles = TETRIMINOS[math.random(#TETRIMINOS)]
+  local variant = 1
   this = {
     ["column"] = def.column,
     ["row"] = def.row,
-    ["tiles"] = {
-      {1, 1},
-      {2, 1},
-      {3, 1},
-      {2, 2}
-    },
+    ["tiles"] = tiles,
+    ["variant"] = variant,
     ["color"] = math.random(#gFrames["tiles"] - 1)
   }
 
@@ -27,7 +25,7 @@ end
 
 function Tetriminos:render()
   love.graphics.setColor(1, 1, 1)
-  for i, tile in ipairs(self.tiles) do
+  for i, tile in ipairs(self.tiles[self.variant]) do
     love.graphics.draw(
       gTextures["tiles"],
       gFrames["tiles"][self.color],

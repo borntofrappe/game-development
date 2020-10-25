@@ -45,10 +45,10 @@ function love.load()
   panel =
     Panel:new(
     {
-      ["column"] = 4.5 + grid.columns,
+      ["column"] = 4 + grid.columns,
       ["row"] = 9,
-      ["width"] = 4,
-      ["height"] = 4
+      ["width"] = 5,
+      ["height"] = 5
     }
   )
 
@@ -61,8 +61,8 @@ function love.load()
     ),
     ["next"] = Tetriminos:new(
       {
-        ["column"] = 4 + grid.columns,
-        ["row"] = 9
+        ["column"] = 5.5 + grid.columns,
+        ["row"] = 10.5
       }
     )
   }
@@ -86,8 +86,31 @@ function love.update(dt)
     showGrid = not showGrid
   end
 
-  if love.keyboard.wasPressed("space") then
+  if love.keyboard.wasPressed("c") then
     tetriminoses.current.color = math.random(#gFrames["tiles"] - 1)
+  end
+
+  if love.keyboard.wasPressed("space") then
+    tetriminoses.current.variant =
+      tetriminoses.current.variant == #tetriminoses.current.tiles and 1 or tetriminoses.current.variant + 1
+  end
+
+  if love.keyboard.wasPressed("t") then
+    tetriminoses.current =
+      Tetriminos:new(
+      {
+        ["column"] = 5,
+        ["row"] = 4
+      }
+    )
+
+    tetriminoses.next =
+      Tetriminos:new(
+      {
+        ["column"] = 5.5 + grid.columns,
+        ["row"] = 10.5
+      }
+    )
   end
 
   if love.keyboard.wasPressed("up") then
