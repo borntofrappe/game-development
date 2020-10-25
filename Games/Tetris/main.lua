@@ -4,7 +4,12 @@ function love.load()
   math.randomseed(os.time())
   love.window.setTitle("Tetris")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.97, 0.9, 0.9)
+  love.graphics.setBackgroundColor(
+    gColors["background"].r,
+    gColors["background"].g,
+    gColors["background"].b,
+    gColors["background"].a
+  )
 
   grid = {
     ["columns"] = COLUMNS,
@@ -76,17 +81,19 @@ function love.update(dt)
     showGrid = not showGrid
   end
 
+  if love.keyboard.wasPressed("space") then
+    tetriminos.color = math.random(#gFrames["tiles"] - 1)
+  end
+
   love.keyboard.keyPressed = {}
 end
 
 function love.draw()
-  love.graphics.setColor(1, 1, 1, 1)
-
   for y = 1, grid.rows + 1 do
-    love.graphics.draw(gTextures["tiles"], gFrames["tiles"][TILE_BACKGROUND], 0, (y - 1) * grid.cellSize)
+    love.graphics.draw(gTextures["tiles"], gFrames["tiles"][#gFrames["tiles"]], 0, (y - 1) * grid.cellSize)
     love.graphics.draw(
       gTextures["tiles"],
-      gFrames["tiles"][TILE_BACKGROUND],
+      gFrames["tiles"][#gFrames["tiles"]],
       grid.cellSize + grid.columns * grid.cellSize,
       (y - 1) * grid.cellSize
     )
@@ -99,7 +106,7 @@ function love.draw()
 
   if showGrid then
     love.graphics.setLineWidth(1)
-    love.graphics.setColor(0.1, 0.1, 0.1, 0.25)
+    love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, 0.5)
     for x = 1, grid.columns + 1 do
       love.graphics.line(
         TILE_SIZE + (x - 1) * grid.cellSize,
@@ -116,5 +123,6 @@ function love.draw()
         (y - 1) * grid.cellSize
       )
     end
+    love.graphics.setColor(1, 1, 1, 1)
   end
 end

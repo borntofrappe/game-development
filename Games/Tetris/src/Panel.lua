@@ -24,9 +24,14 @@ function Panel:new(def)
 end
 
 function Panel:render()
-  love.graphics.setLineWidth(6)
-  love.graphics.setColor(0.07, 0.07, 0.07)
+  love.graphics.setLineWidth(5)
+  love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
   love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 8)
-  love.graphics.setColor(0.87, 0.41, 0.43)
-  love.graphics.rectangle("fill", self.x + 2, self.y + 2, self.width - 4, self.height - 4, 8)
+  love.graphics.setColor(
+    gColors["background"].r,
+    gColors["background"].g,
+    gColors["background"].b,
+    gColors["background"].a
+  )
+  love.graphics.rectangle("fill", self.x + 1, self.y + 1, self.width - 2, self.height - 2, 8)
 end
