@@ -72,6 +72,26 @@ function Tetriminos:move(direction)
   end
 end
 
+function Tetriminos:rotate()
+  if #self.bricks > 1 then
+    local variant = self.variant == #self.bricks and 1 or self.variant + 1
+    local canRotate = true
+    for i, brickCoor in pairs(self.bricks[variant]) do
+      if
+        self.row + brickCoor[2] >= self.grid.rows or self.column + brickCoor[1] > self.grid.columns or
+          self.column + brickCoor[1] < 1
+       then
+        canRotate = false
+        break
+      end
+    end
+
+    if canRotate then
+      self.variant = variant
+    end
+  end
+end
+
 function Tetriminos:render()
   love.graphics.setColor(1, 1, 1)
   for i, brickCoor in ipairs(self.bricks[self.variant]) do

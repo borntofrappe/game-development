@@ -91,20 +91,19 @@ function love.update(dt)
       timer = timer % interval
       tetriminoses.current:move("down")
     end
-  end
 
-  if love.keyboard.wasPressed("right") then
-    tetriminoses.current:move("right")
-  elseif love.keyboard.wasPressed("left") then
-    tetriminoses.current:move("left")
-  elseif love.keyboard.wasPressed("down") then
-    tetriminoses.current:move("down")
-    timer = 0
+    if love.keyboard.wasPressed("right") then
+      tetriminoses.current:move("right")
+    elseif love.keyboard.wasPressed("left") then
+      tetriminoses.current:move("left")
+    elseif love.keyboard.wasPressed("down") then
+      tetriminoses.current:move("down")
+      timer = 0
+    end
   end
 
   if love.keyboard.wasPressed("space") then
-    tetriminoses.current.variant =
-      tetriminoses.current.variant == #tetriminoses.current.bricks and 1 or tetriminoses.current.variant + 1
+    tetriminoses.current:rotate()
   end
 
   if love.keyboard.wasPressed("escape") then
