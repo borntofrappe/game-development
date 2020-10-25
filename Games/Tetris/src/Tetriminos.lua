@@ -5,13 +5,13 @@ function Tetriminos:new(def)
   local def =
     def or
     {
-      ["x"] = TILE_SIZE,
-      ["y"] = 0
+      ["column"] = TILE_SIZE,
+      ["row"] = 0
     }
 
   this = {
-    ["x"] = def.x,
-    ["y"] = def.y,
+    ["column"] = def.column,
+    ["row"] = def.row,
     ["tiles"] = {
       {1, 1},
       {2, 1},
@@ -31,8 +31,8 @@ function Tetriminos:render()
     love.graphics.draw(
       gTextures["tiles"],
       gFrames["tiles"][self.color],
-      self.x + (tile[1] - 1) * TILE_SIZE,
-      self.y + (tile[2] - 1) * TILE_SIZE
+      (self.column + tile[1] - 1) * TILE_SIZE,
+      (self.row + tile[2] - 1) * TILE_SIZE
     )
   end
 end

@@ -5,18 +5,16 @@ function Panel:new(def)
   local def =
     def or
     {
-      ["x"] = 16,
-      ["y"] = 16,
-      ["width"] = TILE_SIZE * 5,
-      ["height"] = TILE_SIZE * 3,
-      ["padding"] = 8
+      ["column"] = 1,
+      ["row"] = 1,
+      ["width"] = 1,
+      ["height"] = 1
     }
   this = {
-    ["x"] = def.x,
-    ["y"] = def.y,
+    ["column"] = def.column,
+    ["row"] = def.row,
     ["width"] = def.width,
-    ["height"] = def.height,
-    ["padding"] = def.padding
+    ["height"] = def.height
   }
 
   setmetatable(this, self)
@@ -26,12 +24,26 @@ end
 function Panel:render()
   love.graphics.setLineWidth(5)
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-  love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 8)
+  love.graphics.rectangle(
+    "line",
+    (self.column - 1) * TILE_SIZE,
+    (self.row - 1) * TILE_SIZE,
+    self.width * TILE_SIZE,
+    self.height * TILE_SIZE,
+    8
+  )
   love.graphics.setColor(
     gColors["background"].r,
     gColors["background"].g,
     gColors["background"].b,
     gColors["background"].a
   )
-  love.graphics.rectangle("fill", self.x + 1, self.y + 1, self.width - 2, self.height - 2, 8)
+  love.graphics.rectangle(
+    "fill",
+    (self.column - 1) * TILE_SIZE,
+    (self.row - 1) * TILE_SIZE,
+    self.width * TILE_SIZE,
+    self.height * TILE_SIZE,
+    8
+  )
 end

@@ -12,18 +12,17 @@ function DescriptionList:new(def)
   this = {
     ["term"] = def.term,
     ["description"] = def.description,
-    ["x"] = def.x,
-    ["y"] = def.y,
+    ["column"] = def.column,
+    ["row"] = def.row,
     ["width"] = def.width,
     ["height"] = def.height,
-    ["padding"] = def.padding,
+    ["padding"] = 8,
     ["panel"] = Panel:new(
       {
-        ["x"] = def.x,
-        ["y"] = def.y,
+        ["column"] = def.column,
+        ["row"] = def.row,
         ["width"] = def.width,
-        ["height"] = def.height,
-        ["padding"] = def.padding
+        ["height"] = def.height
       }
     )
   }
@@ -37,13 +36,17 @@ function DescriptionList:render()
 
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(gColors["text"].r, gColors["text"].g, gColors["text"].b, gColors["text"].a)
-  love.graphics.print(self.term, self.x + self.padding, self.y + self.padding)
+  love.graphics.print(
+    self.term,
+    (self.column - 1) * TILE_SIZE + self.padding,
+    (self.row - 1) * TILE_SIZE + self.padding
+  )
 
   love.graphics.printf(
     self.description,
-    self.x + self.padding,
-    self.y + self.height - self.padding - gFonts["normal"]:getHeight(),
-    self.width - self.padding * 2,
+    (self.column - 1) * TILE_SIZE - self.padding,
+    (self.row - 1 + self.height) * TILE_SIZE - gFonts["normal"]:getHeight() - self.padding,
+    self.width * TILE_SIZE,
     "right"
   )
 end
