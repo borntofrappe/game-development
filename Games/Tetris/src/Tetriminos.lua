@@ -110,7 +110,7 @@ function Tetriminos:rotate()
     local bricks = {}
     for i, offsetBrick in ipairs(self.offsetBricks[shape]) do
       if
-        self.row + offsetBrick[2] < 1 or self.row + offsetBrick[2] >= self.grid.rows or
+        self.row + offsetBrick[2] < 1 or self.row + offsetBrick[2] > self.grid.rows or
           self.column + offsetBrick[1] > self.grid.columns or
           self.column + offsetBrick[1] < 1
        then

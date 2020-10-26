@@ -5,15 +5,15 @@ function Brick:new(def)
   local def =
     def or
     {
-      ["color"] = math.random(#gFrames["tiles"]),
       ["column"] = 1,
-      ["row"] = 1
+      ["row"] = 1,
+      ["color"] = math.random(#gFrames["tiles"])
     }
 
   this = {
-    ["color"] = def.color,
     ["column"] = def.column,
-    ["row"] = def.row
+    ["row"] = def.row,
+    ["color"] = def.color
   }
 
   setmetatable(this, self)

@@ -17,6 +17,13 @@ function love.load()
     ["bricks"] = {}
   }
 
+  for column = 1, grid.columns do
+    grid.bricks[column] = {}
+    for row = 1, grid.rows do
+      grid.bricks[column][row] = ""
+    end
+  end
+
   showGrid = false
 
   score =
@@ -101,6 +108,19 @@ function love.update(dt)
       timer = 0
     end
   else
+    for i, brick in ipairs(tetriminoses.current.bricks) do
+      local column = brick.column
+      local row = brick.row
+      local color = brick.color
+      grid.bricks[column][row] =
+        Brick:new(
+        {
+          ["column"] = column,
+          ["row"] = row,
+          ["color"] = color
+        }
+      )
+    end
     tetriminoses.current =
       Tetriminos:new(
       {
@@ -167,4 +187,12 @@ function love.draw()
 
   love.graphics.translate(TILE_SIZE, 0)
   tetriminoses.current:render()
+
+  for i, column in ipairs(grid.bricks) do
+    for j, brick in ipairs(column) do
+      if brick ~= "" then
+        brick:render()
+      end
+    end
+  end
 end
