@@ -5,9 +5,9 @@ ROWS = 18
 WINDOW_WIDTH = TILE_SIZE * COLUMNS + TILE_SIZE * 2 + TILE_SIZE * 7
 WINDOW_HEIGHT = TILE_SIZE * ROWS
 
-TETRIMINOS = {
+TETRIMINOS_OFFSETS = {
   [1] = {
-    ["offset"] = {0, 0.5},
+    ["center"] = {0, 0.5},
     ["bricks"] = {
       [1] = {
         {-1, 0},
@@ -24,7 +24,7 @@ TETRIMINOS = {
     }
   },
   [2] = {
-    ["offset"] = {0.5, 0},
+    ["center"] = {0.5, 0},
     ["bricks"] = {
       [1] = {
         {-1, 0},
@@ -53,7 +53,7 @@ TETRIMINOS = {
     }
   },
   [3] = {
-    ["offset"] = {0.5, 0},
+    ["center"] = {0.5, 0},
     ["bricks"] = {
       [1] = {
         {1, 0},
@@ -82,7 +82,7 @@ TETRIMINOS = {
     }
   },
   [4] = {
-    ["offset"] = {0, 0},
+    ["center"] = {0, 0},
     ["bricks"] = {
       [1] = {
         {0, 0},
@@ -93,7 +93,7 @@ TETRIMINOS = {
     }
   },
   [5] = {
-    ["offset"] = {0.5, 0},
+    ["center"] = {0.5, 0},
     ["bricks"] = {
       [1] = {
         {1, 0},
@@ -110,7 +110,7 @@ TETRIMINOS = {
     }
   },
   [6] = {
-    ["offset"] = {0.5, 0},
+    ["center"] = {0.5, 0},
     ["bricks"] = {
       [1] = {
         {-1, 0},
@@ -139,7 +139,7 @@ TETRIMINOS = {
     }
   },
   [7] = {
-    ["offset"] = {0.5, 0},
+    ["center"] = {0.5, 0},
     ["bricks"] = {
       [1] = {
         {-1, 0},

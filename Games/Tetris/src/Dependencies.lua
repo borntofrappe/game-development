@@ -1,6 +1,7 @@
 require "src/constants"
 require "src/Utils"
 
+require "src/Brick"
 require "src/Tetriminos"
 
 require "src/Panel"
