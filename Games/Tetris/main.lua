@@ -100,6 +100,26 @@ function love.update(dt)
       tetriminoses.current:move("down")
       timer = 0
     end
+  else
+    tetriminoses.current =
+      Tetriminos:new(
+      {
+        ["type"] = tetriminoses.next.type,
+        ["color"] = tetriminoses.next.color,
+        ["column"] = math.floor(grid.columns / 2),
+        ["row"] = 1,
+        ["grid"] = grid
+      }
+    )
+
+    tetriminoses.next =
+      Tetriminos:new(
+      {
+        ["column"] = 5.5 + grid.columns,
+        ["row"] = 10.5,
+        ["center"] = true
+      }
+    )
   end
 
   if love.keyboard.wasPressed("space") then

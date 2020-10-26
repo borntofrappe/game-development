@@ -2,13 +2,15 @@ Tetriminos = {}
 Tetriminos.__index = Tetriminos
 
 function Tetriminos:new(def)
-  local tetriminos = TETRIMINOS[math.random(#TETRIMINOS)]
-  local bricks = tetriminos.bricks
-  local variant = 1
-  local color = math.random(#gFrames["tiles"] - 1)
+  local type = def.type or math.random(#TETRIMINOS)
+  local color = def.color or math.random(#gFrames["tiles"] - 1)
   local column = def.column or 1
   local row = def.row or 1
   local grid = def.grid or {}
+
+  local tetriminos = TETRIMINOS[type]
+  local bricks = tetriminos.bricks
+  local shape = 1
 
   local center = def.center or false
   if center then
@@ -17,12 +19,13 @@ function Tetriminos:new(def)
   end
 
   this = {
+    ["type"] = type,
+    ["color"] = color,
     ["column"] = column,
     ["row"] = row,
-    ["bricks"] = bricks,
-    ["variant"] = variant,
-    ["color"] = color,
     ["grid"] = grid,
+    ["bricks"] = bricks,
+    ["shape"] = shape,
     ["inPlay"] = true
   }
 
@@ -33,8 +36,8 @@ end
 function Tetriminos:move(direction)
   if direction == "down" then
     local isRowAvailable = true
-    for i, brickCoor in pairs(self.bricks[self.variant]) do
-      if self.row + brickCoor[2] >= self.grid.rows then
+    for i, offset in pairs(self.bricks[self.shape]) do
+      if self.row + offset[2] >= self.grid.rows then
         isRowAvailable = false
         break
       end
@@ -47,8 +50,8 @@ function Tetriminos:move(direction)
     end
   elseif direction == "right" then
     local isColumnAvailable = true
-    for i, brickCoor in pairs(self.bricks[self.variant]) do
-      if self.column + brickCoor[1] >= self.grid.columns then
+    for i, offset in pairs(self.bricks[self.shape]) do
+      if self.column + offset[1] >= self.grid.columns then
         isColumnAvailable = false
         break
       end
@@ -59,8 +62,8 @@ function Tetriminos:move(direction)
     end
   elseif direction == "left" then
     local isColumnAvailable = true
-    for i, brickCoor in pairs(self.bricks[self.variant]) do
-      if self.column + brickCoor[1] <= 1 then
+    for i, offset in pairs(self.bricks[self.shape]) do
+      if self.column + offset[1] <= 1 then
         isColumnAvailable = false
         break
       end
@@ -74,12 +77,13 @@ end
 
 function Tetriminos:rotate()
   if #self.bricks > 1 then
-    local variant = self.variant == #self.bricks and 1 or self.variant + 1
+    local shape = self.shape == #self.bricks and 1 or self.shape + 1
     local canRotate = true
-    for i, brickCoor in pairs(self.bricks[variant]) do
+    for i, offset in pairs(self.bricks[shape]) do
       if
-        self.row + brickCoor[2] >= self.grid.rows or self.column + brickCoor[1] > self.grid.columns or
-          self.column + brickCoor[1] < 1
+        self.row + offset[2] < 1 or self.row + offset[2] >= self.grid.rows or
+          self.column + offset[1] > self.grid.columns or
+          self.column + offset[1] < 1
        then
         canRotate = false
         break
@@ -87,19 +91,19 @@ function Tetriminos:rotate()
     end
 
     if canRotate then
-      self.variant = variant
+      self.shape = shape
     end
   end
 end
 
 function Tetriminos:render()
   love.graphics.setColor(1, 1, 1)
-  for i, brickCoor in ipairs(self.bricks[self.variant]) do
+  for i, offset in ipairs(self.bricks[self.shape]) do
     love.graphics.draw(
       gTextures["tiles"],
       gFrames["tiles"][self.color],
-      (self.column - 1) * TILE_SIZE + brickCoor[1] * TILE_SIZE,
-      (self.row - 1) * TILE_SIZE + brickCoor[2] * TILE_SIZE
+      (self.column - 1) * TILE_SIZE + offset[1] * TILE_SIZE,
+      (self.row - 1) * TILE_SIZE + offset[2] * TILE_SIZE
     )
   end
 end
