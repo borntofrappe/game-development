@@ -17,10 +17,10 @@ function love.load()
     ["bricks"] = {}
   }
 
-  for column = 1, grid.columns do
-    grid.bricks[column] = {}
-    for row = 1, grid.rows do
-      grid.bricks[column][row] = ""
+  for row = 1, grid.rows do
+    grid.bricks[row] = {}
+    for column = 1, grid.columns do
+      grid.bricks[row][column] = ""
     end
   end
 
@@ -30,7 +30,7 @@ function love.load()
     DescriptionList:new(
     {
       ["term"] = "Score",
-      ["description"] = 123,
+      ["description"] = 0,
       ["column"] = 4 + grid.columns,
       ["row"] = 2,
       ["width"] = 5,
@@ -42,7 +42,7 @@ function love.load()
     DescriptionList:new(
     {
       ["term"] = "Lines",
-      ["description"] = 4,
+      ["description"] = 0,
       ["column"] = 4 + grid.columns,
       ["row"] = 6,
       ["width"] = 5,
@@ -112,7 +112,7 @@ function love.update(dt)
       local column = brick.column
       local row = brick.row
       local color = brick.color
-      grid.bricks[column][row] =
+      grid.bricks[row][column] =
         Brick:new(
         {
           ["column"] = column,
@@ -140,6 +140,48 @@ function love.update(dt)
         ["center"] = true
       }
     )
+
+    local wasRowCleared = false
+    for row = grid.rows, 1, -1 do
+      local isRowCleared = true
+      for column = 1, grid.columns do
+        if grid.bricks[row][column] == "" then
+          isRowCleared = false
+          break
+        end
+      end
+
+      if isRowCleared then
+        lines.description = lines.description + 1
+        for column = 1, grid.columns do
+          grid.bricks[row][column] = ""
+        end
+        wasRowCleared = true
+      end
+    end
+
+    if wasRowCleared then
+      for column = 1, grid.columns do
+        local rowEmpty = nil
+        local row = grid.rows
+        while row >= 1 do
+          if rowEmpty then
+            if grid.bricks[row][column] ~= "" then
+              grid.bricks[rowEmpty][column] = grid.bricks[row][column]
+              grid.bricks[rowEmpty][column].row = rowEmpty
+              grid.bricks[row][column] = ""
+              row = rowEmpty
+              rowEmpty = nil
+            end
+          else
+            if grid.bricks[row][column] == "" then
+              rowEmpty = row
+            end
+          end
+          row = row - 1
+        end
+      end
+    end
   end
 
   if love.keyboard.wasPressed("space") then
@@ -188,10 +230,10 @@ function love.draw()
   love.graphics.translate(TILE_SIZE, 0)
   tetriminoses.current:render()
 
-  for column = 1, #grid.bricks do
-    for row = 1, #grid.bricks[column] do
-      if grid.bricks[column][row] ~= "" then
-        grid.bricks[column][row]:render()
+  for row = 1, #grid.bricks do
+    for column = 1, #grid.bricks[row] do
+      if grid.bricks[row][column] ~= "" then
+        grid.bricks[row][column]:render()
       end
     end
   end
