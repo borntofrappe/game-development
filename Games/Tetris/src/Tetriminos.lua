@@ -57,6 +57,18 @@ function Tetriminos:move(direction)
         isRowAvailable = false
         break
       end
+
+      for column = 1, #self.grid.bricks do
+        for row = 1, #self.grid.bricks[column] do
+          if
+            self.grid.bricks[column][row] ~= "" and brick.column == self.grid.bricks[column][row].column and
+              brick.row + 1 == self.grid.bricks[column][row].row
+           then
+            isRowAvailable = false
+            break
+          end
+        end
+      end
     end
 
     if isRowAvailable then
@@ -75,6 +87,18 @@ function Tetriminos:move(direction)
         isColumnAvailable = false
         break
       end
+
+      for column = 1, #self.grid.bricks do
+        for row = 1, #self.grid.bricks[column] do
+          if
+            self.grid.bricks[column][row] ~= "" and brick.column + 1 == self.grid.bricks[column][row].column and
+              brick.row == self.grid.bricks[column][row].row
+           then
+            isColumnAvailable = false
+            break
+          end
+        end
+      end
     end
 
     if isColumnAvailable then
@@ -90,6 +114,18 @@ function Tetriminos:move(direction)
       if brick.column <= 1 then
         isColumnAvailable = false
         break
+      end
+
+      for column = 1, #self.grid.bricks do
+        for row = 1, #self.grid.bricks[column] do
+          if
+            self.grid.bricks[column][row] ~= "" and brick.column - 1 == self.grid.bricks[column][row].column and
+              brick.row == self.grid.bricks[column][row].row
+           then
+            isColumnAvailable = false
+            break
+          end
+        end
       end
     end
 
@@ -118,16 +154,28 @@ function Tetriminos:rotate()
         break
       end
 
-      table.insert(
-        bricks,
+      local brick =
         Brick:new(
-          {
-            ["column"] = self.column + offsetBrick[1],
-            ["row"] = self.row + offsetBrick[2],
-            ["color"] = self.color
-          }
-        )
+        {
+          ["column"] = self.column + offsetBrick[1],
+          ["row"] = self.row + offsetBrick[2],
+          ["color"] = self.color
+        }
       )
+
+      for column = 1, #self.grid.bricks do
+        for row = 1, #self.grid.bricks[column] do
+          if
+            self.grid.bricks[column][row] ~= "" and brick.column == self.grid.bricks[column][row].column and
+              brick.row == self.grid.bricks[column][row].row
+           then
+            canRotate = false
+            break
+          end
+        end
+      end
+
+      table.insert(bricks, brick)
     end
 
     if canRotate then

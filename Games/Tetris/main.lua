@@ -188,10 +188,10 @@ function love.draw()
   love.graphics.translate(TILE_SIZE, 0)
   tetriminoses.current:render()
 
-  for i, column in ipairs(grid.bricks) do
-    for j, brick in ipairs(column) do
-      if brick ~= "" then
-        brick:render()
+  for column = 1, #grid.bricks do
+    for row = 1, #grid.bricks[column] do
+      if grid.bricks[column][row] ~= "" then
+        grid.bricks[column][row]:render()
       end
     end
   end
