@@ -78,7 +78,7 @@ function love.load()
   }
 
   timer = 0
-  interval = 1
+  interval = 0.5
 
   love.keyboard.keyPressed = {}
 end
@@ -170,6 +170,19 @@ function love.update(dt)
     if linesCleared > 0 then
       lines.description = lines.description + linesCleared
       score.description = score.description + 100 * linesCleared + math.random(4) * 25
+    else
+      for column = 1, grid.columns do
+        if grid.bricks[1][column] ~= "" then
+          for row = 1, grid.rows do
+            grid.bricks[row] = {}
+            for column = 1, grid.columns do
+              grid.bricks[row][column] = ""
+            end
+          end
+          lines.description = 0
+          score.description = 0
+        end
+      end
     end
   end
 
@@ -217,7 +230,6 @@ function love.draw()
   end
 
   love.graphics.translate(TILE_SIZE, 0)
-  tetriminoses.current:render()
 
   for row = 1, #grid.bricks do
     for column = 1, #grid.bricks[row] do
@@ -226,4 +238,6 @@ function love.draw()
       end
     end
   end
+
+  tetriminoses.current:render()
 end
