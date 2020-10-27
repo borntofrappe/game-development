@@ -24,14 +24,16 @@ The goal of this repo is two-fold:
 
   Here's a reference table listing the games in the order in which they are developed.
 
-  | Game             | Brief                                                        |
-  | ---------------- | ------------------------------------------------------------ |
-  | 2 Player Pong    | Pong with a mobile interface and mouse controls              |
-  | Bouncing Android | Flappy Bird inspired by the Lollipop OS                      |
-  | Space Invaders   | Space invaders inspired by title on the Game Boy Color       |
-  | Whirly Bird      | Doodle jump concept which comes pre-installed on Google Play |
-  | Asteroids        | Asteroids with shapes from `love.graphics`                   |
-  | Snake            | Snake with blocks and step animation                         |
+  | Game             | Brief                                                   |
+  | ---------------- | ------------------------------------------------------- |
+  | 2 Player Pong    | Pong with a mobile interface and mouse input            |
+  | Bouncing Android | Flappy Bird inspired by the Lollipop OS                 |
+  | Space Invaders   | Space invaders inspired by title on the Game Boy Color  |
+  | Whirly Bird      | Doodle jump inspired by Google Play pre-installed games |
+  | Asteroids        | Asteroids with shapes from `love.graphics`              |
+  | Snake            | Snake with blocks and step animation                    |
+  | Picross          | Picross levels with keyboard and mouse input            |
+  | Tetris           | Tetris leveraging Lua's tables                          |
 
 ## How to run a game
 
