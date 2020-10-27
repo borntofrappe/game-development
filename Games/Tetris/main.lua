@@ -141,7 +141,7 @@ function love.update(dt)
       }
     )
 
-    local wasRowCleared = false
+    local linesCleared = 0
     for row = grid.rows, 1, -1 do
       local isRowCleared = true
       for column = 1, grid.columns do
@@ -152,35 +152,24 @@ function love.update(dt)
       end
 
       if isRowCleared then
-        lines.description = lines.description + 1
-        for column = 1, grid.columns do
-          grid.bricks[row][column] = ""
+        linesCleared = linesCleared + 1
+
+        for r = row, 2, -1 do
+          for c = 1, grid.columns do
+            grid.bricks[r][c] = grid.bricks[r - 1][c]
+            if grid.bricks[r][c] ~= "" then
+              grid.bricks[r][c].row = grid.bricks[r][c].row + 1
+            end
+          end
         end
-        wasRowCleared = true
+
+        row = row + 1
       end
     end
 
-    if wasRowCleared then
-      for column = 1, grid.columns do
-        local rowEmpty = nil
-        local row = grid.rows
-        while row >= 1 do
-          if rowEmpty then
-            if grid.bricks[row][column] ~= "" then
-              grid.bricks[rowEmpty][column] = grid.bricks[row][column]
-              grid.bricks[rowEmpty][column].row = rowEmpty
-              grid.bricks[row][column] = ""
-              row = rowEmpty
-              rowEmpty = nil
-            end
-          else
-            if grid.bricks[row][column] == "" then
-              rowEmpty = row
-            end
-          end
-          row = row - 1
-        end
-      end
+    if linesCleared > 0 then
+      lines.description = lines.description + linesCleared
+      score.description = score.description + 100 * linesCleared + math.random(4) * 25
     end
   end
 
