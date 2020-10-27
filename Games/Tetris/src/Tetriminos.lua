@@ -52,22 +52,19 @@ end
 function Tetriminos:move(direction)
   if direction == "down" then
     local isRowAvailable = true
+
     for i, brick in ipairs(self.bricks) do
-      if brick.row >= self.grid.rows then
+      local row = brick.row
+      local column = brick.column
+
+      if row >= self.grid.rows then
         isRowAvailable = false
         break
       end
 
-      for row = 1, #self.grid.bricks do
-        for column = 1, #self.grid.bricks[row] do
-          if
-            self.grid.bricks[row][column] ~= "" and brick.column == self.grid.bricks[row][column].column and
-              brick.row + 1 == self.grid.bricks[row][column].row
-           then
-            isRowAvailable = false
-            break
-          end
-        end
+      if self.grid.bricks[row + 1] and self.grid.bricks[row + 1][column] then
+        isRowAvailable = false
+        break
       end
     end
 
@@ -83,21 +80,17 @@ function Tetriminos:move(direction)
     local isColumnAvailable = true
 
     for i, brick in ipairs(self.bricks) do
-      if brick.column >= self.grid.columns then
+      local row = brick.row
+      local column = brick.column
+
+      if column >= self.grid.columns then
         isColumnAvailable = false
         break
       end
 
-      for row = 1, #self.grid.bricks do
-        for column = 1, #self.grid.bricks[row] do
-          if
-            self.grid.bricks[row][column] ~= "" and brick.column + 1 == self.grid.bricks[row][column].column and
-              brick.row == self.grid.bricks[row][column].row
-           then
-            isColumnAvailable = false
-            break
-          end
-        end
+      if self.grid.bricks[row][column + 1] then
+        isColumnAvailable = false
+        break
       end
     end
 
@@ -111,21 +104,17 @@ function Tetriminos:move(direction)
     local isColumnAvailable = true
 
     for i, brick in ipairs(self.bricks) do
-      if brick.column <= 1 then
+      local row = brick.row
+      local column = brick.column
+
+      if column <= 1 then
         isColumnAvailable = false
         break
       end
 
-      for row = 1, #self.grid.bricks do
-        for column = 1, #self.grid.bricks[row] do
-          if
-            self.grid.bricks[row][column] ~= "" and brick.column - 1 == self.grid.bricks[row][column].column and
-              brick.row == self.grid.bricks[row][column].row
-           then
-            isColumnAvailable = false
-            break
-          end
-        end
+      if self.grid.bricks[row][column - 1] then
+        isColumnAvailable = false
+        break
       end
     end
 
@@ -163,16 +152,8 @@ function Tetriminos:rotate()
         }
       )
 
-      for row = 1, #self.grid.bricks do
-        for column = 1, #self.grid.bricks[row] do
-          if
-            self.grid.bricks[row][column] ~= "" and brick.column == self.grid.bricks[row][column].column and
-              brick.row == self.grid.bricks[row][column].row
-           then
-            canRotate = false
-            break
-          end
-        end
+      if self.grid.bricks[brick.row] and self.grid.bricks[brick.row][brick.column] then
+        canRotate = false
       end
 
       table.insert(bricks, brick)

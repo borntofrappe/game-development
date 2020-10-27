@@ -13,7 +13,7 @@ function Grid:new(def)
   for row = 1, def.rows do
     bricks[row] = {}
     for column = 1, def.columns do
-      bricks[row][column] = ""
+      bricks[row][column] = nil
     end
   end
 
@@ -30,7 +30,7 @@ end
 function Grid:render()
   for row = 1, self.rows do
     for column = 1, self.columns do
-      if self.bricks[row][column] ~= "" then
+      if self.bricks[row][column] then
         self.bricks[row][column]:render()
       end
     end
@@ -40,7 +40,7 @@ end
 function Grid:reset()
   for row = 1, self.rows do
     for column = 1, self.columns do
-      self.bricks[row][column] = ""
+      self.bricks[row][column] = nil
     end
   end
 end

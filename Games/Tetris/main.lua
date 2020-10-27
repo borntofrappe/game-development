@@ -139,7 +139,7 @@ function love.update(dt)
     for row = grid.rows, 1, -1 do
       local isRowCleared = true
       for column = 1, grid.columns do
-        if grid.bricks[row][column] == "" then
+        if not grid.bricks[row][column] then
           isRowCleared = false
           break
         end
@@ -149,7 +149,7 @@ function love.update(dt)
         table.insert(rowsCleared, row)
 
         for c = 1, grid.columns do
-          grid.bricks[row][c] = ""
+          grid.bricks[row][c] = nil
         end
       end
     end
@@ -158,10 +158,10 @@ function love.update(dt)
       for i, rowCleared in ipairs(rowsCleared) do
         for row = rowCleared, 1, -1 do
           for column = 1, grid.columns do
-            if grid.bricks[row][column] ~= "" then
+            if grid.bricks[row][column] then
               grid.bricks[row][column].row = grid.bricks[row][column].row + 1
               grid.bricks[row + 1][column] = grid.bricks[row][column]
-              grid.bricks[row][column] = ""
+              grid.bricks[row][column] = nil
             end
           end
         end
@@ -171,7 +171,7 @@ function love.update(dt)
     else
       for column = 1, grid.columns do
         local row = 1
-        if grid.bricks[row][column] ~= "" then
+        if grid.bricks[row][column] then
           for i, brick in ipairs(tetriminoses.current.bricks) do
             if brick.row == row and brick.column == column then
               grid:reset()
