@@ -135,7 +135,7 @@ function love.update(dt)
       }
     )
 
-    local linesCleared = 0
+    local rowsCleared = {}
     for row = grid.rows, 1, -1 do
       local isRowCleared = true
       for column = 1, grid.columns do
@@ -146,24 +146,28 @@ function love.update(dt)
       end
 
       if isRowCleared then
-        linesCleared = linesCleared + 1
+        table.insert(rowsCleared, row)
 
-        for r = row, 2, -1 do
-          for c = 1, grid.columns do
-            grid.bricks[r][c] = grid.bricks[r - 1][c]
-            if grid.bricks[r][c] ~= "" then
-              grid.bricks[r][c].row = grid.bricks[r][c].row + 1
-            end
-          end
+        for c = 1, grid.columns do
+          grid.bricks[row][c] = ""
         end
-
-        row = row + 1
       end
     end
 
-    if linesCleared > 0 then
-      lines.description = lines.description + linesCleared
-      score.description = score.description + 100 * linesCleared + math.random(4) * 25
+    if #rowsCleared > 0 then
+      for i, rowCleared in ipairs(rowsCleared) do
+        for row = rowCleared, 1, -1 do
+          for column = 1, grid.columns do
+            if grid.bricks[row][column] ~= "" then
+              grid.bricks[row][column].row = grid.bricks[row][column].row + 1
+              grid.bricks[row + 1][column] = grid.bricks[row][column]
+              grid.bricks[row][column] = ""
+            end
+          end
+        end
+      end
+      lines.description = lines.description + #rowsCleared
+      score.description = score.description + 100 * #rowsCleared + math.random(4) * 25
     else
       for column = 1, grid.columns do
         local row = 1
