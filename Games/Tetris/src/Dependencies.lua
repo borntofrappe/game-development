@@ -5,8 +5,8 @@ require "src/Brick"
 require "src/Tetriminos"
 require "src/Grid"
 
-require "src/Panel"
-require "src/DescriptionList"
+require "src/gui/Panel"
+require "src/gui/DescriptionList"
 
 gTextures = {
   ["tiles"] = love.graphics.newImage("res/tilesheet.png")
