@@ -121,6 +121,7 @@ function love.update(dt)
         }
       )
     end
+
     tetriminoses.current =
       Tetriminos:new(
       {
@@ -172,15 +173,21 @@ function love.update(dt)
       score.description = score.description + 100 * linesCleared + math.random(4) * 25
     else
       for column = 1, grid.columns do
-        if grid.bricks[1][column] ~= "" then
-          for row = 1, grid.rows do
-            grid.bricks[row] = {}
-            for column = 1, grid.columns do
-              grid.bricks[row][column] = ""
+        local row = 1
+        if grid.bricks[row][column] ~= "" then
+          for i, brick in ipairs(tetriminoses.current.bricks) do
+            if brick.row == row and brick.column == column then
+              for row = 1, grid.rows do
+                grid.bricks[row] = {}
+                for column = 1, grid.columns do
+                  grid.bricks[row][column] = ""
+                end
+              end
+              lines.description = 0
+              score.description = 0
+              break
             end
           end
-          lines.description = 0
-          score.description = 0
         end
       end
     end
@@ -192,10 +199,6 @@ function love.update(dt)
 
   if love.keyboard.wasPressed("escape") then
     love.event.quit()
-  end
-
-  if love.keyboard.wasPressed("g") then
-    showGrid = not showGrid
   end
 
   love.keyboard.keyPressed = {}
