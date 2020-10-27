@@ -11,20 +11,13 @@ function love.load()
     gColors["background"].a
   )
 
-  grid = {
-    ["columns"] = COLUMNS,
-    ["rows"] = ROWS,
-    ["bricks"] = {}
-  }
-
-  for row = 1, grid.rows do
-    grid.bricks[row] = {}
-    for column = 1, grid.columns do
-      grid.bricks[row][column] = ""
-    end
-  end
-
-  showGrid = false
+  grid =
+    Grid:new(
+    {
+      ["columns"] = COLUMNS,
+      ["rows"] = ROWS
+    }
+  )
 
   score =
     DescriptionList:new(
@@ -177,12 +170,7 @@ function love.update(dt)
         if grid.bricks[row][column] ~= "" then
           for i, brick in ipairs(tetriminoses.current.bricks) do
             if brick.row == row and brick.column == column then
-              for row = 1, grid.rows do
-                grid.bricks[row] = {}
-                for column = 1, grid.columns do
-                  grid.bricks[row][column] = ""
-                end
-              end
+              grid:reset()
               lines.description = 0
               score.description = 0
               break
@@ -234,13 +222,6 @@ function love.draw()
 
   love.graphics.translate(TILE_SIZE, 0)
 
-  for row = 1, #grid.bricks do
-    for column = 1, #grid.bricks[row] do
-      if grid.bricks[row][column] ~= "" then
-        grid.bricks[row][column]:render()
-      end
-    end
-  end
-
+  grid:render()
   tetriminoses.current:render()
 end

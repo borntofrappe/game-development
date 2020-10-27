@@ -3,6 +3,7 @@ require "src/Utils"
 
 require "src/Brick"
 require "src/Tetriminos"
+require "src/Grid"
 
 require "src/Panel"
 require "src/DescriptionList"
