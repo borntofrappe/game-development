@@ -151,6 +151,77 @@ Eventually, as the table is reset so that the game can continue anew with a diff
 objects = {}
 ```
 
+## Static shapes
+
+The demo buids from the progress achieved with the previous section (see [_Dynamic particles_](#dynamic-particles)) to include two static objects.
+
+The difference with respect to the previous objects, is that the body are initialized with a static type.
+
+```lua
+love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4, "static")
+```
+
+_Please note_: if the type is not specified, the engine defaults to `static`, so that it is equivalent to avoid describing the additional argument.
+
+```lua
+love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4)
+```
+
+Beyond the different type, the demo also introduces two additional functions to describe additional shapes.
+
+- `love.physics.newPolygonShape` to draw a platforms
+
+  ```lua
+  love.physics.newPolygonShape(
+    -WINDOW_WIDTH / 6,
+    -8,
+    WINDOW_WIDTH / 6,
+    -8,
+    WINDOW_WIDTH / 6,
+    8,
+    -WINDOW_WIDTH / 6,
+    8
+  )
+  ```
+
+  _Please note_: Love2D offers `newRectangleShape` as a shorthand to create rectangles.
+
+  ```lua
+  love.physics.newRectangleShape(WINDOW_WIDTH / 3, 20)
+  ```
+
+- `love.physics.newChainShape` to draw a jagged terrain
+
+  ```lua
+  love.physics.newChainShape(
+    false,
+    -WINDOW_WIDTH / 2,
+    -WINDOW_HEIGHT,
+    -WINDOW_WIDTH / 2,
+    -50,
+    0,
+    0,
+    WINDOW_WIDTH / 2,
+    -100,
+    WINDOW_WIDTH / 2,
+    -WINDOW_HEIGHT
+  )
+  ```
+
+  The first argument describes whether the shape should loop back to the first point or not.
+
+Finally, to draw the new features, the demo uses `love.graphics.polygon`. This function is especially suited for polygons, rectangles, or again chains, as it allows to draw the shapes based on their points. `getPoints` is available on the mentioned shapes.
+
+```lua
+love.graphics.polygon("fill", platform.shape:getPoints())
+```
+
+One important addition, however: `Body:getWorldPoints` is necessary to have the game convert between the units in the game and those in the world. Between pixels and meters.
+
+```lua
+love.graphics.polygon("fill", platform.body:getWorldPoints(platform.shape:getPoints()))
+```
+
 ## Resources
 
 - [Love2D physics](https://love2d.org/wiki/love.physics). The wiki describes in detail how the module works.
