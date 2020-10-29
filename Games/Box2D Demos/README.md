@@ -413,6 +413,52 @@ This is enough to have the rotor fixed and rotate as the circles collide with th
 
 _Please note_: the demo also takes advantage of the `getAnchors()` function. This one provide the coordinates of the anchor point, so that the `draw` function is able to draw a black circle where the two objects are connected.
 
+## Mouse joint
+
+The demo removes the progress achieved in the previous sections to focus on a single object. A rectangle shape is included in the middle of the window, while a chain shape works to define the window's edges. This allows to constrain the object to the visible area. From this setup, the mouse joint is included between the object and the mouse current position, but only if the cursor is pressed.
+
+`mouseJoint` is initialized in `love.load` to keep track of the joint itself. A reference is useful in the moment the `draw` function needs to include a visual for the joint itself.
+
+```lua
+mouseJoint = nil
+```
+
+As the mouse is pressed, the joint is initialized by specifying a body and the coordinates of the anchor point. Think of these coordinates as the target, the point to which the object is bound.
+
+```lua
+function love.mousepressed(x, y)
+  mouseJoint = love.physics.newMouseJoint(object.body, x, y)
+end
+```
+
+This is already enough to have what is essentially a distance joint between shape and the mouse's position. As the mouse is released however, the idea is to remove the joint. This allows to have the shape move in the chosen direction, as the object is no longer bound to the joint. Moreover, it allows to set up a different joint as the mouse is pressed once more.
+
+```lua
+function love.mousereleased()
+  mouseJoint:destroy()
+end
+```
+
+As the mouse is dragged then, the joint's coordinates are updated to have the object follow the mouse's movement.
+
+```lua
+function love.update(dt)
+  if love.mouse.isDown(1) then
+    mouseJoint:setTarget(love.mouse.getPosition())
+  end
+end
+```
+
+Finally, the joint is drawn by describing the line connecting the mouse's coordinates and the body. For the actual coordinates, the `getAnchors` function provides the coordinates of the point behind the joint, while `getX` and `getY` provide the center of the body.
+
+```lua
+local x1 = object.body:getX()
+local y1 = object.body:getY()
+
+local x2, y2 = mouseJoint:getAnchors()
+love.graphics.line(x1, y1, x2, y2)
+```
+
 ## Resources
 
 - [Love2D physics](https://love2d.org/wiki/love.physics). The wiki describes in detail how the module works.
