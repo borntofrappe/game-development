@@ -459,6 +459,43 @@ local x2, y2 = mouseJoint:getAnchors()
 love.graphics.line(x1, y1, x2, y2)
 ```
 
+## Body force
+
+The demo works to introduce the concept of forces. These are applied to the world's bodies through the `applyForce` function, specifying the intensity of the force in the horizontal and vertical dimension.
+
+```lua
+body:applyForce(forceX, forceY)
+```
+
+To showcase these forces, the demo introduces a series of rectangle shapes from the top of the screen. These are included and removed in a similar manner to the circles described in the [_Revolute joint_](#revolute-joint) section.
+
+As the mouse is being pressed, the idea is to then loop through the `objects` table to apply a force pushing the shapes toward the mouse's position.
+
+```lua
+if love.mouse.isDown(1) then
+  local x1 = love.mouse:getPosition()
+
+  for i, object in ipairs(objects) do
+    local x2 = object.body:getX()
+    local direction = x1 > x2 and 1 or -1
+  end
+end
+```
+
+Based on the direction, the force is applied on every objects stored in the table.
+
+```lua
+object.body:applyForce(50 * direction, 0)
+```
+
+_Please note_: the hard-coded value is moved into its own variable, so that the force is described at the top of the script with a constant.
+
+```lua
+FORCE = 50
+```
+
+_Please note_: the demo also introduces two platforms, on either side of the window. These are not rendered, but included in the world to see how the shapes would impact the window's edges.
+
 ## Resources
 
 - [Love2D physics](https://love2d.org/wiki/love.physics). The wiki describes in detail how the module works.
