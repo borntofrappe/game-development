@@ -361,6 +361,58 @@ This is enough to have the objects connected to one another. To finally show suc
 
 _Please note_: `newDistanceJoint` accepts an additional argument, to specify whether or not the connected bodies should collide.
 
+## Revolute joint
+
+The idea is to bind bodies to the same anchor point, and have the bodies rotate from this shared coordinate. To show the joint, the demo first introduces a series of circles above the window, and has the objects fall down as subject to gravity. These objects are included at an interval, and to ensure that the demo doesn't slow down excessively, are removed when they exceed the window's height.
+
+```lua
+for i, object in ipairs(objects) do
+  if object.body:getY() > WINDOW_HEIGHT then
+    object.body:destroy()
+    table.remove(objects, i)
+  end
+end
+```
+
+The script is however devoted to the revolute joint. Two rectangles are included to define the pieces of the joint: a platform and a rotor. The idea is to fix the platform in the lower portion of the window, by way of the `static` type. The rotor, on the other hand, specifies a `dynamic` type, so that the object is able to rotate on the connected anchor point.
+
+```lua
+platform.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4)
+rotor.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4 - 25, "dynamic")
+```
+
+The `y` coordinate is reduced by `25` as to have the rotor anchored relative to the top of the platform.
+
+From this setup, the revolute joint considers two bodies and the coordinates of the anchor point.
+
+```lua
+love.physics.newRevoluteJoint(platform.body, rotor.body, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4 - 25)
+```
+
+This is enough to have the rotor fixed and rotate as the circles collide with the object. To have the object actively rotate, however, it's possible to specify a motor with a series of functions:
+
+- `setMotorSpeed` and `setMaxMotorTorque` specify the physics in terms of motor speed and torque
+
+  ```lua
+  revoluteJoint:setMotorSpeed(math.pi * 2)
+  revoluteJoint:setMaxMotorTorque(10000)
+  revoluteJoint:setMotorEnabled(true)
+  ```
+
+  Note that the value change considering the structure of the platform and rotor. A thinner/shorter rotor requires less torque to rotate than a thicker/taller one.
+
+- `setMotorEnabled()` enables the rotation
+
+  The function is also called as the mouse is pressed in the window, to toggle the rotor. `isMotorEnabled` provides a boolean so that the code is able to use the opposite of the existing value.
+
+  ```lua
+  function love.mousepressed()
+    revoluteJoint:setMotorEnabled(not revoluteJoint:isMotorEnabled())
+  end
+  ```
+
+_Please note_: the demo also takes advantage of the `getAnchors()` function. This one provide the coordinates of the anchor point, so that the `draw` function is able to draw a black circle where the two objects are connected.
+
 ## Resources
 
 - [Love2D physics](https://love2d.org/wiki/love.physics). The wiki describes in detail how the module works.
