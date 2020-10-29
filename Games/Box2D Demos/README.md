@@ -222,7 +222,7 @@ One important addition, however: `Body:getWorldPoints` is necessary to have the 
 love.graphics.polygon("fill", platform.body:getWorldPoints(platform.shape:getPoints()))
 ```
 
-### Complex shapes
+## Complex shapes
 
 Instead of drawing circles as in the previous sections (see [_Dynamic particles_](#dynamic-particles) and [_Static shapes_](#static-shapes)), the demo adds objects in the form of complex shapes. The idea is to create objects in the form of two circles connected by a rectangle, as in the following rough ASCII representation.
 
@@ -282,6 +282,84 @@ end
 ```
 
 _Please note_: the radius of the circles is reduced to reduce the impact of each individual body.
+
+## Distance joint
+
+The demo creates a bridge with a series of connected circles. The goal is to use a distance joint to bind the circles together, and have the first and last element fixed, static so that the structure oscillates in the lower porition of the window.
+
+_Please note_: the platform and terrain introduced in the previous demo are removed to focus on the bridge.
+
+To create the bridge, the code first produces a series of objects in the form of circles, spanning the entirety of the window's width.
+
+```lua
+objectsBridge = {}
+objectsBridgeNumber = math.floor(WINDOW_WIDTH / (RADIUS_BRIDGE * 2)) + 1
+
+for i = 1, objectsBridgeNumber do
+
+end
+```
+
+The objects are created with an increasing `x` coordinate, so to have the circles side by side.
+
+```lua
+local x = (i - 1) * RADIUS_BRIDGE * 2
+```
+
+Moreover, the first and last object are made `static`, so that the connected structure doesn't fall due to gravity.
+
+```lua
+local type = i == 1 or i == objectsBridgeNumber and "static" or "dynamic"
+```
+
+Creating the body is enough to produce the components making up the bridge, and you can attest so by commenting out the line updating the world.
+
+```lua
+function love.update(dt)
+  -- world:update(dt)
+end
+```
+
+For the joint however, it is necessary to use the `love.physics.newDistanceJoint` function. This one accepts multiple arguments, for the bodies involved in the joint and the position of the anchor points.
+
+```lua
+love.physics.newDistanceJoint(body1, body2, x1, y1, x2, y2)
+```
+
+In the demo, such a function is used looping through the `objectsBridge` table, from the first up to the penultimate object. This to connect the current body with the one which follows.
+
+```lua
+for i = 1, objectsBridgeNumber - 1 do
+
+end
+```
+
+The bodies are collected from the mentioned table.
+
+```lua
+local body1 = objectsBridge[i].body
+local body2 = objectsBridge[i + 1].body
+```
+
+The anchor points consider the center of each shape.
+
+```lua
+local x1 = body1:getX()
+local y1 = body1:getY()
+
+local x2 = body2:getX()
+local y2 = body2:getY()
+```
+
+The values are then used in the joint.
+
+```lua
+love.physics.newDistanceJoint(body1, body2, x1, y1, x2, y2)
+```
+
+This is enough to have the objects connected to one another. To finally show such a connection, `love.draw` renders a line using the bodies' coordinates.
+
+_Please note_: `newDistanceJoint` accepts an additional argument, to specify whether or not the connected bodies should collide.
 
 ## Resources
 
