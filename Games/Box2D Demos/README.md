@@ -222,6 +222,67 @@ One important addition, however: `Body:getWorldPoints` is necessary to have the 
 love.graphics.polygon("fill", platform.body:getWorldPoints(platform.shape:getPoints()))
 ```
 
+### Complex shapes
+
+Instead of drawing circles as in the previous sections (see [_Dynamic particles_](#dynamic-particles) and [_Static shapes_](#static-shapes)), the demo adds objects in the form of complex shapes. The idea is to create objects in the form of two circles connected by a rectangle, as in the following rough ASCII representation.
+
+```text
+o--o
+```
+
+To create the complex shape, the idea is to create multiple shapes, and attach them to the same body. Two circles:
+
+```lua
+local shape1 = love.physics.newCircleShape(RADIUS)
+local shape2 = love.physics.newCircleShape(RADIUS)
+```
+
+One rectangle:
+
+```lua
+local shape3 = love.physics.newRectangleShape(RADIUS * 4, RADIUS)
+```
+
+And the respective fixtures:
+
+```lua
+local fixture1 = love.physics.newFixture(body, shape1)
+local fixture2 = love.physics.newFixture(body, shape2)
+local fixture3 = love.physics.newFixture(body, shape3)
+```
+
+This works to create the three shapes. However, the shapes are created from the same point of origin. The center described by the body's position. To have the circles on either side, it's necessary to describe an offset. `newCircleShape` allows to describe such an offset in the `x` and `y` coordinate by specifying two additional arguments.
+
+```lua
+-- x, y, radius
+love.physics.newCircleShape(RADIUS * 1.5, 0, RADIUS)
+```
+
+This is enough to build, in the world, the desired `o--o` structure. It is finally necessary to draw in `love.draw` a figure matching the object. This is done again through `love.graphics.circle` and `love.graphics.polygon`, with one considerable difference: the circles cannot use the body's position to describe the center of the shape, remember `body:getX()` and `body:getY()`. This is because the shapes are offset from the body's center. It is therefore necessary to access the coordinates of the matching shape.
+
+```lua
+local cx1, cy1 = object.body:getWorldPoints(object.shapes[1]:getPoint())
+```
+
+`CircleShape:getPoint()` provides the center of the circle, while `Body:getWorldPoints` converts the units to the world measure.
+
+_Please note_: the code producing the desired complex shape is moved into a function, to avoid repeating the instruction in `love.mousepressed` and `love.update(dt)`.
+
+```lua
+function love.mousepressed(x, y)
+  addObject(x, y)
+end
+
+function love.update(dt)
+  if love.mouse.isDown(1) then
+    local x, y = love.mouse:getPosition()
+    addObject(x, y)
+  end
+end
+```
+
+_Please note_: the radius of the circles is reduced to reduce the impact of each individual body.
+
 ## Resources
 
 - [Love2D physics](https://love2d.org/wiki/love.physics). The wiki describes in detail how the module works.
