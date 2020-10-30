@@ -2,6 +2,10 @@
 
 The goal of this folder is to re-introduce the physics library Box2D, as first seen in the game `07 Angry Birds`. The library is used in the context of the Love2D game engine, and specifically looking at the code behind the `love.physics` module.
 
+Most folders describe a specific concept of Box2D, and are inspired by [a playlist](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy4FyZtCHsZc_K0BrXzxfE) from [TheCodingTrain Youtube channel](https://www.youtube.com/c/TheCodingTrain), and are detailed in the sections which follow.
+
+Beyond these demos, the idea is to develop more complex experiences with the semblance of a game. Consider `Hillside ride` and `Launch lever`.
+
 ## Dynamic particles
 
 With this first demo, the idea is to generate a world, and later populate this world as the mouse is pressed in the window.

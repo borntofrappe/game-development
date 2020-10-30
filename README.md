@@ -34,6 +34,7 @@ The goal of this repo is two-fold:
   | Snake            | Snake with blocks and step animation                    |
   | Picross          | Picross levels with keyboard and mouse input            |
   | Tetris           | Tetris leveraging Lua's tables                          |
+  | Box2D Demos      | A series of physics-based experiments                   |
 
 ## How to run a game
 
