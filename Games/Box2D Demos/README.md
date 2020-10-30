@@ -496,6 +496,93 @@ FORCE = 50
 
 _Please note_: the demo also introduces two platforms, on either side of the window. These are not rendered, but included in the world to see how the shapes would impact the window's edges.
 
+## Collision events
+
+Similarly to the demo introduced in the previous section, see [_Body force_](#body-force), the script introduces a series of rectangle shapes from the top of the window. In the lower section of the window, however, the demo adds a circular shape to represent the player. The idea is to here detect a collision between this circle and one of the falling rectangles. In such an instance, the rectangle shape is destroyed.
+
+To complete this demo, it is first necessary to have the world listen for a collision.
+
+```lua
+function love.load()
+  -- define world
+  world:setCallbacks(beginContact)
+end
+```
+
+`setCallbacks` described up to four functions, for different stages of a collision, but here we are interested in the start of a collision only. `beginContact` refers to a function, defined to describe what happens as a contact between two world objects begins.
+
+```lua
+function beginContact(fixture1, fixture2)
+end
+```
+
+The function receives the fixtures involved in the contact. To differentiate the behavior on the basis of which fixture is actually involved (a circle, a rectangle, a platform), love2d provides the `setUserData` and `getUserData` functions. The idea is to set a label on the fixture of the player, and that of the object.
+
+```lua
+player.fixture:setUserData("Player")
+```
+
+In the body of the `beginContact` function then, the idea is to build a table describing the involved fixtures through booleans.
+
+```lua
+
+function beginContact(fixture1, fixture2)
+  local userData = {}
+  local userData1 = fixture1:getUserData()
+  local userData2 = fixture2:getUserData()
+  userData[userData1] = true
+  userData[userData2] = true
+end
+```
+
+In this manner, the function is able to check the involved fixtures regardless of the order in which they are received.
+
+```lua
+if userData["Player"] and userData["Object"] then
+end
+```
+
+Here, the idea is to remove the body of the fixture describing the object.
+
+```lua
+if userData1 == "Object" then
+  fixture1:getBody():destroy()
+else
+  fixture2:getBody():destroy()
+end
+```
+
+This works, but generates an error in the moment the world tries to update a destroyed object. Ideally, the demo would consider a more refined approach, where the `beginContact` function doesn't destroy the object directly, but toggles a boolean so that `love.update` can later destroy the body. Here, it is enough to condition then update and render logic to objects not destroyed.
+
+```lua
+
+for i, object in ipairs(objects) do
+  if not object.body:isDestroyed() then
+    love.graphics.polygon("line", object.body:getWorldPoints(object.shape:getPoints()))
+  end
+end
+```
+
+The update function also removes the object from the `objects` table considering the boolean returned by the function `isDestroyed`.
+
+```lua
+function love.update(dt)
+  for i, object in ipairs(objects) do
+    if object.body:isDestroyed() then
+      table.remove(objects, i)
+    end
+  end
+end
+```
+
+_Please note_: this is not the topic of the demo, but the player is introduced as a kinematic object.
+
+```lua
+player.body = love.physics.newBody(world, x, y, "kinematic")
+```
+
+The movement of the circle is then modified through the `setLinearVelocity` function, to have the shape follow the direction instructed by the arrow keys.
+
 ## Resources
 
 - [Love2D physics](https://love2d.org/wiki/love.physics). The wiki describes in detail how the module works.
