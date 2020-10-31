@@ -4,7 +4,7 @@ The goal of this folder is to re-introduce the physics library Box2D, as first s
 
 Most folders describe a specific concept of Box2D, and are inspired by [a playlist](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy4FyZtCHsZc_K0BrXzxfE) from [TheCodingTrain Youtube channel](https://www.youtube.com/c/TheCodingTrain), and are detailed in the sections which follow.
 
-Beyond these demos, the idea is to develop more complex experiences with the semblance of a game. Consider `Hillside ride` and `Launch lever`.
+Beyond these demos, the idea is to develop more complex experiences with the semblance of a game. Consider `Hillside ride` and `Bowling lane`.
 
 ## Dynamic particles
 
