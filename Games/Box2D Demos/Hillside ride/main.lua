@@ -1,5 +1,5 @@
-WINDOW_WIDTH = 640
-WINDOW_HEIGHT = 400
+WINDOW_WIDTH = 820
+WINDOW_HEIGHT = 360
 METER = 100
 
 function love.load()
@@ -9,15 +9,46 @@ function love.load()
   love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
 
   love.physics.setMeter(METER)
+
   world = love.physics.newWorld(0, 9.81 * METER, true)
   world:setCallbacks(beginContact)
 
+  -- edges
   border = {}
-  border.body = love.physics.newBody(world, 0, 0)
-  border.shape = love.physics.newChainShape(true, 0, 0, 0, WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH, 0)
-  border.fixture = love.physics.newFixture(border.body, border.shape)
-  border.fixture:setUserData("Border")
+  edges = {
+    {
+      x1 = 0,
+      y1 = 0,
+      x2 = WINDOW_WIDTH,
+      y2 = 0
+    },
+    {
+      x1 = WINDOW_WIDTH,
+      y1 = 0,
+      x2 = WINDOW_WIDTH,
+      y2 = WINDOW_HEIGHT
+    },
+    {
+      x1 = WINDOW_WIDTH,
+      y1 = WINDOW_HEIGHT,
+      x2 = 0,
+      y2 = WINDOW_HEIGHT
+    },
+    {
+      x1 = 0,
+      y1 = WINDOW_HEIGHT,
+      x2 = 0,
+      y2 = 0
+    }
+  }
+  for i, edge in ipairs(edges) do
+    local body = love.physics.newBody(world, edge.x1, edge.y1)
+    local shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
+    local fixture = love.physics.newFixture(body, shape)
+    fixture:setUserData("Edge")
+  end
 
+  -- terrain
   terrain = {
     ["y"] = WINDOW_HEIGHT * 3 / 4
   }
@@ -28,14 +59,13 @@ function love.load()
 
   for i = 1, 300 do
     local x = -10 + (i - 1) * (WINDOW_WIDTH + 20) / 300
-    local y = math.sin(i / 20) * 10
+    local y = math.sin(i / 14) * 10
     table.insert(points, x)
     table.insert(points, y)
   end
 
   table.insert(points, WINDOW_WIDTH)
   table.insert(points, WINDOW_HEIGHT)
-
   table.insert(points, 0)
   table.insert(points, WINDOW_HEIGHT)
 
@@ -44,55 +74,56 @@ function love.load()
   terrain.fixture:setUserData("Terrain")
   terrain.fixture:setFriction(0.1)
 
+  -- vehicle
   car = {
     ["x"] = WINDOW_WIDTH / 2,
-    ["y"] = WINDOW_HEIGHT * 3 / 4 - 30
+    ["y"] = WINDOW_HEIGHT * 3 / 4 - 30,
+    ["direction"] = 1
   }
 
-  direction = 1
+  wheelLeft = {}
+  wheelLeft.body = love.physics.newBody(world, car.x - 15, car.y + 10, "dynamic")
+  wheelLeft.shape = love.physics.newCircleShape(8)
+  wheelLeft.fixture = love.physics.newFixture(wheelLeft.body, wheelLeft.shape)
+  wheelLeft.fixture:setFriction(1)
+  wheelLeft.fixture:setUserData("Wheel")
 
-  wheel1 = {}
-  wheel1.body = love.physics.newBody(world, car.x - 15, car.y + 10, "dynamic")
-  wheel1.shape = love.physics.newCircleShape(8)
-  wheel1.fixture = love.physics.newFixture(wheel1.body, wheel1.shape)
-  wheel1.fixture:setFriction(0.3)
-  wheel1.fixture:setUserData("Wheel")
+  wheelRight = {}
+  wheelRight.body = love.physics.newBody(world, car.x + 15, car.y + 10, "dynamic")
+  wheelRight.shape = love.physics.newCircleShape(8)
+  wheelRight.fixture = love.physics.newFixture(wheelRight.body, wheelRight.shape)
+  wheelRight.fixture:setFriction(1)
+  wheelRight.fixture:setUserData("Wheel")
 
-  wheel2 = {}
-  wheel2.body = love.physics.newBody(world, car.x + 15, car.y + 10, "dynamic")
-  wheel2.shape = love.physics.newCircleShape(8)
-  wheel2.fixture = love.physics.newFixture(wheel2.body, wheel2.shape)
-  wheel2.fixture:setFriction(0.3)
-  wheel2.fixture:setUserData("Wheel")
+  car.body = love.physics.newBody(world, car.x, car.y, "dynamic")
+  car.shape = love.physics.newRectangleShape(60, 15)
+  car.fixture = love.physics.newFixture(car.body, car.shape)
+  car.fixture:setFriction(0.1)
+  car.fixture:setUserData("Car")
 
-  square = {}
-  square.body = love.physics.newBody(world, car.x, car.y, "dynamic")
-  square.shape = love.physics.newRectangleShape(60, 15)
-  square.fixture = love.physics.newFixture(square.body, square.shape)
-  square.fixture:setFriction(0.1)
-  square.fixture:setUserData("Car")
+  revoluteJointLeft =
+    love.physics.newRevoluteJoint(car.body, wheelLeft.body, wheelLeft.body:getX(), wheelLeft.body:getY())
+  revoluteJointLeft:setMotorSpeed(math.pi * 10 * car.direction)
+  revoluteJointLeft:setMaxMotorTorque(500)
+  revoluteJointLeft:setMotorEnabled(true)
 
-  wheel1joint = love.physics.newRevoluteJoint(square.body, wheel1.body, wheel1.body:getX(), wheel1.body:getY())
-  wheel1joint:setMotorSpeed(math.pi * 100 * direction)
-  wheel1joint:setMaxMotorTorque(500)
-  wheel1joint:setMotorEnabled(true)
-
-  wheel2joint = love.physics.newRevoluteJoint(square.body, wheel2.body, wheel2.body:getX(), wheel2.body:getY())
-  wheel2joint:setMotorSpeed(math.pi * 100 * direction)
-  wheel2joint:setMaxMotorTorque(500)
-  wheel2joint:setMotorEnabled(true)
-
-  speedUp()
+  revoluteJointRight =
+    love.physics.newRevoluteJoint(car.body, wheelRight.body, wheelRight.body:getX(), wheelRight.body:getY())
+  revoluteJointRight:setMotorSpeed(math.pi * 10 * car.direction)
+  revoluteJointRight:setMaxMotorTorque(500)
+  revoluteJointRight:setMotorEnabled(true)
 end
 
 function changeDirection(dir)
-  direction = dir or direction * -1
-  wheel1joint:setMotorSpeed(math.pi * 30 * direction)
-  wheel2joint:setMotorSpeed(math.pi * 30 * direction)
+  car.direction = dir or car.direction * -1
+  revoluteJointLeft:setMotorSpeed(math.pi * 10 * car.direction)
+  revoluteJointRight:setMotorSpeed(math.pi * 10 * car.direction)
 end
 
 function speedUp()
-  square.body:applyForce(1200 * direction, 0)
+  car.body:applyForce(700 * car.direction, 0)
+  wheelLeft.body:applyForce(500 * car.direction, 0)
+  wheelRight.body:applyForce(500 * car.direction, 0)
 end
 
 function beginContact(fixture1, fixture2)
@@ -102,7 +133,7 @@ function beginContact(fixture1, fixture2)
   userData[userData1] = true
   userData[userData2] = true
 
-  if userData["Border"] and userData["Car"] then
+  if userData["Edge"] and userData["Car"] then
     changeDirection()
     speedUp()
   end
@@ -117,6 +148,11 @@ function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
+
+  if key == "space" then
+    speedUp()
+  end
+
   if key == "right" then
     changeDirection(1)
     speedUp()
@@ -135,7 +171,7 @@ function love.draw()
   love.graphics.setLineWidth(2)
   love.graphics.polygon("line", terrain.body:getWorldPoints(terrain.shape:getPoints()))
 
-  love.graphics.circle("line", wheel1.body:getX(), wheel1.body:getY(), wheel1.shape:getRadius())
-  love.graphics.circle("line", wheel2.body:getX(), wheel2.body:getY(), wheel2.shape:getRadius())
-  love.graphics.polygon("line", square.body:getWorldPoints(square.shape:getPoints()))
+  love.graphics.circle("line", wheelLeft.body:getX(), wheelLeft.body:getY(), wheelLeft.shape:getRadius())
+  love.graphics.circle("line", wheelRight.body:getX(), wheelRight.body:getY(), wheelRight.shape:getRadius())
+  love.graphics.polygon("line", car.body:getWorldPoints(car.shape:getPoints()))
 end
