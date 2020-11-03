@@ -22,6 +22,14 @@ function love.mouse.wasPressed(button)
   return love.mouse.buttonPressed[button]
 end
 
+function love.keypressed(key)
+  if key == "escape" then
+    love.event.quit()
+  elseif key == "r" then
+    grid = Grid:new()
+  end
+end
+
 function love.update(dt)
   grid:update(dt)
 
@@ -55,47 +63,4 @@ function love.draw()
   love.graphics.translate(PADDING_X, MENU_HEIGHT + PADDING_Y)
 
   grid:render()
-
-  -- love.graphics.setColor(gColors["reveal-light"].r, gColors["reveal-light"].g, gColors["reveal-light"].b)
-  -- love.graphics.rectangle("fill", PADDING + (4) * CELL_SIZE, PADDING + (4) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-  -- love.graphics.setColor(gColors["reveal-dark"].r, gColors["reveal-dark"].g, gColors["reveal-dark"].b)
-  -- love.graphics.rectangle("fill", PADDING + (5) * CELL_SIZE, PADDING + (4) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-  -- love.graphics.setColor(gColors["reveal-light"].r, gColors["reveal-light"].g, gColors["reveal-light"].b)
-  -- love.graphics.rectangle("fill", PADDING + (6) * CELL_SIZE, PADDING + (4) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-
-  -- love.graphics.setFont(gFonts["bold"])
-  -- love.graphics.setColor(gColors["number-1"].r, gColors["number-1"].g, gColors["number-1"].b)
-  -- love.graphics.printf(
-  --   1,
-  --   PADDING + (4) * CELL_SIZE,
-  --   PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["bold"]:getHeight() / 2,
-  --   CELL_SIZE,
-  --   "center"
-  -- )
-  -- love.graphics.setColor(gColors["number-2"].r, gColors["number-2"].g, gColors["number-2"].b)
-  -- love.graphics.printf(
-  --   2,
-  --   PADDING + (5) * CELL_SIZE,
-  --   PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["bold"]:getHeight() / 2,
-  --   CELL_SIZE,
-  --   "center"
-  -- )
-  -- love.graphics.setColor(gColors["number-3"].r, gColors["number-3"].g, gColors["number-3"].b)
-  -- love.graphics.printf(
-  --   3,
-  --   PADDING + (6) * CELL_SIZE,
-  --   PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["bold"]:getHeight() / 2,
-  --   CELL_SIZE,
-  --   "center"
-  -- )
-
-  -- love.graphics.setColor(gColors["mine"].r, gColors["mine"].g, gColors["mine"].b)
-  -- love.graphics.rectangle("fill", PADDING + (3) * CELL_SIZE, PADDING + (7) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-  -- love.graphics.setColor(0, 0, 0, 0.25)
-  -- love.graphics.circle(
-  --   "fill",
-  --   PADDING + (3) * CELL_SIZE + CELL_SIZE / 2,
-  --   PADDING + (7) * CELL_SIZE + CELL_SIZE / 2,
-  --   CELL_SIZE / 5
-  -- )
 end

@@ -16,7 +16,9 @@ function Grid:new(def)
       local def = {
         ["column"] = column,
         ["row"] = row,
-        ["isEven"] = (column + row) % 2 == 0
+        ["isEven"] = (column + row) % 2 == 0,
+        ["hasMine"] = math.random(5) == 1,
+        ["neighborsWithMine"] = math.random(5) - 1
       }
       cells[column][row] = Cell:new(def)
     end
