@@ -54,5 +54,6 @@ gColors = {
 }
 
 gFonts = {
-  ["normal"] = love.graphics.newFont("res/font.ttf", math.floor(CELL_SIZE / 1.5))
+  ["normal"] = love.graphics.newFont("res/font.ttf", 20),
+  ["bold"] = love.graphics.newFont("res/font-bold.ttf", math.floor(CELL_SIZE / 1.5))
 }

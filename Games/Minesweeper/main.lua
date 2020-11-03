@@ -8,15 +8,27 @@ function love.load()
     gColors["background-light"].g,
     gColors["background-light"].b
   )
-
-  love.graphics.setFont(gFonts["normal"])
 end
 
 function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(gColors["background-dark"].r, gColors["background-dark"].g, gColors["background-dark"].b)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, MENU_HEIGHT)
+
+  love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(1, 1, 1)
+  love.graphics.printf(
+    "Mines: " .. MINES,
+    -16,
+    MENU_HEIGHT / 2 - gFonts["normal"]:getHeight() / 2,
+    WINDOW_WIDTH / 2,
+    "right"
+  )
+  love.graphics.print("Time: 000", WINDOW_WIDTH / 2 + 16, MENU_HEIGHT / 2 - gFonts["normal"]:getHeight() / 2)
+
+  love.graphics.translate(0, MENU_HEIGHT)
   for x = 1, COLUMNS do
     for y = 1, ROWS do
       local color = (x + y) % 2 == 0 and "cell-light" or "cell-dark"
@@ -38,11 +50,12 @@ function love.draw()
   love.graphics.setColor(gColors["reveal-light"].r, gColors["reveal-light"].g, gColors["reveal-light"].b)
   love.graphics.rectangle("fill", PADDING + (6) * CELL_SIZE, PADDING + (4) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
 
+  love.graphics.setFont(gFonts["bold"])
   love.graphics.setColor(gColors["number-1"].r, gColors["number-1"].g, gColors["number-1"].b)
   love.graphics.printf(
     1,
     PADDING + (4) * CELL_SIZE,
-    PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["normal"]:getHeight() / 2,
+    PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["bold"]:getHeight() / 2,
     CELL_SIZE,
     "center"
   )
@@ -50,7 +63,7 @@ function love.draw()
   love.graphics.printf(
     2,
     PADDING + (5) * CELL_SIZE,
-    PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["normal"]:getHeight() / 2,
+    PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["bold"]:getHeight() / 2,
     CELL_SIZE,
     "center"
   )
@@ -58,7 +71,7 @@ function love.draw()
   love.graphics.printf(
     3,
     PADDING + (6) * CELL_SIZE,
-    PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["normal"]:getHeight() / 2,
+    PADDING + (4) * CELL_SIZE + CELL_SIZE / 2 - gFonts["bold"]:getHeight() / 2,
     CELL_SIZE,
     "center"
   )
