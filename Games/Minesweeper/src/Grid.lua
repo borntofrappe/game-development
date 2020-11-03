@@ -16,9 +16,7 @@ function Grid:new(def)
       local def = {
         ["column"] = column,
         ["row"] = row,
-        ["isEven"] = (column + row) % 2 == 0,
-        ["hasMine"] = math.random(5) == 1,
-        ["neighborsWithMine"] = math.random(5) - 1
+        ["isEven"] = (column + row) % 2 == 0
       }
       cells[column][row] = Cell:new(def)
     end
@@ -34,29 +32,74 @@ function Grid:new(def)
   return this
 end
 
-function Grid:pointToCell(x, y)
-  if x < PADDING_X or x > WINDOW_WIDTH - PADDING_X or y < MENU_HEIGHT + PADDING_Y or y > WINDOW_HEIGHT - PADDING_Y then
-    return false
-  else
-    local column = math.floor((x - PADDING_X) / CELL_SIZE) + 1
-    local row = math.floor((y - PADDING_Y - MENU_HEIGHT) / CELL_SIZE) + 1
-    return column, row
-  end
-end
-
-function Grid:update(dt)
-  if love.mouse.wasPressed() then
-    local column, row = self:pointToCell(love.mouse:getPosition())
-    if column then
-      self.cells[column][row].isRevealed = true
-    end
-  end
-end
-
 function Grid:render()
   for i, column in ipairs(self.cells) do
     for j, cell in ipairs(column) do
       cell:render()
+    end
+  end
+end
+
+function Grid:addMines()
+  local mines = MINES or 10
+  while mines > 0 do
+    local column = math.random(self.columns)
+    local row = math.random(self.rows)
+    local cell = self.cells[column][row]
+    if not cell.hasMine then
+      cell.hasMine = true
+      mines = mines - 1
+    end
+  end
+end
+
+function Grid:addHints()
+  for i, column in ipairs(self.cells) do
+    for j, cell in ipairs(column) do
+      if not cell.hasMine then
+        local column = cell.column
+        local row = cell.row
+        local neighborsWithMine = 0
+        local c1 = math.max(1, column - 1)
+        local c2 = math.min(self.columns, column + 1)
+        local r1 = math.max(1, row - 1)
+        local r2 = math.min(self.rows, row + 1)
+        for c = c1, c2 do
+          for r = r1, r2 do
+            if self.cells[c][r].hasMine then
+              neighborsWithMine = neighborsWithMine + 1
+            end
+          end
+        end
+
+        cell.neighborsWithMine = neighborsWithMine
+      end
+    end
+  end
+end
+
+function Grid:reveal(column, row)
+  local cell = self.cells[column][row]
+  if not cell.isRevealed and not cell.hasMine then
+    cell.isRevealed = true
+    if cell.neighborsWithMine == 0 then
+      local c1 = math.max(1, column - 1)
+      local c2 = math.min(self.columns, column + 1)
+      local r1 = math.max(1, row - 1)
+      local r2 = math.min(self.rows, row + 1)
+      for c = c1, c2 do
+        for r = r1, r2 do
+          self:reveal(c, r)
+        end
+      end
+    end
+  end
+end
+
+function Grid:revealAll()
+  for i, column in ipairs(self.cells) do
+    for j, cell in ipairs(column) do
+      cell.isRevealed = true
     end
   end
 end

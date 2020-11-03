@@ -9,31 +9,28 @@ function love.load()
     gColors["background-light"].b
   )
 
+  math.randomseed(os.time())
+
   grid = Grid:new()
-  love.mouse.buttonPressed = {}
+  grid:addMines()
+  grid:addHints()
 end
 
 function love.mousepressed(x, y, button)
-  love.mouse.buttonPressed[button] = true
-end
-
-function love.mouse.wasPressed(button)
-  local button = button or 1
-  return love.mouse.buttonPressed[button]
+  local column, row = pointToCell(x, y)
+  if column then
+    if grid.cells[column][row].hasMine then
+      grid:revealAll()
+    else
+      grid:reveal(column, row)
+    end
+  end
 end
 
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
-  elseif key == "r" then
-    grid = Grid:new()
   end
-end
-
-function love.update(dt)
-  grid:update(dt)
-
-  love.mouse.buttonPressed = {}
 end
 
 function love.draw()
@@ -63,4 +60,14 @@ function love.draw()
   love.graphics.translate(PADDING_X, MENU_HEIGHT + PADDING_Y)
 
   grid:render()
+end
+
+function pointToCell(x, y)
+  if x < PADDING_X or x > WINDOW_WIDTH - PADDING_X or y < MENU_HEIGHT + PADDING_Y or y > WINDOW_HEIGHT - PADDING_Y then
+    return false
+  else
+    local column = math.floor((x - PADDING_X) / CELL_SIZE) + 1
+    local row = math.floor((y - PADDING_Y - MENU_HEIGHT) / CELL_SIZE) + 1
+    return column, row
+  end
 end

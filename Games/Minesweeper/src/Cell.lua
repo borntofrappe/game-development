@@ -7,9 +7,7 @@ function Cell:new(def)
     {
       ["column"] = 1,
       ["row"] = 1,
-      ["isEven"] = false,
-      ["hasMine"] = false,
-      ["neighborsWithMine"] = 0
+      ["isEven"] = false
     }
 
   local version = def.isEven and "light" or "dark"
@@ -20,9 +18,9 @@ function Cell:new(def)
     ["row"] = def.row,
     ["version"] = version,
     ["size"] = size,
-    ["isRevealed"] = true,
-    ["hasMine"] = def.hasMine,
-    ["neighborsWithMine"] = def.neighborsWithMine
+    ["isRevealed"] = false,
+    ["hasMine"] = def.hasMine or false,
+    ["neighborsWithMine"] = def.neighborsWithMine or 0
   }
 
   setmetatable(this, self)
