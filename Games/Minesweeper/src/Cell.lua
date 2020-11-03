@@ -71,5 +71,15 @@ function Cell:render()
       gColors["cell-" .. self.version].b
     )
     love.graphics.rectangle("fill", (self.column - 1) * self.size, (self.row - 1) * self.size, self.size, self.size)
+
+    if self.isFlagged then
+      love.graphics.setColor(1, 1, 1)
+
+      love.graphics.draw(
+        gTextures["flag"],
+        (self.column - 1) * self.size + self.size / 2 - gTextures["flag"]:getWidth() / 2,
+        (self.row - 1) * self.size + self.size / 2 - gTextures["flag"]:getHeight() / 2
+      )
+    end
   end
 end

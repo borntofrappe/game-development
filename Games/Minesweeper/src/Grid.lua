@@ -80,7 +80,7 @@ end
 
 function Grid:reveal(column, row)
   local cell = self.cells[column][row]
-  if not cell.isRevealed and not cell.hasMine then
+  if not cell.isRevealed and not cell.hasMine and not cell.isFlagged then
     cell.isRevealed = true
     if cell.neighborsWithMine == 0 then
       local c1 = math.max(1, column - 1)
@@ -99,7 +99,15 @@ end
 function Grid:revealAll()
   for i, column in ipairs(self.cells) do
     for j, cell in ipairs(column) do
+      cell.isFlagged = false
       cell.isRevealed = true
     end
+  end
+end
+
+function Grid:flag(column, row)
+  local cell = self.cells[column][row]
+  if not cell.isRevealed and not cell.isFlagged then
+    cell.isFlagged = true
   end
 end

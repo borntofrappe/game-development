@@ -18,6 +18,8 @@ function love.load()
   timer = 0
   isPlaying = false
   isGameOver = false
+
+  isAddingFlags = false
 end
 
 function love.mousepressed(x, y, button)
@@ -29,17 +31,33 @@ function love.mousepressed(x, y, button)
     grid:addMines()
     grid:addHints()
   else
-    local column, row = pointToCell(x, y)
-    if column then
-      if not isPlaying then
-        isPlaying = true
-      end
-      if grid.cells[column][row].hasMine then
-        grid:revealAll()
-        isPlaying = false
-        isGameOver = true
-      else
-        grid:reveal(column, row)
+    if
+      x > WINDOW_WIDTH / 2 - 24 - gFonts["normal"]:getWidth(MINES) - gTextures["flag"]:getWidth() - 4 and
+        x <
+          WINDOW_WIDTH / 2 - 24 - gFonts["normal"]:getWidth(MINES) - gTextures["flag"]:getWidth() - 4 +
+            gTextures["flag"]:getWidth() +
+            8 and
+        y > MENU_HEIGHT / 2 - gTextures["flag"]:getHeight() / 2 - 4 and
+        y < MENU_HEIGHT / 2 - gTextures["flag"]:getHeight() / 2 - 4 + gTextures["flag"]:getHeight() + 8
+     then
+      isAddingFlags = not isAddingFlags
+    else
+      local column, row = pointToCell(x, y)
+      if column then
+        if not isPlaying then
+          isPlaying = true
+        end
+        if isAddingFlags then
+          grid:flag(column, row)
+        else
+          if grid.cells[column][row].hasMine then
+            grid:revealAll()
+            isPlaying = false
+            isGameOver = true
+          else
+            grid:reveal(column, row)
+          end
+        end
       end
     end
   end
@@ -62,6 +80,18 @@ function love.draw()
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, MENU_HEIGHT)
 
   love.graphics.setFont(gFonts["normal"])
+
+  if isAddingFlags then
+    love.graphics.setColor(0, 0, 0, 0.3)
+    love.graphics.rectangle(
+      "fill",
+      WINDOW_WIDTH / 2 - 24 - gFonts["normal"]:getWidth(MINES) - gTextures["flag"]:getWidth() - 4,
+      MENU_HEIGHT / 2 - gTextures["flag"]:getHeight() / 2 - 4,
+      gTextures["flag"]:getWidth() + 8,
+      gTextures["flag"]:getHeight() + 8,
+      5
+    )
+  end
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(
     gTextures["flag"],
