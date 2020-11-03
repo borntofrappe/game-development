@@ -1,5 +1,8 @@
 require "src/constants"
 
+require "src/Cell"
+require "src/Grid"
+
 gColors = {
   ["background-light"] = {
     ["r"] = 0.33,
@@ -21,12 +24,12 @@ gColors = {
     ["g"] = 0.81,
     ["b"] = 0.28
   },
-  ["reveal-light"] = {
+  ["cell-revealed-light"] = {
     ["r"] = 0.89,
     ["g"] = 0.75,
     ["b"] = 0.63
   },
-  ["reveal-dark"] = {
+  ["cell-revealed-dark"] = {
     ["r"] = 0.84,
     ["g"] = 0.72,
     ["b"] = 0.6
