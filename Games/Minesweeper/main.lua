@@ -14,15 +14,33 @@ function love.load()
   grid = Grid:new()
   grid:addMines()
   grid:addHints()
+
+  timer = 0
+  isPlaying = false
+  isGameOver = false
 end
 
 function love.mousepressed(x, y, button)
-  local column, row = pointToCell(x, y)
-  if column then
-    if grid.cells[column][row].hasMine then
-      grid:revealAll()
-    else
-      grid:reveal(column, row)
+  if isGameOver then
+    isGameOver = false
+    isPlaying = true
+    timer = 0
+    grid = Grid:new()
+    grid:addMines()
+    grid:addHints()
+  else
+    local column, row = pointToCell(x, y)
+    if column then
+      if not isPlaying then
+        isPlaying = true
+      end
+      if grid.cells[column][row].hasMine then
+        grid:revealAll()
+        isPlaying = false
+        isGameOver = true
+      else
+        grid:reveal(column, row)
+      end
     end
   end
 end
@@ -30,6 +48,12 @@ end
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
+  end
+end
+
+function love.update(dt)
+  if isPlaying then
+    timer = timer + dt
   end
 end
 
@@ -52,7 +76,7 @@ function love.draw()
     MENU_HEIGHT / 2 - gTextures["stopwatch"]:getHeight() / 2
   )
   love.graphics.print(
-    "000",
+    formatTimer(timer),
     WINDOW_WIDTH / 2 + 24 + gTextures["stopwatch"]:getWidth(),
     MENU_HEIGHT / 2 - gFonts["normal"]:getHeight() / 2 + 2
   )
@@ -70,4 +94,8 @@ function pointToCell(x, y)
     local row = math.floor((y - PADDING_Y - MENU_HEIGHT) / CELL_SIZE) + 1
     return column, row
   end
+end
+
+function formatTimer(timer)
+  return string.format("%03d", timer)
 end
