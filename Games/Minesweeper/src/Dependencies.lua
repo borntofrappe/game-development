@@ -57,6 +57,11 @@ gColors = {
 }
 
 gFonts = {
-  ["normal"] = love.graphics.newFont("res/font.ttf", 20),
+  ["normal"] = love.graphics.newFont("res/font.ttf", 18),
   ["bold"] = love.graphics.newFont("res/font-bold.ttf", math.floor(CELL_SIZE / 1.5))
+}
+
+gTextures = {
+  ["flag"] = love.graphics.newImage("res/flag.png"),
+  ["stopwatch"] = love.graphics.newImage("res/stopwatch.png")
 }

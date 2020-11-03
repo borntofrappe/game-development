@@ -34,14 +34,23 @@ function love.draw()
 
   love.graphics.setFont(gFonts["normal"])
   love.graphics.setColor(1, 1, 1)
-  love.graphics.printf(
-    "Mines: " .. MINES,
-    -16,
-    MENU_HEIGHT / 2 - gFonts["normal"]:getHeight() / 2,
-    WINDOW_WIDTH / 2,
-    "right"
+  love.graphics.draw(
+    gTextures["flag"],
+    WINDOW_WIDTH / 2 - 24 - gFonts["normal"]:getWidth(MINES) - gTextures["flag"]:getWidth(),
+    MENU_HEIGHT / 2 - gTextures["flag"]:getHeight() / 2
   )
-  love.graphics.print("Time: 000", WINDOW_WIDTH / 2 + 16, MENU_HEIGHT / 2 - gFonts["normal"]:getHeight() / 2)
+  love.graphics.printf(MINES, -20, MENU_HEIGHT / 2 - gFonts["normal"]:getHeight() / 2, WINDOW_WIDTH / 2 + 2, "right")
+
+  love.graphics.draw(
+    gTextures["stopwatch"],
+    WINDOW_WIDTH / 2 + 20,
+    MENU_HEIGHT / 2 - gTextures["stopwatch"]:getHeight() / 2
+  )
+  love.graphics.print(
+    "000",
+    WINDOW_WIDTH / 2 + 24 + gTextures["stopwatch"]:getWidth(),
+    MENU_HEIGHT / 2 - gFonts["normal"]:getHeight() / 2 + 2
+  )
 
   love.graphics.translate(PADDING_X, MENU_HEIGHT + PADDING_Y)
 
