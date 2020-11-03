@@ -107,7 +107,7 @@ end
 
 function Grid:flag(column, row)
   local cell = self.cells[column][row]
-  if not cell.isRevealed and not cell.isFlagged then
-    cell.isFlagged = true
+  if not cell.isRevealed then
+    cell.isFlagged = not cell.isFlagged
   end
 end
