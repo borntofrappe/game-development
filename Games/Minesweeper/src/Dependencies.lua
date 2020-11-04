@@ -57,11 +57,11 @@ gColors = {
 }
 
 gFonts = {
-  ["normal"] = love.graphics.newFont("res/font.ttf", 18),
-  ["bold"] = love.graphics.newFont("res/font-bold.ttf", math.floor(CELL_SIZE / 1.5))
+  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 18),
+  ["bold"] = love.graphics.newFont("res/fonts/font-bold.ttf", math.floor(CELL_SIZE / 1.5))
 }
 
 gTextures = {
-  ["flag"] = love.graphics.newImage("res/flag.png"),
-  ["stopwatch"] = love.graphics.newImage("res/stopwatch.png")
+  ["flag"] = love.graphics.newImage("res/graphics/flag.png"),
+  ["stopwatch"] = love.graphics.newImage("res/graphics/stopwatch.png")
 }
