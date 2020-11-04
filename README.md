@@ -35,6 +35,7 @@ The goal of this repo is two-fold:
   | Picross          | Picross levels with keyboard and mouse input            |
   | Tetris           | Tetris leveraging Lua's tables                          |
   | Box2D Demos      | A series of physics-based experiments                   |
+  | Minesweeper      | Minesweeper with mouse input                            |
 
 ## How to run a game
 
