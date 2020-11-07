@@ -2,47 +2,22 @@ require "src/Dependencies"
 
 function love.load()
   love.window.setTitle("Alien Jump")
-  love.keyboard.keyPressed = {}
 
+  math.randomseed(os.time())
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  isPlaying = true
-  translateX = 0
-  walkingAnimation =
-    Animation(
-    {
-      frames = {4, 5},
-      interval = 0.1
-    }
-  )
-
-  idleAnimation =
-    Animation(
-    {
-      frames = {1},
-      interval = 1
-    }
-  )
-
-  jumpingAnimation =
-    Animation(
-    {
-      frames = {2},
-      interval = 1
-    }
-  )
-
-  squattingAnimation =
-    Animation(
-    {
-      frames = {3},
-      interval = 1
-    }
-  )
-
-  alienAnimation = walkingAnimation
   backgroundVariant = math.random(#gQuads["backgrounds"])
+
+  gStateStack =
+    StateStack(
+    {
+      StartState()
+    }
+  )
+
+  love.keyboard.keyPressed = {}
+  love.keyboard.keyReleased = {}
 end
 
 function love.resize(width, height)
@@ -50,28 +25,23 @@ function love.resize(width, height)
 end
 
 function love.keypressed(key)
-  love.keyboard.keyPressed[key] = gTextures
+  love.keyboard.keyPressed[key] = true
+end
+
+function love.keyreleased(key)
+  love.keyboard.keyReleased[key] = true
 end
 
 function love.keyboard.wasPressed(key)
   return love.keyboard.keyPressed[key]
 end
 
-function love.update(dt)
-  alienAnimation:update(dt)
-  if isPlaying then
-    translateX = translateX + SCROLL_SPEED * dt
-    if translateX >= VIRTUAL_WIDTH then
-      translateX = 0
-    end
-  end
+function love.keyboard.wasReleased(key)
+  return love.keyboard.keyReleased[key]
+end
 
-  isPlaying = true
-  alienAnimation = walkingAnimation
-  if love.keyboard.isDown("down") then
-    alienAnimation = squattingAnimation
-    isPlaying = false
-  end
+function love.update(dt)
+  gStateStack:update(dt)
 
   if love.keyboard.wasPressed("escape") then
     love.event.quit()
@@ -82,20 +52,13 @@ function love.update(dt)
   end
 
   love.keyboard.keyPressed = {}
+  love.keyboard.keyReleased = {}
 end
 
 function love.draw()
   push:start()
-  love.graphics.translate(-translateX, 0)
-  love.graphics.draw(gTextures["backgrounds"], gQuads["backgrounds"][backgroundVariant], 0, 0)
-  love.graphics.draw(gTextures["backgrounds"], gQuads["backgrounds"][backgroundVariant], VIRTUAL_WIDTH, 0)
-  love.graphics.translate(translateX, 0)
 
-  love.graphics.draw(
-    gTextures["alien"],
-    gQuads["alien"][alienAnimation:getCurrentFrame()],
-    8,
-    VIRTUAL_HEIGHT - ALIEN_HEIGHT
-  )
+  gStateStack:render()
+
   push:finish()
 end

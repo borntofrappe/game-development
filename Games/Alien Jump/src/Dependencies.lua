@@ -5,6 +5,12 @@ require("res/lib/Animation")
 require("src/constants")
 require("src/Utils")
 
+require("src/StateStack")
+require("src/states/BaseState")
+require("src/states/StartState")
+require("src/states/ScrollState")
+require("src/states/PauseState")
+
 gTextures = {
   ["alien"] = love.graphics.newImage("res/graphics/blue_alien.png"),
   ["backgrounds"] = love.graphics.newImage("res/graphics/backgrounds.png")
