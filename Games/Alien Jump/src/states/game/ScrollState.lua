@@ -29,9 +29,10 @@ function ScrollState:init(def)
   self.coins = {}
   self.creatures = {}
 
-  self.translateX = 0
-
-  self.score = 0
+  self.backgroundX = 0
+  self.scrollSpeed = SCROLL_SPEED
+  self.spawnOdds = SPAWN_ODDS
+  self.spawnScore = 0
 end
 
 function ScrollState:update(dt)
@@ -55,24 +56,26 @@ function ScrollState:update(dt)
     end
   end
 
-  self.translateX = self.translateX + SCROLL_SPEED * dt
+  self.backgroundX = self.backgroundX + self.scrollSpeed * dt
 
-  if #self.bushes == 0 and math.random(100) == 1 then
+  if #self.bushes == 0 then
     table.insert(self.bushes, Bush())
-  elseif #self.coins == 0 and math.random(100) == 1 then
+  end
+
+  if #self.coins == 0 and math.random(self.spawnOdds * 2) == 1 then
     table.insert(self.coins, Coin())
   end
 
-  if #self.creatures == 0 then
+  if #self.creatures == 0 and math.random(self.spawnOdds) == 1 then
     table.insert(self.creatures, Creature())
   end
 
-  if self.translateX >= VIRTUAL_WIDTH then
-    self.translateX = 0
+  if self.backgroundX >= VIRTUAL_WIDTH then
+    self.backgroundX = 0
   end
 
   for i, bush in ipairs(self.bushes) do
-    bush.x = bush.x - SCROLL_SPEED * dt
+    bush.x = bush.x - self.scrollSpeed * dt
     if bush.x + bush.width < 0 then
       bush.inPlay = false
     end
@@ -85,14 +88,16 @@ function ScrollState:update(dt)
   end
 
   for i, coin in ipairs(self.coins) do
-    coin.x = coin.x - SCROLL_SPEED * dt
+    coin.x = coin.x - self.scrollSpeed * dt
     if coin.x + coin.width < 0 then
       coin.inPlay = false
     end
     if coin:collides(self.player) then
+      gSounds["pickup"]:play()
       coin.inPlay = false
       gScore["current"] = gScore["current"] + coin.points
-      gSounds["pickup"]:play()
+      self.spawnScore = self.spawnScore + coin.points
+      self:checkScore()
     end
   end
 
@@ -104,9 +109,12 @@ function ScrollState:update(dt)
 
   for i, creature in ipairs(self.creatures) do
     creature:update(dt)
-    creature.x = creature.x - CREATURE_SCROLL_SPEED * dt
+    creature.x = creature.x - self.scrollSpeed * 1.5 * dt
     if creature.x + creature.width < 0 then
       creature.inPlay = false
+      gScore["current"] = gScore["current"] + creature.points
+      self.spawnScore = self.spawnScore + creature.points
+      self:checkScore()
     end
     if creature:collides(self.player) then
       gStateStack:push(GameoverState())
@@ -121,11 +129,19 @@ function ScrollState:update(dt)
   end
 end
 
+function ScrollState:checkScore()
+  if self.spawnScore >= INCREMENT_THRESHOLD then
+    self.spawnScore = 0
+    self.scrollSpeed = math.min(SCROLL_SPEED * 2, self.scrollSpeed + INCREMENT_SCROLL_SPEED)
+    self.spawnOdds = math.max(math.floor(SPAWN_ODDS / 2), self.spawnOdds - INCREMENT_SPAWN_ODDS)
+  end
+end
+
 function ScrollState:render()
-  love.graphics.translate(-self.translateX, 0)
+  love.graphics.translate(-self.backgroundX, 0)
   love.graphics.draw(gTextures["backgrounds"], gQuads["backgrounds"][gBackgroundVariant], 0, 0)
   love.graphics.draw(gTextures["backgrounds"], gQuads["backgrounds"][gBackgroundVariant], VIRTUAL_WIDTH, 0)
-  love.graphics.translate(self.translateX, 0)
+  love.graphics.translate(self.backgroundX, 0)
 
   for i, bush in ipairs(self.bushes) do
     bush:render()

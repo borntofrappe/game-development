@@ -13,6 +13,8 @@ function Creature:init()
     self.type == "land" and VIRTUAL_HEIGHT - self.height or
     VIRTUAL_HEIGHT - self.height - math.random(self.height, math.floor(VIRTUAL_HEIGHT / 2))
 
+  self.points = CREATURE_POINTS[self.type]
+
   self.inPlay = true
 
   self.animation =

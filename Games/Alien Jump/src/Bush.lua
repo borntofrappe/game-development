@@ -7,7 +7,6 @@ function Bush:init(def)
   self.y = VIRTUAL_HEIGHT - BUSH_SIZE
   self.width = BUSH_SIZE * #self.variants
   self.height = BUSH_SIZE
-
   self.inPlay = true
 end
 

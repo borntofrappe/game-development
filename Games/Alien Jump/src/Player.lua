@@ -1,14 +1,14 @@
 Player = Class {}
 
 function Player:init(def)
-  self.x = def.x or 8
-  self.y = def.y or VIRTUAL_HEIGHT - ALIEN_HEIGHT
   self.width = ALIEN_WIDTH
   self.height = ALIEN_HEIGHT
 
+  self.x = def.x or 8
+  self.y = def.y or VIRTUAL_HEIGHT - self.height
+
   self.dy = 0
 
-  self.sprite = def.sprite or 1
   self.stateMachine =
     def.stateMachine or
     StateMachine(
@@ -18,7 +18,7 @@ function Player:init(def)
         end
       }
     )
-  self.stateStack = def.stateStack
+
   self.currentAnimation = ALIEN_ANIMATION["idle"]
 end
 

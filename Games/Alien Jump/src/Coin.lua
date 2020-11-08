@@ -2,10 +2,11 @@ Coin = Class {}
 
 function Coin:init()
   self.variant = math.random(#gQuads["coins"])
-  self.x = VIRTUAL_WIDTH
-  self.y = math.random(math.floor(VIRTUAL_HEIGHT / 2 - BUSH_SIZE), VIRTUAL_HEIGHT - BUSH_SIZE)
   self.width = COIN_SIZE
   self.height = COIN_SIZE
+
+  self.x = VIRTUAL_WIDTH
+  self.y = math.random(math.floor(VIRTUAL_HEIGHT / 2 - self.height), VIRTUAL_HEIGHT - self.height)
   self.points = COIN_POINTS[self.variant]
   self.inPlay = true
 end

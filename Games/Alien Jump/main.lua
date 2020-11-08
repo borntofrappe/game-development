@@ -8,13 +8,14 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  gBackgroundVariant = math.random(#gQuads["backgrounds"])
   gStateStack =
     StateStack(
     {
       StartState()
     }
   )
+
+  gBackgroundVariant = math.random(#gQuads["backgrounds"])
 
   gScore = {
     ["hi"] = 0,
@@ -61,10 +62,18 @@ function love.draw()
 
   gStateStack:render()
 
+  if gScore.hi > 0 then
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.printf(string.upper("Hi " .. formatScore(gScore.hi)), -1, 5, VIRTUAL_WIDTH - 6, "right")
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.printf(string.upper("Hi " .. formatScore(gScore.hi)), 0, 4, VIRTUAL_WIDTH - 6, "right")
+  end
+
   love.graphics.setColor(0, 0, 0)
-  love.graphics.print(string.upper("Hi " .. formatScore(gScore.hi) .. " " .. formatScore(gScore.current)), 5, 5)
+  love.graphics.print(formatScore(gScore.current), 5, 5)
   love.graphics.setColor(1, 1, 1)
-  love.graphics.print(string.upper("Hi " .. formatScore(gScore.hi) .. " " .. formatScore(gScore.current)), 6, 4)
+  love.graphics.print(formatScore(gScore.current), 6, 4)
+
   push:finish()
 end
 
