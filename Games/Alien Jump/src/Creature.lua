@@ -33,12 +33,13 @@ function Creature:render()
   love.graphics.draw(
     gTextures[self.texture],
     gQuads[self.texture][self.color][self.animation:getCurrentFrame()],
-    self.x,
-    self.y
+    math.floor(self.x),
+    math.floor(self.y)
   )
 end
 
 function Creature:collides(target)
-  return not (self.x + self.width < target.x or self.x > target.x + target.width or self.y + self.height < target.y or
-    self.y > target.y + target.height)
+  return not (self.x + self.width - 2 < target.x or self.x - 2 > target.x + target.width or
+    self.y + self.height - 2 < target.y or
+    self.y - 2 > target.y + target.height)
 end

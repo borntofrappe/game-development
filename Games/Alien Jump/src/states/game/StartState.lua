@@ -8,15 +8,6 @@ function StartState:init()
         {
           ["idle"] = function()
             return PlayerIdleState(self.player)
-          end,
-          ["jump"] = function()
-            return PlayerJumpState(self.player)
-          end,
-          ["squat"] = function()
-            return PlayerSquatState(self.player)
-          end,
-          ["walk"] = function()
-            return PlayerWalkState(self.player)
           end
         }
       )
@@ -29,13 +20,7 @@ end
 function StartState:update(dt)
   if love.keyboard.wasPressed("return") then
     gStateStack:pop()
-    gStateStack:push(
-      ScrollState(
-        {
-          player = self.player
-        }
-      )
-    )
+    gStateStack:push(ScrollState())
   end
 end
 

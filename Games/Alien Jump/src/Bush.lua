@@ -13,6 +13,11 @@ end
 
 function Bush:render()
   for i, variant in ipairs(self.variants) do
-    love.graphics.draw(gTextures["bushes"], gQuads["bushes"][self.color][variant], self.x + BUSH_SIZE * (i - 1), self.y)
+    love.graphics.draw(
+      gTextures["bushes"],
+      gQuads["bushes"][self.color][variant],
+      math.floor(self.x + BUSH_SIZE * (i - 1)),
+      math.floor(self.y)
+    )
   end
 end

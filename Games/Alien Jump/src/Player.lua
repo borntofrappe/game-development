@@ -31,5 +31,10 @@ function Player:changeState(state, params)
 end
 
 function Player:render()
-  love.graphics.draw(gTextures["alien"], gQuads["alien"][self.currentAnimation:getCurrentFrame()], self.x, self.y)
+  love.graphics.draw(
+    gTextures["alien"],
+    gQuads["alien"][self.currentAnimation:getCurrentFrame()],
+    math.floor(self.x),
+    math.floor(self.y)
+  )
 end

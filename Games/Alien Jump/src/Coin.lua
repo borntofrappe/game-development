@@ -11,7 +11,7 @@ function Coin:init()
 end
 
 function Coin:render()
-  love.graphics.draw(gTextures["coins"], gQuads["coins"][self.variant], self.x, self.y)
+  love.graphics.draw(gTextures["coins"], gQuads["coins"][self.variant], math.floor(self.x), math.floor(self.y))
 end
 
 function Coin:collides(target)

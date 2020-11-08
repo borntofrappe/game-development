@@ -1,12 +1,34 @@
 ScrollState = Class {__includes = BaseState}
 
 function ScrollState:init(def)
-  self.player = def.player
+  self.player =
+    Player(
+    {
+      ["stateMachine"] = StateMachine(
+        {
+          ["idle"] = function()
+            return PlayerIdleState(self.player)
+          end,
+          ["jump"] = function()
+            return PlayerJumpState(self.player)
+          end,
+          ["squat"] = function()
+            return PlayerSquatState(self.player)
+          end,
+          ["walk"] = function()
+            return PlayerWalkState(self.player)
+          end
+        }
+      )
+    }
+  )
+
+  self.player:changeState("walk")
+
   self.bushes = {}
   self.coins = {}
   self.creatures = {}
 
-  self.player:changeState("walk")
   self.translateX = 0
 
   self.score = 0
@@ -18,6 +40,7 @@ function ScrollState:update(dt)
   if self.player.y == VIRTUAL_HEIGHT - self.player.height then
     if (love.keyboard.wasPressed("up") or love.keyboard.wasPressed("w")) then
       self.player:changeState("jump")
+      gSounds["jump"]:play()
     end
 
     if love.keyboard.wasPressed("down") or love.keyboard.wasPressed("s") then
@@ -69,6 +92,7 @@ function ScrollState:update(dt)
     if coin:collides(self.player) then
       coin.inPlay = false
       gScore["current"] = gScore["current"] + coin.points
+      gSounds["pickup"]:play()
     end
   end
 
@@ -85,8 +109,8 @@ function ScrollState:update(dt)
       creature.inPlay = false
     end
     if creature:collides(self.player) then
-      creature.inPlay = false
-    -- gameover
+      gStateStack:push(GameoverState())
+      gSounds["hit"]:play()
     end
   end
 
