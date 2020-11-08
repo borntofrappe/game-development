@@ -5,11 +5,19 @@ require("res/lib/Animation")
 require("src/constants")
 require("src/Utils")
 
+require("src/Player")
+
 require("src/StateStack")
 require("src/states/BaseState")
-require("src/states/StartState")
-require("src/states/ScrollState")
-require("src/states/PauseState")
+require("src/states/game/StartState")
+require("src/states/game/ScrollState")
+require("src/states/game/PauseState")
+
+require("src/StateMachine")
+require("src/states/player/PlayerIdleState")
+require("src/states/player/PlayerWalkState")
+require("src/states/player/PlayerJumpState")
+require("src/states/player/PlayerSquatState")
 
 gTextures = {
   ["alien"] = love.graphics.newImage("res/graphics/blue_alien.png"),
