@@ -4,17 +4,22 @@ function love.load()
   love.window.setTitle("Alien Jump")
 
   math.randomseed(os.time())
+  love.graphics.setFont(gFonts["normal"])
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  backgroundVariant = math.random(#gQuads["backgrounds"])
-
+  gBackgroundVariant = math.random(#gQuads["backgrounds"])
   gStateStack =
     StateStack(
     {
       StartState()
     }
   )
+
+  gScore = {
+    ["hi"] = 0,
+    ["current"] = 0
+  }
 
   love.keyboard.keyPressed = {}
   love.keyboard.keyReleased = {}
@@ -47,10 +52,6 @@ function love.update(dt)
     love.event.quit()
   end
 
-  if love.keyboard.wasPressed("r") then
-    backgroundVariant = math.random(#gQuads["backgrounds"])
-  end
-
   love.keyboard.keyPressed = {}
   love.keyboard.keyReleased = {}
 end
@@ -60,5 +61,11 @@ function love.draw()
 
   gStateStack:render()
 
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.print(string.upper("Hi " .. formatScore(gScore.hi) .. " " .. formatScore(gScore.current)), 6, 4)
   push:finish()
+end
+
+function formatScore(score)
+  return string.format("%04d", score)
 end

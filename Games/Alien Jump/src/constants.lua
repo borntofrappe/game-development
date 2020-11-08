@@ -49,8 +49,7 @@ ALIEN_ANIMATION = {
   )
 }
 
-BUSH_WIDTH = 16
-BUSH_HEIGHT = 16
+BUSH_SIZE = 16
 BUSH_VARIANTS = {
   {3, 4},
   {1, 3, 4},
@@ -68,3 +67,6 @@ BUSH_VARIANTS = {
   {1, 3, 4, 5, 2},
   {2, 3, 4, 5, 1}
 }
+
+COIN_SIZE = 16
+COIN_MULTIPLIER = 50

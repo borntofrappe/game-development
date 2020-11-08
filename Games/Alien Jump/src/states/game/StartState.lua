@@ -40,6 +40,6 @@ function StartState:update(dt)
 end
 
 function StartState:render()
-  love.graphics.draw(gTextures["backgrounds"], gQuads["backgrounds"][backgroundVariant], 0, 0)
+  love.graphics.draw(gTextures["backgrounds"], gQuads["backgrounds"][gBackgroundVariant], 0, 0)
   self.player:render()
 end
