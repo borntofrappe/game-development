@@ -1,7 +1,8 @@
 StartState = Class {__includes = BaseState}
 
 function StartState:update(dt)
-  if love.keyboard.wasPressed("return") or love.keyboard.wasPressed("space") then
+  if love.keyboard.wasPressed("return") then
+    gStateStack:pop()
     gStateStack:push(ScrollState())
   end
 end

@@ -2,29 +2,24 @@ ScrollState = Class {__includes = BaseState}
 
 function ScrollState:init()
   self.translateX = 0
-
-  self.animation =
-    Animation(
-    {
-      frames = {4, 5},
-      interval = 0.1
-    }
-  )
+  self.player = {
+    ["animation"] = ANIMATION["walk"]
+  }
 end
 
 function ScrollState:update(dt)
-  self.animation:update(dt)
+  self.player.animation:update(dt)
 
   self.translateX = self.translateX + SCROLL_SPEED * dt
   if self.translateX >= VIRTUAL_WIDTH then
     self.translateX = 0
   end
 
-  if love.keyboard.wasPressed("down") then
+  if love.keyboard.wasPressed("down") or love.keyboard.wasPressed("s") then
     gStateStack:push(
       PauseState(
         {
-          translateX = self.translateX
+          player = self.player
         }
       )
     )
@@ -39,7 +34,7 @@ function ScrollState:render()
 
   love.graphics.draw(
     gTextures["alien"],
-    gQuads["alien"][self.animation:getCurrentFrame()],
+    gQuads["alien"][self.player.animation:getCurrentFrame()],
     8,
     VIRTUAL_HEIGHT - ALIEN_HEIGHT
   )

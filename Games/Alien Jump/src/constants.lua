@@ -17,3 +17,30 @@ SCROLL_SPEED = 120
 
 ALIEN_WIDTH = 16
 ALIEN_HEIGHT = 20
+
+ANIMATION = {
+  ["idle"] = Animation(
+    {
+      frames = {1},
+      interval = 1
+    }
+  ),
+  ["jump"] = Animation(
+    {
+      frames = {2},
+      interval = 1
+    }
+  ),
+  ["squat"] = Animation(
+    {
+      frames = {3},
+      interval = 1
+    }
+  ),
+  ["walk"] = Animation(
+    {
+      frames = {4, 5},
+      interval = 0.1
+    }
+  )
+}

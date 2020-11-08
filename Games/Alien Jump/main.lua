@@ -25,7 +25,7 @@ function love.resize(width, height)
 end
 
 function love.keypressed(key)
-  love.keyboard.keyPressed[key] = true
+  love.keyboard.keyPressed[string.lower(key)] = true
 end
 
 function love.keyreleased(key)

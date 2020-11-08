@@ -1,20 +1,16 @@
 PauseState = Class {__includes = BaseState}
 
 function PauseState:init(def)
-  self.translateX = def and def.translateX or 0
+  self.player = def.player
+  self.player.animation = ANIMATION["squat"]
 end
 
 function PauseState:update(dt)
-  if love.keyboard.wasReleased("down") then
+  if love.keyboard.wasReleased("down") or love.keyboard.wasReleased("s") then
+    self.player.animation = ANIMATION["walk"]
     gStateStack:pop()
   end
 end
 
 function PauseState:render()
-  love.graphics.translate(-self.translateX, 0)
-  love.graphics.draw(gTextures["backgrounds"], gQuads["backgrounds"][backgroundVariant], 0, 0)
-  love.graphics.draw(gTextures["backgrounds"], gQuads["backgrounds"][backgroundVariant], VIRTUAL_WIDTH, 0)
-  love.graphics.translate(self.translateX, 0)
-
-  love.graphics.draw(gTextures["alien"], gQuads["alien"][3], 8, VIRTUAL_HEIGHT - ALIEN_HEIGHT)
 end
