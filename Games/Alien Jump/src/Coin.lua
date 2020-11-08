@@ -6,7 +6,7 @@ function Coin:init()
   self.y = math.random(math.floor(VIRTUAL_HEIGHT / 2 - BUSH_SIZE), VIRTUAL_HEIGHT - BUSH_SIZE)
   self.width = COIN_SIZE
   self.height = COIN_SIZE
-  self.points = COIN_MULTIPLIER * self.variant
+  self.points = COIN_POINTS[self.variant]
   self.inPlay = true
 end
 

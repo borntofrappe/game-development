@@ -61,6 +61,8 @@ function love.draw()
 
   gStateStack:render()
 
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.print(string.upper("Hi " .. formatScore(gScore.hi) .. " " .. formatScore(gScore.current)), 5, 5)
   love.graphics.setColor(1, 1, 1)
   love.graphics.print(string.upper("Hi " .. formatScore(gScore.hi) .. " " .. formatScore(gScore.current)), 6, 4)
   push:finish()

@@ -4,6 +4,7 @@ function ScrollState:init(def)
   self.player = def.player
   self.bushes = {}
   self.coins = {}
+  self.creatures = {}
 
   self.player:changeState("walk")
   self.translateX = 0
@@ -39,6 +40,10 @@ function ScrollState:update(dt)
     table.insert(self.coins, Coin())
   end
 
+  if #self.creatures == 0 then
+    table.insert(self.creatures, Creature())
+  end
+
   if self.translateX >= VIRTUAL_WIDTH then
     self.translateX = 0
   end
@@ -72,6 +77,24 @@ function ScrollState:update(dt)
       table.remove(self.coins, i)
     end
   end
+
+  for i, creature in ipairs(self.creatures) do
+    creature:update(dt)
+    creature.x = creature.x - SCROLL_SPEED_CREATURE * dt
+    if creature.x + creature.width < 0 then
+      creature.inPlay = false
+    end
+    if creature:collides(self.player) then
+      creature.inPlay = false
+    -- gameover
+    end
+  end
+
+  for i, creature in ipairs(self.creatures) do
+    if not creature.inPlay then
+      table.remove(self.creatures, i)
+    end
+  end
 end
 
 function ScrollState:render()
@@ -86,6 +109,10 @@ function ScrollState:render()
 
   for i, coin in ipairs(self.coins) do
     coin:render()
+  end
+
+  for i, creature in ipairs(self.creatures) do
+    creature:render()
   end
 
   self.player:render()
