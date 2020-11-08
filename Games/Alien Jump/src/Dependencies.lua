@@ -36,8 +36,8 @@ gQuads = {
   ["alien"] = GenerateQuads(gTextures["alien"], ALIEN_WIDTH, ALIEN_HEIGHT),
   ["bushes"] = GenerateQuadsObjects(gTextures["bushes"], BUSH_SIZE, BUSH_SIZE),
   ["coins"] = GenerateQuads(gTextures["coins"], COIN_SIZE, COIN_SIZE),
-  ["creatures_land"] = GenerateQuadsObjects(gTextures["creatures_land"], CREATURE_SIZE, CREATURE_SIZE),
-  ["creatures_sky"] = GenerateQuadsObjects(gTextures["creatures_sky"], CREATURE_SIZE, CREATURE_SIZE),
+  ["creatures_land"] = GenerateQuadsObjects(gTextures["creatures_land"], CREATURE_WIDTH, CREATURE_HEIGHT_LAND),
+  ["creatures_sky"] = GenerateQuadsObjects(gTextures["creatures_sky"], CREATURE_WIDTH, CREATURE_HEIGHT_SKY),
   ["backgrounds"] = GenerateQuads(gTextures["backgrounds"], BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
 }
 

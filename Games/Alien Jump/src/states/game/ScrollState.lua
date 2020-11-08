@@ -104,7 +104,7 @@ function ScrollState:update(dt)
 
   for i, creature in ipairs(self.creatures) do
     creature:update(dt)
-    creature.x = creature.x - SCROLL_SPEED_CREATURE * dt
+    creature.x = creature.x - CREATURE_SCROLL_SPEED * dt
     if creature.x + creature.width < 0 then
       creature.inPlay = false
     end

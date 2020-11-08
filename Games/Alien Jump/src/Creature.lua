@@ -5,14 +5,13 @@ function Creature:init()
   self.texture = "creatures_" .. self.type
   self.color = math.random(#gQuads[self.texture])
 
-  self.x = VIRTUAL_WIDTH
-  self.y = VIRTUAL_HEIGHT - CREATURE_SIZE
-  if self.type == "sky" then
-    self.y = self.y - math.random(CREATURE_SIZE, math.floor(VIRTUAL_HEIGHT / 2))
-  end
+  self.width = CREATURE_WIDTH
+  self.height = self.type == "land" and CREATURE_HEIGHT_LAND or CREATURE_HEIGHT_SKY
 
-  self.width = CREATURE_SIZE
-  self.height = CREATURE_SIZE
+  self.x = VIRTUAL_WIDTH
+  self.y =
+    self.type == "land" and VIRTUAL_HEIGHT - self.height or
+    VIRTUAL_HEIGHT - self.height - math.random(self.height, math.floor(VIRTUAL_HEIGHT / 2))
 
   self.inPlay = true
 
@@ -39,7 +38,7 @@ function Creature:render()
 end
 
 function Creature:collides(target)
-  return not (self.x + self.width - 2 < target.x or self.x - 2 > target.x + target.width or
-    self.y + self.height - 2 < target.y or
-    self.y - 2 > target.y + target.height)
+  return not (self.x + self.width - 1 < target.x or self.x - 1 > target.x + target.width or
+    self.y + self.height - 1 < target.y or
+    self.y - 1 > target.y + target.height)
 end
