@@ -15,3 +15,22 @@ function GenerateQuads(atlas, tileWidth, tileHeight)
 
   return spritesheet
 end
+
+function GenerateQuadsBushes(atlas)
+  local width = BUSH_WIDTH
+  local height = BUSH_HEIGHT
+
+  local colors = math.floor(atlas:getWidth() / width)
+  local variants = math.floor(atlas:getHeight() / height)
+
+  local quads = {}
+
+  for y = 1, colors do
+    quads[y] = {}
+    for x = 1, variants do
+      quads[y][x] = love.graphics.newQuad((x - 1) * width, (y - 1) * height, width, height, atlas:getDimensions())
+    end
+  end
+
+  return quads
+end
