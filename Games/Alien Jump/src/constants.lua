@@ -86,3 +86,5 @@ CREATURE_POINTS = {
   ["sky"] = 10,
   ["land"] = 5
 }
+
+NUMBER_SIZE = 8

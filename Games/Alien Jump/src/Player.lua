@@ -32,8 +32,8 @@ end
 
 function Player:render()
   love.graphics.draw(
-    gTextures["alien"],
-    gQuads["alien"][self.currentAnimation:getCurrentFrame()],
+    gTextures[gAlienVariant .. "_alien"],
+    gQuads[gAlienVariant .. "_alien"][self.currentAnimation:getCurrentFrame()],
     math.floor(self.x),
     math.floor(self.y)
   )

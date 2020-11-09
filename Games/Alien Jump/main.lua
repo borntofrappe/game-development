@@ -4,7 +4,6 @@ function love.load()
   love.window.setTitle("Alien Jump")
 
   math.randomseed(os.time())
-  love.graphics.setFont(gFonts["normal"])
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
@@ -15,6 +14,7 @@ function love.load()
     }
   )
 
+  gAlienVariant = math.random(2) == 1 and "blue" or "pink"
   gBackgroundVariant = math.random(#gQuads["backgrounds"])
 
   gScore = {
@@ -63,18 +63,45 @@ function love.draw()
   gStateStack:render()
 
   if gScore.hi > 0 then
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.printf(string.upper("Hi " .. formatScore(gScore.hi)), -1, 5, VIRTUAL_WIDTH - 6, "right")
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.printf(string.upper("Hi " .. formatScore(gScore.hi)), 0, 4, VIRTUAL_WIDTH - 6, "right")
+    displayRecord(gScore.hi)
   end
 
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.print(formatScore(gScore.current), 5, 5)
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.print(formatScore(gScore.current), 6, 4)
+  displayScore(gScore.current)
 
   push:finish()
+end
+
+function numberToDigits(num)
+  local digits = {}
+  local string = tostring(num)
+  for i = 1, #string do
+    local char = string:sub(i, i)
+    local digit = tonumber(char)
+    digits[i] = digit
+  end
+
+  return digits
+end
+
+function displayScore(score)
+  local scoreDigits = numberToDigits(score)
+  for i, digit in ipairs(scoreDigits) do
+    love.graphics.draw(
+      gTextures["numbers"],
+      gQuads["numbers"][digit + 1],
+      VIRTUAL_WIDTH - 4 - NUMBER_SIZE * #scoreDigits + NUMBER_SIZE * (i - 1),
+      6
+    )
+  end
+end
+
+function displayRecord(record)
+  love.graphics.draw(gTextures["star"], 4, 2)
+
+  local recordDigits = numberToDigits(record)
+  for i, digit in ipairs(recordDigits) do
+    love.graphics.draw(gTextures["numbers"], gQuads["numbers"][digit + 1], 20 + NUMBER_SIZE * (i - 1), 6)
+  end
 end
 
 function formatScore(score)
