@@ -9,9 +9,10 @@ function Creature:init()
   self.height = self.type == "land" and CREATURE_HEIGHT_LAND or CREATURE_HEIGHT_SKY
 
   self.x = VIRTUAL_WIDTH
-  self.y =
-    self.type == "land" and VIRTUAL_HEIGHT - self.height or
-    VIRTUAL_HEIGHT - self.height - math.random(self.height, math.floor(VIRTUAL_HEIGHT / 2))
+  self.y = VIRTUAL_HEIGHT - self.height
+  if self.type == "sky" then
+    self.y = self.y - math.random(self.height, math.floor(VIRTUAL_HEIGHT / 2))
+  end
 
   self.points = CREATURE_POINTS[self.type]
 
