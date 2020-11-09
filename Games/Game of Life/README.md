@@ -4,6 +4,14 @@ The goal of this demo is to set up a grid in which to recreate a version of [_Co
 
 ## Preface
 
-The project is more of a simulation than a game, but it does provide the option to modify the grid by selecting a specific cell, or again a pre-existing pattern.
+On CodePen, I already experimented with the simulation [using the React framework](https://codepen.io/borntofrappe/pen/xxbKgMQ). The demo is also the basis for the UI used in this project. The project is more of a simulation than a game, but it does provide the option to modify the grid by selecting a specific cell, or again a pre-existing pattern.
 
-The goal is also simple enough to experiment with how Love2D sets up the gaming window. The idea is to use [`love.graphics.getDimensions`](https://love2d.org/wiki/love.graphics.getDimensions) so that the simulation fills the entire window.
+The project is also simple enough to experiment with how Love2D sets up the gaming window. The goal is to consider the entirety of the window's width and height, so that the simulation will stretch fullscreen, based on the device running the script.
+
+_Please note_: what follows is a series of notes carelessly jotted down as I develop the game. Eventually, I will try to elaborate the concepts in a more structured fashion.
+
+## Fullscreen
+
+- [`love.graphics.setMode`](https://love2d.org/wiki/love.window.setMode) with a value of `0` for the width or height
+
+- [`love.graphics.getDimensions`](https://love2d.org/wiki/love.graphics.getDimensions) to find the resulting width and the height
