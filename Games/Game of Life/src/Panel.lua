@@ -1,3 +1,7 @@
+--[[ GUI
+  draw the outline of a rectangle
+  highlight by drawing the filled rectangle
+]]
 Panel = {}
 Panel.__index = Panel
 

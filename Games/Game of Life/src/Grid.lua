@@ -1,3 +1,7 @@
+--[[ Grid
+  initialize a table of cells
+  modify the boolean isAlive depending the game of life's rules
+]]
 Grid = {}
 Grid.__index = Grid
 
@@ -25,6 +29,8 @@ function Grid:new(columns, rows, width, height, offset)
   return this
 end
 
+-- proceed by one generation
+-- ! loop through the grid twice, one to count the neighbors, and once to modify the structure
 function Grid:step()
   for column = 1, self.columns do
     for row = 1, self.rows do
@@ -71,22 +77,12 @@ function Grid:reset()
   end
 end
 
+-- toggle a specific cell
 function Grid:toggleCell(column, row)
   self.cells[column][row].isAlive = not self.cells[column][row].isAlive
 end
 
-function Grid:render()
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.setLineWidth(2)
-  love.graphics.rectangle("line", self.offset.x, self.offset.y, self.width, self.height)
-
-  for column = 1, self.columns do
-    for row = 1, self.rows do
-      self.cells[column][row]:render()
-    end
-  end
-end
-
+-- consider one of the pattern described in constants.lua
 function Grid:addPattern()
   local patterns = {}
   for k, pattern in pairs(PATTERNS) do
@@ -101,6 +97,18 @@ function Grid:addPattern()
       local index = column + (row - 1) * self.columns
       self.cells[column][row].isAlive = patternString:sub(index, index) == "o"
       self.cells[column][row].aliveNeighbors = 0
+    end
+  end
+end
+
+function Grid:render()
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.setLineWidth(2)
+  love.graphics.rectangle("line", self.offset.x, self.offset.y, self.width, self.height)
+
+  for column = 1, self.columns do
+    for row = 1, self.rows do
+      self.cells[column][row]:render()
     end
   end
 end

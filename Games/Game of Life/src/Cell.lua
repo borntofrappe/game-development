@@ -1,3 +1,6 @@
+--[[ Cell
+  render a filled rectangle only if the cell is alive
+]]
 Cell = {}
 Cell.__index = Cell
 

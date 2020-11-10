@@ -2,16 +2,21 @@ require "src/Dependencies"
 
 function love.load()
   love.window.setTitle("Game of Life")
-  love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
-  love.window.setMode(0, 0)
+  love.graphics.setBackgroundColor(0, 0.05, 0.09)
 
-  -- math.randomseed(os.time())
+  love.window.setMode(0, 0)
   WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
 
+  math.randomseed(os.time())
+  isAnimating = false
+  timer = 0
+
+  -- font
   local fontSize = math.floor(math.min(WINDOW_WIDTH, WINDOW_HEIGHT) / 40)
   font = love.graphics.newFont("res/font.ttf", fontSize)
   love.graphics.setFont(font)
 
+  -- grid
   local gridWidth = math.floor(WINDOW_WIDTH / 1.5)
   local gridHeight = math.floor(WINDOW_HEIGHT / 1.5)
 
@@ -32,9 +37,8 @@ function love.load()
   end
 
   grid = Grid:new(COLUMNS, ROWS, gridWidth, gridHeight, offsetGrid)
-  isAnimating = false
-  timer = 0
 
+  -- buttons
   local actions = {
     {
       ["text"] = "Step forward",
@@ -97,6 +101,7 @@ function love.load()
   end
 end
 
+-- consider if the cursor is pressed on top of the grid or one of the buttons
 function love.mousepressed(x, y, button)
   if button == 1 then
     if x > grid.offset.x and x < grid.offset.x + grid.width and y > grid.offset.y and y < grid.offset.y + grid.height then
@@ -124,12 +129,13 @@ function love.keypressed(key)
     isAnimating = not isAnimating
   elseif key == "r" then
     grid:reset()
-  elseif key == "p" then
+  elseif key == "a" then
     grid:addPattern()
   end
 end
 
 function love.update(dt)
+  -- consider whether the cursor hvoers above a button
   local x, y = love.mouse:getPosition()
   if x and y then
     for i, button in ipairs(buttons) do

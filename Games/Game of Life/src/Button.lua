@@ -1,3 +1,7 @@
+--[[ GUI
+  draw text in the center of a panel
+  highlight by modifying the text color
+]]
 Button = {}
 Button.__index = Button
 

@@ -1,9 +1,9 @@
 COLUMNS = 21
 ROWS = 19
-INTERVAL = 0.25
+INTERVAL = 0.2
 
 PATTERNS = {
-  ["accident"] = [[
+  ["nameless"] = [[
       xxxxxxxxxxxxxxxxxxxxx
       xxxxoxxxxxoxxxxxoxxxx
       xxxxoxxxxxoxxxxxoxxxx
