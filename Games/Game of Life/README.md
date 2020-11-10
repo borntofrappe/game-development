@@ -18,8 +18,18 @@ _Please note_: what follows is a series of notes carelessly jotted down as I dev
 
 - in order to position the grid at specific coordinates, in order to guarantee that the cells are square, all the while starting from a width and height which are not known, it is necessary to adjust the width or height depending on which value is greater
 
+- consider a different layout depending on the width/heigth: side by side or single column if the height is greater
+
 ## Step
 
 The function has the generation progress by 1. The logic is similar to that implemented in the game _Minesweeper_, whereby a loop is set up to consider the eight neighbors.
 
 Be careful: it is necessary to loop through the grid twice. One to establish the number of alive neighbors, one to implement the rules based on the number itself. Otherwise you end up modifying the grid as you count the neighbors.
+
+Be careful: `math.randomseed`. I haven't included the line up to the very end to test the simulation on a grid that doesn't change.
+
+## GUI elements
+
+- `font:getWidth(text)` and `font:getWidth()` are two invaluable functions to have the GUI scale according to the size of the text
+
+- base the width of the buttons on the greater width between the possible options (step, animate, pause)

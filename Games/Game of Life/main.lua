@@ -1,4 +1,4 @@
-require "constants"
+require "src/Dependencies"
 
 function buildGrid()
   local grid = {}
@@ -65,6 +65,9 @@ function love.load()
   -- math.randomseed(os.time())
   width, height = love.graphics.getDimensions()
 
+  font = love.graphics.newFont("res/font.ttf", math.floor(math.min(width, height) / 40))
+  love.graphics.setFont(font)
+
   gridWidth = math.floor(width / 2)
   gridHeight = math.floor(height / 2)
 
@@ -83,6 +86,10 @@ function love.load()
 
   grid = buildGrid()
   generation = 0
+  isAnimating = false
+  timer = 0
+
+  button = Button:new(0, 0, font:getWidth("Animate") * 1.25, font:getHeight() * 2, "Animate")
 end
 
 function love.mousepressed(x, y, button)
@@ -96,14 +103,24 @@ function love.keypressed(key)
     love.event.quit()
   end
   if key == "s" then
-    step()
+    -- step()
+  elseif key == "space" then
+    isAnimating = isAnimating and false or true
   end
 end
 
 function love.update(dt)
+  if isAnimating then
+    timer = timer + dt
+    if timer >= INTERVAL then
+      timer = timer % INTERVAL
+      step()
+    end
+  end
 end
 
 function love.draw()
+  button:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.translate(padding.x, padding.y)
 
@@ -116,5 +133,5 @@ function love.draw()
     end
   end
 
-  love.graphics.printf("Generation " .. generation, 0, gridHeight + 8, gridWidth, "center")
+  love.graphics.printf("Generation " .. generation, 0, gridHeight + 16, gridWidth, "center")
 end
