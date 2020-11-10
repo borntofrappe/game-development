@@ -15,3 +15,11 @@ _Please note_: what follows is a series of notes carelessly jotted down as I dev
 - [`love.graphics.setMode`](https://love2d.org/wiki/love.window.setMode) with a value of `0` for the width or height
 
 - [`love.graphics.getDimensions`](https://love2d.org/wiki/love.graphics.getDimensions) to find the resulting width and the height
+
+- in order to position the grid at specific coordinates, in order to guarantee that the cells are square, all the while starting from a width and height which are not known, it is necessary to adjust the width or height depending on which value is greater
+
+## Step
+
+The function has the generation progress by 1. The logic is similar to that implemented in the game _Minesweeper_, whereby a loop is set up to consider the eight neighbors.
+
+Be careful: it is necessary to loop through the grid twice. One to establish the number of alive neighbors, one to implement the rules based on the number itself. Otherwise you end up modifying the grid as you count the neighbors.
