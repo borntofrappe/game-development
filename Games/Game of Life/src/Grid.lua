@@ -86,3 +86,21 @@ function Grid:render()
     end
   end
 end
+
+function Grid:addPattern()
+  local patterns = {}
+  for k, pattern in pairs(PATTERNS) do
+    table.insert(patterns, k)
+  end
+
+  local pattern = PATTERNS[patterns[math.floor(math.random(#patterns))]]
+  local patternString = pattern:gsub("[^xo]", "")
+
+  for column = 1, self.columns do
+    for row = 1, self.rows do
+      local index = column + (row - 1) * self.columns
+      self.cells[column][row].isAlive = patternString:sub(index, index) == "o"
+      self.cells[column][row].aliveNeighbors = 0
+    end
+  end
+end

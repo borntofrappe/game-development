@@ -8,7 +8,8 @@ function love.load()
   -- math.randomseed(os.time())
   WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
 
-  font = love.graphics.newFont("res/font.ttf", math.floor(math.min(WINDOW_WIDTH, WINDOW_HEIGHT) / 40))
+  local fontSize = math.floor(math.min(WINDOW_WIDTH, WINDOW_HEIGHT) / 40)
+  font = love.graphics.newFont("res/font.ttf", fontSize)
   love.graphics.setFont(font)
 
   local gridWidth = math.floor(WINDOW_WIDTH / 1.5)
@@ -52,6 +53,12 @@ function love.load()
       ["callback"] = function()
         grid:reset()
       end
+    },
+    {
+      ["text"] = "Add pattern",
+      ["callback"] = function()
+        grid:addPattern()
+      end
     }
   }
 
@@ -68,12 +75,12 @@ function love.load()
 
   local offsetButtons = {
     ["x"] = WINDOW_WIDTH * 3 / 4 - buttonWidth / 2,
-    ["y"] = WINDOW_HEIGHT / 2 - (#buttons + 1) * (buttonHeight * 2) - buttonHeight / 2
+    ["y"] = WINDOW_HEIGHT / 2 - (#buttons + 1) * (buttonHeight * 2) - buttonHeight
   }
 
   if WINDOW_HEIGHT > WINDOW_WIDTH then
     offsetButtons.x = WINDOW_WIDTH / 2 - buttonWidth / 2
-    offsetButtons.y = WINDOW_HEIGHT * 3 / 4 - (#buttons + 1) * (buttonHeight * 2) - buttonHeight / 2
+    offsetButtons.y = WINDOW_HEIGHT * 3 / 4 - (#buttons + 1) * (buttonHeight * 2) - buttonHeight
   end
 
   for i, action in ipairs(actions) do
@@ -117,6 +124,8 @@ function love.keypressed(key)
     isAnimating = not isAnimating
   elseif key == "r" then
     grid:reset()
+  elseif key == "p" then
+    grid:addPattern()
   end
 end
 
