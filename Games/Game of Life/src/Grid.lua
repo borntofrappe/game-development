@@ -8,9 +8,7 @@ function Grid:new(columns, rows, width, height, offset)
   for column = 1, columns do
     cells[column] = {}
     for row = 1, rows do
-      local isAlive = math.random(2) == 1
-      local aliveNeighbors = 0
-      cells[column][row] = Cell:new(column, row, cellSize, isAlive, aliveNeighbors, offset)
+      cells[column][row] = Cell:new(column, row, cellSize, offset)
     end
   end
 
@@ -61,6 +59,14 @@ function Grid:step()
           self.cells[column][row].isAlive = true
         end
       end
+    end
+  end
+end
+
+function Grid:reset()
+  for column = 1, self.columns do
+    for row = 1, self.rows do
+      self.cells[column][row]:reset()
     end
   end
 end

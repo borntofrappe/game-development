@@ -17,12 +17,6 @@ function Button:new(x, y, width, height, text, callback)
   return this
 end
 
--- function Button:update(dt)
--- if pressed then
---   self.callback()
--- end
--- end
-
 function Button:render()
   self.panel:render()
   love.graphics.setColor(1, 1, 1)

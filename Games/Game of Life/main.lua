@@ -20,63 +20,85 @@ function love.load()
     gridHeight = gridWidth * ROWS / COLUMNS
   end
 
-  local offset = {
+  local offsetGrid = {
     ["x"] = WINDOW_WIDTH / 2 - gridWidth,
     ["y"] = WINDOW_HEIGHT / 2 - gridHeight / 2
   }
 
   if WINDOW_HEIGHT > WINDOW_WIDTH then
-    offset.x = WINDOW_WIDTH / 2 - gridWidth / 2
-    offset.y = WINDOW_HEIGHT / 2 - gridHeight
+    offsetGrid.x = WINDOW_WIDTH / 2 - gridWidth / 2
+    offsetGrid.y = WINDOW_HEIGHT / 2 - gridHeight
   end
 
-  grid = Grid:new(COLUMNS, ROWS, gridWidth, gridHeight, offset)
+  grid = Grid:new(COLUMNS, ROWS, gridWidth, gridHeight, offsetGrid)
 
   isAnimating = false
   timer = 0
 
-  -- actions = {
-  --   {
-  --     ["text"] = "Step",
-  --     ["callback"] = function()
-  --       step()
-  --     end
-  --   },
-  --   {
-  --     ["text"] = "Animate",
-  --     ["callback"] = function()
-  --       isAnimating = true
-  --     end
-  --   },
-  --   {
-  --     ["text"] = "Reset",
-  --     ["callback"] = function()
-  --       grid = buildGrid()
-  --       generation = 0
-  --     end
-  --   }
-  -- }
+  local actions = {
+    {
+      ["text"] = "Step forward",
+      ["callback"] = function()
+        grid:step()
+      end
+    },
+    {
+      ["text"] = "Toggle animation",
+      ["callback"] = function()
+        isAnimating = not isAnimating
+      end
+    },
+    {
+      ["text"] = "Reset simulation",
+      ["callback"] = function()
+        grid:reset()
+      end
+    }
+  }
 
-  -- buttons = {}
-  -- buttonWidth = 0
-  -- for i, action in ipairs(actions) do
-  --   local width = font:getWidth(action.text) * 1.25
-  --   if width > buttonWidth then
-  --     buttonWidth = width
-  --   end
-  -- end
+  buttons = {}
+  local buttonWidth = 0
+  local buttonHeight = font:getHeight() * 2.5
 
-  -- buttonHeight = font:getHeight() * 2
-  -- for i, action in ipairs(actions) do
-  --   local button =
-  --     Button:new(8, 8 + (buttonHeight * 2) * (i - 1), buttonWidth, buttonHeight, action.text, action.callback)
-  --   table.insert(buttons, button)
-  -- end
+  for i, action in ipairs(actions) do
+    local width = font:getWidth(action.text) * 1.25
+    if width > buttonWidth then
+      buttonWidth = width
+    end
+  end
+
+  local offsetButtons = {
+    ["x"] = WINDOW_WIDTH * 3 / 4 - buttonWidth / 2,
+    ["y"] = WINDOW_HEIGHT / 2 - (#buttons + 1) * (buttonHeight * 2) - buttonHeight / 2
+  }
+
+  if WINDOW_HEIGHT > WINDOW_WIDTH then
+    offsetButtons.x = WINDOW_WIDTH / 2 - buttonWidth / 2
+    offsetButtons.y = WINDOW_HEIGHT * 3 / 4 - (#buttons + 1) * (buttonHeight * 2) - buttonHeight / 2
+  end
+
+  for i, action in ipairs(actions) do
+    local button =
+      Button:new(
+      offsetButtons.x,
+      offsetButtons.y + (buttonHeight * 2) * (i - 1),
+      buttonWidth,
+      buttonHeight,
+      action.text,
+      action.callback
+    )
+    table.insert(buttons, button)
+  end
 end
 
 function love.mousepressed(x, y, button)
   if button == 1 then
-    grid:step()
+    for i, button in ipairs(buttons) do
+      if x > button.x and x < button.x + button.width and y > button.y and y < button.y + button.height then
+        button.callback()
+        break
+      end
+    end
   end
 end
 
@@ -86,8 +108,10 @@ function love.keypressed(key)
   end
   if key == "s" then
     grid:step()
-  elseif key == "space" then
-    isAnimating = isAnimating and false or true
+  elseif key == "t" then
+    isAnimating = not isAnimating
+  elseif key == "r" then
+    grid:reset()
   end
 end
 
@@ -104,8 +128,7 @@ end
 function love.draw()
   grid:render()
 
-  -- love.graphics.printf("Generation " .. generation, 0, gridHeight + 16, gridWidth, "center")
-  -- for i, button in ipairs(buttons) do
-  --   button:render()
-  -- end
+  for i, button in ipairs(buttons) do
+    button:render()
+  end
 end

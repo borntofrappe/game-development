@@ -1,8 +1,9 @@
 Cell = {}
 Cell.__index = Cell
 
-function Cell:new(column, row, size, isAlive, aliveNeighors, offset)
-  local cells = {}
+function Cell:new(column, row, size, offset)
+  local isAlive = math.random(2) == 1 and true or false
+  local aliveNeighbors = 0
 
   this = {
     ["column"] = column,
@@ -15,6 +16,11 @@ function Cell:new(column, row, size, isAlive, aliveNeighors, offset)
 
   setmetatable(this, self)
   return this
+end
+
+function Cell:reset()
+  self.isAlive = math.random(2) == 1 and true or false
+  self.aliveNeighbors = 0
 end
 
 function Cell:render()

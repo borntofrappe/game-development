@@ -1,6 +1,6 @@
 COLUMNS = 21
 ROWS = 19
-INTERVAL = 0.5
+INTERVAL = 0.25
 
 PATTERNS = {
   ["accident"] = [[
