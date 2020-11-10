@@ -36,6 +36,8 @@ The goal of this repo is two-fold:
   | Tetris           | Tetris leveraging Lua's tables                          |
   | Box2D Demos      | A series of physics-based experiments                   |
   | Minesweeper      | Minesweeper with mouse input                            |
+  | Alien Jump       | An endless scroller inspired by Chrome's offline game   |
+  | Game of Life     | A fullscreen simulation of Conway's game of life        |
 
 ## How to run a game
 
