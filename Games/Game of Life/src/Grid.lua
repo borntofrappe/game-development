@@ -72,6 +72,7 @@ function Grid:reset()
 end
 
 function Grid:render()
+  love.graphics.setColor(1, 1, 1)
   love.graphics.setLineWidth(2)
   love.graphics.rectangle("line", self.offset.x, self.offset.y, self.width, self.height)
 

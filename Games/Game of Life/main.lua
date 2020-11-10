@@ -116,6 +116,17 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
+  local x, y = love.mouse:getPosition()
+  if x and y then
+    for i, button in ipairs(buttons) do
+      if x > button.x and x < button.x + button.width and y > button.y and y < button.y + button.height then
+        button:highlight()
+      else
+        button:reset()
+      end
+    end
+  end
+
   if isAnimating then
     timer = timer + dt
     if timer >= INTERVAL then
