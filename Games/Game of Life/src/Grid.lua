@@ -71,6 +71,10 @@ function Grid:reset()
   end
 end
 
+function Grid:toggleCell(column, row)
+  self.cells[column][row].isAlive = not self.cells[column][row].isAlive
+end
+
 function Grid:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.setLineWidth(2)

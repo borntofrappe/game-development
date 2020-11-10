@@ -31,7 +31,6 @@ function love.load()
   end
 
   grid = Grid:new(COLUMNS, ROWS, gridWidth, gridHeight, offsetGrid)
-
   isAnimating = false
   timer = 0
 
@@ -93,10 +92,16 @@ end
 
 function love.mousepressed(x, y, button)
   if button == 1 then
-    for i, button in ipairs(buttons) do
-      if x > button.x and x < button.x + button.width and y > button.y and y < button.y + button.height then
-        button.callback()
-        break
+    if x > grid.offset.x and x < grid.offset.x + grid.width and y > grid.offset.y and y < grid.offset.y + grid.height then
+      local column = math.floor((x - grid.offset.x) / grid.width * grid.columns) + 1
+      local row = math.floor((y - grid.offset.y) / grid.height * grid.rows) + 1
+      grid:toggleCell(column, row)
+    else
+      for i, button in ipairs(buttons) do
+        if x > button.x and x < button.x + button.width and y > button.y and y < button.y + button.height then
+          button.callback()
+          break
+        end
       end
     end
   end
