@@ -20,6 +20,25 @@ _Please note_: what follows is a series of notes carelessly jotted down as I dev
 
 - consider a different layout depending on the width/heigth: side by side or single column if the height is greater
 
+- position the elements at breakpoints
+
+widht > height
+
+```
+       button
+ grid  button
+       button
+```
+
+else
+
+```
+    grid
+    button
+    button
+    button
+```
+
 ## Step
 
 The function has the generation progress by 1. The logic is similar to that implemented in the game _Minesweeper_, whereby a loop is set up to consider the eight neighbors.
