@@ -12,6 +12,9 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0, 0.05, 0.12)
 
+  local font = love.graphics.newFont("font.ttf", 14)
+  love.graphics.setFont(font)
+
   circle = {
     ["cx"] = WINDOW_WIDTH / 2,
     ["cy"] = WINDOW_HEIGHT / 2,
