@@ -39,3 +39,12 @@ Here I introduce two functions from the `love.math` module:
   The noise function works by building a sequence of numbers, loosely connected to each other. By modifying the offset `x` you are traversing through this sequence. This means that the greater the offset `x`, the greater the value is different from the previous measure.
 
 In the specific demo, I modify the position of a circle using one of the two functions. By pressing a specific key, the demo is updated to change the function being used, and to also modify the offset used to update the noise function.
+
+## Buzzing bee
+
+The demo considers random movement in both the `x` and `y` dimension, and it works to illustrate how the same noise function can be used for two values and yet show difference in how the values evolve. This is because the `x` and `y` coordinate pick from a different point in the imaginary curve describing the sequence of random numbers.
+
+```lua
+bee.x = love.math.noise(offset) * WINDOW_WIDTH
+bee.y = love.math.noise(offset + 1000) * WINDOW_HEIGHT
+```
