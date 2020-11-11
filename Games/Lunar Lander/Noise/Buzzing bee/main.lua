@@ -4,7 +4,7 @@ WINDOW_HEIGHT = 500
 function love.load()
   love.window.setTitle("Buzzing bee")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.85, 0.3, 0.52)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
   bee = {
     ["img"] = love.graphics.newImage("bee.png"),
@@ -16,6 +16,12 @@ function love.load()
   bee.width = bee.img:getWidth()
   offset = 0
   offsetIncrement = 0.01
+end
+
+function love.keypressed(key)
+  if key == "escape" then
+    love.event.quit()
+  end
 end
 
 function love.update(dt)

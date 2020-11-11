@@ -50,9 +50,50 @@ _Please note_: with the demo I also set up a timer. This is helpful to slow down
 
 ## Buzzing bee
 
-The demo builds on top of the progress achieved with the `Random functions` folder, and considers random movement in both the `x` and `y` dimension. Tthe project is also useful to illustrate how the same noise function can be used for two values and yet produce different measures. The idea is to pick the values from the same fnoise function, but using a different offset.
+The demo considers random movement in both the `x` and `y` dimension. Tthe project is also useful to illustrate how the same noise function can be used for two values and yet produce different measures. The idea is to pick the values from the same fnoise function, but using a different offset.
 
 ```lua
 bee.x = love.math.noise(offset) * WINDOW_WIDTH
 bee.y = love.math.noise(offset + 1000) * WINDOW_HEIGHT
 ```
+
+## Noise graph
+
+The demo populates a table with a series of points. These are meant to describe a line stretching to cover the entirety of the gaming window, and changing in their `y` coordinate according to a noise function.
+
+```lua
+points = {}
+for i = 0, POINTS do
+  table.insert(points, i * (WINDOW_WIDTH / POINTS))
+  table.insert(points, WINDOW_HEIGHT / 4 + love.math.noise(offset) * WINDOW_HEIGHT / 2)
+  offset = offset + offsetIncrement
+end
+```
+
+`love.graphics.line` is able to draw a line based on a table of points, which explains why the coordinates are included in pairs in the one dimensional table.
+
+By pressing the up or down arrow key, the demo modifies the increment used at each iteration, but here I want to highlight the variable `offsetStart`. It is initialized with a random value in `love.load`, and it is then used to determine the first value of `offset`.
+
+```lua
+function love.load()
+  offsetStart = love.math.random(0, 1000)
+end
+
+function love.update(dt)
+  offset = offsetStart
+end
+```
+
+After each iteration computing the points, it is finally updated with the increment variable.
+
+```lua
+function love.update(dt)
+  offset = offsetStart
+  for i = 0, POINTS
+    -- add x, y points
+  end
+  offsetStart = offsetStart + offsetIncrement
+end
+```
+
+The end result is that the line is seemingly moving to the right. In reality, it is as if each point picks up the coordinates of the point coming after it. Remember that `love.math.noise` returns the same number for the same input value.

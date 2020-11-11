@@ -10,7 +10,7 @@ TIMER_INTERVAL = 0.1
 function love.load()
   love.window.setTitle("Random functions")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0, 0.05, 0.12)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
   local font = love.graphics.newFont("font.ttf", 14)
   love.graphics.setFont(font)
@@ -59,7 +59,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(0, 0, 0)
   love.graphics.print("Press:", 8, 8)
   love.graphics.print('"r" to use love.math.random', 8, 24)
   love.graphics.print('"n" to use love.math.noise', 8, 40)
