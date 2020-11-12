@@ -1,5 +1,5 @@
-WINDOW_WIDTH = 600
-WINDOW_HEIGHT = 300
+WINDOW_WIDTH = 400
+WINDOW_HEIGHT = 400
 OFFSET_INCREMENT = 0.1
 OFFSET_INCREMENT_MAX = 0.2
 OFFSET_INCREMENT_MIN = 0.005
@@ -10,10 +10,7 @@ TIMER_INTERVAL = 0.1
 function love.load()
   love.window.setTitle("Random functions")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(1, 1, 1)
-
-  local font = love.graphics.newFont("font.ttf", 14)
-  love.graphics.setFont(font)
+  love.graphics.setBackgroundColor(0.8, 0.8, 0.8)
 
   circle = {
     ["cx"] = WINDOW_WIDTH / 2,
@@ -59,16 +56,12 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.print("Press:", 8, 8)
-  love.graphics.print('"r" to use love.math.random', 8, 24)
-  love.graphics.print('"n" to use love.math.noise', 8, 40)
-  love.graphics.print('"down" to reduce the change in the noise offset', 8, 56)
-  love.graphics.print('"up" to increase the change in the noise offset', 8, 72)
+  love.graphics.setColor(0.1, 0.1, 0.1)
+  love.graphics.print("Function: " .. mode, 8, 8)
+  if mode == "noise" then
+    love.graphics.print("Increment: " .. offsetIncrement, 8, 24)
+  end
 
-  love.graphics.printf("Current values", 0, 8, WINDOW_WIDTH - 8, "right")
-  love.graphics.printf("Mode: " .. mode, 0, 24, WINDOW_WIDTH - 8, "right")
-  love.graphics.printf("Offset increment: " .. offsetIncrement, 0, 40, WINDOW_WIDTH - 8, "right")
-
+  love.graphics.setColor(0.3, 0.3, 0.3)
   love.graphics.circle("fill", circle.cx, circle.cy, circle.r)
 end

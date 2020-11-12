@@ -1,10 +1,11 @@
-WINDOW_WIDTH = 500
-WINDOW_HEIGHT = 500
+WINDOW_WIDTH = 400
+WINDOW_HEIGHT = 400
+OFFSET_DISTANCE = 1000
 
 function love.load()
   love.window.setTitle("Buzzing bee")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(1, 1, 1)
+  love.graphics.setBackgroundColor(0.8, 0.8, 0.8)
 
   bee = {
     ["img"] = love.graphics.newImage("bee.png"),
@@ -26,7 +27,7 @@ end
 
 function love.update(dt)
   bee.x = love.math.noise(offset) * WINDOW_WIDTH
-  bee.y = love.math.noise(offset + 1000) * WINDOW_HEIGHT
+  bee.y = love.math.noise(offset + OFFSET_DISTANCE) * WINDOW_HEIGHT
 
   offset = offset + offsetIncrement
 end
