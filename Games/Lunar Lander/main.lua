@@ -26,7 +26,24 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.05, 0.05, 0.05)
 
+  font = love.graphics.newFont("res/font.ttf", 16)
+  love.graphics.setFont(font)
+
   terrain = makeTerrain()
+
+  data = {
+    ["score"] = 0,
+    ["time"] = 0,
+    ["fuel"] = 1000,
+    ["altitude"] = 1234,
+    ["horizontal speed"] = 0,
+    ["vertical speed"] = 0
+  }
+
+  icons = {
+    ["horizontal speed"] = {"←", "→"},
+    ["vertical speed"] = {"↑", "↓"}
+  }
 end
 
 function love.keypressed(key)
@@ -39,4 +56,6 @@ function love.draw()
   love.graphics.setColor(0.85, 0.85, 0.85)
   love.graphics.setLineWidth(1)
   love.graphics.line(terrain)
+
+  love.graphics.print(string.upper("Score " .. padNumber(data.score, 4)))
 end
