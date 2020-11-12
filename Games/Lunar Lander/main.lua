@@ -26,7 +26,7 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.05, 0.05, 0.05)
 
-  font = love.graphics.newFont("res/font.ttf", 16)
+  font = love.graphics.newFont("res/font.ttf", 14)
   love.graphics.setFont(font)
 
   terrain = makeTerrain()
@@ -36,13 +36,8 @@ function love.load()
     ["time"] = 0,
     ["fuel"] = 1000,
     ["altitude"] = 1234,
-    ["horizontal speed"] = 0,
-    ["vertical speed"] = 0
-  }
-
-  icons = {
-    ["horizontal speed"] = {"←", "→"},
-    ["vertical speed"] = {"↑", "↓"}
+    ["horizontal speed"] = 24,
+    ["vertical speed"] = -12
   }
 end
 
@@ -57,5 +52,50 @@ function love.draw()
   love.graphics.setLineWidth(1)
   love.graphics.line(terrain)
 
-  love.graphics.print(string.upper("Score " .. padNumber(data.score, 4)))
+  displayData()
+end
+
+function displayData()
+  local whitespace = #"score" + 3
+
+  love.graphics.print(
+    formatKeyValuePair("score", formatNumber(data["score"], 4), whitespace - #"score"),
+    WINDOW_WIDTH / 6,
+    8
+  )
+
+  love.graphics.print(
+    formatKeyValuePair("time", formatTime(data["time"]), whitespace - #"time"),
+    WINDOW_WIDTH / 6,
+    8 + font:getHeight()
+  )
+
+  love.graphics.print(
+    formatKeyValuePair("fuel", formatNumber(data["fuel"], 4), whitespace - #"fuel"),
+    WINDOW_WIDTH / 6,
+    8 + font:getHeight() * 2
+  )
+
+  whitespace = #"horizontal speed" + 2
+
+  love.graphics.print(
+    formatKeyValuePair("altitude", data["altitude"], whitespace - #"altitude"),
+    WINDOW_WIDTH / 2 + 8,
+    8
+  )
+
+  love.graphics.print(
+    formatKeyValuePair(
+      "horizontal speed",
+      formatSpeed(data["horizontal speed"], "←", "→"),
+      whitespace - #"horizontal speed"
+    ),
+    WINDOW_WIDTH / 2 + 8,
+    8 + font:getHeight()
+  )
+  love.graphics.print(
+    formatKeyValuePair("vertical speed", formatSpeed(data["vertical speed"], "↑", "↓"), whitespace - #"vertical speed"),
+    WINDOW_WIDTH / 2 + 8,
+    8 + font:getHeight() * 2
+  )
 end
