@@ -75,3 +75,41 @@ Specific to the demo:
   ```
 
 Finally, pressing the letter `r` has the body reset to its original position. Pressing the letter `p` toggles the update function so that the lander is paused midair. This allows to show the lander sans motion.
+
+## Physics — World and Lander
+
+For the world, the gravity picks up the value registered on the moon satellite. This gravity is however scaled by a factor of `10`
+
+```lua
+METER = 10
+GRAVITY = 1.62
+
+function love.load()
+  love.physics.setMeter(METER)
+  world = love.physics.newWorld(0, GRAVITY * METER, true)
+end
+```
+
+The meter seems to provide a subtle enough force for the window itself `500` pixels tall.
+
+For the lander, as one of the prescribed arrow keys is pressed, the game applies an impulse in the desired direction.
+
+```lua
+if key == "up" then
+  lander.body:applyLinearImpulse(0, -IMPULSE)
+end
+```
+
+As the arrow key is continuously being pressed, the game applies then a force.
+
+```lua
+function love.update(dt)
+  if love.keyboard.isDown("up") then
+    lander.body:applyForce(0, -VELOCITY)
+  end
+end
+```
+
+This is in line with the suggestion described [in the wiki](https://love2d.org/wiki/Body:applyForce). The force has a minor influence, which is felt as it is continuously applied in `love.update(dt)`.
+
+As the keys are being pressed, `love.draw` finally renders a series of polygons as a helper visual, a signifier for the body being subject to a force.
