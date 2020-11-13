@@ -5,32 +5,19 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.05, 0.05, 0.05)
 
-  font = love.graphics.newFont("res/fonts/font.ttf", 14)
+  font = love.graphics.newFont("res/font.ttf", 14)
   love.graphics.setFont(font)
 
   data = {
     ["score"] = 0,
-    ["time"] = 212,
-    ["fuel"] = 874,
-    ["altitude"] = 234,
-    ["horizontal speed"] = 24,
-    ["vertical speed"] = -32
+    ["time"] = 0,
+    ["fuel"] = 1000,
+    ["altitude"] = 0,
+    ["horizontal speed"] = 0,
+    ["vertical speed"] = 0
   }
 
   terrain = makeTerrain()
-
-  gStateMachine =
-    StateMachine(
-    {
-      ["orbit"] = function()
-        return OrbitState()
-      end,
-      ["platform"] = function()
-        return PlatformState()
-      end
-    }
-  )
-  gStateMachine:change("orbit", {})
 
   love.keyboard.keyPressed = {}
 end
@@ -48,13 +35,12 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
-  gStateMachine:update(dt)
-
   love.keyboard.keyPressed = {}
 end
 
 function love.draw()
-  gStateMachine:render()
+  love.graphics.setColor(0.85, 0.85, 0.85)
+  love.graphics.line(terrain)
 
   displayData(
     {"score", "time", "fuel"},
