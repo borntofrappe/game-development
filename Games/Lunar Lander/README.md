@@ -29,3 +29,7 @@ The idea is to display data by passing it to a function. A function which accept
 - gapX, gapY, two variables to dictate the gap between key-value pairs and the gap between successive pairs
 
 Most importantly, `data` is made to be a global variable, and it is rendered from `main.lua`. It is then in the individual state where its values are modified.
+
+## Box2D
+
+In the folder I go through dedicated projects to build up the box2d world. This is because of personal inexperience of the library.
