@@ -2,7 +2,7 @@
 
 The folder illustrates the different components of the eventual game _Lunar Lander_. Dedicating a specific environment for these elements allows to experiment with the physics library.
 
-## Terrain
+## ChainShape — Terrain
 
 The demo considers the `makeTerrain` function developed for the game in the `src/Utils`. This one is however modified so that the `y` coordinates describe the height with a negative value. This is beceuse the body making up the terrain is already positioned at the bottom of the window.
 
@@ -34,3 +34,44 @@ table.insert(points, 0)
 ```
 
 To illustrate that the demo works, the game adds circle objects through a dedicated function. The code is borrowed here from the `Box2D Demos` folder, and specifically the `Dynamic particles` demo.
+
+## Complex shape — Lander
+
+The demo builds the lander by tying a series of shapes together. These shapes are attached to the same body, which is ultimately how box2D is able to wrangle the lander's physics, gravity, forces and collision detection.
+
+The lander is made of:
+
+- a circle making the lander's body, or its core if you will
+
+- two polygons to make the lander's feet, or again landing gear
+
+- a rectangle connecting the two polygons
+
+The rectangle is stored in the same table as the polygons, as they fundamentally describe the same structure. Moreover, both the polygons and the rectangles can be rendered through `love.graphics.polygon`.
+
+```lua
+for i, gear in ipairs(lander.landingGear) do
+  love.graphics.polygon("line", lander.body:getWorldPoints(gear.shape:getPoints()))
+end
+```
+
+Specific to the demo:
+
+- in order to make the lander collide with restitution, it is necessary to add such a value to the individual fixtures
+
+  ```lua
+  lander.landingGear[1].fixture:setRestitution(0.5)
+  lander.landingGear[2].fixture:setRestitution(0.5)
+  ```
+
+  This is not necessary in the actual game, but it's a helpful reminder to highlight how fixtures work.
+
+- setting a fixture to be a sensor provides a minor improvement, but is more generally good practice when a particular fixture doesn't need to cause a collision
+
+  Case in point, the rectangle connecting the two polygons, which is purely aesthetical.
+
+  ```lua
+  lander.landingGear[3].fixture:setSensor(true)
+  ```
+
+Finally, pressing the letter `r` has the body reset to its original position. Pressing the letter `p` toggles the update function so that the lander is paused midair. This allows to show the lander sans motion.
