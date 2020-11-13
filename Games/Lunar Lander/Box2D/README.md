@@ -113,3 +113,63 @@ end
 This is in line with the suggestion described [in the wiki](https://love2d.org/wiki/Body:applyForce). The force has a minor influence, which is felt as it is continuously applied in `love.update(dt)`.
 
 As the keys are being pressed, `love.draw` finally renders a series of polygons as a helper visual, a signifier for the body being subject to a force.
+
+## Collision detection — Safe landing
+
+The demo adds a callback function to react to a collision between the lander and the edge at the bottom of the window. In the game, it is necessary to check for the jagged/smooth nature of the terrain, but here I am interested in highlighting how the script checks the linear velocity and then decides whether or not to describe a safe landing.
+
+To check for a collision, it is first necessary to have the world listen for such an event.
+
+```lua
+function love.load()
+  world:setCallbacks(beginContact)
+end
+```
+
+`beginContact` receives the fixtures involved in the collision, and to check if these fixtures describe the lander and terrain, it uses `getUserData` on the connected body.
+
+```lua
+function beginContact(f1, f2)
+  local bodies = {}
+  bodies[f1:getBody():getUserData()] = true
+  bodies[f2:getBody():getUserData()] = true
+end
+```
+
+The values are added to a table so that the function quickly considers the objects involved.
+
+```lua
+if bodies["Lander"] and bodies["Terrain"] then
+end
+```
+
+The label described as `userData` is itself set in `love.load` on the desired bodies. On the terrain:
+
+```lua
+terrain.body:setUserData("Terrain")
+```
+
+On the lander:
+
+```lua
+lander.body:setUserData("Lander")
+```
+
+It is possible to set such a label on the fixture, but especially with the lander, it is preferable to have a reference for the entirety of the complex shape. The only precaution is that you need to find the body connected to the input fixture. As expressed above:
+
+```lua
+f1:getBody():getUserData()
+```
+
+Pending a collision between the two bodies, the game finally evaluates the velocity of the lander. Assuming the lander is behind the first fixture, for instance.
+
+```lua
+local vx, vy = f1:getBody():getLinearVelocity()
+if vy > 20 then
+ -- crash
+else
+  -- safe landing
+end
+```
+
+In the specific demo, the difference is highlighted with a label. Eventually, the game should consider the difference by visualizing the crash, or again awarding an arbitrary amount of points.
