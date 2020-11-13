@@ -2,13 +2,64 @@
 
 The folder explores noise functions with a series of demos. These demos are mostly inspired by [What is Perlin Noise](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6bgPNQAdxQZpJuJCjeOr7VD), a playlist from the YouTube channel [the coding train](https://www.youtube.com/c/TheCodingTrain) describing noise functions starting from Perlin noise and in the context of the library p5.js.
 
-Think of a function, which maps points through time and according through their value. The value describes the function's amplitude, and the distance between maximum and minimum points shows the function's frequency. A Perlin function works by creating random functions with different amplitude and frequency, and by considering the sum of said functions. By overlapping gentler, smoother curves with more jagged, changing patterns it provides a sequence of number which are random, and yet connected to one another. This is why the function ultimately expects an argument, `x`.
+## Theory
+
+Think of a function, which maps points through time and according through their value. You can visualize this mapping on two axes.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 50" width="450" height="150">
+  <g fill="none" stroke="hsl(0, 0%, 0%)" stroke-width="1" stroke-linecap="round">
+    <path d="M 0.5 50 v -49.5 l 4 5" />
+    <path d="M 0 49.5 h 149.5 l -5 -4" />
+    <path d="M 0 30 q 14 -20 28 0 t 28 0 t 28 0 t 28 0 t 28 0" />
+  </g>
+  <g fill="" font-size="7">
+    <text x="8" y="6">Amplitude</text>
+    <text x="142" y="46" text-anchor="end">Time</text>
+  </g>
+  <g fill="hsl(15, 70%, 50%)" >
+   <circle cx="70" cy="20" r="3"/>
+   <circle cx="42" cy="40" r="3"/>
+   <text font-size="5" x="70" y="12" text-anchor="end">Frequency</text>
+  </g>
+  <g stroke="hsl(15, 70%, 50%)">
+   <path d="M 42 14 H 70" stroke-linecap="round" />
+   <path d="M 42 40 V 14" stroke-dasharray="1" />
+   <path d="M 70 20 V 14" stroke-dasharray="1" />
+  </g>
+</svg>
+
+The value describes the function's amplitude, and the distance between maximum and minimum points shows the function's frequency. A Perlin function works by creating random functions with different amplitude and frequency, and by considering the sum of said functions. By overlapping gentler, smoother curves with more jagged, changing patterns it provides a sequence of number which are random, and yet connected to one another. This is why the function ultimately expects an argument, `x`.
 
 ```js
 noise(x);
 ```
 
-The idea is to provide a number at a specific offset. To find a different number then, you modify the offset value. Considering how the function is built, the greater the change, the greater the difference between numbers. A smaller change results in having two numbers closely resembling one another, and this is ultimately how you achieve smooth randomness.
+The idea is to provide a number at a specific offset. To find a different number then, you modify the offset value.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 50" width="450" height="150">
+  <g fill="none" stroke="hsl(0, 0%, 0%)" stroke-width="1" stroke-linecap="round">
+    <path d="M 0.5 50 v -49.5 l 4 5" />
+    <path d="M 0 49.5 h 149.5 l -5 -4" />
+    <path d="M 0 30 q 14 -20 28 0 t 28 0 t 28 0 t 28 0 t 28 0" />
+  </g>
+  <g fill="" font-size="7">
+    <text x="142" y="46" text-anchor="end">x</text>
+  </g>
+  <g fill="hsl(15, 70%, 50%)" >
+   <circle cx="38" cy="38" r="2"/>
+   <circle cx="42" cy="40" r="2"/>
+   <g font-size="5">
+    <text x="37" y="48" text-anchor="end">x1</text>
+    <text x="43" y="48" >x2</text>
+   </g>
+  </g>
+  <g stroke="hsl(15, 70%, 50%)" stroke-width="0.5" stroke-dasharray="1">
+   <path d="M 38 38 V 50" />
+   <path d="M 42 40 V 50" />
+  </g>
+</svg>
+
+Considering how the function is built, the greater the change, the greater the difference between numbers. A smaller change results in having two numbers closely resembling one another, and this is ultimately how you achieve smooth randomness.
 
 _Please note_: Love2D works with a Simplex noise function, which seems to be the answer to issues existing with the Perlin variant. The way smooth randomness is achieved is still the same, by passing an offset to the noise function.
 
@@ -18,7 +69,7 @@ Here I introduce two functions from the `love.math` module:
 
 - `love.math.random()`; returns a random number between `0` and `1`
 
-  The function works similarly to `math.random()`, the method available from the `math` library and in the Lua language. Conveniently, it sets a random seed behind the scenes, and using `os.time()`. It it therefore not necessary to set the seed at run time.
+  The function works similarly to `math.random()`, from the `math` library provided by the Lua language. Conveniently, it sets a random seed behind the scenes, and using `os.time()`. It it therefore not necessary to explicitly set the seed at run time.
 
   ```lua
   -- math.randomseed(os.time())
@@ -35,12 +86,12 @@ Here I introduce two functions from the `love.math` module:
 
   ```lua
   function love.load()
-    x = 0
+    offset = 0
   end
 
   function love.update(dt)
-    num = love.math.noise(x)
-    x = x + 0.1
+    num = love.math.noise(offset)
+    offset = offset + 0.1
   end
   ```
 
@@ -50,7 +101,7 @@ _Please note_: with the demo I also set up a timer. This is helpful to have the 
 
 ## Buzzing bee
 
-The demo considers random movement in both the `x` and `y` dimension. The project is also useful to illustrate how the same noise function can be used for two values and yet produce different measures, by picking the values from the same noise function, but using a different offset.
+The demo considers random movement in both the `x` and `y` dimension. The project is useful to illustrate how the same noise function can be used for two values and yet produce different measures. This is achieved by picking the values from the same noise function, but using a different offset.
 
 ```lua
 bee.x = love.math.noise(offset) * WINDOW_WIDTH
@@ -70,7 +121,7 @@ for i = 0, numberPoints do
 end
 ```
 
-`love.graphics.line` is able to draw a line based on a table of points, which explains why the coordinates are included in pairs directly in the table.
+`love.graphics.line` is able to draw a line based on a table of points, which explains why the coordinates are included one after the other, and directly in the table.
 
 By pressing the arrow keys, the demo updates the number of points (left or right), or again the increment to the noise function (up or down).
 

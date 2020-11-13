@@ -67,7 +67,7 @@ function love.draw()
 
   displayData(
     {"altitude", "horizontal speed", "vertical speed"},
-    {false, formatHorizontalSpeed, formatVerticalSpeed},
+    {nil, formatHorizontalSpeed, formatVerticalSpeed},
     WINDOW_WIDTH / 2 + 16,
     8,
     font:getWidth("horizontal speed  "),
@@ -77,7 +77,8 @@ end
 
 function displayData(keys, formattingFunctions, startX, startY, gapX, gapY)
   for i, key in ipairs(keys) do
-    local value = formattingFunctions[i] and formattingFunctions[i](data[key]) or data[key]
+    local formattingFunction = formattingFunctions[i]
+    local value = formattingFunction and formattingFunction(data[key]) or data[key]
     local y = startY + (i - 1) * gapY
     local xKey = startX
     local xValue = startX + gapX

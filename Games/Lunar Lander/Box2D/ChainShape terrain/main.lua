@@ -1,11 +1,14 @@
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 500
-GRAVITY = 9.81
-RADIUS = 8
+
 METER = 20
 
+GRAVITY = 9.81
+RESTITUTION = 0.5
+RADIUS = 8
+
 function love.load()
-  love.window.setTitle("Box2D — World, terrain and lander")
+  love.window.setTitle("ChainShape terrain")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.05, 0.05, 0.05)
 
@@ -14,6 +17,7 @@ function love.load()
   world = love.physics.newWorld(0, GRAVITY * METER, true)
 
   objects = {}
+  addObject(WINDOW_WIDTH / 2, 16)
 
   terrain = {}
   terrain.body = love.physics.newBody(world, 0, WINDOW_HEIGHT)
