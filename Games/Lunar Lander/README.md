@@ -14,7 +14,7 @@ Data covers the top half of the screen, displaying the score, time, but also fue
 
 In the `Noise` and `Box2D` folder I develop a series of demos which work as the foundation of the eventual game. These are useful given personal inexperience with noise functions and the physics library respectively.
 
-In the `ParticleSystem` folder, I also experiment with how Love2D draws a particle system. This topic was first introduced in `03 Breakout`, but only at surface level.
+In the `Particles` folder, I also experiment with how Love2D draws a particle system. This topic was first introduced in `03 Breakout`, but only at surface level.
 
 Each folder has a dedicated `README` to describe the different concepts and demos. Here, however, I annotate the specificities introduced in the game itself.
 
