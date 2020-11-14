@@ -17,22 +17,43 @@ function love.load()
   lander = {}
   lander.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "dynamic")
   lander.core = {}
-  lander.core.shape = love.physics.newCircleShape(10)
+  lander.core.shape = love.physics.newCircleShape(9)
   lander.core.fixture = love.physics.newFixture(lander.body, lander.core.shape)
 
   lander.landingGear = {}
   lander.landingGear[1] = {}
-  lander.landingGear[1].shape = love.physics.newPolygonShape(-11, 13, -8, 9, -6, 9, -3, 13)
+  lander.landingGear[1].shape = love.physics.newPolygonShape(-10, 12, -7, 8, -5, 8, -2, 12)
   lander.landingGear[1].fixture = love.physics.newFixture(lander.body, lander.landingGear[1].shape)
 
   lander.landingGear[2] = {}
-  lander.landingGear[2].shape = love.physics.newPolygonShape(11, 13, 8, 9, 6, 9, 3, 13)
+  lander.landingGear[2].shape = love.physics.newPolygonShape(10, 12, 7, 8, 5, 8, 2, 12)
   lander.landingGear[2].fixture = love.physics.newFixture(lander.body, lander.landingGear[2].shape)
 
   lander.landingGear[3] = {}
-  lander.landingGear[3].shape = love.physics.newRectangleShape(0, 8.5, 16, 2)
+  lander.landingGear[3].shape = love.physics.newRectangleShape(0, 8, 8, 2)
   lander.landingGear[3].fixture = love.physics.newFixture(lander.body, lander.landingGear[3].shape)
   lander.landingGear[3].fixture:setSensor(true)
+
+  lander.signifiers = {}
+  lander.signifiers[1] = {}
+  lander.signifiers[1].shape = love.physics.newPolygonShape(-9, 13, -7, 16, -5, 13)
+  lander.signifiers[1].fixture = love.physics.newFixture(lander.body, lander.signifiers[1].shape)
+  lander.signifiers[1].fixture:setSensor(true)
+
+  lander.signifiers[2] = {}
+  lander.signifiers[2].shape = love.physics.newPolygonShape(9, 13, 7, 16, 5, 13)
+  lander.signifiers[2].fixture = love.physics.newFixture(lander.body, lander.signifiers[2].shape)
+  lander.signifiers[2].fixture:setSensor(true)
+
+  lander.signifiers[3] = {}
+  lander.signifiers[3].shape = love.physics.newPolygonShape(-8, 6, -12, 8, -8, 10)
+  lander.signifiers[3].fixture = love.physics.newFixture(lander.body, lander.signifiers[3].shape)
+  lander.signifiers[3].fixture:setSensor(true)
+
+  lander.signifiers[4] = {}
+  lander.signifiers[4].shape = love.physics.newPolygonShape(8, 6, 12, 8, 8, 10)
+  lander.signifiers[4].fixture = love.physics.newFixture(lander.body, lander.signifiers[4].shape)
+  lander.signifiers[4].fixture:setSensor(true)
 
   terrain = {}
   terrain.body = love.physics.newBody(world, 0, WINDOW_HEIGHT)
@@ -84,51 +105,20 @@ function love.draw()
     love.graphics.polygon("line", lander.body:getWorldPoints(gear.shape:getPoints()))
   end
 
+  if love.keyboard.isDown("up") then
+    love.graphics.polygon("line", lander.body:getWorldPoints(lander.signifiers[1].shape:getPoints()))
+    love.graphics.polygon("line", lander.body:getWorldPoints(lander.signifiers[2].shape:getPoints()))
+  end
+
+  if love.keyboard.isDown("right") then
+    love.graphics.polygon("line", lander.body:getWorldPoints(lander.signifiers[3].shape:getPoints()))
+  elseif love.keyboard.isDown("left") then
+    love.graphics.polygon("line", lander.body:getWorldPoints(lander.signifiers[4].shape:getPoints()))
+  end
+
   local x, y = lander.body:getLinearVelocity()
   love.graphics.print("x velocity: " .. formatVelocity(x), 8, 8)
   love.graphics.print("y velocity: " .. formatVelocity(y), 8, 32)
-
-  if love.keyboard.isDown("up") then
-    love.graphics.polygon(
-      "line",
-      lander.body:getX() - 9,
-      lander.body:getY() + 13,
-      lander.body:getX() - 7,
-      lander.body:getY() + 16,
-      lander.body:getX() - 5,
-      lander.body:getY() + 13
-    )
-    love.graphics.polygon(
-      "line",
-      lander.body:getX() + 9,
-      lander.body:getY() + 13,
-      lander.body:getX() + 7,
-      lander.body:getY() + 16,
-      lander.body:getX() + 5,
-      lander.body:getY() + 13
-    )
-  end
-  if love.keyboard.isDown("right") then
-    love.graphics.polygon(
-      "line",
-      lander.body:getX() - 8,
-      lander.body:getY() + 5.5,
-      lander.body:getX() - 12.5,
-      lander.body:getY() + 8,
-      lander.body:getX() - 8,
-      lander.body:getY() + 10.5
-    )
-  elseif love.keyboard.isDown("left") then
-    love.graphics.polygon(
-      "line",
-      lander.body:getX() + 8,
-      lander.body:getY() + 5.5,
-      lander.body:getX() + 12.5,
-      lander.body:getY() + 8,
-      lander.body:getX() + 8,
-      lander.body:getY() + 10.5
-    )
-  end
 end
 
 function formatVelocity(velocity)
