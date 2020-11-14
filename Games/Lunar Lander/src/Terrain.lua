@@ -25,7 +25,6 @@ function Terrain:new(world)
 end
 
 function Terrain:render()
-  love.graphics.setColor(0.85, 0.85, 0.85)
   love.graphics.setLineWidth(1)
   love.graphics.polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
 end

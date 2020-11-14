@@ -36,27 +36,34 @@ function love.load()
   particleSystem:setRotation(0, math.pi * 2)
 
   hasCrashed = false
+  hasLanded = false
+  isWaiting = false
+  timer = 0
 end
 
 function beginContact(f1, f2, coll)
-  local bodies = {}
-  bodies[f1:getBody():getUserData()] = true
-  bodies[f2:getBody():getUserData()] = true
+  if not isWaiting then
+    local bodies = {}
+    bodies[f1:getBody():getUserData()] = true
+    bodies[f2:getBody():getUserData()] = true
 
-  if bodies["Lander"] and bodies["Terrain"] then
-    local vx, vy
-    if f1:getBody():getUserData() == "Lander" then
-      vx, vy = f1:getBody():getLinearVelocity()
-    else
-      vx, vy = f2:getBody():getLinearVelocity()
-    end
+    if bodies["Lander"] and bodies["Terrain"] then
+      local vx, vy
+      if f1:getBody():getUserData() == "Lander" then
+        vx, vy = f1:getBody():getLinearVelocity()
+      else
+        vx, vy = f2:getBody():getLinearVelocity()
+      end
 
-    if vy > VELOCITY_CRASH then
-      local x, y = coll:getPositions()
-      if x and y then
-        particleSystem:setPosition(x, y - 5)
-        particleSystem:emit(20)
-        hasCrashed = true
+      if vy > VELOCITY_CRASH then
+        local x, y = coll:getPositions()
+        if x and y then
+          particleSystem:setPosition(x, y - 5)
+          particleSystem:emit(20)
+          hasCrashed = true
+        end
+      else
+        hasLanded = true
       end
     end
   end
@@ -67,12 +74,7 @@ function love.keypressed(key)
     love.event.quit()
   end
 
-  if not lander.body:isDestroyed() then
-    if key:lower() == "r" then
-      lander.body:destroy()
-      lander = Lander:new(world)
-    end
-
+  if not lander.body:isDestroyed() and not isWaiting then
     if key == "up" then
       lander:burst("up")
     end
@@ -89,7 +91,7 @@ function love.update(dt)
   particleSystem:update(dt)
   world:update(dt)
 
-  if not lander.body:isDestroyed() then
+  if not lander.body:isDestroyed() and not isWaiting then
     local vx, vy = lander.body:getLinearVelocity()
     data["horizontal speed"] = math.floor(vx)
     data["vertical speed"] = math.floor(vy)
@@ -105,21 +107,51 @@ function love.update(dt)
       lander:push("left")
       data["fuel"] = data["fuel"] - 0.5
     end
+
+    if hasCrashed then
+      lander.body:destroy()
+      isWaiting = true
+    end
+
+    if hasLanded then
+      isWaiting = true
+    end
   end
 
-  if hasCrashed then
-    lander.body:destroy()
-    lander = Lander:new(world)
-    hasCrashed = false
+  if isWaiting then
+    timer = timer + dt
+    if timer > TIMER_DELAY then
+      timer = 0
+      isWaiting = false
+      if hasCrashed then
+        lander = Lander:new(world)
+        hasCrashed = false
+      elseif hasLanded then
+        data["score"] = data["score"] + 100
+        lander.body:destroy()
+        lander = Lander:new(world)
+        hasLanded = false
+      end
+    end
   end
 end
 
 function love.draw()
+  love.graphics.setColor(0.85, 0.85, 0.85)
+
   terrain:render()
   lander:render()
   love.graphics.draw(particleSystem)
 
   displayData()
+
+  if isWaiting then
+    if hasCrashed then
+      love.graphics.printf("Too bad", 0, WINDOW_HEIGHT / 2 - font:getHeight(), WINDOW_WIDTH, "center")
+    elseif hasLanded then
+      love.graphics.printf("Congratulations", 0, WINDOW_HEIGHT / 2 - font:getHeight(), WINDOW_WIDTH, "center")
+    end
+  end
 end
 
 function displayData()

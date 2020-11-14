@@ -2,7 +2,7 @@ Lander = {}
 Lander.__index = Lander
 
 function Lander:new(world)
-  local body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "dynamic")
+  local body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, "dynamic")
   body:setUserData("Lander")
 
   local core = {}
@@ -77,7 +77,6 @@ end
 
 function Lander:render()
   if not self.body:isDestroyed() then
-    love.graphics.setColor(0.85, 0.85, 0.85)
     love.graphics.setLineWidth(2)
     love.graphics.circle("line", self.body:getX(), self.body:getY(), self.core.shape:getRadius())
     for i, gear in ipairs(self.landingGear) do
