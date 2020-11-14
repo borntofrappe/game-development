@@ -20,60 +20,9 @@ function love.load()
   love.physics.setMeter(METER)
   world = love.physics.newWorld(0, GRAVITY * METER, true)
   world:setCallbacks(beginContact)
-  lander = {}
-  lander.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "dynamic")
-  lander.core = {}
-  lander.core.shape = love.physics.newCircleShape(9)
-  lander.core.fixture = love.physics.newFixture(lander.body, lander.core.shape)
-  lander.body:setUserData("Lander")
 
-  lander.landingGear = {}
-  lander.landingGear[1] = {}
-  lander.landingGear[1].shape = love.physics.newPolygonShape(-10, 12, -7, 8, -5, 8, -2, 12)
-  lander.landingGear[1].fixture = love.physics.newFixture(lander.body, lander.landingGear[1].shape)
-
-  lander.landingGear[2] = {}
-  lander.landingGear[2].shape = love.physics.newPolygonShape(10, 12, 7, 8, 5, 8, 2, 12)
-  lander.landingGear[2].fixture = love.physics.newFixture(lander.body, lander.landingGear[2].shape)
-
-  lander.landingGear[3] = {}
-  lander.landingGear[3].shape = love.physics.newRectangleShape(0, 8, 8, 2)
-  lander.landingGear[3].fixture = love.physics.newFixture(lander.body, lander.landingGear[3].shape)
-  lander.landingGear[3].fixture:setSensor(true)
-
-  lander.signifiers = {}
-  lander.signifiers[1] = {}
-  lander.signifiers[1].shape = love.physics.newPolygonShape(-9, 13, -7, 16, -5, 13)
-  lander.signifiers[1].fixture = love.physics.newFixture(lander.body, lander.signifiers[1].shape)
-  lander.signifiers[1].fixture:setSensor(true)
-
-  lander.signifiers[2] = {}
-  lander.signifiers[2].shape = love.physics.newPolygonShape(9, 13, 7, 16, 5, 13)
-  lander.signifiers[2].fixture = love.physics.newFixture(lander.body, lander.signifiers[2].shape)
-  lander.signifiers[2].fixture:setSensor(true)
-
-  lander.signifiers[3] = {}
-  lander.signifiers[3].shape = love.physics.newPolygonShape(-8, 6, -12, 8, -8, 10)
-  lander.signifiers[3].fixture = love.physics.newFixture(lander.body, lander.signifiers[3].shape)
-  lander.signifiers[3].fixture:setSensor(true)
-
-  lander.signifiers[4] = {}
-  lander.signifiers[4].shape = love.physics.newPolygonShape(8, 6, 12, 8, 8, 10)
-  lander.signifiers[4].fixture = love.physics.newFixture(lander.body, lander.signifiers[4].shape)
-  lander.signifiers[4].fixture:setSensor(true)
-
-  terrain = {}
-  terrain.body = love.physics.newBody(world, 0, WINDOW_HEIGHT)
-  terrain.body:setUserData("Terrain")
-
-  local terrainPoints = getTerrainPoints()
-  table.insert(terrainPoints, WINDOW_WIDTH)
-  table.insert(terrainPoints, 0)
-  table.insert(terrainPoints, 0)
-  table.insert(terrainPoints, 0)
-
-  terrain.shape = love.physics.newChainShape(false, terrainPoints)
-  terrain.fixture = love.physics.newFixture(terrain.body, terrain.shape)
+  lander = Lander:new(world)
+  terrain = Terrain:new(world)
 
   particleImage = love.graphics.newImage("res/particle.png")
   particleSystem = love.graphics.newParticleSystem(particleImage, 200)
@@ -105,19 +54,12 @@ function beginContact(f1, f2, coll)
     if vy > VELOCITY_CRASH then
       local x, y = coll:getPositions()
       if x and y then
-        particleSystem:setPosition(x, y)
-        particleSystem:emit(40)
+        particleSystem:setPosition(x, y - 5)
+        particleSystem:emit(20)
         hasCrashed = true
       end
     end
   end
-end
-
-function reset()
-  lander.body:setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-  lander.body:setLinearVelocity(0, 0)
-  lander.body:setAngularVelocity(0)
-  lander.body:setAngle(0)
 end
 
 function love.keypressed(key)
@@ -127,16 +69,18 @@ function love.keypressed(key)
 
   if not lander.body:isDestroyed() then
     if key:lower() == "r" then
-      reset()
+      lander.body:destroy()
+      lander = Lander:new(world)
     end
 
     if key == "up" then
-      lander.body:applyLinearImpulse(0, -IMPULSE)
+      lander:burst("up")
     end
+
     if key == "right" then
-      lander.body:applyLinearImpulse(math.floor(IMPULSE / 2), 0)
+      lander:burst("right")
     elseif key == "left" then
-      lander.body:applyLinearImpulse(-math.floor(IMPULSE / 2), 0)
+      lander:burst("left")
     end
   end
 end
@@ -151,48 +95,28 @@ function love.update(dt)
     data["vertical speed"] = math.floor(vy)
 
     if love.keyboard.isDown("up") then
-      lander.body:applyForce(0, -VELOCITY)
+      lander:push("up")
       data["fuel"] = data["fuel"] - 1
     end
     if love.keyboard.isDown("right") then
+      lander:push("right")
       data["fuel"] = data["fuel"] - 0.5
-      lander.body:applyForce(VELOCITY, 0)
     elseif love.keyboard.isDown("left") then
+      lander:push("left")
       data["fuel"] = data["fuel"] - 0.5
-      lander.body:applyForce(-VELOCITY, 0)
     end
   end
 
   if hasCrashed then
     lander.body:destroy()
+    lander = Lander:new(world)
     hasCrashed = false
   end
 end
 
 function love.draw()
-  love.graphics.setColor(0.85, 0.85, 0.85)
-  love.graphics.setLineWidth(1)
-  love.graphics.polygon("line", terrain.body:getWorldPoints(terrain.shape:getPoints()))
-
-  if not lander.body:isDestroyed() then
-    love.graphics.setLineWidth(2)
-    love.graphics.circle("line", lander.body:getX(), lander.body:getY(), lander.core.shape:getRadius())
-    for i, gear in ipairs(lander.landingGear) do
-      love.graphics.polygon("line", lander.body:getWorldPoints(gear.shape:getPoints()))
-    end
-
-    if love.keyboard.isDown("up") then
-      love.graphics.polygon("line", lander.body:getWorldPoints(lander.signifiers[1].shape:getPoints()))
-      love.graphics.polygon("line", lander.body:getWorldPoints(lander.signifiers[2].shape:getPoints()))
-    end
-
-    if love.keyboard.isDown("right") then
-      love.graphics.polygon("line", lander.body:getWorldPoints(lander.signifiers[3].shape:getPoints()))
-    elseif love.keyboard.isDown("left") then
-      love.graphics.polygon("line", lander.body:getWorldPoints(lander.signifiers[4].shape:getPoints()))
-    end
-  end
-
+  terrain:render()
+  lander:render()
   love.graphics.draw(particleSystem)
 
   displayData()
