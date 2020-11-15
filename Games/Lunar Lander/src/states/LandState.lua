@@ -25,9 +25,7 @@ end
 
 function LandState:render()
   love.graphics.setColor(0.85, 0.85, 0.85)
-  if not lander.body:isDestroyed() then
-    lander:render()
-  end
+  lander:render()
 
   love.graphics.setFont(gFonts["message"])
   love.graphics.printf(

@@ -91,9 +91,7 @@ end
 
 function love.draw()
   love.graphics.setColor(0.85, 0.85, 0.85)
-  if not terrain.body:isDestroyed() then
-    terrain:render()
-  end
+  terrain:render()
   displayData()
   gStateMachine:render()
 end

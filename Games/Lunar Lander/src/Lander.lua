@@ -76,22 +76,20 @@ function Lander:push(direction)
 end
 
 function Lander:render()
-  if not self.body:isDestroyed() then
-    love.graphics.setLineWidth(2)
-    love.graphics.circle("line", self.body:getX(), self.body:getY(), self.core.shape:getRadius())
-    for i, gear in ipairs(self.landingGear) do
-      love.graphics.polygon("line", self.body:getWorldPoints(gear.shape:getPoints()))
-    end
+  love.graphics.setLineWidth(2)
+  love.graphics.circle("line", self.body:getX(), self.body:getY(), self.core.shape:getRadius())
+  for i, gear in ipairs(self.landingGear) do
+    love.graphics.polygon("line", self.body:getWorldPoints(gear.shape:getPoints()))
+  end
 
-    if love.keyboard.isDown("up") then
-      love.graphics.polygon("line", self.body:getWorldPoints(self.signifiers[1].shape:getPoints()))
-      love.graphics.polygon("line", self.body:getWorldPoints(self.signifiers[2].shape:getPoints()))
-    end
+  if love.keyboard.isDown("up") then
+    love.graphics.polygon("line", self.body:getWorldPoints(self.signifiers[1].shape:getPoints()))
+    love.graphics.polygon("line", self.body:getWorldPoints(self.signifiers[2].shape:getPoints()))
+  end
 
-    if love.keyboard.isDown("right") then
-      love.graphics.polygon("line", self.body:getWorldPoints(self.signifiers[3].shape:getPoints()))
-    elseif love.keyboard.isDown("left") then
-      love.graphics.polygon("line", self.body:getWorldPoints(self.signifiers[4].shape:getPoints()))
-    end
+  if love.keyboard.isDown("right") then
+    love.graphics.polygon("line", self.body:getWorldPoints(self.signifiers[3].shape:getPoints()))
+  elseif love.keyboard.isDown("left") then
+    love.graphics.polygon("line", self.body:getWorldPoints(self.signifiers[4].shape:getPoints()))
   end
 end

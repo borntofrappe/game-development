@@ -38,6 +38,7 @@ The goal of this repo is two-fold:
   | Minesweeper      | Minesweeper with mouse input                            |
   | Alien Jump       | An endless scroller inspired by Chrome's offline game   |
   | Game of Life     | A fullscreen simulation of Conway's game of life        |
+  | Lunar Lander     | Lunar Lander with Box2D and `love.math.noise`           |
 
 ## How to run a game
 
