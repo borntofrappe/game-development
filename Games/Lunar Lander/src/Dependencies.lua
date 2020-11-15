@@ -14,3 +14,8 @@ require "src/states/CrashState"
 gTextures = {
   ["particle"] = love.graphics.newImage("res/particle.png")
 }
+
+gFonts = {
+  ["data"] = love.graphics.newFont("res/font-data.ttf", 14),
+  ["message"] = love.graphics.newFont("res/font-message.ttf", 20)
+}

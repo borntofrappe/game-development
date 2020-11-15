@@ -4,7 +4,7 @@ The goal of this project is to recreate the [Atari game Lunar Lander](<https://e
 
 ## Design
 
-The game uses [Overpass Mono](https://fonts.google.com/specimen/Overpass+Mono) for its one and only font.
+The game uses [Overpass Mono](https://fonts.google.com/specimen/Overpass+Mono) for the data, [Aldrich](https://fonts.google.com/specimen/Aldrich) for the messages shown midscreen.
 
 Terrain covers the bottom half of the screen. It is created using `love.math.noise` in conjunction with `love.math.random`. As noticed in the `Noise` folder, `love.math.noise` provieds a sequence of random numbers which is too smooth, and the inclusion of `love.math.random` allows to modify the segments to have jagged edges.
 

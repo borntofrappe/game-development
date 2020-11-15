@@ -25,7 +25,11 @@ function formatNumber(number, padding)
 end
 
 function formatTime(seconds)
-  return formatNumber(math.floor(seconds / 60), 2) .. ":" .. formatNumber(seconds % 60, 2)
+  return formatNumber(math.floor(seconds / 60), 2) .. ":" .. formatNumber(math.floor(seconds) % 60, 2)
+end
+
+function formatAltitude(y)
+  return WINDOW_HEIGHT - math.floor(y)
 end
 
 function formatHorizontalSpeed(speed)

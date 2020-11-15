@@ -4,15 +4,15 @@ function CrashState:enter(params)
   local particleSystem = love.graphics.newParticleSystem(gTextures["particle"], 200)
 
   particleSystem:setPosition(params.x, params.y - 5)
-  particleSystem:setParticleLifetime(0.25, 0.75)
+  particleSystem:setParticleLifetime(0.25, 0.5)
   particleSystem:setEmissionArea("uniform", 18, 18)
-  particleSystem:setRadialAcceleration(0, 500)
-  particleSystem:setLinearDamping(10, 20)
+  particleSystem:setRadialAcceleration(50, 500)
+  particleSystem:setLinearDamping(15, 25)
   particleSystem:setSizes(0, 1, 1, 0)
   particleSystem:setRotation(0, math.pi * 2)
 
   self.particleSystem = particleSystem
-  self.particleSystem:emit(20)
+  self.particleSystem:emit(30)
 
   lander.body:destroy()
 
@@ -31,11 +31,10 @@ function CrashState:update(dt)
   self.particleSystem:update(dt)
 
   self.timer = self.timer + dt
-  if self.timer > TIMER_DELAY then
+  if self.timer > TIMER_DELAY or love.keyboard.wasPressed("return") then
     self.timer = 0
     terrain.body:destroy()
-    lander = Lander:new(world)
-    terrain = Terrain:new(world)
+    data["score"] = 0
     gStateMachine:change("start")
   end
 end
@@ -44,5 +43,12 @@ function CrashState:render()
   love.graphics.setColor(0.85, 0.85, 0.85)
   love.graphics.draw(self.particleSystem)
 
-  love.graphics.printf(self.message, 0, WINDOW_HEIGHT / 2 - font:getHeight(), WINDOW_WIDTH, "center")
+  love.graphics.setFont(gFonts["message"])
+  love.graphics.printf(
+    self.message:upper(),
+    0,
+    WINDOW_HEIGHT / 2 - gFonts["message"]:getHeight(),
+    WINDOW_WIDTH,
+    "center"
+  )
 end

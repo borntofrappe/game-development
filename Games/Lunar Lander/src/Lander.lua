@@ -2,7 +2,7 @@ Lander = {}
 Lander.__index = Lander
 
 function Lander:new(world)
-  local body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, "dynamic")
+  local body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4 + 16, "dynamic")
   body:setUserData("Lander")
 
   local core = {}

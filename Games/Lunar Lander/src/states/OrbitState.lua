@@ -1,15 +1,12 @@
 OrbitState = BaseState:create()
 
 function OrbitState:update(dt)
-  if love.keyboard.wasPressed("escape") then
-    gStateMachine:change("start")
-  end
-
   data["time"] = data["time"] + dt
 
   local vx, vy = lander.body:getLinearVelocity()
   data["horizontal speed"] = math.floor(vx)
   data["vertical speed"] = math.floor(vy)
+  data["altitude"] = formatAltitude(lander.body:getY())
 
   world:update(dt)
 
@@ -35,6 +32,18 @@ function OrbitState:update(dt)
     elseif love.keyboard.isDown("left") then
       lander:push("left")
       data["fuel"] = data["fuel"] - 0.5
+    end
+
+    if lander.body:getX() < -lander.core.shape:getRadius() then
+      lander.body:setX(WINDOW_WIDTH + lander.core.shape:getRadius())
+      terrain.body:destroy()
+      terrain = Terrain:new(world)
+    end
+
+    if lander.body:getX() > WINDOW_WIDTH + lander.core.shape:getRadius() then
+      lander.body:setX(-lander.core.shape:getRadius())
+      terrain.body:destroy()
+      terrain = Terrain:new(world)
     end
   end
 end

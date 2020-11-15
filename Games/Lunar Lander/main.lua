@@ -5,9 +5,6 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.05, 0.05, 0.05)
 
-  font = love.graphics.newFont("res/font.ttf", 14)
-  love.graphics.setFont(font)
-
   love.physics.setMeter(METER)
   world = love.physics.newWorld(0, GRAVITY * METER, true)
   world:setCallbacks(beginContact)
@@ -17,7 +14,7 @@ function love.load()
   data = {
     ["score"] = 0,
     ["time"] = 0,
-    ["fuel"] = 1000,
+    ["fuel"] = FUEL,
     ["altitude"] = 0,
     ["horizontal speed"] = 0,
     ["vertical speed"] = 0
@@ -58,7 +55,7 @@ function beginContact(f1, f2, coll)
       vx, vy = f2:getBody():getLinearVelocity()
     end
 
-    if vy > VELOCITY_CRASH then
+    if (math.abs(vx / 2) + math.abs(vy)) > VELOCITY_CRASH then
       local x, y = coll:getPositions()
       if x and y then
         gStateMachine:change(
@@ -84,6 +81,10 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
+  if love.keyboard.wasPressed("escape") then
+    love.event.quit()
+  end
+
   gStateMachine:update(dt)
   love.keyboard.keyPressed = {}
 end
@@ -98,13 +99,14 @@ function love.draw()
 end
 
 function displayData()
+  love.graphics.setFont(gFonts["data"])
   displayKeyValuePairs(
     {"score", "time", "fuel"},
     {formatNumber, formatTime, formatNumber},
     WINDOW_WIDTH / 6 + 8,
     8,
-    font:getWidth("score  "),
-    font:getHeight() * 0.9
+    gFonts["data"]:getWidth("score  "),
+    gFonts["data"]:getHeight() * 0.9
   )
 
   displayKeyValuePairs(
@@ -112,8 +114,8 @@ function displayData()
     {nil, formatHorizontalSpeed, formatVerticalSpeed},
     WINDOW_WIDTH / 2 + 16,
     8,
-    font:getWidth("horizontal speed  "),
-    font:getHeight() * 0.9
+    gFonts["data"]:getWidth("horizontal speed  "),
+    gFonts["data"]:getHeight() * 0.9
   )
 end
 
