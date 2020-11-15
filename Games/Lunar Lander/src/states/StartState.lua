@@ -16,8 +16,10 @@ function StartState:enter(params)
 
   local messages = {
     "Good luck",
-    "Give it your best",
-    "Tricky terrain"
+    "Give it your best shot",
+    "You can do this",
+    "Slow and steady wins the race",
+    "Patience is key"
   }
   local message = messages[love.math.random(#messages)]
 

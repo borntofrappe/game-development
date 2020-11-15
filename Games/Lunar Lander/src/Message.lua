@@ -9,7 +9,7 @@ function Message:new(text, callback)
     ["timerInterval"] = 0,
     ["timerDelay"] = 0,
     ["x"] = 0,
-    ["y"] = WINDOW_HEIGHT / 2 - gFonts["message"]:getHeight() / 2,
+    ["y"] = WINDOW_HEIGHT / 2 - gFonts["message"]:getHeight(),
     ["width"] = WINDOW_WIDTH,
     ["align"] = "center"
   }

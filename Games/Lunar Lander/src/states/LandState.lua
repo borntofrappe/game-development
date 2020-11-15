@@ -6,7 +6,10 @@ function LandState:enter()
   local messages = {
     "Congratulations",
     "Great job",
-    "Safe landing"
+    "Smooth landing",
+    "You did it",
+    "The cargo is safe",
+    "Nice"
   }
 
   local message = messages[love.math.random(#messages)]

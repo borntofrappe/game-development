@@ -18,8 +18,9 @@ function CrashState:enter(params)
 
   local messages = {
     "Too bad",
-    "That wasn't cheap",
-    "Better luck next time"
+    "Better luck next time",
+    "Let's call it a practice run",
+    "Far from the perfect landing"
   }
 
   local message = messages[love.math.random(#messages)]
