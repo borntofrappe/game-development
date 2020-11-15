@@ -38,3 +38,7 @@ In order, these arguments describe:
 - `startX` and `startY`, two variables describing where the data needs to be displayed. Multiple keys are shown from these two initial coordinates.
 
 - `gapX` and `gapY`, two variables describing the gap between a key and it value (`gapX`), and between successive key-value pairs (`gapY`)
+
+## State
+
+The game mixes global variables with a state machine. This is with the ultimate goal of having a single world, initialized in `love.load` and then manipulated in the distinct states.

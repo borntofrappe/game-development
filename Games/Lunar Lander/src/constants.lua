@@ -9,16 +9,3 @@ IMPULSE = 40
 VELOCITY_CRASH = 20
 
 TIMER_DELAY = 3
-
-MESSAGES = {
-  ["hasLanded"] = {
-    "Congratulations",
-    "Great job",
-    "Safe landing"
-  },
-  ["hasCrashed"] = {
-    "Too bad",
-    "That wasn't cheap",
-    "Better luck next time"
-  }
-}
