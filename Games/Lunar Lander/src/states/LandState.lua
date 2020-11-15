@@ -1,7 +1,7 @@
 LandState = BaseState:create()
 
 function LandState:enter()
-  self.timer = 0
+  data["score"] = data["score"] + (WINDOW_HEIGHT - data["altitude"]) + data["fuel"]
 
   local messages = {
     "Congratulations",
@@ -9,14 +9,23 @@ function LandState:enter()
     "Safe landing"
   }
 
-  data["score"] = data["score"] + (WINDOW_HEIGHT - data["altitude"]) + data["fuel"]
-  self.message = messages[love.math.random(#messages)]
+  local message = messages[love.math.random(#messages)]
+
+  self.message =
+    Message:new(
+    message,
+    function()
+      lander.body:destroy()
+      terrain.body:destroy()
+      gStateMachine:change("start")
+    end
+  )
 end
 
 function LandState:update(dt)
-  self.timer = self.timer + dt
-  if self.timer > TIMER_DELAY or love.keyboard.wasPressed("return") then
-    self.timer = 0
+  self.message:update(dt)
+
+  if love.keyboard.wasPressed("return") then
     lander.body:destroy()
     terrain.body:destroy()
     gStateMachine:change("start")
@@ -27,12 +36,5 @@ function LandState:render()
   love.graphics.setColor(0.85, 0.85, 0.85)
   lander:render()
 
-  love.graphics.setFont(gFonts["message"])
-  love.graphics.printf(
-    self.message:upper(),
-    0,
-    WINDOW_HEIGHT / 2 - gFonts["message"]:getHeight(),
-    WINDOW_WIDTH,
-    "center"
-  )
+  self.message:render()
 end

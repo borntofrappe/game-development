@@ -4,7 +4,7 @@ The goal of this project is to create a demo inspired by the Atari game [Lunar L
 
 ## Design
 
-The game uses [Overpass Mono](https://fonts.google.com/specimen/Overpass+Mono) for the data, [Aldrich](https://fonts.google.com/specimen/Aldrich) for the messages shown midscreen.
+The game uses [Overpass Mono](https://fonts.google.com/specimen/Overpass+Mono) for its one and only font.
 
 Terrain covers the bottom half of the screen. It is created using `love.math.noise` in conjunction with `love.math.random`. As noticed in the `Noise` folder, `love.math.noise` provieds a sequence of random numbers which is too smooth, and the inclusion of `love.math.random` allows to modify the segments to have jagged edges.
 
@@ -64,11 +64,11 @@ In order:
 
 - `gapX` and `gapY`, two variables describing the gap between a key and it value (`gapX`), and between successive key-value pairs (`gapY`)
 
-## State
+### State
 
 The game mixes global variables with a state machine. This is with the ultimate goal of having a single world, initialized in `love.load` and then manipulated in the distinct states.
 
-## isDestroyed
+### isDestroyed
 
 The function `body:isDestroyed()` is necessary to avoid having the game crash as the world tries to use/update bodies which no longer exist.
 
@@ -86,4 +86,65 @@ end
 if terrain.body:isDestroyed() then
   terrain = Terrain:new(world)
 end
+```
+
+### Message
+
+The class is responsible for the rendering of text in the center of the screen, with the idea of showing a message one letter at a time. To achieve this effect, each instance of `Message` sets up an interval to increment a counter variable.
+
+```lua
+self.timerInterval = self.timerInterval + dt
+if self.timerInterval > TIMER_INTERVAL then
+  self.timerInterval = self.timerInterval % TIMER_INTERVAL
+  self.index = self.index + 1
+end
+```
+
+The counter variable is used in `love.draw` to show the relevant portion of text.
+
+```lua
+love.graphics.printf(
+  self.text:sub(1, self.index)
+  -- position and alignment
+  )
+```
+
+When the counter variable reaches the length of the text, finally, the `update` function moves on to set a timeout.
+
+```lua
+if self.index >= #self.text then
+  self.timerDelay = self.timerDelay + dt
+  if self.timerDelay >= TIMER_DELAY then
+  end
+end
+```
+
+The idea is to here provide a small delay, after which the class executes the code passed in the second argument of `Message`.
+
+```lua
+function Message:new(text, callback)
+  this = {
+    ["callback"] = callback,
+    -- other attributes
+  }
+end
+
+function Message:update(dt)
+  if self.timerDelay >= TIMER_DELAY then
+    self.timerDelay = 0
+    self.callback()
+  end
+end
+```
+
+This is ultimately how the `StartState`, `LandState` and again `CrashState` are able to show informative text, and then move the game onward. For `StartState`, for instance:
+
+```lua
+ self.message =
+  Message:new(
+  message,
+  function()
+    gStateMachine:change("orbit")
+  end
+)
 ```

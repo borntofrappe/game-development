@@ -16,23 +16,30 @@ function CrashState:enter(params)
 
   lander.body:destroy()
 
-  self.timer = 0
-
   local messages = {
     "Too bad",
     "That wasn't cheap",
     "Better luck next time"
   }
 
-  self.message = messages[love.math.random(#messages)]
+  local message = messages[love.math.random(#messages)]
+
+  self.message =
+    Message:new(
+    message,
+    function()
+      terrain.body:destroy()
+      data["score"] = 0
+      gStateMachine:change("start")
+    end
+  )
 end
 
 function CrashState:update(dt)
+  self.message:update(dt)
   self.particleSystem:update(dt)
 
-  self.timer = self.timer + dt
-  if self.timer > TIMER_DELAY or love.keyboard.wasPressed("return") then
-    self.timer = 0
+  if love.keyboard.wasPressed("return") then
     terrain.body:destroy()
     data["score"] = 0
     gStateMachine:change("start")
@@ -43,12 +50,5 @@ function CrashState:render()
   love.graphics.setColor(0.85, 0.85, 0.85)
   love.graphics.draw(self.particleSystem)
 
-  love.graphics.setFont(gFonts["message"])
-  love.graphics.printf(
-    self.message:upper(),
-    0,
-    WINDOW_HEIGHT / 2 - gFonts["message"]:getHeight(),
-    WINDOW_WIDTH,
-    "center"
-  )
+  self.message:render()
 end

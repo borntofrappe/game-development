@@ -4,6 +4,8 @@ require "src/Utils"
 require "src/Terrain"
 require "src/Lander"
 
+require "src/Message"
+
 require "src/StateMachine"
 require "src/states/BaseState"
 require "src/states/StartState"
@@ -16,6 +18,6 @@ gTextures = {
 }
 
 gFonts = {
-  ["data"] = love.graphics.newFont("res/font-data.ttf", 14),
-  ["message"] = love.graphics.newFont("res/font-message.ttf", 20)
+  ["data"] = love.graphics.newFont("res/font.ttf", 14),
+  ["message"] = love.graphics.newFont("res/font.ttf", 16)
 }
