@@ -37,8 +37,10 @@ function love.load()
 
   hasCrashed = false
   hasLanded = false
+  message = nil
   isWaiting = false
   timer = 0
+  timerWaiting = 0
 end
 
 function beginContact(f1, f2, coll)
@@ -92,6 +94,8 @@ function love.update(dt)
   world:update(dt)
 
   if not lander.body:isDestroyed() and not isWaiting then
+    timer = timer + dt
+    data["time"] = timer
     local vx, vy = lander.body:getLinearVelocity()
     data["horizontal speed"] = math.floor(vx)
     data["vertical speed"] = math.floor(vy)
@@ -110,19 +114,23 @@ function love.update(dt)
 
     if hasCrashed then
       lander.body:destroy()
+      message = MESSAGES["hasCrashed"][love.math.random(#MESSAGES["hasCrashed"])]
       isWaiting = true
     end
 
     if hasLanded then
       isWaiting = true
+      message = MESSAGES["hasLanded"][love.math.random(#MESSAGES["hasLanded"])]
     end
   end
 
   if isWaiting then
-    timer = timer + dt
-    if timer > TIMER_DELAY then
+    timerWaiting = timerWaiting + dt
+    if timerWaiting > TIMER_DELAY then
       timer = 0
+      timerWaiting = 0
       isWaiting = false
+      message = nil
       if hasCrashed then
         lander = Lander:new(world)
         hasCrashed = false
@@ -146,11 +154,7 @@ function love.draw()
   displayData()
 
   if isWaiting then
-    if hasCrashed then
-      love.graphics.printf("Too bad", 0, WINDOW_HEIGHT / 2 - font:getHeight(), WINDOW_WIDTH, "center")
-    elseif hasLanded then
-      love.graphics.printf("Congratulations", 0, WINDOW_HEIGHT / 2 - font:getHeight(), WINDOW_WIDTH, "center")
-    end
+    love.graphics.printf(message, 0, WINDOW_HEIGHT / 2 - font:getHeight(), WINDOW_WIDTH, "center")
   end
 end
 
