@@ -6,6 +6,7 @@ function love.load()
   love.graphics.setBackgroundColor(1, 1, 1)
 
   launcher = Launcher:new()
+  pocketed = Pocketed:new({6, 2, 3, 5, 8})
 
   isLaunching = false
 end
@@ -32,4 +33,5 @@ end
 
 function love.draw()
   launcher:render()
+  pocketed:render()
 end
