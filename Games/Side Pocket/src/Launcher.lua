@@ -42,6 +42,14 @@ function Launcher:update(dt)
   self.slider:update(dt)
 end
 
+function Launcher:getValue()
+  return math.floor(self.slider.value)
+end
+
+function Launcher:reset()
+  self.slider.value = 0
+end
+
 function Launcher:render()
   self.panel:render()
   self.slider:render()
@@ -56,7 +64,8 @@ function Launcher:render()
   for i = 1, 4 do
     love.graphics.rectangle(
       "fill",
-      self.panel.x + 16 + 16 + gFonts["ui"]:getWidth("MIN") + (i - 1) * 22,
+      self.panel.x + 16 + gFonts["ui"]:getWidth("MIN") + 16 +
+        (i - 1) * (self.panel.width - 48 - gFonts["ui"]:getWidth("MINMAX")) / 4,
       self.slider.y - 24 - 12 - (i - 1) * 3,
       12,
       12 + (i - 1) * 3,

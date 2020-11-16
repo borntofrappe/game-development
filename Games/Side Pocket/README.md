@@ -171,3 +171,7 @@ _Please note_: one of the game's feature is that the balls can be toggled betwee
 ## Development
 
 `Launcher` makes use of two utilities: `Panel` and `Slider`. The first one is responsible for rendering the outline of a rounded rectangle. The second for rendering a panel and a circle bouncing within the panel itself.
+
+`Pocketed` also uses a panel, to describe the balls already being pocketed. In the panel, the balls received as arguments are displayed in two rows of four columns each, with the goal of spacing the circles in the available width.
+
+_Please note_: I've tried my best to avoid using magic, hard-coded numbers, so that the design is more flexible when changing the width or height of the window.
