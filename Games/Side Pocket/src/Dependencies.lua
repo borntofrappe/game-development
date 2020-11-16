@@ -1,5 +1,7 @@
 require "src/constants"
 
+require "src/Panel"
+require "src/Slider"
 require "src/Launcher"
 
 gFonts = {

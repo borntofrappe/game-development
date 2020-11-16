@@ -167,3 +167,7 @@ _Please note_: one of the game's feature is that the balls can be toggled betwee
     <text x="25" y="31.5">3</text>
   </g>
 </svg>
+
+## Development
+
+`Launcher` makes use of two utilities: `Panel` and `Slider`. The first one is responsible for rendering the outline of a rounded rectangle. The second for rendering a panel and a circle bouncing within the panel itself.

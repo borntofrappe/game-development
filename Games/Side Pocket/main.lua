@@ -3,9 +3,10 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Side Pocket")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.95, 0.95, 0.95)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
   launcher = Launcher:new()
+
   isLaunching = false
 end
 
@@ -13,14 +14,12 @@ function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
-
   if key == "space" then
-    if not isLaunching then
-      isLaunching = true
-    else
+    if isLaunching then
       -- launch
       isLaunching = false
-      launcher:reset()
+    else
+      isLaunching = true
     end
   end
 end
