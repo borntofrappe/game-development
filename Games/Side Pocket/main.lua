@@ -6,15 +6,29 @@ function love.load()
   love.graphics.setBackgroundColor(0.95, 0.95, 0.95)
 
   launcher = Launcher:new()
+  isLaunching = false
 end
 
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
+
+  if key == "space" then
+    if not isLaunching then
+      isLaunching = true
+    else
+      -- launch
+      isLaunching = false
+      launcher:reset()
+    end
+  end
 end
 
 function love.update(dt)
+  if isLaunching then
+    launcher:update(dt)
+  end
 end
 
 function love.draw()

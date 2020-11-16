@@ -18,13 +18,27 @@ function Launcher:new()
   this.rxLauncher = this.rx * 2
   this.radiusLauncher = this.heightLauncher / 3
   this.paddingLauncher = 8
-  this.percentageLauncher = 100
-
+  this.percentageLauncher = 0
+  this.percentageDirection = 1
+  this.percentageSpeed = 60
   setmetatable(this, self)
   return this
 end
 
 function Launcher:update(dt)
+  self.percentageLauncher = self.percentageLauncher + self.percentageDirection * self.percentageSpeed * dt
+  if self.percentageLauncher >= 100 then
+    self.percentageDirection = -1
+    self.percentageLauncher = 100
+  end
+  if self.percentageLauncher <= 0 then
+    self.percentageDirection = 1
+    self.percentageLauncher = 0
+  end
+end
+
+function Launcher:reset()
+  self.percentageLauncher = 0
 end
 
 function Launcher:render()
