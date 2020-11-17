@@ -1,14 +1,15 @@
 Ball = {}
 Ball.__index = Ball
 
-function Ball:new(world, cx, cy, r)
+function Ball:new(world, cx, cy, r, number)
   local body = love.physics.newBody(world, cx, cy, "dynamic")
   local shape = love.physics.newCircleShape(r)
   local fixture = love.physics.newFixture(body, shape)
   this = {
     ["body"] = body,
     ["shape"] = shape,
-    ["fixture"] = fixture
+    ["fixture"] = fixture,
+    ["number"] = number or 0
   }
 
   setmetatable(this, self)

@@ -48,6 +48,7 @@ function Pocketed:render()
     for i, ball in ipairs(self.balls) do
       love.graphics.setLineWidth(3)
       love.graphics.circle("line", ball.x, ball.y, ball.r)
+      love.graphics.setFont(gFonts["ui"])
       love.graphics.printf(ball.number, ball.x - ball.r, ball.y - gFonts["ui"]:getHeight() / 2, ball.r * 2, "center")
     end
   else
