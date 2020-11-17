@@ -24,15 +24,18 @@ function Pocketed:new()
 end
 
 function Pocketed:addBall(number)
-  local x = self.panel.x + 14 + 16 + (#self.balls) % 4 * (self.panel.width - 14) / 4
-  local y = #self.balls < 4 and self.panel.y + self.panel.height / 3 or self.panel.y + self.panel.height * 2 / 3
+  local padding = 12
+  local r = 16
+  local x = self.panel.x + (padding + r + r * 3 * (#self.balls)) % (self.panel.width - padding)
+  local y =
+    self.panel.y + padding + r + r * 3 * math.floor((padding + r + r * 3 * (#self.balls)) / (self.panel.width - r))
 
   table.insert(
     self.balls,
     {
       ["x"] = x,
       ["y"] = y,
-      ["r"] = 14,
+      ["r"] = r,
       ["number"] = number
     }
   )
