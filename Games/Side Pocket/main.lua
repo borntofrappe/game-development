@@ -78,28 +78,28 @@ function love.load()
 
   local pocketsCoordinates = {
     {
-      cx = surface.x + surface.lineWidth / 2 + 4,
-      cy = surface.y + surface.lineWidth / 2 + 4
+      cx = surface.x + surface.lineWidth / 2,
+      cy = surface.y + surface.lineWidth / 2
     },
     {
       cx = surface.x + surface.width / 2,
       cy = surface.y + surface.lineWidth / 2 - (surface.lineWidth - POCKET_RADIUS)
     },
     {
-      cx = surface.x + surface.width - surface.lineWidth / 2 - 4,
-      cy = surface.y + surface.lineWidth / 2 + 4
+      cx = surface.x + surface.width - surface.lineWidth / 2,
+      cy = surface.y + surface.lineWidth / 2
     },
     {
-      cx = surface.x + surface.lineWidth / 2 + 4,
-      cy = surface.y + surface.height - surface.lineWidth / 2 - 4
+      cx = surface.x + surface.lineWidth / 2,
+      cy = surface.y + surface.height - surface.lineWidth / 2
     },
     {
       cx = surface.x + surface.width / 2,
       cy = surface.y + surface.height - surface.lineWidth / 2 + (surface.lineWidth - POCKET_RADIUS)
     },
     {
-      cx = surface.x + surface.width - surface.lineWidth / 2 - 4,
-      cy = surface.y + surface.height - surface.lineWidth / 2 - 4
+      cx = surface.x + surface.width - surface.lineWidth / 2,
+      cy = surface.y + surface.height - surface.lineWidth / 2
     }
   }
 
@@ -130,7 +130,9 @@ function love.load()
   for i = 1, BALLS_COLUMNS do
     ballY = surface.y + surface.height / 2 - (i - 1) * BALL_RADIUS
     for j = 1, i do
-      local ball = Ball:new(world, ballX, ballY, BALL_RADIUS, ballCounter)
+      local number = ballCounter
+      local color = {["r"] = 0.3, ["g"] = 0.3, ["b"] = 0.3}
+      local ball = Ball:new(world, ballX, ballY, BALL_RADIUS, number, color)
       ball.fixture:setRestitution(0.75)
       ball.fixture:setUserData("Ball")
       table.insert(balls, ball)
@@ -164,6 +166,12 @@ function love.keypressed(key)
       else
         isLaunching = true
       end
+    end
+  end
+
+  if key == "t" then
+    for i, ball in ipairs(balls) do
+      ball:toggleNumber()
     end
   end
 end
