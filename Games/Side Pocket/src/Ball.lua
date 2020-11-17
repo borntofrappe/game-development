@@ -12,9 +12,9 @@ function Ball:new(world, cx, cy, r, number, color)
     ["number"] = number or 0,
     ["color"] = color or
       {
-        ["r"] = 0.5,
-        ["g"] = 0.5,
-        ["b"] = 0.5
+        ["r"] = 0.6,
+        ["g"] = 0.6,
+        ["b"] = 0.6
       },
     ["showNumber"] = false
   }

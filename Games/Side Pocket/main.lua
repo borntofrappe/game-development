@@ -67,6 +67,7 @@ function love.load()
     local shape = love.physics.newEdgeShape(0, 0, segment.x2 - segment.x1, segment.y2 - segment.y1)
     local fixture = love.physics.newFixture(body, shape)
     fixture:setUserData("Edge")
+
     table.insert(
       edges,
       {
@@ -124,16 +125,22 @@ function love.load()
     )
   end
 
-  balls = {}
-  addBalls()
-
-  player = Ball:new(world, surface.x + surface.width * 3 / 4, surface.y + surface.height / 2, BALL_RADIUS)
-  player.fixture:setRestitution(0.75)
-  player.fixture:setUserData("Player")
+  balls = initializeBalls()
+  player = initializePlayer()
 end
 
-function addBalls()
-  balls = {}
+function initializePlayer()
+  local player = Ball:new(world, surface.x + surface.width * 3 / 4, surface.y + surface.height / 2, BALL_RADIUS)
+  player.fixture:setRestitution(0.75)
+  player.fixture:setUserData("Player")
+  player.body:setLinearDamping(0.35)
+  player.body:setMass(1.25)
+
+  return player
+end
+
+function initializeBalls()
+  local balls = {}
 
   local ballCounter = 1
   local ballX = surface.x + surface.width / 4
@@ -144,8 +151,10 @@ function addBalls()
       local number = ballCounter
       local color = {["r"] = 0.3, ["g"] = 0.3, ["b"] = 0.3}
       local ball = Ball:new(world, ballX, ballY, BALL_RADIUS, number, color)
-      ball.fixture:setRestitution(0.75)
+      ball.fixture:setRestitution(0.85)
       ball.fixture:setUserData("Ball")
+      ball.body:setLinearDamping(0.2)
+      ball.body:setMass(0.5)
       table.insert(balls, ball)
 
       ballCounter = ballCounter + 1
@@ -153,6 +162,8 @@ function addBalls()
     end
     ballX = ballX - BALL_RADIUS
   end
+
+  return balls
 end
 
 function love.keypressed(key)
@@ -185,8 +196,9 @@ function love.keypressed(key)
     isGameover = false
     angle = math.pi
     player.body:destroy()
-    player = Ball:new(world, surface.x + surface.width * 3 / 4, surface.y + surface.height / 2, BALL_RADIUS)
-    addBalls()
+    player = initializePlayer()
+    balls = initializeBalls()
+    pocketed:reset()
   end
 end
 

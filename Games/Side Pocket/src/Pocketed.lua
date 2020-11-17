@@ -41,6 +41,10 @@ function Pocketed:addBall(number)
   )
 end
 
+function Pocketed:reset()
+  self.balls = {}
+end
+
 function Pocketed:render()
   self.panel:render()
 
