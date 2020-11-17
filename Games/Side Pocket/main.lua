@@ -150,6 +150,7 @@ function love.load()
   player.fixture:setRestitution(0.65)
   player.fixture:setUserData("Player")
 
+  angle = math.pi
   isLaunching = false
   isPlayerPocketed = false
 end
@@ -160,8 +161,9 @@ function love.keypressed(key)
   end
   if key == "space" then
     if isLaunching then
-      local force = FORCE_MULTIPLIER * launcher:getValue() / 100
-      player.body:applyLinearImpulse(-force, 0)
+      local impulseX = math.cos(angle) * IMPULSE_MULTIPLIER
+      local impulseY = math.sin(angle) * IMPULSE_MULTIPLIER
+      player.body:applyLinearImpulse(impulseX, impulseY)
       launcher:reset()
 
       isLaunching = false
@@ -196,6 +198,46 @@ function love.update(dt)
       end
     end
   end
+
+  if angle > math.pi * 2 then
+    angle = 0
+  elseif angle < 0 then
+    angle = math.pi * 2
+  end
+
+  if love.keyboard.isDown("up") then
+    if angle ~= math.pi * 3 / 2 and angle ~= math.pi / 2 then
+      if angle < math.pi * 3 / 2 and angle > math.pi / 2 then
+        angle = angle + dt
+      else
+        angle = angle - dt
+      end
+    end
+  elseif love.keyboard.isDown("right") then
+    if angle ~= math.pi and angle ~= 0 then
+      if angle > math.pi then
+        angle = angle + dt
+      else
+        angle = angle - dt
+      end
+    end
+  elseif love.keyboard.isDown("down") then
+    if angle ~= math.pi * 3 / 2 and angle ~= math.pi / 2 then
+      if angle > math.pi / 2 and angle < math.pi * 3 / 2 then
+        angle = angle - dt
+      else
+        angle = angle + dt
+      end
+    end
+  elseif love.keyboard.isDown("left") then
+    if angle ~= math.pi and angle ~= 0 then
+      if angle > math.pi then
+        angle = angle - dt
+      else
+        angle = angle + dt
+      end
+    end
+  end
 end
 
 function love.draw()
@@ -203,15 +245,32 @@ function love.draw()
   pocketed:render()
   surface:render()
 
-  player:render()
+  for i, pocket in ipairs(pockets) do
+    love.graphics.setColor(0.2, 0.2, 0.2)
+    love.graphics.circle("fill", pocket.body:getX(), pocket.body:getY(), pocket.shape:getRadius())
+  end
 
   for i, ball in ipairs(balls) do
     ball:render()
   end
 
-  for i, pocket in ipairs(pockets) do
-    love.graphics.setColor(0.2, 0.2, 0.2)
-    love.graphics.circle("fill", pocket.body:getX(), pocket.body:getY(), pocket.shape:getRadius())
+  player:render()
+
+  love.graphics.setLineWidth(1)
+  for i = 1, 4 do
+    local x = player.body:getX() + math.cos(angle) * (BALL_RADIUS * 3 * i)
+    local y = player.body:getY() + math.sin(angle) * (BALL_RADIUS * 3 * i)
+    if
+      x > surface.x + surface.lineWidth / 2 + BALL_RADIUS and
+        x < surface.x + surface.width - surface.lineWidth / 2 - BALL_RADIUS and
+        y > surface.y + surface.lineWidth / 2 + BALL_RADIUS and
+        y < surface.y + surface.height - surface.lineWidth / 2 - BALL_RADIUS
+     then
+      love.graphics.setColor(0.2, 0.2, 0.2, 0.25)
+      love.graphics.circle("line", x, y, BALL_RADIUS)
+      love.graphics.setColor(0.2, 0.2, 0.2, 0.05)
+      love.graphics.circle("fill", x, y, BALL_RADIUS)
+    end
   end
 
   -- for i, edge in ipairs(edges) do
