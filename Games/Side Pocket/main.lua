@@ -8,6 +8,7 @@ function love.load()
   -- manage state
   isMoving = false
   isLaunching = false
+  isGameover = false
   angle = math.pi
 
   -- consider if the player collides with a pocket
@@ -124,6 +125,16 @@ function love.load()
   end
 
   balls = {}
+  addBalls()
+
+  player = Ball:new(world, surface.x + surface.width * 3 / 4, surface.y + surface.height / 2, BALL_RADIUS)
+  player.fixture:setRestitution(0.75)
+  player.fixture:setUserData("Player")
+end
+
+function addBalls()
+  balls = {}
+
   local ballCounter = 1
   local ballX = surface.x + surface.width / 4
   local ballY = surface.y + surface.height / 2
@@ -142,10 +153,6 @@ function love.load()
     end
     ballX = ballX - BALL_RADIUS
   end
-
-  player = Ball:new(world, surface.x + surface.width * 3 / 4, surface.y + surface.height / 2, BALL_RADIUS)
-  player.fixture:setRestitution(0.75)
-  player.fixture:setUserData("Player")
 end
 
 function love.keypressed(key)
@@ -159,7 +166,6 @@ function love.keypressed(key)
         local impulseX = math.cos(angle) * IMPULSE_MULTIPLIER
         local impulseY = math.sin(angle) * IMPULSE_MULTIPLIER
         player.body:applyLinearImpulse(impulseX, impulseY)
-        launcher:reset()
 
         isMoving = true
         isLaunching = false
@@ -173,6 +179,14 @@ function love.keypressed(key)
     for i, ball in ipairs(balls) do
       ball:toggleNumber()
     end
+  end
+
+  if key == "return" and isGameover then
+    isGameover = false
+    angle = math.pi
+    player.body:destroy()
+    player = Ball:new(world, surface.x + surface.width * 3 / 4, surface.y + surface.height / 2, BALL_RADIUS)
+    addBalls()
   end
 end
 
@@ -192,6 +206,7 @@ function love.update(dt)
       end
       if areBallsNotMoving then
         isMoving = false
+        launcher:reset()
       end
     end
 
@@ -212,6 +227,10 @@ function love.update(dt)
           pocketed:addBall(balls[i].number)
           table.remove(balls, i)
         end
+      end
+
+      if #balls == 0 then
+        isGameover = true
       end
     end
   else
@@ -299,6 +318,18 @@ function love.draw()
         love.graphics.circle("fill", x, y, BALL_RADIUS)
       end
     end
+  end
+
+  if isGameover then
+    love.graphics.setColor(0.2, 0.2, 0.2)
+    love.graphics.setFont(gFonts["title"])
+    love.graphics.printf(
+      string.upper("Congrats"),
+      surface.x,
+      surface.y + surface.height / 2 - gFonts["title"]:getHeight() / 2,
+      surface.width,
+      "center"
+    )
   end
 
   -- SIMULATION EDGES FOR THE SURFACE
