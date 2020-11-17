@@ -1,7 +1,7 @@
 Pocketed = {}
 Pocketed.__index = Pocketed
 
-function Pocketed:new(numbers)
+function Pocketed:new()
   local panel =
     Panel:new(
     {
@@ -14,31 +14,28 @@ function Pocketed:new(numbers)
     }
   )
 
-  local numbers = numbers or {}
-
-  local balls = {}
-  for i = 1, #numbers do
-    local x = panel.x + 14 + 16 + (i - 1) % 4 * (panel.width - 14) / 4
-    local y = i <= 4 and panel.y + panel.height / 3 or panel.y + panel.height * 2 / 3
-
-    table.insert(
-      balls,
-      {
-        ["x"] = x,
-        ["y"] = y,
-        ["r"] = 14,
-        ["number"] = numbers[i]
-      }
-    )
-  end
-
   this = {
     ["panel"] = panel,
-    ["balls"] = balls
+    ["balls"] = {}
   }
 
   setmetatable(this, self)
   return this
+end
+
+function Pocketed:addBall(number)
+  local x = self.panel.x + 14 + 16 + (#self.balls) % 4 * (self.panel.width - 14) / 4
+  local y = #self.balls < 4 and self.panel.y + self.panel.height / 3 or self.panel.y + self.panel.height * 2 / 3
+
+  table.insert(
+    self.balls,
+    {
+      ["x"] = x,
+      ["y"] = y,
+      ["r"] = 14,
+      ["number"] = number
+    }
+  )
 end
 
 function Pocketed:render()

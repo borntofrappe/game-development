@@ -1,11 +1,29 @@
 require "src/Dependencies"
 
+function beginContact(f1, f2)
+  local fixtures = {}
+  fixtures[f1:getUserData()] = true
+  fixtures[f2:getUserData()] = true
+  if fixtures["Ball"] and fixtures["Pocket"] then
+    if f1:getUserData() == "Ball" then
+      table.insert(pocketedBalls, f1:getBody())
+    else
+      table.insert(pocketedBalls, f2:getBody())
+    end
+  end
+
+  if fixtures["Player"] and fixtures["Pocket"] then
+    isPlayerPocketed = true
+  end
+end
+
 function love.load()
   love.window.setTitle("Side Pocket")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(1, 1, 1)
 
   launcher = Launcher:new()
+  pocketedBalls = {}
   pocketed = Pocketed:new()
 
   surface =
@@ -22,6 +40,7 @@ function love.load()
 
   love.physics.setMeter(METER)
   world = love.physics.newWorld(0, 0, true)
+  world:setCallbacks(beginContact)
 
   local border = {
     {
@@ -54,7 +73,7 @@ function love.load()
     local body = love.physics.newBody(world, segment.x1, segment.y1)
     local shape = love.physics.newEdgeShape(0, 0, segment.x2 - segment.x1, segment.y2 - segment.y1)
     local fixture = love.physics.newFixture(body, shape)
-
+    fixture:setUserData("Edge")
     table.insert(
       edges,
       {
@@ -99,6 +118,7 @@ function love.load()
     local shape = love.physics.newCircleShape(POCKET_RADIUS)
     local fixture = love.physics.newFixture(body, shape)
     fixture:setSensor(true)
+    fixture:setUserData("Pocket")
 
     table.insert(
       pockets,
@@ -118,6 +138,7 @@ function love.load()
     for j = 1, i do
       local ball = Ball:new(world, ballX, ballY, BALL_RADIUS)
       ball.fixture:setRestitution(0.75)
+      ball.fixture:setUserData("Ball")
       table.insert(balls, ball)
 
       ballY = ballY + BALL_RADIUS * 2
@@ -127,9 +148,10 @@ function love.load()
 
   player = Ball:new(world, surface.x + surface.width * 3 / 4, surface.y + surface.height / 2, BALL_RADIUS)
   player.fixture:setRestitution(0.65)
+  player.fixture:setUserData("Player")
 
   isLaunching = false
-  force = 0
+  isPlayerPocketed = false
 end
 
 function love.keypressed(key)
@@ -138,7 +160,7 @@ function love.keypressed(key)
   end
   if key == "space" then
     if isLaunching then
-      force = FORCE_MULTIPLIER * launcher:getValue() / 100
+      local force = FORCE_MULTIPLIER * launcher:getValue() / 100
       player.body:applyLinearImpulse(-force, 0)
       launcher:reset()
 
@@ -153,6 +175,26 @@ function love.update(dt)
   world:update(dt)
   if isLaunching then
     launcher:update(dt)
+  end
+
+  if isPlayerPocketed then
+    player.body:setPosition(surface.x + surface.width * 3 / 4, surface.y + surface.height / 2)
+
+    isPlayerPocketed = false
+  end
+
+  if #pocketedBalls > 0 then
+    for i, body in ipairs(pocketedBalls) do
+      body:destroy()
+    end
+    pocketedBalls = {}
+
+    for i = #balls, 1, -1 do
+      if balls[i].body:isDestroyed() then
+        pocketed:addBall(i)
+        table.remove(balls, i)
+      end
+    end
   end
 end
 
