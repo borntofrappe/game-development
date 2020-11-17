@@ -4,7 +4,7 @@ With this project I set out to create a basic game of pool, or billiard, leverag
 
 ## Style
 
-The game has but one state, in which an infinite game of pool is played in the bottom half. The top half is instead reserved to two panels respectively showing a launcher and the ball already being pocketed.
+The game has but one state, in which an infinite game of pool is played in the bottom half. The top half is instead reserved to two panels respectively showing a launcher and the balls already being pocketed.
 
 ### Launcher
 
@@ -68,13 +68,9 @@ The component describes, always in a rounded rectangle, the balls already pocket
   </g>
 </svg>
 
-### Surface
+### World
 
-_Please note_: I use "surface" instead of "table" as I found the noun would be at odds with the "table" used by Lua to describe the data structure.
-
-This is the essence of the game, and where box2d creates the physics-based simulation.
-
-Box2D itself is set to create the surface with a rectangle, and six circles making up the pockets.
+Box2D itself creates the surface with a rectangle, and six circles making up the pockets.
 
 <svg viewBox="-5 -5 110 60" width="220" height="120">
   <g stroke="hsl(0, 0%, 30%)" fill="none" >
@@ -90,7 +86,7 @@ Box2D itself is set to create the surface with a rectangle, and six circles maki
   </g>
 </svg>
 
-With `love.graphics` then, the idea is to enhance the previous structure with a more pleasing aesthetic. `love.graphics.rectangle` can, for instance, include a rectangle with rounded borders, to match with the overall style.
+The edges are however not rendered. Instead of the lines, the goal is to use `love.graphics` to improve the aesthetics with rounded corners. This is achieve with another panel.
 
 <svg viewBox="-5 -5 110 60" width="220" height="120">
   <g stroke="hsl(0, 0%, 30%)" fill="none" >
@@ -107,9 +103,7 @@ With `love.graphics` then, the idea is to enhance the previous structure with a 
   </g>
 </svg>
 
-### Balls
-
-In the context of the surface, the game finally populates the level with a predetermined number of balls.
+In the context of the surface, and always with `love.physics`, the game finally populates the level with a predetermined number of balls.
 
 <svg viewBox="-5 -5 110 60" width="220" height="120">
   <g stroke="hsl(0, 0%, 30%)" fill="none" >
@@ -125,21 +119,21 @@ In the context of the surface, the game finally populates the level with a prede
     <circle cx="100" cy="50" r="5" />
   </g>
   <g>
-    <circle stroke="hsl(0, 0%, 0%)" stroke-width="0.75" fill="none" r="2.5" cx="75" cy="27.5"/>
-    <circle fill="hsl(0, 70%, 60%)" r="2.5" cx="30" cy="27.5"/>
-    <circle fill="hsl(45, 70%, 80%)" r="2.5" cx="25" cy="25"/>
-    <circle fill="hsl(120, 70%, 70%)" r="2.5" cx="25" cy="30"/>
-    <circle fill="hsl(180, 70%, 80%)" r="2.5" cx="20" cy="22.5"/>
-    <circle fill="hsl(240, 70%, 60%)" r="2.5" cx="20" cy="27.5"/>
-    <circle fill="hsl(300, 70%, 60%)" r="2.5" cx="20" cy="32.5"/>
+    <circle fill="hsl(0, 0%, 50%)" r="2.5" cx="75" cy="27.5"/>
+    <g fill="hsl(0, 0%, 20%)">
+      <circle r="2.5" cx="30" cy="27.5"/>
+      <circle r="2.5" cx="25" cy="25"/>
+      <circle r="2.5" cx="25" cy="30"/>
+      <circle r="2.5" cx="20" cy="22.5"/>
+      <circle r="2.5" cx="20" cy="27.5"/>
+      <circle r="2.5" cx="20" cy="32.5"/>
+    </g>
   </g>
 </svg>
-
-The colors chosen in the graphic are purely experimental, but ultimately showcase how to differentiate between the ball controlled by the player and the targets of the game.
 
 _Please note_: one of the game's feature is that the balls can be toggled between ball and number.
 
-<svg viewBox="-5 -5 110 60" width="275" height="150">
+<svg viewBox="-5 -5 110 60" width="220" height="120">
   <g stroke="hsl(0, 0%, 30%)" fill="none" >
     <rect width="100" height="50" stroke-width="2" />
     <rect x="-2.5" y="-2.5" width="105" height="55" stroke-width="5" rx="5" />
@@ -153,25 +147,115 @@ _Please note_: one of the game's feature is that the balls can be toggled betwee
     <circle cx="100" cy="50" r="5" />
   </g>
   <g>
-    <circle stroke="hsl(0, 0%, 0%)" stroke-width="0.75" fill="none" r="2.5" cx="75" cy="27.5"/>
-    <circle stroke="hsl(0, 70%, 60%)" fill="none" r="2.5" cx="30" cy="27.5"/>
-    <circle stroke="hsl(45, 70%, 80%)" fill="none" r="2.5" cx="25" cy="25"/>
-    <circle stroke="hsl(120, 70%, 70%)" fill="none" r="2.5" cx="25" cy="30"/>
-    <circle stroke="hsl(180, 70%, 80%)" fill="none" r="2.5" cx="20" cy="22.5"/>
-    <circle stroke="hsl(240, 70%, 60%)" fill="none" r="2.5" cx="20" cy="27.5"/>
-    <circle stroke="hsl(300, 70%, 60%)" fill="none" r="2.5" cx="20" cy="32.5"/>
+    <circle fill="hsl(0, 0%, 50%)" r="2.5" cx="75" cy="27.5"/>
+    <g fill="none" stroke="hsl(0, 0%, 20%)" stroke-width="0.5">
+      <circle r="2.5" cx="30" cy="27.5"/>
+      <circle r="2.5" cx="25" cy="25"/>
+      <circle r="2.5" cx="25" cy="30"/>
+      <circle r="2.5" cx="20" cy="22.5"/>
+      <circle r="2.5" cx="20" cy="27.5"/>
+      <circle r="2.5" cx="20" cy="32.5"/>
+    </g>
   </g>
   <g font-size="4" font-weight="bold" text-anchor="middle">
     <text x="30" y="29">1</text>
-    <text x="25" y="27">2</text>
-    <text x="25" y="31.5">3</text>
+    <text x="25" y="26.5">2</text>
+    <text x="25" y="31.25">3</text>
   </g>
 </svg>
 
 ## Development
 
-`Launcher` makes use of two utilities: `Panel` and `Slider`. The first one is responsible for rendering the outline of a rounded rectangle. The second for rendering a panel and a circle bouncing within the panel itself.
+A few notes on the codebase.
 
-`Pocketed` also uses a panel, to describe the balls already being pocketed. In the panel, the balls received as arguments are displayed in two rows of four columns each, with the goal of spacing the circles in the available width.
+### Comments
 
-_Please note_: I've tried my best to avoid using magic, hard-coded numbers, so that the design is more flexible when changing the width or height of the window.
+In `love.graphics.draw`, several instructions are commented out. These instruct the game to render the edges of the simulation, with a green color, and to show the usefulness of the corresponding bodies.
+
+### State
+
+`main.lua` manages the state with a series of booleans:
+
+- `isMoving` to update the simulation
+
+  It is here that the game manages the game, removes the pocketed tables, resets the player if necessary. It is also here where the script checks the speed of the balls, in order to toggle the boolean to `false`.
+
+- `isLaunching` to update the launcher
+
+  The idea is to use the boolean so that, by pressing the `space` key, the game updates the launcher. By pressing the same key again, the game consider the launcher's value and actually launches the game.
+
+- `isGameover` to show a congratulatory message
+
+  The booelean is also used to reset the game following a press on the enter key.
+
+### Destroy
+
+Bodies are not destroyed in the `beginContact` function which is called when a collision is registered in the world. They are destroyed in `love.update`, after being flagged.
+
+Balls are included in the table `pocketedBalls`, and successively removed checking the table's length.
+
+```lua
+if #pocketedBalls > 0 then
+  -- remove balls
+end
+```
+
+The player's ball is instead removed considering a boolean, `isPlayerPocketed`.
+
+```lua
+if isPlayerPocketed then
+  -- remove and reset player
+end
+```
+
+### Angle
+
+In order to alter the player's trajectory, the game introduces a variable to describe the angle. This one is initialized to `math.pi`, in order to have the ball aim to the left.
+
+```lua
+angle = math.pi
+```
+
+It is furthermore updated as the arrow keys are being pressed in `love.update`
+
+```lua
+function love.update(dt)
+  if love.keyboard.isDown('up') then
+  elseif love.keyboard.isDown('right') then
+  elseif love.keyboard.isDown('down') then
+  elseif love.keyboard.isDown('left') then
+  end
+end
+```
+
+It is finally used as the game launches the ball, to compute the `x` and `y` dimensions of a linear impulse.
+
+```lua
+local impulseX = math.cos(angle) * IMPULSE_MULTIPLIER
+local impulseY = math.sin(angle) * IMPULSE_MULTIPLIER
+```
+
+_Update_: `angle` is also used in `love.draw`, and to render the trajectory with a series of semitransparent circles.
+
+### Physics
+
+The game uses plenty of functions from the `love.physics` module. Here, however, I want to highlight `body:applyLinearImpulse` and `body:setLinearDamping`.
+
+`applyLinearImpulse` is used to have the ball move toward the direction specified by the angle. This is using the values documented in the previous section.
+
+```lua
+player.body:applyLinearImpulse(impulseX, impulseY)
+```
+
+`setLinearDamping` is instead helpful to have the balls slow down. Without this instruction, the movement of the ball becomes execessively tedious, slow.
+
+```lua
+player.body:setLinearDamping(0.35)
+```
+
+One last mention is for `fixture:setSensor()`. This function is used on the bodies making up the pockets so that `beginContact` registers an eventual collision, but the update function doesn't consider the body as solid.
+
+```lua
+fixture:setUserData("Pocket")
+fixture:setSensor(true)
+```

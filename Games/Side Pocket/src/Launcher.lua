@@ -54,6 +54,7 @@ function Launcher:render()
   self.panel:render()
   self.slider:render()
 
+  love.graphics.setColor(0.3, 0.3, 0.3)
   love.graphics.setFont(gFonts["ui"])
   love.graphics.print("MIN", self.panel.x + 16, self.slider.y - 20 - gFonts["ui"]:getHeight())
   love.graphics.print(
@@ -61,11 +62,11 @@ function Launcher:render()
     self.panel.x + self.panel.width - 16 - gFonts["ui"]:getWidth("MAX"),
     self.slider.y - 20 - gFonts["ui"]:getHeight()
   )
-  for i = 1, 4 do
+  for i = 1, 5 do
     love.graphics.rectangle(
       "fill",
       self.panel.x + 16 + gFonts["ui"]:getWidth("MIN") + 16 +
-        (i - 1) * (self.panel.width - 48 - gFonts["ui"]:getWidth("MINMAX")) / 4,
+        (i - 1) * (self.panel.width - 48 - gFonts["ui"]:getWidth("MINMAX")) / 5,
       self.slider.y - 24 - 12 - (i - 1) * 3,
       12,
       12 + (i - 1) * 3,

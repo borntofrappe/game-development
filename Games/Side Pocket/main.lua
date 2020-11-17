@@ -3,17 +3,14 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Side Pocket")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.98, 0.98, 0.98)
+  love.graphics.setBackgroundColor(0.95, 0.95, 0.95)
 
-  -- manage state
   isMoving = false
   isLaunching = false
   isGameover = false
   angle = math.pi
 
-  -- consider if the player collides with a pocket
   isPlayerPocketed = false
-  -- consider the pocketed balls to destroy the bodies outside of beginContact
   pocketedBalls = {}
 
   launcher = Launcher:new()
@@ -111,9 +108,8 @@ function love.load()
     local body = love.physics.newBody(world, pocketsCoordinate.cx, pocketsCoordinate.cy)
     local shape = love.physics.newCircleShape(POCKET_RADIUS - POCKET_PADDING)
     local fixture = love.physics.newFixture(body, shape)
-    -- avoid managing a collision with the pockets
-    fixture:setSensor(true)
     fixture:setUserData("Pocket")
+    fixture:setSensor(true)
 
     table.insert(
       pockets,
@@ -134,7 +130,6 @@ function initializePlayer()
   player.fixture:setRestitution(0.75)
   player.fixture:setUserData("Player")
   player.body:setLinearDamping(0.35)
-  player.body:setMass(1.25)
 
   return player
 end
@@ -186,7 +181,7 @@ function love.keypressed(key)
     end
   end
 
-  if key == "t" then
+  if key == "t" or key == "T" then
     for i, ball in ipairs(balls) do
       ball:toggleNumber()
     end
@@ -223,8 +218,8 @@ function love.update(dt)
     end
 
     if isPlayerPocketed then
-      player.body:setLinearVelocity(0, 0)
-      player.body:setPosition(surface.x + surface.width * 3 / 4, surface.y + surface.height / 2)
+      player.body:destroy()
+      player = initializePlayer()
       isPlayerPocketed = false
     end
 
@@ -344,7 +339,6 @@ function love.draw()
     )
   end
 
-  -- SIMULATION EDGES FOR THE SURFACE
   -- for i, edge in ipairs(edges) do
   --   love.graphics.setLineWidth(2)
   --   love.graphics.setColor(0, 1, 0.2)
