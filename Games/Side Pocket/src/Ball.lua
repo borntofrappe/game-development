@@ -1,20 +1,21 @@
 Ball = {}
 Ball.__index = Ball
 
-function Ball:new(world, cx, cy, r, number, color)
-  local body = love.physics.newBody(world, cx, cy, "dynamic")
-  local shape = love.physics.newCircleShape(r)
+function Ball:new(def)
+  local body = love.physics.newBody(def.world, def.cx, def.cy, "dynamic")
+  local shape = love.physics.newCircleShape(def.r)
   local fixture = love.physics.newFixture(body, shape)
+
   this = {
     ["body"] = body,
     ["shape"] = shape,
     ["fixture"] = fixture,
-    ["number"] = number or 0,
-    ["color"] = color or
+    ["number"] = def.number or 0,
+    ["color"] = def.color or
       {
-        ["r"] = 0.75,
-        ["g"] = 0.75,
-        ["b"] = 0.75
+        ["r"] = 0.9,
+        ["g"] = 0.9,
+        ["b"] = 0.9
       },
     ["showNumber"] = false
   }
@@ -28,18 +29,17 @@ function Ball:toggleNumber()
 end
 
 function Ball:render()
+  love.graphics.setColor(self.color.r, self.color.g, self.color.b)
   if self.showNumber then
     love.graphics.setLineWidth(2)
-    love.graphics.setColor(self.color.r, self.color.g, self.color.b)
-    love.graphics.setFont(gFonts["game"])
+    love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
+    love.graphics.setFont(gFonts["small"])
     love.graphics.print(
       self.number,
-      self.body:getX() - gFonts["game"]:getWidth(tostring(self.number)) / 2,
-      self.body:getY() - gFonts["game"]:getHeight() / 2
+      self.body:getX() - gFonts["small"]:getWidth(tostring(self.number)) / 2,
+      self.body:getY() - gFonts["small"]:getHeight() / 2
     )
-    love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
   else
-    love.graphics.setColor(self.color.r, self.color.g, self.color.b)
     love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius(), SEGMENTS)
   end
 end

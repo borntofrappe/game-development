@@ -53,15 +53,21 @@ function Pocketed:render()
     for i, ball in ipairs(self.balls) do
       love.graphics.setLineWidth(3)
       love.graphics.circle("line", ball.x, ball.y, ball.r)
-      love.graphics.setFont(gFonts["ui"])
-      love.graphics.printf(ball.number, ball.x - ball.r, ball.y - gFonts["ui"]:getHeight() / 2, ball.r * 2, "center")
+      love.graphics.setFont(gFonts["normal"])
+      love.graphics.printf(
+        ball.number,
+        ball.x - ball.r,
+        ball.y - gFonts["normal"]:getHeight() / 2,
+        ball.r * 2,
+        "center"
+      )
     end
   else
-    love.graphics.setFont(gFonts["title"])
+    love.graphics.setFont(gFonts["big"])
     love.graphics.printf(
       string.upper("Good luck!"),
       self.panel.x,
-      self.panel.y + self.panel.height / 2 - gFonts["title"]:getHeight() / 2,
+      self.panel.y + self.panel.height / 2 - gFonts["big"]:getHeight() / 2,
       self.panel.width,
       "center"
     )

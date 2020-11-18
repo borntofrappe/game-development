@@ -3,7 +3,7 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Side Pocket")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.02, 0.3, 0.13)
+  love.graphics.setBackgroundColor(0.02, 0.33, 0.12)
 
   isMoving = false
   isLaunching = false
@@ -126,10 +126,25 @@ function love.load()
 end
 
 function initializePlayer()
-  local player = Ball:new(world, surface.x + surface.width * 3 / 4, surface.y + surface.height / 2, BALL_RADIUS)
-  player.fixture:setRestitution(0.75)
+  local player =
+    Ball:new(
+    {
+      ["world"] = world,
+      ["cx"] = surface.x + surface.width * 3 / 4,
+      ["cy"] = surface.y + surface.height / 2,
+      ["r"] = BALL_RADIUS,
+      ["color"] = {
+        ["r"] = 0.7,
+        ["g"] = 0.7,
+        ["b"] = 0.7
+      }
+    }
+  )
+
   player.fixture:setUserData("Player")
-  player.body:setLinearDamping(0.35)
+  player.fixture:setRestitution(RESTITUTION)
+  player.body:setLinearDamping(LINEAR_DAMPING)
+  player.body:setMass(PLAYER_MASS)
 
   return player
 end
@@ -144,12 +159,23 @@ function initializeBalls()
     ballY = surface.y + surface.height / 2 - (i - 1) * BALL_RADIUS
     for j = 1, i do
       local number = ballCounter
-      local color = {["r"] = 0.95, ["g"] = 0.95, ["b"] = 0.95}
-      local ball = Ball:new(world, ballX, ballY, BALL_RADIUS, number, color)
-      ball.fixture:setRestitution(0.85)
+
+      local ball =
+        Ball:new(
+        {
+          ["world"] = world,
+          ["cx"] = ballX,
+          ["cy"] = ballY,
+          ["r"] = BALL_RADIUS,
+          ["number"] = number
+        }
+      )
+
       ball.fixture:setUserData("Ball")
-      ball.body:setLinearDamping(0.2)
-      ball.body:setMass(0.5)
+      ball.fixture:setRestitution(RESTITUTION)
+      ball.body:setLinearDamping(LINEAR_DAMPING)
+      ball.body:setMass(BALL_MASS)
+
       table.insert(balls, ball)
 
       ballCounter = ballCounter + 1
@@ -169,8 +195,8 @@ function love.keypressed(key)
   if key == "space" then
     if not isMoving then
       if isLaunching then
-        local impulseX = math.cos(angle) * IMPULSE_MULTIPLIER
-        local impulseY = math.sin(angle) * IMPULSE_MULTIPLIER
+        local impulseX = math.cos(angle) * IMPULSE
+        local impulseY = math.sin(angle) * IMPULSE
         player.body:applyLinearImpulse(impulseX, impulseY)
 
         isMoving = true
@@ -202,11 +228,11 @@ function love.update(dt)
 
   if isMoving then
     local vx, vy = player.body:getLinearVelocity()
-    if math.abs(vx) + math.abs(vy) < 5 then
+    if math.abs(vx) + math.abs(vy) < SPEED_THRESHOLD then
       local areBallsNotMoving = true
       for i, ball in pairs(balls) do
         local vx, vy = ball.body:getLinearVelocity()
-        if math.abs(vx) + math.abs(vy) > 5 then
+        if math.abs(vx) + math.abs(vy) > SPEED_THRESHOLD then
           areBallsNotMoving = false
           break
         end
@@ -329,11 +355,11 @@ function love.draw()
 
   if isGameover then
     love.graphics.setColor(0.2, 0.2, 0.2)
-    love.graphics.setFont(gFonts["title"])
+    love.graphics.setFont(gFonts["big"])
     love.graphics.printf(
       string.upper("Congrats"),
       surface.x,
-      surface.y + surface.height / 2 - gFonts["title"]:getHeight() / 2,
+      surface.y + surface.height / 2 - gFonts["big"]:getHeight() / 2,
       surface.width,
       "center"
     )
@@ -341,7 +367,7 @@ function love.draw()
 
   -- for i, edge in ipairs(edges) do
   --   love.graphics.setLineWidth(2)
-  --   love.graphics.setColor(0, 1, 0.2)
+  --   love.graphics.setColor(0, 1, 1)
   --   love.graphics.line(edge.body:getWorldPoints(edge.shape:getPoints()))
   -- end
 end

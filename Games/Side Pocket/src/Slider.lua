@@ -12,7 +12,7 @@ function Slider:new(def)
       ["lineWidth"] = 2,
       ["rx"] = 8,
       ["offset"] = 3,
-      ["radius"] = 5,
+      ["radius"] = 8,
       ["value"] = 0,
       ["direction"] = 1
     }
@@ -25,7 +25,7 @@ function Slider:new(def)
       ["width"] = def.width,
       ["height"] = def.height,
       ["lineWidth"] = def.lineWidth,
-      ["rx"] = def.rx
+      ["rx"] = def.height / 2
     }
   )
 
@@ -44,6 +44,10 @@ function Slider:update(dt)
     self.value = 0
     self.direction = 1
   end
+end
+
+function Slider:reset()
+  self.value = 0
 end
 
 function Slider:render()

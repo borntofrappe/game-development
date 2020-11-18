@@ -4,7 +4,7 @@ With this project I set out to create a basic game of pool, or billiard, leverag
 
 ## Style
 
-The game has but one state, in which an infinite game of pool is played in the bottom half. The top half is instead reserved to two panels respectively showing a launcher and the balls already being pocketed.
+The game has but one screen, to play an infinite game of pool. The bottom half is reserved to the pool's table, while the top helf is instead devoted to the launcher and a panel showing which ball is already pocketed.
 
 ### Launcher
 
@@ -86,7 +86,7 @@ Box2D itself creates the surface with a rectangle, and six circles making up the
   </g>
 </svg>
 
-The edges are however not rendered. Instead of the lines, the goal is to use `love.graphics` to improve the aesthetics with rounded corners. This is achieve with another panel.
+The edges are however not rendered. Instead, the idea is to use `love.graphics` to improve the aesthetics with rounded corners.
 
 <svg viewBox="-5 -5 110 60" width="220" height="120">
   <g stroke="hsl(0, 0%, 30%)" fill="none" >
@@ -103,7 +103,7 @@ The edges are however not rendered. Instead of the lines, the goal is to use `lo
   </g>
 </svg>
 
-In the context of the surface, and always with `love.physics`, the game finally populates the level with a predetermined number of balls.
+In this context, and again with `love.physics`, the game finally populates the level with a predetermined number of balls.
 
 <svg viewBox="-5 -5 110 60" width="220" height="120">
   <g stroke="hsl(0, 0%, 30%)" fill="none" >
@@ -131,7 +131,7 @@ In the context of the surface, and always with `love.physics`, the game finally 
   </g>
 </svg>
 
-_Please note_: one of the game's feature is that the balls can be toggled between ball and number.
+One of the game's feature is that the balls can be toggled between ball and number. With this different view, the design changes to show the respective number aligned in the outline of a circle.
 
 <svg viewBox="-5 -5 110 60" width="220" height="120">
   <g stroke="hsl(0, 0%, 30%)" fill="none" >
@@ -164,48 +164,93 @@ _Please note_: one of the game's feature is that the balls can be toggled betwee
   </g>
 </svg>
 
-## Development
+## Components
 
-A few notes on the codebase.
+To implement the design described in the previous section — see [Style](#style) — the game creates a series of `lua` files responsible for the building blocks:
 
-### Comments
+- `Panel` to render a rounded rectangle
 
-In `love.graphics.draw`, several instructions are commented out. These instruct the game to render the edges of the simulation, with a green color, and to show the usefulness of the corresponding bodies.
+- `Slider` to include a circle inside of a panel, and have the signifier move right and left to provide a percentage value
 
-### State
+- `Launcher` to wrap together the logic of the slider with the design of the top left screen. Here the slider is accompanied by the mentioned `min`, `max` strings
+
+- `Pocketed` to use a panel in which to show the pocketed balls
+
+## State
 
 `main.lua` manages the state with a series of booleans:
 
 - `isMoving` to update the simulation
 
-  It is here that the game manages the game, removes the pocketed tables, resets the player if necessary. It is also here where the script checks the speed of the balls, in order to toggle the boolean to `false`.
+  It is here that the game manages the game, removes the pocketed tables, resets the player if necessary. It is also here where the script checks the speed of the balls, in order to toggle the same boolean to `false`.
 
 - `isLaunching` to update the launcher
 
-  The idea is to use the boolean so that, by pressing the `space` key, the game updates the launcher. By pressing the same key again, the game consider the launcher's value and actually launches the game.
+  The idea is to use the boolean so that, by pressing the `space` key, the game updates the launcher. By pressing the same key again, the game consider the launcher's value and actually launches the player's ball.
 
 - `isGameover` to show a congratulatory message
 
   The booelean is also used to reset the game following a press on the enter key.
 
+## Gameplay
+
+It is worth to describe the logic of the codebase in a few points.
+
 ### Destroy
 
-Bodies are not destroyed in the `beginContact` function which is called when a collision is registered in the world. They are destroyed in `love.update`, after being flagged.
+When objects collide, `world:setCallbacks` allows to execute the logic described in the `beginContact` function.
 
-Balls are included in the table `pocketedBalls`, and successively removed checking the table's length.
+```lua
+world:setCallbacks(beginContact)
+```
+
+However, this is not where the bodies are actually destroyed; as detailed in the [tutorial on callback functions](https://love2d.org/wiki/Tutorial:PhysicsCollisionCallbacks), love2d locks the world in place, so that changes need to happen outside of the function's scope. In the scope, the bodies to-be-destroyed are flagged with two different methods:
+
+- balls are included in the table `pocketedBalls`
+
+- the player's ball is signalled with the boolean `isPlayerPocketed`
+
+In `love.update`, the code then proceed to destroying the objects and repopulating the world if necessary.
 
 ```lua
 if #pocketedBalls > 0 then
-  -- remove balls
+  for i, body in ipairs(pocketedBalls) do
+    body:destroy()
+  end
+
+  pocketedBalls = 0
+end
+
+if isPlayerPocketed then
+  player.body:destroy()
+  player = initializePlayer()
+  isPlayerPocketed = false
 end
 ```
 
-The player's ball is instead removed considering a boolean, `isPlayerPocketed`.
+### Physics
+
+The game uses plenty of functions from the `love.physics` module. Here, however, I want to highlight `body:applyLinearImpulse` and `body:setLinearDamping`.
+
+- `applyLinearImpulse` is used to have the ball move toward the direction specified by the angle
+
+  ```lua
+  player.body:applyLinearImpulse(impulseX, impulseY)
+  ```
+
+- `setLinearDamping` is helpful to have the balls slow down
+
+  Without this instruction, the movement of the ball becomes execessively tedious, slow.
+
+  ```lua
+  player.body:setLinearDamping(LINEAR_DAMPING)
+  ```
+
+One last mention is for `fixture:setSensor()`. This function is used on the bodies making up the pockets so that `beginContact` registers an eventual collision, but the world doesn't consider the body as solid.
 
 ```lua
-if isPlayerPocketed then
-  -- remove and reset player
-end
+fixture:setUserData("Pocket")
+fixture:setSensor(true)
 ```
 
 ### Angle
@@ -216,7 +261,7 @@ In order to alter the player's trajectory, the game introduces a variable to des
 angle = math.pi
 ```
 
-It is furthermore updated as the arrow keys are being pressed in `love.update`
+The variable updated as the arrow keys are being pressed in `love.update`.
 
 ```lua
 function love.update(dt)
@@ -228,7 +273,9 @@ function love.update(dt)
 end
 ```
 
-It is finally used as the game launches the ball, to compute the `x` and `y` dimensions of a linear impulse.
+The logic is rather convoluted, but considers a value in the `[0, math.pi * 2]` range, with the idea of updating the trajectory toward the direction expressed by the key.
+
+Regardless of how the value is updated, the variable is finally used as the game launches the ball, to compute the `x` and `y` dimensions of a linear impulse.
 
 ```lua
 local impulseX = math.cos(angle) * IMPULSE_MULTIPLIER
@@ -237,25 +284,42 @@ local impulseY = math.sin(angle) * IMPULSE_MULTIPLIER
 
 _Update_: `angle` is also used in `love.draw`, and to render the trajectory with a series of semitransparent circles.
 
-### Physics
+## Concluding remarks
 
-The game uses plenty of functions from the `love.physics` module. Here, however, I want to highlight `body:applyLinearImpulse` and `body:setLinearDamping`.
+A few notes for posterity's sake.
 
-`applyLinearImpulse` is used to have the ball move toward the direction specified by the angle. This is using the values documented in the previous section.
+### Comments
 
-```lua
-player.body:applyLinearImpulse(impulseX, impulseY)
-```
+In `love.draw` there are a few instructions commented out. These are helpful to render the edges introduced by `love.physics`; edges which are however rendered with the panel component.
 
-`setLinearDamping` is instead helpful to have the balls slow down. Without this instruction, the movement of the ball becomes execessively tedious, slow.
+### constants
 
-```lua
-player.body:setLinearDamping(0.35)
-```
+Beside variables describing the game's physics and sizes, two values are worth a detailed mention
 
-One last mention is for `fixture:setSensor()`. This function is used on the bodies making up the pockets so that `beginContact` registers an eventual collision, but the update function doesn't consider the body as solid.
+- in terms of aesthetics, `SEGMENTS` is used to refine the edges of the circles used with `love.graphics`
 
-```lua
-fixture:setUserData("Pocket")
-fixture:setSensor(true)
-```
+  ```lua
+  SEGMENTS = 20
+  ```
+
+  `love.graphics.circle` accepts an additional argument to specify the number of segments with which to render the circle. The higher the value, the smoother the circle's appearance.
+
+- in terms of aesthetics, but also gameplay, POCKET_PADDING describes the part of the pocket with which the balls actually collide
+
+  The idea is to here reduce the radius of the shape making up the pocket.
+
+  ```lua
+  love.physics.newCircleShape(POCKET_RADIUS - POCKET_PADDING)
+  ```
+
+  In `love.draw` then, the idea is to increase the radius by the same amount.
+
+  ```lua
+  love.graphics.circle("fill", pocket.body:getX(), pocket.body:getY(), pocket.shape:getRadius() + POCKET_PADDING)
+  ```
+
+  The goal is to ultimately pocket a ball only when the ball is well inside the pocket. To see the actual pocket, as in world-units, remove the constant in `love.draw`.
+
+  ```lua
+  love.graphics.circle("fill", pocket.body:getX(), pocket.body:getY(), pocket.shape:getRadius())
+  ```
