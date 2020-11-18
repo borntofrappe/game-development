@@ -54,7 +54,7 @@ function Launcher:render()
   self.panel:render()
   self.slider:render()
 
-  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setColor(0.9, 0.9, 0.9)
   love.graphics.setFont(gFonts["ui"])
   love.graphics.print("MIN", self.panel.x + 16, self.slider.y - 20 - gFonts["ui"]:getHeight())
   love.graphics.print(

@@ -20,7 +20,7 @@ function Panel:new(def)
 end
 
 function Panel:render()
-  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setColor(0.73, 0.42, 0.05)
   love.graphics.setLineWidth(self.lineWidth)
   love.graphics.rectangle("line", self.x, self.y, self.width, self.height, self.rx)
 end

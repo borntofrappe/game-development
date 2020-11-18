@@ -48,7 +48,7 @@ end
 function Pocketed:render()
   self.panel:render()
 
-  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setColor(0.9, 0.9, 0.9)
   if #self.balls > 0 then
     for i, ball in ipairs(self.balls) do
       love.graphics.setLineWidth(3)

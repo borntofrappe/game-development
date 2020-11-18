@@ -3,7 +3,7 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Side Pocket")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.95, 0.95, 0.95)
+  love.graphics.setBackgroundColor(0.02, 0.3, 0.13)
 
   isMoving = false
   isLaunching = false
@@ -144,7 +144,7 @@ function initializeBalls()
     ballY = surface.y + surface.height / 2 - (i - 1) * BALL_RADIUS
     for j = 1, i do
       local number = ballCounter
-      local color = {["r"] = 0.3, ["g"] = 0.3, ["b"] = 0.3}
+      local color = {["r"] = 0.95, ["g"] = 0.95, ["b"] = 0.95}
       local ball = Ball:new(world, ballX, ballY, BALL_RADIUS, number, color)
       ball.fixture:setRestitution(0.85)
       ball.fixture:setUserData("Ball")
@@ -298,7 +298,7 @@ function love.draw()
   surface:render()
 
   for i, pocket in ipairs(pockets) do
-    love.graphics.setColor(0.2, 0.2, 0.2)
+    love.graphics.setColor(0.1, 0.12, 0.12)
     love.graphics.circle("fill", pocket.body:getX(), pocket.body:getY(), pocket.shape:getRadius() + POCKET_PADDING)
   end
 
@@ -319,9 +319,9 @@ function love.draw()
           y > surface.y + surface.lineWidth / 2 + BALL_RADIUS and
           y < surface.y + surface.height - surface.lineWidth / 2 - BALL_RADIUS
        then
-        love.graphics.setColor(0.2, 0.2, 0.2, 0.25)
+        love.graphics.setColor(0.9, 0.9, 0.9, 0.5)
         love.graphics.circle("line", x, y, BALL_RADIUS)
-        love.graphics.setColor(0.2, 0.2, 0.2, 0.05)
+        love.graphics.setColor(0.9, 0.9, 0.9, 0.1)
         love.graphics.circle("fill", x, y, BALL_RADIUS)
       end
     end

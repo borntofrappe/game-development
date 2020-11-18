@@ -48,11 +48,12 @@ end
 
 function Slider:render()
   self.panel:render()
-  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setColor(0.9, 0.9, 0.9)
   love.graphics.circle(
     "fill",
     self.x + self.offset + self.radius + ((self.width - (self.offset + self.radius) * 2) * self.value / 100),
     self.y + self.height / 2,
-    self.radius
+    self.radius,
+    SEGMENTS
   )
 end

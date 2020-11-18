@@ -12,9 +12,9 @@ function Ball:new(world, cx, cy, r, number, color)
     ["number"] = number or 0,
     ["color"] = color or
       {
-        ["r"] = 0.6,
-        ["g"] = 0.6,
-        ["b"] = 0.6
+        ["r"] = 0.75,
+        ["g"] = 0.75,
+        ["b"] = 0.75
       },
     ["showNumber"] = false
   }
@@ -40,6 +40,6 @@ function Ball:render()
     love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
   else
     love.graphics.setColor(self.color.r, self.color.g, self.color.b)
-    love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius())
+    love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius(), SEGMENTS)
   end
 end
