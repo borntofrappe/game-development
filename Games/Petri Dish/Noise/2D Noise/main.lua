@@ -1,16 +1,12 @@
-WINDOW_WIDTH = 400
-WINDOW_HEIGHT = 400
-OFFSET_INCREMENT = 0.01
-OFFSET_INCREMENT_MAX = 0.05
-OFFSET_INCREMENT_MIN = 0.005
-OFFSET_INCREMENT_CHANGE = 0.005
+WINDOW_WIDTH = 620
+WINDOW_HEIGHT = 480
 
 function love.load()
   love.window.setTitle("2D Noise")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.8, 0.8, 0.8)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
-  offsetIncrement = OFFSET_INCREMENT
+  offsetIncrement = 0.01
   grid = makeGrid(offsetIncrement)
 end
 
@@ -35,14 +31,6 @@ end
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
-  end
-
-  if key == "down" then
-    offsetIncrement = math.max(OFFSET_INCREMENT_MIN, offsetIncrement - OFFSET_INCREMENT_CHANGE)
-    grid = makeGrid(offsetIncrement)
-  elseif key == "up" then
-    offsetIncrement = math.min(OFFSET_INCREMENT_MAX, offsetIncrement + OFFSET_INCREMENT_CHANGE)
-    grid = makeGrid(offsetIncrement)
   end
 end
 
