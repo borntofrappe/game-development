@@ -8,6 +8,10 @@ Using `love.math.noise` then, the goal is to animate the cell to draw a circle, 
 
 In the `Noise` folder I explore `love.math.noise` with the ultimate goal of building the foundation for the blob-like animation.
 
+## Timer
+
+In the `Timer` folder I try to recreate the functionality of the knife library, with a series of files dedicated to create and manage timers, delays, tweens.
+
 ## Resources
 
 - [Wikipedia entry for agar.io](https://en.wikipedia.org/wiki/Agar.io)
