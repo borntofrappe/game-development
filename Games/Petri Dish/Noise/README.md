@@ -183,6 +183,10 @@ local offsetY = offsetStart + math.sin(i) * multiplier
 
 `multiplier` considers the horizontal coordinate of the mouse cursor, so that as the mouse moves to the right of the screen, the shape becomes less and less circular. The shape is however and always closing itself.
 
+## 2D Noise walk
+
+The goal of this demo is to illustrate how and why the demo `Circle 2D noise` produces a shape which closes itself. It is based on the project shown at roughly second 38 of [this coding challenge from The Coding Train](https://youtu.be/c6K-wJQ77yQ?t=38).
+
 ## Resources
 
 - [Coding Train on noise loops](https://thecodingtrain.com/CodingChallenges/136.1-polar-perlin-noise-loops.html)
