@@ -143,3 +143,33 @@ offset = offset + OFFSET_INCREMENT
 ```
 
 The higher the increment, the greater the difference between the points. To showcase this, I've modified `makeCircle` to return the points based on two arguments, the radius and the offset. In `love.update` then, I use the horizontal position of the mouse cursor to show different offset values.
+
+## Circle 2D noise
+
+Building on top of the code described in `Circle noise`, the goal is to create a shape which closes itself. A shape in which the first and last point match.
+
+This is achieved by having `love.math.noise` use two arguments, and have these arguments describe an offset in two dimensions.
+
+```lua
+local offsetX = ???
+local offsetY = ???
+local r = radius / 2 + love.math.noise(offsetX, offsetY) * radius / 2
+```
+
+To have the first and last offset match, it is possible once again to use the polar coordinates.
+
+```lua
+local offsetX = offsetStart + math.cos(i)
+local offsetY = offsetStart + math.sin(i)
+```
+
+Since the counter variable varies in the `[0, math.pi * 2]` range, the first and last offset describe the same values.
+
+Once again, I modify the demo to have the `update` function react to the mouse coordinate. The idea is to here modify the offset values to provide more/less change between individual points.
+
+```lua
+local offsetX = offsetStart + math.cos(i) * multiplier
+local offsetY = offsetStart + math.sin(i) * multiplier
+```
+
+`multiplier` considers once more the horizontal coordinate of the mouse cursor, so that as the mouse moves to the right of the screen, the shape becomes less and less circular. The shape is however and always closing itself.
