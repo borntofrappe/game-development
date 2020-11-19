@@ -1,19 +1,20 @@
 # Noise
 
-This folder works as a spiritual successor to `Lunar Lander/Noise`. The goal is to experiment with `love.math.noise`, particularly with two offset values, to draw an irregular circle.
+This folder works as a spiritual successor to `Lunar Lander/Noise`. The goal is to experiment with `love.math.noise`, particularly with two offset values.
 
 ## 2D Noise
 
 The demo illustrates how the `love.math.noise` function accepts multiple arguments.
 
-`makeGrid` builds a two-dimensional table in which each individual cell describes a number in the `[0,1]` range, with the goal of using the value for the alpha channel of a dark rectangle.
+`makeGrid` builds a two-dimensional table where each individual cell describes a number in the `[0,1]` range. The goal is to use this value for the alpha channel of a black rectangle.
 
 ```lua
-grid = {}
-for x = 1, WINDOW_WIDTH + 1 do
-  grid[x] = {}
-  for y = 1, WINDOW_HEIGHT + 1 do
-    grid[x][y] = love.math.noise(???, ???)
+for column = 1, columns do
+  grid[column] = {}
+  for row = 1, rows + 1 do
+    grid[column][row] = {
+      ["alpha"] = love.math.noise(???, ???)
+    }
   end
 end
 ```
@@ -23,34 +24,38 @@ The arguments describe the offset in the `x` and `y` dimension, and are updated 
 - in the innermost loop update `offsetY`
 
   ```lua
-  for y = 1, WINDOW_HEIGHT + 1 do
-    offsetY = offsetY + increment
+  for row = 1, rows + 1 do
+    offsetRow = offsetRow + OFFSET_INCREMENT
   end
   ```
 
-- in the outer loop increment `offsetX`
+- before the end of the outer loop increment `offsetX`
 
   ```lua
-  for x = 1, WINDOW_WIDTH + 1 do
-    for y = 1, WINDOW_HEIGHT + 1 do
+  for column = 1, columns do
+    for row = 1, rows + 1 do
+      -- update offset row
     end
-    offsetX = offsetX + increment
+    offsetColumn = offsetColumn + OFFSET_INCREMENT
   end
   ```
 
 This works, but creates a connection between rows. For each column, it is necessary to reset `offsetY`, so that the first cell in the new column is connected to the last cell of the column coming before it.
 
 ```lua
-for x = 1, WINDOW_WIDTH + 1 do
-  offsetY = 0
+for column = 1, columns do
+  offsetRow = 0
+  -- update offset values
 end
 ```
 
 ## Circle noise
 
-The demo works to show how a circle can be drawn with a series of points. By then modifying the position of these points with a noise function, the goal is to create irregular, yet smooth circular shapes.
+The demo works to show how a circle can be drawn with a series of points, and how a noise function is able to render a circle with smooth irregularities.
 
-The points are computed using the `cos` and `sin` functions from the `math` module.
+### Points
+
+The points benefit from the polar coordinates computed using the `cos` and `sin` functions.
 
 ```lua
 for i = 0, math.pi * 2, math.pi * 2 / 1000 do
@@ -67,7 +72,7 @@ Considering these points and `love.graphics`, it is actually possible to draw a 
 
    The idea is to draw circles with a very small radius in the coordinates specified by `x` and `y`. One way to achieve this is by collecting the coordinates in individual tables, and then loop through the points' table in `love.draw`.
 
-   In `love.load`
+   In `love.load`:
 
    ```lua
    for i = 0, math.pi * 2, math.pi * 2 / 1000 do
@@ -81,10 +86,10 @@ Considering these points and `love.graphics`, it is actually possible to draw a 
    end
    ```
 
-   In `love.draw`
+   In `love.draw`:
 
    ```lua
-   for k, point in ipairs(points) do
+   for i, point in ipairs(points) do
      love.graphics.circle("fill", point.x, point.y, 2)
    end
    ```
@@ -93,7 +98,7 @@ Considering these points and `love.graphics`, it is actually possible to draw a 
 
    The idea is to here draw a line connecting the various points. The function is able to receive a one dimensional table as its second argument, so that the data structure is slightly different.
 
-   In `love.load`, the coordinates are included one after the other
+   In `love.load`, the coordinates are included one after the other:
 
    ```lua
    for i = 0, math.pi * 2, math.pi * 2 / 1000 do
@@ -104,7 +109,7 @@ Considering these points and `love.graphics`, it is actually possible to draw a 
    end
    ```
 
-   In `love.draw`, the graphics' function uses the table directly
+   In `love.draw`, the graphics' function uses the table directly:
 
    ```lua
    love.graphics.polygon("line", points)
@@ -120,7 +125,9 @@ end
 
 With five points, you are essentially drawing a pentagon. With `love.graphics.polygon`, you see the polygon, while using `love.graphics.circle` you see only the vertices.
 
-Regardless of how the points are drawn, and for reference I will be using the second solution, randomness is introduced in the measure describing the radius. The goal is to modify the radius so that the `x` and `y` values are offset from their original position.
+### Noise
+
+Regardless of how the points are drawn (for reference I'll adopt the `polygon` function), randomness is introduced in the measure describing the radius. The goal is to modify the radius so that the `x` and `y` values are offset from their original position.
 
 ```lua
 local r = RADIUS / 2 + love.math.random() * RADIUS / 2
@@ -128,7 +135,7 @@ local x = r * math.cos(i)
 local y = r * math.sin(i)
 ```
 
-Here the radius varies in the `[RADIUS / 2, RADIUS]` range, since `love.math.random` returns a value in the `[0, 1]` range.
+Here the radius varies in the `[RADIUS / 2, RADIUS]` range, since `love.math.random` returns a value in the `[0, 1]` range. The snippet finally creates a shape with jagged edges, as there is not connection between successive points.
 
 To have the radius change smoothly, randomness is introduced with `love.math.noise` instead.
 
@@ -142,7 +149,9 @@ local r = RADIUS / 2 + love.math.noise(offset) * RADIUS / 2
 offset = offset + OFFSET_INCREMENT
 ```
 
-The higher the increment, the greater the difference between the points. To showcase this, I've modified `makeCircle` to return the points based on two arguments, the radius and the offset. In `love.update` then, I use the horizontal position of the mouse cursor to show different offset values.
+The higher the increment, the greater the difference between the points.
+
+_Please note_: the demo is updated so that it considers the position of the mouse cursor. As the mouse moves horizontally, the idea is to create a circle with an offset proportional to the `x` coordinate.
 
 ## Circle 2D noise
 
@@ -165,11 +174,17 @@ local offsetY = offsetStart + math.sin(i)
 
 Since the counter variable varies in the `[0, math.pi * 2]` range, the first and last offset describe the same values.
 
-Once again, I modify the demo to have the `update` function react to the mouse coordinate. The idea is to here modify the offset values to provide more/less change between individual points.
+_Please note_: once again, I modified the demo to have the `update` function react to the position of the mouse cursor. The idea is to here modify the offset values to provide more/less change between individual points.
 
 ```lua
 local offsetX = offsetStart + math.cos(i) * multiplier
 local offsetY = offsetStart + math.sin(i) * multiplier
 ```
 
-`multiplier` considers once more the horizontal coordinate of the mouse cursor, so that as the mouse moves to the right of the screen, the shape becomes less and less circular. The shape is however and always closing itself.
+`multiplier` considers the horizontal coordinate of the mouse cursor, so that as the mouse moves to the right of the screen, the shape becomes less and less circular. The shape is however and always closing itself.
+
+## Resources
+
+- [Coding Train on noise loops](https://thecodingtrain.com/CodingChallenges/136.1-polar-perlin-noise-loops.html)
+
+- [Coding Train on Perlin noise GIF loops](https://thecodingtrain.com/CodingChallenges/136.2-perlin-noise-gif-loops)
