@@ -33,11 +33,14 @@ function Timer:every(dt, callback, label)
   table.insert(self.intervals, interval)
 end
 
+function Timer:tween()
+  -- ???
+end
+
 function Timer:update(dt)
   for i, delay in ipairs(self.delays) do
     delay.timer = delay.timer + dt
     if delay.timer >= delay.dt then
-      delay.timer = 0
       delay.callback()
       table.remove(self.delays, i)
     end
