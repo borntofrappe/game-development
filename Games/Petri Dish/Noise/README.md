@@ -1,10 +1,10 @@
 # Noise
 
-This folder works as a spiritual successor to `Lunar Lander/Noise`. The goal is to experiment with `love.math.noise`, particularly with two offset values.
+The goal is to experiment with `love.math.noise`, particularly with two offset values.
 
 ## 2D Noise
 
-The demo illustrates how the `love.math.noise` function accepts multiple arguments.
+The demo illustrates how the `love.math.noise` function works with multiple — two — arguments.
 
 `makeGrid` builds a two-dimensional table where each individual cell describes a number in the `[0,1]` range. The goal is to use this value for the alpha channel of a black rectangle.
 
@@ -49,13 +49,55 @@ for column = 1, columns do
 end
 ```
 
+Consider the following visual
+
+<svg viewBox="0 0 100 100" width="200" height="200">
+<pattern id="polka-dots-1" viewBox="-5 -5 10 10" width="0.2" height="0.2">
+<circle r="2" />
+</pattern>
+
+<rect width="100" height="100" fill="url(#polka-dots-1)" />
+</svg>
+
+Without resetting the offset in the row dimension, it is as if the connection exists between columns. The first cell of a column is connected to the last cell of the column before it. See the reddish dots.
+
+<svg viewBox="0 0 100 100" width="200" height="200">
+<pattern id="polka-dots-2" viewBox="-5 -5 10 10" width="0.2" height="0.2">
+<circle r="2" />
+</pattern>
+
+<rect width="100" height="100" fill="url(#polka-dots-2)" />
+<g fill="hsl(0, 90%, 48%)">
+  <circle r="5" cx="30" cy="10" />
+  <g opacity="0.75">
+    <circle  r="5" cx="10" cy="90" />
+  </g>
+</g>
+</svg>
+
+By resetting the value, it is instead connected to the neighboring cell.
+
+<svg viewBox="0 0 100 100" width="200" height="200">
+<pattern id="polka-dots-3" viewBox="-5 -5 10 10" width="0.2" height="0.2">
+<circle r="2" />
+</pattern>
+
+<rect width="100" height="100" fill="url(#polka-dots-3)" />
+<g fill="hsl(0, 90%, 48%)">
+  <circle r="5" cx="30" cy="10" />
+  <g opacity="0.75">
+    <circle  r="5" cx="10" cy="10" />
+  </g>
+</g>
+</svg>
+
 ## Circle noise
 
 The demo works to show how a circle can be drawn with a series of points, and how a noise function is able to render a circle with smooth irregularities.
 
 ### Points
 
-The points benefit from the polar coordinates computed using the `cos` and `sin` functions.
+The idea is to compute the polar coordinates of a series of points using the `cos` and `sin` functions. These essentially trace the outline of a circle.
 
 ```lua
 for i = 0, math.pi * 2, math.pi * 2 / 1000 do
@@ -174,6 +216,30 @@ local offsetY = offsetStart + math.sin(i)
 
 Since the counter variable varies in the `[0, math.pi * 2]` range, the first and last offset describe the same values.
 
+Considering the following, simplified noise field, it is essentially as if you are taking the offset values in a circle.
+
+<svg viewBox="0 0 100 100" width="200" height="200">
+<pattern id="polka-dots-3" viewBox="-5 -5 10 10" width="0.2" height="0.2">
+<circle r="2" />
+</pattern>
+
+<rect width="100" height="100" fill="url(#polka-dots-3)" />
+<g fill="hsl(0, 90%, 48%)">
+  <circle r="5" cx="50" cy="10" />
+  <g opacity="0.75">
+    <circle  r="5" cx="70" cy="30" />
+    <circle  r="5" cx="90" cy="50" />
+    <circle  r="5" cx="70" cy="70" />
+    <circle  r="5" cx="50" cy="90" />
+    <circle  r="5" cx="30" cy="70" />
+    <circle  r="5" cx="10" cy="50" />
+    <circle  r="5" cx="30" cy="30" />
+  </g>
+</g>
+</svg>
+
+By walking through the circle, the first and last offset provide the same value.
+
 _Please note_: once again, I modified the demo to have the `update` function react to the position of the mouse cursor. The idea is to here modify the offset values to provide more/less change between individual points.
 
 ```lua
@@ -187,7 +253,41 @@ local offsetY = offsetStart + math.sin(i) * multiplier
 
 The goal of this demo is to illustrate how and why the demo `Circle 2D noise` produces a shape which closes itself. It is based on the project shown at roughly second 38 of [this coding challenge from The Coding Train](https://youtu.be/c6K-wJQ77yQ?t=38).
 
-## Resources
+Starting from `love.load`, the demo can be explained as follows:
+
+- create a noise field in the top section of the screen, using the `makeGrid` function first developed in `2D Noise`.
+
+  The function provides a series of cells in a 2D space, with a distinct alpha value. The alpha value is finally used for the opacity of the individual cell.
+
+  _Please note_: the alpha value is in the `[0, 1]` range
+
+- compute the `x` and `y` coordinates of a circle in the top section of the screen
+
+  The idea is to ultimately loop through the points of this circle to find the alpha values of the corresponding cells
+
+- create a table in which to store the `x` and `y` coordinates for a line drawn in the bottom section
+
+  The coordinates are computed by looping through the points of the circle.
+
+  Horizontally, the idea is to consider a fraction of the width, so that the line goes from end to end.
+
+  Vertically, the idea is to instead consider the alpha value of the cell matching the coordinate of the individual point.
+
+  _Please note_: the value in the `[0, 1]` range is mapped to the height of the available space. In this instance, the height of the window minus the height of the grid describing the noise field.
+
+The logic works to provide the necessary data for `love.draw`:
+
+- `grid` describes a two-dimensional table in order to draw a series of rectangles in two dimensions
+
+- `points` describes the points for the circle overlapping the grid
+
+- `values` describes the points for the line connecting the points and grid
+
+_Please note_: in order to highlight the relation between the noise field and the line below, and to stress how the shape closes itself, `love.load` introduces a counter variable in `index`. This one is used to highlight the individual point in the circle in the top section, and the individual point in the line below.
+
+The goal is to show how the first and last point match, thanks to the circular pattern, but to also stress the connection between the two areas:. Lighter values in the noise field — with lower opacity — correspond to taller points in the line — with smaller `y` values from the top.
+
+## Helpful resources
 
 - [Coding Train on noise loops](https://thecodingtrain.com/CodingChallenges/136.1-polar-perlin-noise-loops.html)
 

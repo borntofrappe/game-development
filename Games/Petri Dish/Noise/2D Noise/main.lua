@@ -8,7 +8,6 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(1, 1, 1)
 
-  offsetIncrement = 0.01
   grid = makeGrid(WINDOW_WIDTH, WINDOW_HEIGHT, CELL_SIZE)
 end
 

@@ -2,6 +2,7 @@ WINDOW_WIDTH = 480
 WINDOW_HEIGHT = 480
 RADIUS = WINDOW_WIDTH / 4
 OFFSET_MULTIPLIER = 0.1
+OFFSET_INITIAL_MAX = 1000
 POINTS = 50
 
 function love.load()
@@ -9,13 +10,13 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(1, 1, 1)
 
-  points = makeCircle(OFFSET_MULTIPLIER)
+  points = getPoints(OFFSET_MULTIPLIER)
   previousMultiplier = OFFSET_MULTIPLIER
 end
 
-function makeCircle(multiplier)
+function getPoints(multiplier)
   local points = {}
-  local offsetStart = love.math.random(1000)
+  local offsetStart = love.math.random(OFFSET_INITIAL_MAX)
 
   for i = 0, math.pi * 2, math.pi * 2 / POINTS do
     local offsetX = offsetStart + math.cos(i) * multiplier
@@ -41,7 +42,7 @@ function love.update(dt)
   local x, y = love.mouse:getPosition()
   local offsetMultiplier = x / WINDOW_WIDTH
   if offsetMultiplier ~= previousMultiplier then
-    points = makeCircle(offsetMultiplier)
+    points = getPoints(offsetMultiplier)
     previousMultiplier = offsetMultiplier
   end
 end

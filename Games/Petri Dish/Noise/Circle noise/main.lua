@@ -2,6 +2,7 @@ WINDOW_WIDTH = 480
 WINDOW_HEIGHT = 480
 RADIUS = WINDOW_WIDTH / 4
 OFFSET_INCREMENT = 0.1
+OFFSET_INITIAL_MAX = 1000
 POINTS = 50
 
 function love.load()
@@ -9,15 +10,15 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(1, 1, 1)
 
-  points = makeCircle(OFFSET_INCREMENT)
+  points = getPoints(OFFSET_INCREMENT)
+  -- previous value to avoid calling `getPoints` continuously with the same offset
   previousIncrement = OFFSET_INCREMENT
 end
 
-function makeCircle(offsetIncrement)
+function getPoints(offsetIncrement)
   local points = {}
-  local offset = love.math.random(1000)
+  local offset = love.math.random(OFFSET_INITIAL_MAX)
   for i = 0, math.pi * 2, math.pi * 2 / POINTS do
-    -- local r = RADIUS / 2 + love.math.random() * RADIUS / 2
     local r = RADIUS / 2 + love.math.noise(offset) * RADIUS / 2
     local x = r * math.cos(i)
     local y = r * math.sin(i)
@@ -40,7 +41,7 @@ function love.update(dt)
   local x, y = love.mouse:getPosition()
   local offsetIncrement = x / WINDOW_WIDTH
   if offsetIncrement ~= previousIncrement then
-    points = makeCircle(offsetIncrement)
+    points = getPoints(offsetIncrement)
     previousIncrement = offsetIncrement
   end
 end

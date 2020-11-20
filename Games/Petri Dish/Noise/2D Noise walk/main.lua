@@ -2,6 +2,7 @@ WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 480
 CELL_SIZE = 5
 OFFSET_INCREMENT = 0.02
+OFFSET_INITIAL_MAX = 1000
 
 GRID_WIDTH = WINDOW_WIDTH
 GRID_HEIGHT = 360
@@ -17,10 +18,9 @@ function love.load()
 
   timer = 0
 
-  offsetStart = love.math.random(1000)
+  offsetStart = love.math.random(OFFSET_INITIAL_MAX)
   grid = makeGrid(GRID_WIDTH, GRID_HEIGHT, CELL_SIZE)
   points = getPoints(GRID_WIDTH / 2, GRID_HEIGHT / 2, GRID_HEIGHT / 4)
-  index = 1
 
   values = {}
   for i = 1, POINTS * 2 + 2, 2 do
@@ -32,6 +32,8 @@ function love.load()
     table.insert(values, (i - 1) / 2 * WINDOW_WIDTH / POINTS)
     table.insert(values, GRID_HEIGHT + alpha * (WINDOW_HEIGHT - GRID_HEIGHT))
   end
+
+  index = 1
 end
 
 function getPoints(startX, startY, radius)
@@ -96,6 +98,11 @@ function love.draw()
       love.graphics.rectangle("fill", (cell.column - 1) * cell.size, (cell.row - 1) * cell.size, cell.size, cell.size)
     end
   end
+
+  -- love.graphics.setColor(1, 1, 1)
+  -- love.graphics.setLineWidth(2)
+  -- love.graphics.line(points)
+
   love.graphics.setColor(0, 1, 0)
   love.graphics.circle("fill", points[index], points[index + 1], 5)
 

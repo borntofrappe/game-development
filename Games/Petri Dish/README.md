@@ -6,11 +6,11 @@ Using `love.math.noise` then, the goal is to animate the cell to draw a circle, 
 
 ## Noise
 
-In the `Noise` folder I explore `love.math.noise` with the ultimate goal of building the foundation for the blob-like animation.
+In the `Noise` folder I explore `love.math.noise` with the ultimate goal of building the foundation for the blob-like animation. The folder works as a spiritual successor to `Lunar Lander/Noise`, and discusses noise functions with two arguments.
 
 ## Timer
 
-In the `Timer` folder I try to recreate the functionality of the knife library, with a series of files dedicated to create and manage timers, delays, tweens.
+In the `Timer` folder I try to recreate the functionality of the knife library, in order to manage a delay, interval, and ultimately tween animation. This last function is especially useful to modify the size of the blob in the final game.
 
 ## Resources
 
