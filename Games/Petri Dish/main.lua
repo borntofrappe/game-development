@@ -21,6 +21,28 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
+  Timer:update(dt)
+  if love.mouse.isDown(1) then
+    local x, y = love.mouse:getPosition()
+    Timer:after(
+      0.1,
+      function()
+        for i, tween in ipairs(Timer.tweens) do
+          if tween.label == "player" then
+            table.remove(Timer.tweens, i)
+          end
+        end
+
+        Timer:tween(
+          0.5,
+          {
+            [player] = {["x"] = x, ["y"] = y}
+          },
+          "player"
+        )
+      end
+    )
+  end
 end
 
 function love.draw()
