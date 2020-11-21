@@ -17,12 +17,14 @@ function Player:assimilate(particle)
     end
   end
 
-  local r = particle.r
+  local area = math.pi * self.r ^ 2 + math.pi * particle.r ^ 2
+  local r = (area / math.pi) ^ 0.5
+
   local color = particle.color
   Timer:tween(
     0.2,
     {
-      [self] = {["r"] = self.r + r},
+      [self] = {["r"] = r},
       [self.color] = {
         ["r"] = color.r,
         ["g"] = color.g,

@@ -8,14 +8,14 @@ function love.load()
   player = Player:new()
   particles = {}
   for i = 0, PARTICLES do
-    local x = love.math.random(-WINDOW_WIDTH, WINDOW_WIDTH)
-    local y = love.math.random(-WINDOW_HEIGHT, WINDOW_HEIGHT)
-    table.insert(particles, Particle:new(x, y, PARTICLE_RADIUS))
+    local x = love.math.random(math.floor(-WINDOW_WIDTH / 2), math.floor(WINDOW_WIDTH / 2))
+    local y = love.math.random(math.floor(-WINDOW_HEIGHT / 2), math.floor(WINDOW_HEIGHT / 2))
+    table.insert(particles, Particle:new(x, y, player.r / PARTICLE_RADIUS_FRACTION))
   end
 
   translate = {
-    ["x"] = WINDOW_WIDTH / 2,
-    ["y"] = WINDOW_HEIGHT / 2
+    ["x"] = 0,
+    ["y"] = 0
   }
 end
 
@@ -44,7 +44,7 @@ function love.update(dt)
           0.15,
           {
             [player] = {["x"] = player.x + x, ["y"] = player.y + y},
-            [translate] = {["x"] = WINDOW_WIDTH / 2 - player.x - x, ["y"] = WINDOW_HEIGHT / 2 - player.y - y}
+            [translate] = {["x"] = -player.x - x, ["y"] = -player.y - y}
           },
           "translate"
         )
@@ -56,11 +56,17 @@ function love.update(dt)
     if player:collides(particle) then
       table.remove(particles, i)
       player:assimilate(particle)
+
+      local x = (love.math.random() - 0.5) * WINDOW_WIDTH * player.r / PLAYER_RADIUS
+      local y = (love.math.random() - 0.5) * WINDOW_HEIGHT * player.r / PLAYER_RADIUS
+      table.insert(particles, Particle:new(x, y, player.r / PARTICLE_RADIUS_FRACTION))
     end
   end
 end
 
 function love.draw()
+  love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+  love.graphics.scale(PLAYER_RADIUS / player.r)
   love.graphics.translate(translate.x, translate.y)
   for i, particle in ipairs(particles) do
     particle:render()
