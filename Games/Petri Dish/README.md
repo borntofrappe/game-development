@@ -19,3 +19,10 @@ In the `Timer` folder I try to recreate the functionality of the knife library, 
 - [Coding Train on agar.io](https://thecodingtrain.com/CodingChallenges/032.1-agar.html)
 
 - [Coding Train on blobs created with noise](https://thecodingtrain.com/CodingChallenges/036-blobby)
+
+- fix translation
+- fix gameplay: radius, area and scale
+- animate blob
+  - add noise
+  - animate offset for a full rotation
+  - remove noise
