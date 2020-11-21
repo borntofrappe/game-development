@@ -28,8 +28,6 @@ function love.update(dt)
   Timer:update(dt)
   if love.mouse.isDown(1) then
     local x, y = love.mouse:getPosition()
-    local dx = player.x - x
-    local dy = player.y - y
     Timer:after(
       0.1,
       function()
@@ -42,18 +40,24 @@ function love.update(dt)
         Timer:tween(
           0.5,
           {
-            [translation] = {["x"] = translation.x + dx, ["y"] = translation.y + dy}
+            [player] = {["x"] = x, ["y"] = y}
           },
           "translation"
         )
       end
     )
   end
+
+  for i, particle in ipairs(particles) do
+    if player:collides(particle) then
+      table.remove(particles, i)
+      player:grow(particle.r)
+    end
+  end
 end
 
 function love.draw()
   player:render()
-  love.graphics.translate(translation.x, translation.y)
   for i, particle in ipairs(particles) do
     particle:render()
   end
