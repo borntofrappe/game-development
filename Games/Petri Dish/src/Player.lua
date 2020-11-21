@@ -1,0 +1,1 @@
+Player = Particle:new(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, PLAYER_RADIUS)

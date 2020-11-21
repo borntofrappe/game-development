@@ -1,9 +1,17 @@
--- good luck
-WINDOW_WIDTH = 620
-WINDOW_HEIGHT = 480
+require "src/Dependencies"
 
 function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
+  love.window.setTitle("Petri Dish")
+  love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
+
+  player = Player:new()
+  particles = {}
+  for i = 0, PARTICLES do
+    local x = love.math.random(WINDOW_WIDTH)
+    local y = love.math.random(WINDOW_HEIGHT)
+    table.insert(particles, Particle:new(x, y, PARTICLE_RADIUS))
+  end
 end
 
 function love.keypressed(key)
@@ -16,5 +24,8 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.printf("Good luck", 0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, "center")
+  for i, particle in ipairs(particles) do
+    particle:render()
+  end
+  player:render()
 end
