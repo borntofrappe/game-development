@@ -7,7 +7,7 @@ function love.load()
 
   player = Particle:new(0, 0, PLAYER_RADIUS)
   particles = {}
-  for i = 0, PARTICLES do
+  for i = 1, PARTICLES do
     local r = love.math.random(PARTICLE_RADIUS_MIN, PARTICLE_RADIUS_MAX)
     local x = love.math.random(-WINDOW_WIDTH, WINDOW_WIDTH)
     local y = love.math.random(-WINDOW_HEIGHT, WINDOW_HEIGHT)
@@ -24,6 +24,10 @@ function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
+
+  if key == "a" then
+    addParticle()
+  end
 end
 
 function love.update(dt)
@@ -32,7 +36,7 @@ function love.update(dt)
     love.keyboard.isDown("up") or love.keyboard.isDown("right") or love.keyboard.isDown("down") or
       love.keyboard.isDown("left")
    then
-    speed = {
+    local speed = {
       ["x"] = 0,
       ["y"] = 0
     }
@@ -81,11 +85,22 @@ function love.update(dt)
 
   player:update(dt)
   for i, particle in ipairs(particles) do
+    particle:update(dt)
     if player:collides(particle) then
       player:assimilates(particle)
       table.remove(particles, i)
+      addParticle()
     end
-    particle:update(dt)
+
+    if
+      particle.x < player.x - (WINDOW_WIDTH * 2 * player.r / PLAYER_RADIUS) or
+        particle.x > player.x + (WINDOW_WIDTH * 2 * player.r / PLAYER_RADIUS) or
+        particle.y < player.y - (WINDOW_HEIGHT * 2 * player.r / PLAYER_RADIUS) or
+        particle.y > player.y + (WINDOW_HEIGHT * 2 * player.r / PLAYER_RADIUS)
+     then
+      table.remove(particles, i)
+      addParticle()
+    end
   end
 end
 
@@ -99,4 +114,15 @@ function love.draw()
     particle:render()
   end
   player:render()
+end
+
+function addParticle()
+  local angle = love.math.random() * math.pi * 2
+  local distance = math.max(WINDOW_WIDTH, WINDOW_HEIGHT) * player.r / PLAYER_RADIUS
+
+  local x = math.floor(player.x + math.cos(angle) * distance)
+  local y = math.floor(player.y + math.sin(angle) * distance)
+
+  local r = math.floor(love.math.random(PARTICLE_RADIUS_MIN, PARTICLE_RADIUS_MAX) * player.r / PLAYER_RADIUS)
+  table.insert(particles, Particle:new(x, y, r))
 end

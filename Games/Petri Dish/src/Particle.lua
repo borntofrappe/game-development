@@ -4,7 +4,7 @@ Particle.__index = Particle
 function Particle:new(x, y, r)
   local offset = love.math.random(OFFSET_INITIAL_MAX)
   local angleChange = love.math.random(ANGLE_CHANGE_MIN, ANGLE_CHANGE_MAX)
-  local points, noises = self:getPoints(x, y, r, offset)
+  local points, noises = self:getShape(x, y, r, offset)
 
   this = {
     ["x"] = x,
@@ -29,7 +29,7 @@ function Particle:update(dt)
   if math.abs(self.angle) > math.pi * 2 then
     self.angle = self.angle % math.pi * 2
   end
-  self.points = self:getPoints(self.x, self.y, self.r, self.offset)
+  self.points, self.noises = self:getShape(self.x, self.y, self.r, self.offset)
 end
 
 function Particle:render()
@@ -45,7 +45,7 @@ function Particle:collides(particle)
     self.r + particle.r - COLLISION_OVERLAP
 end
 
-function Particle:getPoints(x, y, r, offset)
+function Particle:getShape(x, y, r, offset)
   local points = {}
   local noises = {}
   for i = 0, math.pi * 2, math.pi * 2 / POINTS do
@@ -72,7 +72,8 @@ function Particle:assimilates(particle)
     Timer:tween(
       0.2,
       {
-        [self.points] = {[i] = self.points[i] + particle.noises[i]}
+        [self.points] = {[i] = self.points[i] + particle.noises[i]},
+        [self.noises] = {[i] = self.noises[i] + particle.noises[i]}
       }
     )
 
@@ -87,5 +88,4 @@ function Particle:assimilates(particle)
       [self] = {["r"] = self.r + maxNoise, ["lineWidth"] = (self.r + maxNoise) ^ 0.3}
     }
   )
-  -- self.r = self.r + maxNoise
 end
