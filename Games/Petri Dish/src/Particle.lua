@@ -1,16 +1,18 @@
 Particle = {}
+Particle.__index = Particle
 
 function Particle:new(x, y, r)
   local offset = love.math.random(OFFSET_INITIAL_MAX)
   local angleChange = love.math.random(50, 100) / 100 * ANGLE_CHANGE_MAX
 
-  local points = self:getPoints(x, y, r, offset)
+  local points, noises = self:getPoints(x, y, r, offset)
 
   this = {
     ["x"] = x,
     ["y"] = y,
     ["r"] = r,
     ["points"] = points,
+    ["noises"] = noises,
     ["offset"] = offset,
     ["offsetInitial"] = offset,
     ["angle"] = 0,
@@ -19,7 +21,6 @@ function Particle:new(x, y, r)
   }
 
   setmetatable(this, self)
-  self.__index = self
   return this
 end
 
@@ -47,19 +48,45 @@ end
 
 function Particle:getPoints(x, y, r, offset)
   local points = {}
+  local noises = {}
   for i = 0, math.pi * 2, math.pi * 2 / POINTS do
     local offsetX = offset + math.cos(i)
     local offsetY = offset + math.sin(i)
 
-    local r = r * 6 / 7 + love.math.noise(offsetX, offsetY) * r / 7
+    local noise = love.math.noise(offsetX, offsetY) * r / 7
+    local r = r + noise
     local x = x + r * math.cos(i)
     local y = y + r * math.sin(i)
+
+    table.insert(noises, noise)
+    table.insert(noises, noise)
     table.insert(points, x)
     table.insert(points, y)
   end
 
-  return points
+  return points, noises
 end
 
 function Particle:assimilates(particle)
+  local maxNoise = 0
+  for i = 1, #self.points do
+    Timer:tween(
+      0.2,
+      {
+        [self.points] = {[i] = self.points[i] + particle.noises[i]}
+      }
+    )
+
+    if particle.noises[i] > maxNoise then
+      maxNoise = particle.noises[i]
+    end
+  end
+
+  Timer:tween(
+    0.2,
+    {
+      [self] = {["r"] = self.r + maxNoise, ["lineWidth"] = (self.r + maxNoise) ^ 0.3}
+    }
+  )
+  -- self.r = self.r + maxNoise
 end

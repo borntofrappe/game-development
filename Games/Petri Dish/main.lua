@@ -54,6 +54,10 @@ function love.update(dt)
 
   player:update(dt)
   for i, particle in ipairs(particles) do
+    if player:collides(particle) then
+      player:assimilates(particle)
+      table.remove(particles, i)
+    end
     particle:update(dt)
   end
 end
