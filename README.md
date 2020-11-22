@@ -24,22 +24,23 @@ The goal of this repo is two-fold:
 
   Here's a reference table listing the games in the order in which they are developed.
 
-  | Game             | Brief                                                   |
-  | ---------------- | ------------------------------------------------------- |
-  | 2 Player Pong    | Pong with a mobile interface and mouse input            |
-  | Bouncing Android | Flappy Bird inspired by the Lollipop OS                 |
-  | Space Invaders   | Space invaders inspired by title on the Game Boy Color  |
-  | Whirly Bird      | Doodle jump inspired by Google Play pre-installed games |
-  | Asteroids        | Asteroids with shapes from `love.graphics`              |
-  | Snake            | Snake with blocks and step animation                    |
-  | Picross          | Picross levels with keyboard and mouse input            |
-  | Tetris           | Tetris leveraging Lua's tables                          |
-  | Box2D Demos      | A series of physics-based experiments                   |
-  | Minesweeper      | Minesweeper with mouse input                            |
-  | Alien Jump       | An endless scroller inspired by Chrome's offline game   |
-  | Game of Life     | A fullscreen simulation of Conway's game of life        |
-  | Lunar Lander     | Lunar Lander with Box2D and `love.math.noise`           |
-  | Side Pocket      | Billiard with rounded rectangles and Box2D              |
+  | Game             | Brief                                                            |
+  | ---------------- | ---------------------------------------------------------------- |
+  | 2 Player Pong    | Pong with a mobile interface and mouse input                     |
+  | Bouncing Android | Flappy Bird inspired by the Lollipop OS                          |
+  | Space Invaders   | Space invaders inspired by title on the Game Boy Color           |
+  | Whirly Bird      | Doodle jump inspired by Google Play pre-installed games          |
+  | Asteroids        | Asteroids with shapes from `love.graphics`                       |
+  | Snake            | Snake with blocks and step animation                             |
+  | Picross          | Picross levels with keyboard and mouse input                     |
+  | Tetris           | Tetris leveraging Lua's tables                                   |
+  | Box2D Demos      | A series of physics-based experiments                            |
+  | Minesweeper      | Minesweeper with mouse input                                     |
+  | Alien Jump       | An endless scroller inspired by Chrome's offline game            |
+  | Game of Life     | A fullscreen simulation of Conway's game of life                 |
+  | Lunar Lander     | Lunar Lander with Box2D and `love.math.noise`                    |
+  | Side Pocket      | Billiard with rounded rectangles and Box2D                       |
+  | Petri Dish       | Time events and `love.math.noise` to animate irregular particles |
 
 ## How to run a game
 

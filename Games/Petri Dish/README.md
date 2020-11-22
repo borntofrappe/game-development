@@ -1,8 +1,10 @@
+closes 91
+
 # Petri Dish
 
 The goal is to create a game inspired by [agar.io](https://en.wikipedia.org/wiki/Agar.io), where a large particle assimilates neighboring, smaller units by entering into contact with them.
 
-Using `love.math.noise` then, the goal is to animate the cells to avoid a regular circle shape.
+Using `love.math.noise` then, the goal is to modify the particles to avoid a regular circle shape.
 
 ## Prep
 
@@ -10,7 +12,7 @@ Before the actual game, I develop a series of demos in dedicated folders.
 
 ### Noise
 
-In the `Noise` folder I explore `love.math.noise` with the ultimate goal of building the foundation for the blob-like animation. The folder works as a spiritual successor to `Lunar Lander/Noise`, and discusses noise functions with two arguments.
+In the `Noise` folder I explore `love.math.noise` with the ultimate goal of building the foundation for the blob-like shape and animation. The folder works as a spiritual successor to `Lunar Lander/Noise`, and discusses noise functions with two arguments.
 
 ### Timer
 
@@ -22,19 +24,14 @@ The game is set to have a single screen, with a larger particle symbolizing the 
 
 The idea is to then:
 
-- allow to move the player with arrow keys or the mouse cursor, with a delay and tween animation
+- allow to move the player with arrow keys or the mouse cursor. In this last instance, the particle follows the cursor with a delay and tween animation
 
 - detect a collision between player and surrounding particles
 
 - increase the size of the player considering the structure of the assimilating particles
 
-### Color
+## Resources
 
-Consider the following shades for the color palette.
+- [The Coding Train on agar.io](https://thecodingtrain.com/CodingChallenges/032.1-agar.html). The coding challenge introduces much of the logic implemented of the game.
 
-- rgb(243, 248, 248)
-- rgb(102, 227, 248)
-- rgb(0, 180, 233)
-- rgb(8, 8, 8)
-
-The goal is to have a particle with a dark outline and a brighter, perhaps semi-transparent fill.
+- [The Coding Train on perlin noise loops](https://thecodingtrain.com/CodingChallenges/136.1-polar-perlin-noise-loops.html)
