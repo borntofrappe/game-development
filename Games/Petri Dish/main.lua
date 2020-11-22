@@ -3,14 +3,14 @@ require "src/Dependencies"
 function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.window.setTitle("Petri Dish")
-  love.graphics.setBackgroundColor(0.99, 0.99, 1)
+  love.graphics.setBackgroundColor(0.95, 0.98, 0.98)
 
-  player = Player:new()
+  player = Particle:new(0, 0, PLAYER_RADIUS)
   particles = {}
   for i = 0, PARTICLES do
-    local x = love.math.random(math.floor(-WINDOW_WIDTH / 2), math.floor(WINDOW_WIDTH / 2))
-    local y = love.math.random(math.floor(-WINDOW_HEIGHT / 2), math.floor(WINDOW_HEIGHT / 2))
-    table.insert(particles, Particle:new(x, y, player.r / PARTICLE_RADIUS_FRACTION))
+    local x = love.math.random(-WINDOW_WIDTH, WINDOW_WIDTH)
+    local y = love.math.random(-WINDOW_HEIGHT, WINDOW_HEIGHT)
+    table.insert(particles, Particle:new(x, y, PARTICLE_RADIUS))
   end
 
   translate = {
@@ -52,15 +52,9 @@ function love.update(dt)
     )
   end
 
+  player:update(dt)
   for i, particle in ipairs(particles) do
-    if player:collides(particle) then
-      table.remove(particles, i)
-      player:assimilate(particle)
-
-      local x = (love.math.random() - 0.5) * WINDOW_WIDTH * player.r / PLAYER_RADIUS
-      local y = (love.math.random() - 0.5) * WINDOW_HEIGHT * player.r / PLAYER_RADIUS
-      table.insert(particles, Particle:new(x, y, player.r / PARTICLE_RADIUS_FRACTION))
-    end
+    particle:update(dt)
   end
 end
 
@@ -72,8 +66,4 @@ function love.draw()
     particle:render()
   end
   player:render()
-  love.graphics.setColor(0, 0, 0, 0.2)
-  love.graphics.circle("fill", player.x, player.y, WINDOW_HEIGHT * player.r / PLAYER_RADIUS)
-  love.graphics.setColor(1, 1, 1, 0.2)
-  love.graphics.circle("fill", player.x, player.y, WINDOW_HEIGHT / 2 * player.r / PLAYER_RADIUS)
 end
