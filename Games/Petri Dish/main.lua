@@ -3,7 +3,7 @@ require "src/Dependencies"
 function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.window.setTitle("Petri Dish")
-  love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
+  love.graphics.setBackgroundColor(0.99, 0.99, 1)
 
   player = Player:new()
   particles = {}
@@ -72,4 +72,8 @@ function love.draw()
     particle:render()
   end
   player:render()
+  love.graphics.setColor(0, 0, 0, 0.2)
+  love.graphics.circle("fill", player.x, player.y, WINDOW_HEIGHT * player.r / PLAYER_RADIUS)
+  love.graphics.setColor(1, 1, 1, 0.2)
+  love.graphics.circle("fill", player.x, player.y, WINDOW_HEIGHT / 2 * player.r / PLAYER_RADIUS)
 end

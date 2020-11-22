@@ -7,9 +7,9 @@ function Particle:new(x, y, r, color)
     ["r"] = r,
     ["color"] = color or
       {
-        ["r"] = love.math.random(30, 100) / 100,
-        ["g"] = love.math.random(30, 100) / 100,
-        ["b"] = love.math.random(30, 100) / 100
+        ["r"] = 32 / 255,
+        ["g"] = 54 / 255,
+        ["b"] = 72 / 255
       }
   }
 

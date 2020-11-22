@@ -4,9 +4,9 @@ Player =
   0,
   PLAYER_RADIUS,
   {
-    ["r"] = 1,
-    ["g"] = 1,
-    ["b"] = 1
+    ["r"] = 42 / 255,
+    ["g"] = 96 / 255,
+    ["b"] = 156 / 255
   }
 )
 
@@ -20,16 +20,10 @@ function Player:assimilate(particle)
   local area = math.pi * self.r ^ 2 + math.pi * particle.r ^ 2
   local r = (area / math.pi) ^ 0.5
 
-  local color = particle.color
   Timer:tween(
     0.2,
     {
-      [self] = {["r"] = r},
-      [self.color] = {
-        ["r"] = color.r,
-        ["g"] = color.g,
-        ["b"] = color.b
-      }
+      [self] = {["r"] = r}
     },
     "assimilate"
   )
