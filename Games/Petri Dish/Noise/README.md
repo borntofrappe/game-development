@@ -4,6 +4,8 @@ The goal is to experiment with `love.math.noise`, particularly with two offset v
 
 ## 2D Noise
 
+> draw noise in two dimensions, creating a field of semi-transparent rectangles
+
 The demo illustrates how the `love.math.noise` function works with multiple — two — arguments.
 
 `makeGrid` builds a two-dimensional table where each individual cell describes a number in the `[0,1]` range. The goal is to use this value for the alpha channel of a black rectangle.
@@ -197,7 +199,7 @@ _Please note_: the demo is updated so that it considers the position of the mous
 
 ## Circle 2D noise
 
-Building on top of the code described in `Circle noise`, the goal is to create a shape which closes itself. A shape in which the first and last point match.
+Building on top of the code described in `Circle noise` demo, the goal is to create a shape which closes itself. A shape in which the first and last point match.
 
 This is achieved by having `love.math.noise` use two arguments, and have these arguments describe an offset in two dimensions.
 
@@ -287,8 +289,38 @@ _Please note_: in order to highlight the relation between the noise field and th
 
 The goal is to show how the first and last point match, thanks to the circular pattern, but to also stress the connection between the two areas:. Lighter values in the noise field — with lower opacity — correspond to taller points in the line — with smaller `y` values from the top.
 
-## Helpful resources
+## Blob noise
 
-- [Coding Train on noise loops](https://thecodingtrain.com/CodingChallenges/136.1-polar-perlin-noise-loops.html)
+The goal is to show the design of the particles as introduced in the game. These particles have an irregular shape inspired by the `Circle 2D noise` demo, and are animated to have the irregularities constantly move.
 
-- [Coding Train on Perlin noise GIF loops](https://thecodingtrain.com/CodingChallenges/136.2-perlin-noise-gif-loops)
+In order to have the animation roll smoothly, the way the offset is incremented is with another two-dimensional noise. The idea is to attribute to each blob an angle, and update this angle in `love.update(dt)`.
+
+```lua
+function love.update(dt)
+  for i, blob in ipairs(blobs) do
+    blob.angle = blob.angle + blob.angleChange
+  end
+end
+```
+
+By using the angle to compute the change in the offset, it is possible to use the polar coordinates of the makeshift circle.
+
+```lua
+blob.offset = blob.offsetInitial + love.math.noise(math.cos(blob.angle), math.sin(blob.angle))
+```
+
+This ensures that the offset at angle `0` matches the offset at angle `math.pi * 2`, which means it is then possible to reset the value with a smooth transition.
+
+```lua
+if math.abs(blob.angle) > math.pi * 2 then
+  blob.angle = 0
+end
+```
+
+I use `math.abs` since ultimately, the way the angle is updated is by adding or removing a random amount.
+
+```lua
+["angleChange"] = love.math.random(2) == 1 and angleChange or angleChange * -1
+```
+
+This adds a bit of variety in the form of the direction of the animation.

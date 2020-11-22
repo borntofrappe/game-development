@@ -14,7 +14,7 @@ In the `Noise` folder I explore `love.math.noise` with the ultimate goal of buil
 
 ### Timer
 
-In the `Timer` folder I try to create a small library to manage delays, intervals, and ultimately tween animations. This is a replacement from the code introduced in the CS50 course.
+In the `Timer` folder I try to create a small library to manage delays, intervals, and ultimately tween animations. It works as a replacement for the API introduced in the CS50 course.
 
 ## Design
 

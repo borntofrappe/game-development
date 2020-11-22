@@ -1,6 +1,8 @@
 # Timer
 
-In the projects introduced in the CS50 course, the lecturer introduces the `timer` module from the `knife` library, to manage delays, intervals, and tween animations. Here, I try to recreate the functionality with a series of dedicated functions.
+A small library to manage delays, intervals, and tween animations. It works as a replacement for the API introduced in the CS50 course.
+
+Each folder implements a distinct feature with a small demo.
 
 ## Delay
 
@@ -71,9 +73,9 @@ if interval.timer >= interval.dt then
 end
 ```
 
-## label and remove
+### label and remove
 
-A label is useful to have a reference for the delays/intervals/tweens, in order to then remove their logic if necessary. This is particularly useful in the context of intervals.
+A label is useful to have a reference for the delays/intervals/tweens, in order to then remove their logic if necessary. This is particularly useful in the context of intervals, but is helpful for every time-related event.
 
 The `after` and `every` function are therefore updated to accept an additional argument.
 
