@@ -8,9 +8,10 @@ function love.load()
   player = Particle:new(0, 0, PLAYER_RADIUS)
   particles = {}
   for i = 0, PARTICLES do
+    local r = love.math.random(PARTICLE_RADIUS_MIN, PARTICLE_RADIUS_MAX)
     local x = love.math.random(-WINDOW_WIDTH, WINDOW_WIDTH)
     local y = love.math.random(-WINDOW_HEIGHT, WINDOW_HEIGHT)
-    table.insert(particles, Particle:new(x, y, PARTICLE_RADIUS))
+    table.insert(particles, Particle:new(x, y, r))
   end
 
   translate = {
@@ -27,6 +28,32 @@ end
 
 function love.update(dt)
   Timer:update(dt)
+  if
+    love.keyboard.isDown("up") or love.keyboard.isDown("right") or love.keyboard.isDown("down") or
+      love.keyboard.isDown("left")
+   then
+    speed = {
+      ["x"] = 0,
+      ["y"] = 0
+    }
+    if love.keyboard.isDown("up") then
+      speed.y = -PLAYER_SPEED
+    end
+    if love.keyboard.isDown("right") then
+      speed.x = PLAYER_SPEED
+    end
+    if love.keyboard.isDown("down") then
+      speed.y = PLAYER_SPEED
+    end
+    if love.keyboard.isDown("left") then
+      speed.x = -PLAYER_SPEED
+    end
+
+    player.x = player.x + speed.x * dt
+    player.y = player.y + speed.y * dt
+    translate.x = -player.x - speed.x * dt
+    translate.y = -player.y - speed.y * dt
+  end
   if love.mouse.isDown(1) then
     local x, y = love.mouse:getPosition()
     x = x - WINDOW_WIDTH / 2
@@ -63,6 +90,8 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.draw(gTextures["background"])
   love.graphics.translate(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
   love.graphics.scale(PLAYER_RADIUS / player.r)
   love.graphics.translate(translate.x, translate.y)

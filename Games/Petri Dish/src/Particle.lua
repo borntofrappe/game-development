@@ -3,8 +3,7 @@ Particle.__index = Particle
 
 function Particle:new(x, y, r)
   local offset = love.math.random(OFFSET_INITIAL_MAX)
-  local angleChange = love.math.random(50, 100) / 100 * ANGLE_CHANGE_MAX
-
+  local angleChange = love.math.random(ANGLE_CHANGE_MIN, ANGLE_CHANGE_MAX)
   local points, noises = self:getPoints(x, y, r, offset)
 
   this = {
