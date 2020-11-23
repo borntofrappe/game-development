@@ -1,10 +1,11 @@
 -- good luck
-WINDOW_WIDTH = 520
-WINDOW_HEIGHT = 380
+WINDOW_WIDTH = 620
+WINDOW_HEIGHT = 440
 
 function love.load()
-  love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.window.setTitle("Bang bang")
+  love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
+  love.graphics.setBackgroundColor(1, 0.95, 1)
 end
 
 function love.keypressed(key)
