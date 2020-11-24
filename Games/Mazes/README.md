@@ -4,7 +4,7 @@ Projects created while going through this entertaining book by [**Jamis Buck**](
 
 Starting from a grid with an arbitrary number of rows and columns, each demo also sports a table describing the player. This one is depicted through a circle which moves in the maze considering the available borders and the direction expressed by arrow keys.
 
-## Binary Tree
+## Binary Tree Algorithm
 
 - visit every cell
 
@@ -20,7 +20,7 @@ It is a simple algorithm, which is yet capable of building useful structure. If 
 
 It is also efficient. To build the maze it is necessary to visit each cell only once. Moreover, it is only necessary to store in memory the value of a single cell at a time.
 
-## Sidewinder
+## Sidewinder Algorithm
 
 - visit every cell, traversing each row left to right
 
@@ -37,3 +37,19 @@ If north, consider the current cell with the ones coming earlier in the row. Pic
 This slightly more complex algorithm has a bias toward the top of the maze. In the first row, you find an uninterrupted corridor.
 
 Unlike the binary tree algorithm, there's no guarantee that the last column will provide an uninterrupted corridor. This because the last cell could very well select north and pick a gate from the previous cells.
+
+## Simplified Dijkstra
+
+This is a first attempt at describing the path between a point and any other point in the grid. In the spirit of making the experience more interactive, the demo waits for a key press on the enter key, and then proceeds to populate the grid with the distance from the selected cell-
+
+The function works as follows:
+
+- accept a cell as well as a level of depth. This value begins at `0`
+
+- mark the current cell with the depth value
+
+- look for accessible neighbords. That is neighbors which can be visited, without a gate between the two cells
+
+- call the function again, for the neighboring cell, and for an incremented depth value
+
+To illustrate the recursive process even further, I've decided to include a `Timer` utility. The idea is to here add a delay between successive function calls, and show the different steps taken through Dijkstra's algorithm.
