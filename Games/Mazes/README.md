@@ -71,3 +71,27 @@ To illustrate the recursive process even further, I've decided to include a `Tim
 This algorithm allows to remove any bias, at the price of slower runtime.
 
 In the demo, I illustrate how the algorithm works with the `Timer` utility, and by calling the `aldousBroder` function with a delay.
+
+## Wilson Algorithm
+
+Instead of a purely random walk, such as the one described in the previous algorithm, Wilson's approach leverages a loop-erased random walk. It has the same benefit of Aldous Broder, in being unbiased, but is suffers from a similar drawback, being slow.
+
+You can break down the algorithm's logic in two phases:
+
+- immediately, pick a cell at random and mark it as visited
+
+- recursively, proceed to create connection with a random walk:
+
+  - pick an unvisited cell, and take note of its position
+
+  - pick a neighbor at random. Note its position while moving to the new cell
+
+  - continue picking neighboring cells until you reach a visited cell
+
+  - when you reach a visited cell, remove the gates of the noted cells in the manner described by the path
+
+  - if the noted cells create a loop, erase said loop.
+
+  - repeat the random walk until every cell has been visited
+
+As you progress and find visited cells, it becomes easier and easier to find a path, meaning the algorithm is slow to start, and increases in speed once there are a few visited cells.
