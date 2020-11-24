@@ -53,3 +53,21 @@ The function works as follows:
 - call the function again, for the neighboring cell, and for an incremented depth value
 
 To illustrate the recursive process even further, I've decided to include a `Timer` utility. The idea is to here add a delay between successive function calls, and show the different steps taken through Dijkstra's algorithm.
+
+## Aldous-Broder Algorithm
+
+- pick a cell in the grid
+
+- choose a neighbor at random
+
+- if not visited, link to it by removing the connecting border
+
+- if visited, do nothing
+
+- move to the selected cell and repeat from step 2, selecting a new neighbor
+
+- repeat until every cell has been visited
+
+This algorithm allows to remove any bias, at the price of slower runtime.
+
+In the demo, I illustrate how the algorithm works with the `Timer` utility, and by calling the `aldousBroder` function with a delay.
