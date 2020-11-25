@@ -96,7 +96,7 @@ You can break down the algorithm's logic in two phases:
 
 As you progress and find visited cells, it becomes easier and easier to find a path, meaning the algorithm is slow to start, and increases in speed once there are a few visited cells.
 
-## Hunt and Kill
+## Hunt and Kill Algorithm
 
 The algorithm is similar to Aldous-Broder, performing a random walk from cell to cell. However, unlike the previous approach, the algorithm changes in the moment it finds a cell which has already been visited. In this instance, it performs a search for an unvisited cell with a visited neighbor.
 

@@ -79,8 +79,21 @@ function love.update(dt)
 end
 
 --[[ Hunt and Kill algorithm
-  
+  - pick a cell and mark it as visited
 
+  - pick a neighbor at random
+
+  - if the neighbor has not already been visited, connect the two and visit the cell
+
+  - if the neighbor has already been visited, "hunt" for an unvisited cell
+
+    - loop through the grid top to bottom, left to right
+
+    - look for the first unvisited cell with a visited neighbor
+
+    - connect the cell with the neighbor, and visit the same cell
+
+    - resume the random walk picking a neighbor at random
 ]]
 function huntAndKill(column, row)
   grid.cells[column][row].visited = true
@@ -154,7 +167,6 @@ function huntAndKill(column, row)
       )
     else
       local cell, neighboringCell, gates
-      -- hunt once
       for r = 1, ROWS do
         for c = 1, COLUMNS do
           local candidate = grid.cells[c][r]
