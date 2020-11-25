@@ -95,3 +95,29 @@ You can break down the algorithm's logic in two phases:
   - repeat the random walk until every cell has been visited
 
 As you progress and find visited cells, it becomes easier and easier to find a path, meaning the algorithm is slow to start, and increases in speed once there are a few visited cells.
+
+## Hunt and Kill
+
+The algorithm is similar to Aldous-Broder, performing a random walk from cell to cell. However, unlike the previous approach, the algorithm changes in the moment it finds a cell which has already been visited. In this instance, it performs a search for an unvisited cell with a visited neighbor.
+
+In detailed steps:
+
+- pick a cell and mark it as visited
+
+- pick a neighbor at random
+
+- if the neighbor has not already been visited, connect the two and visit the cell
+
+- if the neighbor has already been visited, "hunt" for an unvisited cell
+
+  - loop through the grid top to bottom, left to right
+
+  - look for the first unvisited cell with a visited neighbor
+
+  - connect the cell with the neighbor, and visit the same cell
+
+  - resume the random walk picking a neighbor at random
+
+In the implementation, I rely on a `goto` statement to break out of the nested loop.
+
+_Please note_: the demo includes the `Timer` utility to show the different steps and through the `highlight` variable. For the purposes of the algorithm, it is however unnecessary.
