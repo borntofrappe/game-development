@@ -6,9 +6,7 @@ In so doing, I intendo to practice with `love.math.noise`, as well as basic trig
 
 ## Prep
 
-In dedicated folders I develop the building blocks behind the game.
-
-- `Terrain` creates a few demos to explore `love.math.noise`, `math.sin` and `math.cos`. The goal is to create smooth surfaces for the levels, and arcs for the eventual holes created by the cannon balls.
+In dedicated folders I develop the building blocks behind the game. `Terrain` creates a few demos to explore how to render terrain and cannoball holes.
 
 ## Resources
 
