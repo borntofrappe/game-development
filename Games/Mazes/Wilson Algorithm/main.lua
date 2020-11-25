@@ -1,6 +1,5 @@
 require "Grid"
 require "Cell"
-Timer = require "Timer"
 
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 500
@@ -63,10 +62,6 @@ function love.keypressed(key)
   end
 end
 
-function love.update(dt)
-  Timer:update(dt)
-end
-
 function love.draw()
   love.graphics.translate(PADDING, PADDING)
   grid:render()
@@ -99,6 +94,8 @@ end
 ]]
 function wilson()
   local cell = unvisited[love.math.random(#unvisited)]
+  -- cell might hold the value of a gate from a previous iteration
+  cell.gates = {}
   local visited = {cell}
 
   while not grid.cells[cell.column][cell.row].visited do
@@ -172,7 +169,5 @@ function wilson()
 
   if #unvisited > 0 then
     wilson()
-  else
-    visitedCell = nil
   end
 end
