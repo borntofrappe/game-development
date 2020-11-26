@@ -1,6 +1,5 @@
 require "Grid"
 require "Cell"
-Timer = require "Timer"
 
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 500
@@ -15,17 +14,12 @@ function love.load()
 
   grid = Grid:new()
 
-  highlight = {
+  player = {
     ["column"] = love.math.random(COLUMNS),
     ["row"] = love.math.random(ROWS)
   }
 
-  player = {
-    ["column"] = highlight.column,
-    ["row"] = highlight.row
-  }
-
-  huntAndKill(highlight.column, highlight.row)
+  huntAndKill(player.column, player.row)
 end
 
 function love.keypressed(key)
@@ -61,21 +55,6 @@ function love.draw()
     (player.row - 1) * grid.cellHeight + grid.cellHeight / 2,
     math.min(grid.cellWidth, grid.cellHeight) / 4
   )
-
-  if highlight then
-    love.graphics.setColor(1, 1, 1, 0.5)
-    love.graphics.rectangle(
-      "fill",
-      (highlight.column - 1) * grid.cellWidth,
-      (highlight.row - 1) * grid.cellHeight,
-      grid.cellWidth,
-      grid.cellHeight
-    )
-  end
-end
-
-function love.update(dt)
-  Timer:update(dt)
 end
 
 --[[ Hunt and Kill algorithm
@@ -97,6 +76,7 @@ end
 ]]
 function huntAndKill(column, row)
   grid.cells[column][row].visited = true
+
   local allVisited = true
   for c = 1, COLUMNS do
     if allVisited then
@@ -149,22 +129,13 @@ function huntAndKill(column, row)
 
     local connection = connections[love.math.random(#connections)]
     local neighboringCell = grid.cells[cell.column + connection.dc][cell.row + connection.dr]
-    highlight = {
-      ["column"] = neighboringCell.column,
-      ["row"] = neighboringCell.row
-    }
 
     if not neighboringCell.visited then
       cell.gates[connection.gates[1]] = nil
       neighboringCell.gates[connection.gates[2]] = nil
       neighboringCell.visited = true
 
-      Timer:after(
-        0.2,
-        function()
-          huntAndKill(neighboringCell.column, neighboringCell.row)
-        end
-      )
+      huntAndKill(neighboringCell.column, neighboringCell.row)
     else
       local cell, neighboringCell, gates
       for r = 1, ROWS do
@@ -228,19 +199,8 @@ function huntAndKill(column, row)
       cell.visited = true
       cell.gates[gates[1]] = nil
       neighboringCell.gates[gates[2]] = nil
-      highlight = {
-        ["column"] = cell.column,
-        ["row"] = cell.row
-      }
 
-      Timer:after(
-        0.2,
-        function()
-          huntAndKill(cell.column, cell.row)
-        end
-      )
+      huntAndKill(cell.column, cell.row)
     end
-  else
-    highlight = nil
   end
 end

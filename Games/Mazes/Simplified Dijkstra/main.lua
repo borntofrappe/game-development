@@ -15,46 +15,12 @@ function love.load()
 
   grid = Grid:new()
 
-  --[[ sidewinder algorithm ]]
-  for row = ROWS, 1, -1 do
-    local visited = {}
-    for column = 1, COLUMNS do
-      visited[#visited + 1] = column
-
-      local openEast = love.math.random(2) == 1
-      if openEast then
-        if column < COLUMNS then
-          grid.cells[column][row].gates.right = nil
-          grid.cells[column + 1][row].gates.left = nil
-        else
-          if row > 1 then
-            local index = love.math.random(#visited)
-            grid.cells[visited[index]][row - 1].gates.down = nil
-            grid.cells[visited[index]][row].gates.up = nil
-            visited = {}
-          end
-        end
-      else
-        if row > 1 then
-          local index = love.math.random(#visited)
-          grid.cells[visited[index]][row - 1].gates.down = nil
-          grid.cells[visited[index]][row].gates.up = nil
-          visited = {}
-        else
-          if column < COLUMNS then
-            grid.cells[column][row].gates.right = nil
-            grid.cells[column + 1][row].gates.left = nil
-          end
-        end
-      end
-    end
-  end
-
-  -- selected cell
   cell = {
     ["column"] = 1,
     ["row"] = 1
   }
+
+  sidewinder()
 end
 
 function love.keypressed(key)
@@ -110,6 +76,42 @@ function love.draw()
   )
 end
 
+function sidewinder()
+  for row = ROWS, 1, -1 do
+    local visited = {}
+    for column = 1, COLUMNS do
+      visited[#visited + 1] = column
+
+      local openEast = love.math.random(2) == 1
+      if openEast then
+        if column < COLUMNS then
+          grid.cells[column][row].gates.right = nil
+          grid.cells[column + 1][row].gates.left = nil
+        else
+          if row > 1 then
+            local index = love.math.random(#visited)
+            grid.cells[visited[index]][row - 1].gates.down = nil
+            grid.cells[visited[index]][row].gates.up = nil
+            visited = {}
+          end
+        end
+      else
+        if row > 1 then
+          local index = love.math.random(#visited)
+          grid.cells[visited[index]][row - 1].gates.down = nil
+          grid.cells[visited[index]][row].gates.up = nil
+          visited = {}
+        else
+          if column < COLUMNS then
+            grid.cells[column][row].gates.right = nil
+            grid.cells[column + 1][row].gates.left = nil
+          end
+        end
+      end
+    end
+  end
+end
+
 --[[ Dijkstra algorithm
 - mark the current cell with a "distance" value
 - call the function for any accessible neighbor and with an incremented "distance" value 
@@ -140,7 +142,18 @@ function dijkstra(cell, distance)
     }
   }
 
+  for i = #connections, 1, -1 do
+    if
+      cell.column + connections[i].dc < 1 or cell.column + connections[i].dc > COLUMNS or
+        cell.row + connections[i].dr < 1 or
+        cell.row + connections[i].dr > ROWS
+     then
+      table.remove(connections, i)
+    end
+  end
+
   for i, connection in ipairs(connections) do
+    -- consider the distance to avoid visiting the same cell twice
     if
       not grid.cells[cell.column][cell.row].gates[connection.gate] and
         not grid.cells[cell.column + connection.dc][cell.row + connection.dr].distance

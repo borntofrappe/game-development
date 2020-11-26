@@ -1,10 +1,10 @@
 # Mazes
 
-Projects created while going through this entertaining book by [**Jamis Buck**](https://twitter.com/jamis): [_Mazes for Programmers Code Your Own Twisty Little Passages_](http://www.mazesforprogrammers.com/).
+With this folder I set out to implement a series of algorithms to create perfect mazes, mazes in which any two cells can be connected by one path. It is inspired by the book [_Mazes for Programmers Code Your Own Twisty Little Passages_](http://www.mazesforprogrammers.com/), and specifically the first part of the volume.
 
-Starting from a grid with an arbitrary number of rows and columns, each demo also sports a table describing the player. This one is depicted through a circle which moves in the maze considering the available borders and the direction expressed by arrow keys.
+There is no game, currently, but a series of demos creating mazes with the different algorithms. A circle represents the player, but its only feature is the ability to walk in the maze constrained by the existing gates.
 
-## Binary Tree Algorithm
+## Binary Tree
 
 - visit every cell
 
@@ -14,21 +14,19 @@ Starting from a grid with an arbitrary number of rows and columns, each demo als
 
 The instructions mean that the first row and the last column will have the same pattern for every maze, with an uninterrupted corridor leading up to the top right corner. This feature describes the texture and the bias of the specific maze.
 
-> Texture and bias allow to describe the style and tendency of a maze
-
 It is a simple algorithm, which is yet capable of building useful structure. If the bottom left corner provides a clear-cut solution inspired by the maze's bias, consider a situation in which the starting point is moved elsewhere in the structure.
 
 It is also efficient. To build the maze it is necessary to visit each cell only once. Moreover, it is only necessary to store in memory the value of a single cell at a time.
 
-## Sidewinder Algorithm
+## Sidewinder
 
 - visit every cell, traversing each row left to right
 
-- pick a gate east or north. North of one of the visited, available cells in the current row (explained with a few more words below)
+- pick a gate east or north. When picking the north side, however, pick the gate of one of the visited, available cells in the current row
 
 - do not create any exit
 
-As you traverse the grid, one row at a time and from the left to the right, you select a gate east or north.
+In detail, and as you traverse the grid, one row at a time and from the left to the right, you select a gate east or north.
 
 If east, remove the gate.
 
@@ -40,19 +38,21 @@ Unlike the binary tree algorithm, there's no guarantee that the last column will
 
 ## Simplified Dijkstra
 
-This is a first attempt at describing the path between a point and any other point in the grid. In the spirit of making the experience more interactive, the demo waits for a key press on the enter key, and then proceeds to populate the grid with the distance from the selected cell-
+This is a first attempt at describing the path between a point and any other point in the grid. In the spirit of making the experience more interactive, the demo waits for a key press on the enter key, and then proceeds to populate the grid with the distance from the selected cell.
 
 The function works as follows:
 
-- accept a cell as well as a level of depth. This value begins at `0`
+- accept a cell as well as a distance. This value begins at `0`
 
-- mark the current cell with the depth value
+- mark the current cell with the distance value
 
 - look for accessible neighbords. That is neighbors which can be visited, without a gate between the two cells
 
-- call the function again, for the neighboring cell, and for an incremented depth value
+- call the function again, for the neighboring cell, and for an incremented distance value
 
 To illustrate the recursive process even further, I've decided to include a `Timer` utility. The idea is to here add a delay between successive function calls, and show the different steps taken through Dijkstra's algorithm.
+
+_Please note_: the demo creates a maze with the sidewinder algorithm, but any algorithm modifying the grid would work.
 
 ## Aldous-Broder Algorithm
 
@@ -69,8 +69,6 @@ To illustrate the recursive process even further, I've decided to include a `Tim
 - repeat until every cell has been visited
 
 This algorithm allows to remove any bias, at the price of slower runtime.
-
-In the demo, I illustrate how the algorithm works with the `Timer` utility, and by calling the `aldousBroder` function with a delay.
 
 ## Wilson Algorithm
 
@@ -120,21 +118,21 @@ In detailed steps:
 
 In the implementation, I rely on a `goto` statement to break out of the nested loop.
 
-_Please note_: the demo includes the `Timer` utility to show the different steps and through the `highlight` variable. For the purposes of the algorithm, it is however unnecessary.
-
 ## Recursive Backtracker
 
 The algorithm is similar to Hunt and Kill (and therefore Aldous-Broder), but it does differ in the way it seeks an unvisited cell. Faced against a visited cell, it goes through the previous cells (backtracking its way on the beaten path), and looks for unvisited neighbors cell by cell.
 
-In detailed steps:
+It is based on the concept of a stack, a data structure where you add items to and remove items from the end. In lua, with `table.insert` and `table.remove`.
 
-- create a stack
+- pick a cell at random and add it to the stack (above)
 
-- pick a cell, visit it and add it to the stack
+- from the top of the stack, pick a neighbor at random
 
-- pick a neighbor at random
+- if the neighbor has not already been visited, connect the current cell to said neighbor
 
-- if the neighbor has not already been visited, connect to the neighbor, visit it and add it to the stack
+  - visit the neighbor
+
+  - add the neighbor to the stack
 
 - if the neighbor has already been visited, backtrack the cells in the stack
 
@@ -146,6 +144,4 @@ In detailed steps:
 
   - add the neighbor to the stack
 
-  - resume the random walk
-
-_Please note_: the demo includes the `Timer` utility to show the different steps and through the `highlight` variable. For the purposes of the algorithm, it is however unnecessary.
+- continue until the stack is empty

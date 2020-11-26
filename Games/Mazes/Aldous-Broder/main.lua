@@ -1,6 +1,5 @@
 require "Grid"
 require "Cell"
-Timer = require "Timer"
 
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 500
@@ -15,17 +14,13 @@ function love.load()
 
   grid = Grid:new()
 
-  highlight = {
+  player = {
     ["column"] = love.math.random(COLUMNS),
     ["row"] = love.math.random(ROWS)
   }
 
-  player = {
-    ["column"] = highlight.column,
-    ["row"] = highlight.row
-  }
-
-  aldousBroder(highlight.column, highlight.row)
+  grid.cells[player.column][player.row].visited = true
+  aldousBroder(player.column, player.row)
 end
 
 function love.keypressed(key)
@@ -51,10 +46,6 @@ function love.keypressed(key)
   end
 end
 
-function love.update(dt)
-  Timer:update(dt)
-end
-
 function love.draw()
   love.graphics.translate(PADDING, PADDING)
   grid:render()
@@ -65,17 +56,6 @@ function love.draw()
     (player.row - 1) * grid.cellHeight + grid.cellHeight / 2,
     math.min(grid.cellWidth, grid.cellHeight) / 4
   )
-
-  if highlight then
-    love.graphics.setColor(1, 1, 1, 0.5)
-    love.graphics.rectangle(
-      "fill",
-      (highlight.column - 1) * grid.cellWidth,
-      (highlight.row - 1) * grid.cellHeight,
-      grid.cellWidth,
-      grid.cellHeight
-    )
-  end
 end
 
 --[[ aldous broder algorithm
@@ -108,9 +88,6 @@ function aldousBroder(column, row)
 
   if not allVisited then
     local cell = grid.cells[column][row]
-    if not cell.visited then
-      cell.visited = true
-    end
 
     local connections = {
       {
@@ -147,22 +124,13 @@ function aldousBroder(column, row)
 
     local connection = connections[love.math.random(#connections)]
     local neighboringCell = grid.cells[cell.column + connection.dc][cell.row + connection.dr]
-    highlight = {
-      ["column"] = neighboringCell.column,
-      ["row"] = neighboringCell.row
-    }
 
     if not neighboringCell.visited then
       cell.gates[connection.gates[1]] = nil
       neighboringCell.gates[connection.gates[2]] = nil
+      neighboringCell.visited = true
     end
-    Timer:after(
-      0.1,
-      function()
-        aldousBroder(neighboringCell.column, neighboringCell.row)
-      end
-    )
-  else
-    highlight = nil
+
+    aldousBroder(neighboringCell.column, neighboringCell.row)
   end
 end

@@ -1,6 +1,5 @@
 require "Grid"
 require "Cell"
-Timer = require "Timer"
 
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 500
@@ -15,17 +14,12 @@ function love.load()
 
   grid = Grid:new()
 
-  highlight = {
+  player = {
     ["column"] = love.math.random(COLUMNS),
     ["row"] = love.math.random(ROWS)
   }
 
-  player = {
-    ["column"] = highlight.column,
-    ["row"] = highlight.row
-  }
-
-  stack = {grid.cells[highlight.column][highlight.row]}
+  stack = {grid.cells[player.column][player.row]}
   recursiveBacktracker()
 end
 
@@ -62,24 +56,31 @@ function love.draw()
     (player.row - 1) * grid.cellHeight + grid.cellHeight / 2,
     math.min(grid.cellWidth, grid.cellHeight) / 4
   )
-
-  if highlight then
-    love.graphics.setColor(1, 1, 1, 0.5)
-    love.graphics.rectangle(
-      "fill",
-      (highlight.column - 1) * grid.cellWidth,
-      (highlight.row - 1) * grid.cellHeight,
-      grid.cellWidth,
-      grid.cellHeight
-    )
-  end
-end
-
-function love.update(dt)
-  Timer:update(dt)
 end
 
 --[[ Recursive backtracker algorithm
+
+  - pick a cell at random and add it to the stack (above)
+
+  - from the top of the stack, pick a neighbor at random
+
+  - if the neighbor has not already been visited, connect the current cell to said neighbor
+  
+    - visit the neighbor 
+    
+    - add the neighbor to the stack
+
+  - if the neighbor has already been visited, backtrack the cells in the stack
+
+    - loop through the stack removing cells one at a time
+
+    - look for unvisited neighbors
+
+    - connect the already visited cell with one of its unvisited neighbors
+
+    - add the neighbor to the stack
+
+  - continue until the stack is empty
 ]]
 function recursiveBacktracker()
   if #stack > 0 then
@@ -120,22 +121,14 @@ function recursiveBacktracker()
 
     local connection = connections[love.math.random(#connections)]
     local neighboringCell = grid.cells[cell.column + connection.dc][cell.row + connection.dr]
-    highlight = {
-      ["column"] = neighboringCell.column,
-      ["row"] = neighboringCell.row
-    }
 
     if not neighboringCell.visited then
       cell.gates[connection.gates[1]] = nil
       neighboringCell.gates[connection.gates[2]] = nil
       neighboringCell.visited = true
       table.insert(stack, neighboringCell)
-      Timer:after(
-        0.2,
-        function()
-          recursiveBacktracker()
-        end
-      )
+
+      recursiveBacktracker()
     else
       while #stack > 0 do
         local cell = table.remove(stack)
@@ -192,21 +185,10 @@ function recursiveBacktracker()
           neighboringCell.visited = true
           table.insert(stack, neighboringCell)
 
-          highlight = {
-            ["column"] = neighboringCell.column,
-            ["row"] = neighboringCell.row
-          }
           break
         end
       end
-      Timer:after(
-        0.2,
-        function()
-          recursiveBacktracker()
-        end
-      )
+      recursiveBacktracker()
     end
-  else
-    highlight = nil
   end
 end
