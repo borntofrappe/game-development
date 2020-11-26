@@ -183,6 +183,7 @@ function recursiveBacktracker()
           cell.gates[gates[1]] = nil
           neighboringCell.gates[gates[2]] = nil
           neighboringCell.visited = true
+          table.insert(stack, cell)
           table.insert(stack, neighboringCell)
 
           break
