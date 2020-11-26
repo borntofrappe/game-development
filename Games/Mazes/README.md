@@ -4,7 +4,9 @@ With this folder I set out to implement a series of algorithms to create perfect
 
 There is no game, currently, but a series of demos creating mazes with the different algorithms. A circle represents the player, but its only feature is the ability to walk in the maze constrained by the existing gates.
 
-## Binary Tree
+## Algorithms
+
+### Binary Tree
 
 - visit every cell
 
@@ -18,7 +20,7 @@ It is a simple algorithm, which is yet capable of building useful structure. If 
 
 It is also efficient. To build the maze it is necessary to visit each cell only once. Moreover, it is only necessary to store in memory the value of a single cell at a time.
 
-## Sidewinder
+### Sidewinder
 
 - visit every cell, traversing each row left to right
 
@@ -36,7 +38,7 @@ This slightly more complex algorithm has a bias toward the top of the maze. In t
 
 Unlike the binary tree algorithm, there's no guarantee that the last column will provide an uninterrupted corridor. This because the last cell could very well select north and pick a gate from the previous cells.
 
-## Simplified Dijkstra
+### Simplified Dijkstra
 
 This is a first attempt at describing the path between a point and any other point in the grid. In the spirit of making the experience more interactive, the demo waits for a key press on the enter key, and then proceeds to populate the grid with the distance from the selected cell.
 
@@ -54,7 +56,7 @@ To illustrate the recursive process even further, I've decided to include a `Tim
 
 _Please note_: the demo creates a maze with the sidewinder algorithm, but any algorithm modifying the grid would work.
 
-## Aldous-Broder Algorithm
+### Aldous-Broder Algorithm
 
 - pick a cell in the grid
 
@@ -70,7 +72,7 @@ _Please note_: the demo creates a maze with the sidewinder algorithm, but any al
 
 This algorithm allows to remove any bias, at the price of slower runtime.
 
-## Wilson Algorithm
+### Wilson Algorithm
 
 Instead of a purely random walk, such as the one described in the previous algorithm, Wilson's approach leverages a loop-erased random walk. It has the same benefit of Aldous Broder, in being unbiased, but is suffers from a similar drawback, being slow (technically slow to start, as will be explained briefly).
 
@@ -94,7 +96,7 @@ You can break down the algorithm's logic in two phases:
 
 As you progress and find visited cells, it becomes easier and easier to find a path, meaning the algorithm is slow to start, and increases in speed once there are a few visited cells.
 
-## Hunt and Kill Algorithm
+### Hunt and Kill Algorithm
 
 The algorithm is similar to Aldous-Broder, performing a random walk from cell to cell. However, unlike the previous approach, the algorithm changes in the moment it finds a cell which has already been visited. In this instance, it performs a search for an unvisited cell with a visited neighbor.
 
@@ -118,7 +120,7 @@ In detailed steps:
 
 In the implementation, I rely on a `goto` statement to break out of the nested loop.
 
-## Recursive Backtracker
+### Recursive Backtracker
 
 The algorithm is similar to Hunt and Kill (and therefore Aldous-Broder), but it does differ in the way it seeks an unvisited cell. Faced against a visited cell, it goes through the previous cells (backtracking its way on the beaten path), and looks for unvisited neighbors cell by cell.
 
@@ -145,3 +147,22 @@ It is based on the concept of a stack, a data structure where you add items to a
   - add the neighbor to the stack
 
 - continue until the stack is empty
+
+## Shapes
+
+### Masking
+
+The idea is to alter the default structure provided by a regular, complete grid. The effect is achieved by having some of the cells initialized with a `nil` value, and by modifying the algorithm so that, when it considers the possible connections, it disregards the same value.
+
+```lua
+if
+  -- previous conditions
+  or not grid.cells[cell.column + connections[i].dc][cell.row + connections[i].dr]
+  then
+  table.remove(connections, i)
+end
+```
+
+_Please note_: unlike the previous demos, using the constants `COLUMNS` and `ROWS`, the project aptly considers the columns and rows on the basis of the mask and its length.
+
+_Please note_: the demo uses the algorithm developed in the project _Recursive Backtracker_, but other algorithms would work as well. All except the binary tree and sidewinder algorithm, which rely on the grid having non-nil cells.
