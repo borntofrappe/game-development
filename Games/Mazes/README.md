@@ -121,3 +121,31 @@ In detailed steps:
 In the implementation, I rely on a `goto` statement to break out of the nested loop.
 
 _Please note_: the demo includes the `Timer` utility to show the different steps and through the `highlight` variable. For the purposes of the algorithm, it is however unnecessary.
+
+## Recursive Backtracker
+
+The algorithm is similar to Hunt and Kill (and therefore Aldous-Broder), but it does differ in the way it seeks an unvisited cell. Faced against a visited cell, it goes through the previous cells (backtracking its way on the beaten path), and looks for unvisited neighbors cell by cell.
+
+In detailed steps:
+
+- create a stack
+
+- pick a cell, visit it and add it to the stack
+
+- pick a neighbor at random
+
+- if the neighbor has not already been visited, connect to the neighbor, visit it and add it to the stack
+
+- if the neighbor has already been visited, backtrack the cells in the stack
+
+  - loop through the stack removing cells one at a time
+
+  - look for unvisited neighbors
+
+  - connect the already visited cell with one of its unvisited neighbors
+
+  - add the neighbor to the stack
+
+  - resume the random walk
+
+_Please note_: the demo includes the `Timer` utility to show the different steps and through the `highlight` variable. For the purposes of the algorithm, it is however unnecessary.
