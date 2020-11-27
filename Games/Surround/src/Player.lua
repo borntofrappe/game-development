@@ -7,9 +7,10 @@ function Player:new(x, y)
     ["y"] = y,
     ["size"] = PLAYER_SIZE,
     ["d"] = {
-      ["x"] = 0,
+      ["x"] = 1,
       ["y"] = 0
-    }
+    },
+    ["trail"] = {}
   }
 
   setmetatable(this, self)
@@ -35,7 +36,12 @@ function Player:update(dt)
 end
 
 function Player:render()
-  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setColor(0.5, 0.5, 0.5)
+  for i, tail in ipairs(self.trail) do
+    love.graphics.rectangle("fill", tail.x, tail.y, self.size, self.size)
+  end
+
+  love.graphics.setColor(0.25, 0.25, 0.25)
   love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 end
 
@@ -43,11 +49,18 @@ function Player:move()
   Timer:every(
     INTERVAL,
     function()
-      local x = self.x + self.d.x * self.size
-      local y = self.y + self.d.y * self.size
+      if self.d.x ~= 0 or self.d.y ~= 0 then
+        table.insert(
+          self.trail,
+          {
+            ["x"] = self.x,
+            ["y"] = self.y
+          }
+        )
+      end
 
-      self.x = x
-      self.y = y
+      self.x = self.x + self.d.x * self.size
+      self.y = self.y + self.d.y * self.size
     end
   )
 end
