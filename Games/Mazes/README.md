@@ -166,3 +166,17 @@ end
 _Please note_: unlike the previous demos, using the constants `COLUMNS` and `ROWS`, the project aptly considers the columns and rows on the basis of the mask and its length.
 
 _Please note_: the demo uses the algorithm developed in the project _Recursive Backtracker_, but other algorithms would work as well. All except the binary tree and sidewinder algorithm, which rely on the grid having non-nil cells.
+
+### Circle Maze
+
+The `love.graphics` module provides the `arc` function to the different cells around the center. The function accepts an optional second argument for the arc type which embodies the desired result.
+
+```lua
+love.graphics.arc("line", "open", 0, 0, 20, 0, math.pi / 2)
+```
+
+Without specifying the type as `open`, the result is that the function draws two straight lines connecting the arc to the center of the grid.
+
+Past this detail, the folder implements a circular shape with polar coordinates and the recursive backtracker algorithm. The structure of the grid is modified from one using columns and rows to one using rings and slices of each ring.
+
+_Please note_: the rings have an equal number of slices, which leads to the maze having a rather uneven structure. This is fixed in a different demo fully implementing a theta maze. I decided to preserve this project as well to illustrate how the code changes from the grid-based demos.
