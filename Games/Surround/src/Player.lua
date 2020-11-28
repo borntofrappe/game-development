@@ -1,21 +1,29 @@
 Player = {}
 Player.__index = Player
 
-function Player:new(column, row)
+function Player:new(column, row, color, keys)
   this = {
     ["column"] = column,
     ["row"] = row,
     ["size"] = CELL_SIZE,
     ["d"] = {
-      ["c"] = 1,
+      ["c"] = 0,
       ["r"] = 0
     },
     ["trail"] = {},
-    ["color"] = {
-      ["r"] = 0.16, -- [0.62, 0.16]
-      ["g"] = 0.83, -- [0, 0.83]
-      ["b"] = 0.69 -- [1, 0.69]
-    }
+    ["color"] = color or
+      {
+        ["r"] = 0.16,
+        ["g"] = 0.83,
+        ["b"] = 0.69
+      },
+    ["keys"] = keys or
+      {
+        ["up"] = "up",
+        ["right"] = "right",
+        ["down"] = "down",
+        ["left"] = "left"
+      }
   }
 
   setmetatable(this, self)
@@ -24,22 +32,18 @@ function Player:new(column, row)
 end
 
 function Player:update(dt)
-  if love.keyboard.wasPressed("up") then
+  if love.keyboard.wasPressed(self.keys["up"]) then
     self.d.c = 0
     self.d.r = -1
-  elseif love.keyboard.wasPressed("right") then
+  elseif love.keyboard.wasPressed(self.keys["right"]) then
     self.d.c = 1
     self.d.r = 0
-  elseif love.keyboard.wasPressed("down") then
+  elseif love.keyboard.wasPressed(self.keys["down"]) then
     self.d.c = 0
     self.d.r = 1
-  elseif love.keyboard.wasPressed("left") then
+  elseif love.keyboard.wasPressed(self.keys["left"]) then
     self.d.c = -1
     self.d.r = 0
-  end
-
-  if love.keyboard.wasPressed("r") then
-    self.trail = {}
   end
 end
 
