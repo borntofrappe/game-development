@@ -3,11 +3,11 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Surround")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.98, 0.99, 0.98)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
   love.keyboard.keyPressed = {}
 
-  player = Player:new(0, 0)
+  player = Player:new(1, 1)
   player:move()
 end
 
