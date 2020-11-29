@@ -23,3 +23,15 @@ Finally in `love.draw`:
 - (optional) set a blend mode with `love.graphics.setBlendMode`
 
 - draw the actual canvas passing the object to the `love.graphics.draw` function
+
+## Dynamic
+
+The demo sets up two canvases to show a different perspective of the same world. It is important to note that both canvases render the same visuals, the same rectangle.
+
+```lua
+love.graphics.rectangle("fill", rectangle.x, rectangle.y, CELL_SIZE, CELL_SIZE)
+```
+
+What changes is the translation applied before this drawing operation.
+
+It is also important to stress how the `love.draw` function draws a canvas through `love.graphics.draw`, and it is necessary to update the canvas itself in order to see the changes take place.
