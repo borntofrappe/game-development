@@ -11,7 +11,10 @@ function VictoryState:update(dt)
 end
 
 function VictoryState:render()
+  love.graphics.setBlendMode("alpha")
+
   love.graphics.setColor(1, 1, 1)
   love.graphics.setFont(gFonts["normal"])
+  love.graphics.setLineWidth(1)
   love.graphics.printf("VictoryState", 0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, "center")
 end
