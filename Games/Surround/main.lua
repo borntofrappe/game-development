@@ -21,15 +21,15 @@ function love.load()
     love.math.random(world.columns),
     love.math.random(world.rows),
     {
-      ["r"] = 0.16, -- [0.62, 0.16]
-      ["g"] = 0.83, -- [0, 0.83]
-      ["b"] = 0.69 -- [1, 0.69]
+      ["r"] = 0.16,
+      ["g"] = 0.83,
+      ["b"] = 0.69
     },
     {
-      ["up"] = "up",
-      ["right"] = "right",
-      ["down"] = "down",
-      ["left"] = "left"
+      ["up"] = "w",
+      ["right"] = "d",
+      ["down"] = "s",
+      ["left"] = "a"
     }
   )
 
@@ -43,19 +43,59 @@ function love.load()
       ["b"] = 1
     },
     {
-      ["up"] = "w",
-      ["right"] = "d",
-      ["down"] = "s",
-      ["left"] = "a"
+      ["up"] = "up",
+      ["right"] = "right",
+      ["down"] = "down",
+      ["left"] = "left"
     }
   )
 
-  translate = {
-    ["column"] = -(p1.column - math.floor(world.translate.columns / 2)),
-    ["row"] = -(p1.row - math.floor(world.translate.rows / 2))
+  translations = {}
+  for i, p in ipairs({p1, p2}) do
+    translations[i] = {
+      ["column"] = -(p.column - math.floor(world.translate.columns / 4)),
+      ["row"] = -(p.row - math.floor(world.translate.rows / 2))
+    }
+  end
+
+  game = {
+    ["world"] = world,
+    ["players"] = {p1, p2},
+    ["translations"] = translations
   }
 
-  updateWorld()
+  canvases = getCanvases()
+  updateGame()
+end
+
+function getCanvases()
+  local canvases = {}
+
+  for i = 1, #game.players do
+    canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+    love.graphics.setCanvas(canvas)
+    love.graphics.clear()
+    love.graphics.push()
+
+    love.graphics.translate(
+      game.translations[i].column * game.players[i].size,
+      game.translations[i].row * game.players[i].size
+    )
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.rectangle("fill", 0, 0, game.world.columns * CELL_SIZE, game.world.rows * CELL_SIZE)
+
+    for j = 1, #game.players do
+      game.players[j]:render()
+    end
+
+    love.graphics.pop()
+
+    love.graphics.setCanvas()
+    canvases[i] = canvas
+  end
+
+  return canvases
 end
 
 function love.keypressed(key)
@@ -72,26 +112,31 @@ end
 
 function love.update(dt)
   Timer:update(dt)
-  for i, p in ipairs({p1, p2}) do
-    p:update(dt)
+  for i = 1, #game.players do
+    game.players[i]:update(dt)
   end
 
   love.keyboard.keyPressed = {}
 end
 
 function love.draw()
-  love.graphics.translate((translate.column) * CELL_SIZE, (translate.row) * CELL_SIZE)
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.rectangle("fill", 0, 0, world.columns * CELL_SIZE, world.rows * CELL_SIZE)
-  p1:render()
-  p2:render()
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setBlendMode("alpha", "premultiplied")
+
+  for i, canvas in ipairs(canvases) do
+    love.graphics.draw(canvas, (i - 1) * CANVAS_WIDTH)
+  end
+  love.graphics.setColor(0.3, 0.3, 0.3)
 end
 
-function updateWorld()
+function updateGame()
   Timer:every(
     INTERVAL,
     function()
-      for i, p in ipairs({p1, p2}) do
+      for i = 1, #game.players do
+        local p = game.players[i]
+        local translation = game.translations[i]
+
         if p.d.c ~= 0 or p.d.r ~= 0 then
           local hasTrail = false
           local previousTail = {}
@@ -117,19 +162,21 @@ function updateWorld()
 
         p.column = p.column + p.d.c
         p.row = p.row + p.d.r
+
+        translation.column = translation.column - p.d.c
+        translation.row = translation.row - p.d.r
+
+        if p.column < 1 or p.column > game.world.columns or p.row < 1 or p.row > game.world.rows then
+          p.column = love.math.random(game.world.columns)
+          p.row = love.math.random(game.world.rows)
+          p.trail = {}
+
+          translation.column = -(p.column - math.floor(game.world.translate.columns / 4))
+          translation.row = -(p.row - math.floor(game.world.translate.rows / 2))
+        end
       end
 
-      translate.column = translate.column - p1.d.c
-      translate.row = translate.row - p1.d.r
-
-      if p1.column < 1 or p1.column > world.columns or p1.row < 1 or p1.row > world.rows then
-        p1 = Player:new(love.math.random(world.columns), love.math.random(world.rows))
-
-        translate = {
-          ["column"] = -(p1.column - math.floor(world.translate.columns / 2)),
-          ["row"] = -(p1.row - math.floor(world.translate.rows / 2))
-        }
-      end
+      canvases = getCanvases()
     end
   )
 end

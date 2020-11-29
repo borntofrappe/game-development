@@ -19,10 +19,10 @@ function Player:new(column, row, color, keys)
       },
     ["keys"] = keys or
       {
-        ["up"] = "up",
-        ["right"] = "right",
-        ["down"] = "down",
-        ["left"] = "left"
+        ["up"] = "w",
+        ["right"] = "d",
+        ["down"] = "s",
+        ["left"] = "a"
       }
   }
 
