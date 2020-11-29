@@ -52,17 +52,11 @@ function love.load()
 
   translations = {}
   for i, p in ipairs({p1, p2}) do
-    translations[i] = {
+    p.translate = {
       ["column"] = -(p.column - math.floor(world.translate.columns / 4)),
       ["row"] = -(p.row - math.floor(world.translate.rows / 2))
     }
   end
-
-  game = {
-    ["world"] = world,
-    ["players"] = {p1, p2},
-    ["translations"] = translations
-  }
 
   canvases = getCanvases()
   updateGame()
@@ -71,22 +65,19 @@ end
 function getCanvases()
   local canvases = {}
 
-  for i = 1, #game.players do
+  for i, p in ipairs({p1, p2}) do
     canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     love.graphics.setCanvas(canvas)
     love.graphics.clear()
     love.graphics.push()
 
-    love.graphics.translate(
-      game.translations[i].column * game.players[i].size,
-      game.translations[i].row * game.players[i].size
-    )
+    love.graphics.translate(p.translate.column * p.size, p.translate.row * p.size)
 
     love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("fill", 0, 0, game.world.columns * CELL_SIZE, game.world.rows * CELL_SIZE)
+    love.graphics.rectangle("fill", 0, 0, world.columns * p.size, world.rows * p.size)
 
-    for j = 1, #game.players do
-      game.players[j]:render()
+    for j, player in ipairs({p1, p2}) do
+      player:render()
     end
 
     love.graphics.pop()
@@ -112,8 +103,8 @@ end
 
 function love.update(dt)
   Timer:update(dt)
-  for i = 1, #game.players do
-    game.players[i]:update(dt)
+  for i, p in ipairs({p1, p2}) do
+    p:update(dt)
   end
 
   love.keyboard.keyPressed = {}
@@ -133,17 +124,12 @@ function updateGame()
   Timer:every(
     INTERVAL,
     function()
-      for i = 1, #game.players do
-        local p = game.players[i]
-        local translation = game.translations[i]
-
+      for i, p in ipairs({p1, p2}) do
         if p.d.c ~= 0 or p.d.r ~= 0 then
           local hasTrail = false
-          local previousTail = {}
           for i, tail in ipairs(p.trail) do
             if tail.column == p.column and tail.row == p.row then
               hasTrail = true
-              previousTail = tail
               break
             end
           end
@@ -163,16 +149,16 @@ function updateGame()
         p.column = p.column + p.d.c
         p.row = p.row + p.d.r
 
-        translation.column = translation.column - p.d.c
-        translation.row = translation.row - p.d.r
+        p.translate.column = p.translate.column - p.d.c
+        p.translate.row = p.translate.row - p.d.r
 
-        if p.column < 1 or p.column > game.world.columns or p.row < 1 or p.row > game.world.rows then
-          p.column = love.math.random(game.world.columns)
-          p.row = love.math.random(game.world.rows)
+        if p.column < 1 or p.column > world.columns or p.row < 1 or p.row > world.rows then
+          p.column = love.math.random(world.columns)
+          p.row = love.math.random(world.rows)
           p.trail = {}
 
-          translation.column = -(p.column - math.floor(game.world.translate.columns / 4))
-          translation.row = -(p.row - math.floor(game.world.translate.rows / 2))
+          p.translate.column = -(p.column - math.floor(world.translate.columns / 4))
+          p.translate.row = -(p.row - math.floor(world.translate.rows / 2))
         end
       end
 
