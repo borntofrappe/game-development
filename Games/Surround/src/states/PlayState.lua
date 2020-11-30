@@ -76,7 +76,9 @@ function PlayState:update(dt)
     gStateMachine:change(
       "victory",
       {
-        ["winner"] = self.winner
+        ["winner"] = self.winner,
+        ["world"] = self.world,
+        ["offsetCanvas"] = self.winner == p2
       }
     )
   end
@@ -96,7 +98,7 @@ function PlayState:getCanvases()
   local p1, p2 = self.p1, self.p2
 
   for i, p in ipairs({p1, p2}) do
-    canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+    local canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     love.graphics.setCanvas(canvas)
     love.graphics.clear()
     love.graphics.push()
