@@ -32,16 +32,16 @@ function Player:new(column, row, color, keys)
 end
 
 function Player:update(dt)
-  if love.keyboard.wasPressed(self.keys["up"]) then
+  if love.keyboard.wasPressed(self.keys["up"]) and self.d.r ~= 1 then
     self.d.c = 0
     self.d.r = -1
-  elseif love.keyboard.wasPressed(self.keys["right"]) then
+  elseif love.keyboard.wasPressed(self.keys["right"]) and self.d.c ~= -1 then
     self.d.c = 1
     self.d.r = 0
-  elseif love.keyboard.wasPressed(self.keys["down"]) then
+  elseif love.keyboard.wasPressed(self.keys["down"]) and self.d.r ~= -1 then
     self.d.c = 0
     self.d.r = 1
-  elseif love.keyboard.wasPressed(self.keys["left"]) then
+  elseif love.keyboard.wasPressed(self.keys["left"]) and self.d.c ~= 1 then
     self.d.c = -1
     self.d.r = 0
   end

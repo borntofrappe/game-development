@@ -72,14 +72,19 @@ function PlayState:update(dt)
   end
 
   if self.winner then
-    Timer:reset()
-    gStateMachine:change(
-      "victory",
-      {
-        ["winner"] = self.winner,
-        ["world"] = self.world,
-        ["offsetCanvas"] = self.winner == p2
-      }
+    Timer.intervals = {}
+    Timer:after(
+      1,
+      function()
+        gStateMachine:change(
+          "victory",
+          {
+            ["winner"] = self.winner,
+            ["world"] = self.world,
+            ["offsetCanvas"] = self.winner == p2
+          }
+        )
+      end
     )
   end
 end
@@ -125,20 +130,47 @@ function PlayState:updateCanvases()
   Timer:every(
     INTERVAL,
     function()
+      local gameover = false
       local world = self.world
       local p1, p2 = self.p1, self.p2
 
       for i, p in ipairs({p1, p2}) do
+        local opposingP = p == p1 and p2 or p1
         if p.d.c ~= 0 or p.d.r ~= 0 then
-          local hasTrail = false
+          p.column = p.column + p.d.c
+          p.row = p.row + p.d.r
+
+          p.translate.column = p.translate.column - p.d.c
+          p.translate.row = p.translate.row - p.d.r
+
+          local doesOverlap = false
           for i, tail in ipairs(p.trail) do
             if tail.column == p.column and tail.row == p.row then
-              hasTrail = true
+              doesOverlap = true
               break
             end
           end
 
-          if not hasTrail then
+          if not doesOverlap then
+            for i, tail in ipairs(opposingP.trail) do
+              if tail.column == p.column and tail.row == p.row then
+                doesOverlap = true
+                break
+              end
+            end
+          end
+
+          if p.column < 1 or p.column > world.columns or p.row < 1 or p.row > world.rows or doesOverlap then
+            gameover = true
+          end
+
+          if gameover then
+            p.column = (p.column + p.d.c) * -1
+            p.row = (p.row + p.d.r) * -1
+
+            p.translate.column = (p.translate.column - p.d.c) * -1
+            p.translate.row = (p.translate.row - p.d.r) * -1
+          else
             table.insert(
               p.trail,
               {
@@ -146,22 +178,15 @@ function PlayState:updateCanvases()
                 ["row"] = p.row
               }
             )
-          else
           end
-        end
-
-        p.column = p.column + p.d.c
-        p.row = p.row + p.d.r
-
-        p.translate.column = p.translate.column - p.d.c
-        p.translate.row = p.translate.row - p.d.r
-
-        if p.column < 1 or p.column > world.columns or p.row < 1 or p.row > world.rows then
-          self.winner = p == p1 and p2 or p1
         end
       end
 
-      self.canvases = self:getCanvases()
+      if gameover then
+        self.winner = p == p1 and p2 or p1
+      else
+        self.canvases = self:getCanvases()
+      end
     end
   )
 end
