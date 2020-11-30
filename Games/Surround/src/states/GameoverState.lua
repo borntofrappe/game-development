@@ -1,10 +1,10 @@
 GameoverState = BaseState:create()
 
 function GameoverState:enter(params)
-  local winner = params.winner
+  self.winner = params.winner
 
   local color =
-    winner and winner.color or
+    self.winner and self.winner.color or
     {
       ["r"] = 0.3,
       ["g"] = 0.3,
@@ -15,10 +15,6 @@ function GameoverState:enter(params)
   for column = 1, math.floor(WINDOW_WIDTH / CELL_SIZE) + 1 do
     grid[column] = {}
     for row = 1, math.floor(WINDOW_HEIGHT / CELL_SIZE) + 1 do
-      -- if winner and (winner.column + winner.row) % 2 == 0 then
-      --   everyOther = not everyOther
-      -- end
-
       grid[column][row] = {
         ["column"] = column,
         ["row"] = row,
@@ -50,6 +46,8 @@ function GameoverState:update(dt)
   end
 
   if love.keyboard.wasPressed("return") then
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
     gStateMachine:change("play")
   end
 end
@@ -58,6 +56,22 @@ function GameoverState:render()
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setBlendMode("alpha", "premultiplied")
   love.graphics.draw(self.canvas)
+
+  love.graphics.setBlendMode("alpha")
+
+  if self.winner then
+    love.graphics.setColor(self.winner.color.r, self.winner.color.g, self.winner.color.b)
+    love.graphics.setFont(gFonts["big"])
+    love.graphics.printf("Gameover", 4, WINDOW_HEIGHT / 2 - gFonts["big"]:getHeight() + 4, WINDOW_WIDTH, "center")
+    love.graphics.setFont(gFonts["normal"])
+    love.graphics.printf(string.upper("Congrats"), 2, WINDOW_HEIGHT / 2 + 26, WINDOW_WIDTH, "center")
+    love.graphics.setColor(0.3, 0.3, 0.3)
+    love.graphics.printf(string.upper("Congrats"), 0, WINDOW_HEIGHT / 2 + 24, WINDOW_WIDTH, "center")
+  end
+
+  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setFont(gFonts["big"])
+  love.graphics.printf("Gameover", 0, WINDOW_HEIGHT / 2 - gFonts["big"]:getHeight(), WINDOW_WIDTH, "center")
 end
 
 function GameoverState:getCanvas()

@@ -24,6 +24,8 @@ function StartState:update(dt)
   if love.keyboard.wasPressed("escape") then
     love.event.quit()
   elseif love.keyboard.wasPressed("return") then
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
     Timer:reset()
     gStateMachine:change("play")
   end
