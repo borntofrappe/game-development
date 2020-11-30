@@ -178,17 +178,12 @@ function PlayState:updateCanvases()
         Timer:after(
           1,
           function()
-            if winner then
-              gStateMachine:change(
-                "victory",
-                {
-                  ["world"] = world,
-                  ["winner"] = winner
-                }
-              )
-            else
-              gStateMachine:change("gameover")
-            end
+            gStateMachine:change(
+              "gameover",
+              {
+                ["winner"] = winner
+              }
+            )
           end
         )
       else

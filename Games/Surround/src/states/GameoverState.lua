@@ -1,31 +1,41 @@
 GameoverState = BaseState:create()
 
 function GameoverState:enter(params)
+  local winner = params.winner
+
+  local color =
+    winner and winner.color or
+    {
+      ["r"] = 0.3,
+      ["g"] = 0.3,
+      ["b"] = 0.3
+    }
+
   grid = {}
   for column = 1, math.floor(WINDOW_WIDTH / CELL_SIZE) + 1 do
     grid[column] = {}
     for row = 1, math.floor(WINDOW_HEIGHT / CELL_SIZE) + 1 do
-      local everyOther = (column + row) % 2 == 1
-      local color =
-        everyOther and
-        {
-          ["r"] = 0.3,
-          ["g"] = 0.3,
-          ["b"] = 0.3,
-          ["a"] = 0.5
-        } or
-        {
-          ["r"] = 0.3,
-          ["g"] = 0.3,
-          ["b"] = 0.3,
-          ["a"] = 0.3
-        }
+      -- if winner and (winner.column + winner.row) % 2 == 0 then
+      --   everyOther = not everyOther
+      -- end
 
       grid[column][row] = {
         ["column"] = column,
         ["row"] = row,
         ["size"] = CELL_SIZE,
-        ["color"] = color
+        ["color"] = (column + row) % 2 == 0 and
+          {
+            ["r"] = color.r,
+            ["g"] = color.g,
+            ["b"] = color.b,
+            ["a"] = 0.5
+          } or
+          {
+            ["r"] = color.r,
+            ["g"] = color.g,
+            ["b"] = color.b,
+            ["a"] = 0.3
+          }
       }
     end
   end
