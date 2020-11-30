@@ -16,6 +16,9 @@ function love.load()
       end,
       ["victory"] = function()
         return VictoryState:create()
+      end,
+      ["gameover"] = function()
+        return GameoverState:create()
       end
     }
   )

@@ -1,39 +1,30 @@
-VictoryState = BaseState:create()
+GameoverState = BaseState:create()
 
-function VictoryState:enter(params)
-  self.p = params.winner
-  self.p.trail = {}
-
-  self.world = params.world
-  self.offsetCanvas = params.offsetCanvas
-
+function GameoverState:enter(params)
   grid = {}
-  for column = 1, self.world.columns do
+  for column = 1, math.floor(WINDOW_WIDTH / CELL_SIZE) + 1 do
     grid[column] = {}
-    for row = 1, self.world.rows do
+    for row = 1, math.floor(WINDOW_HEIGHT / CELL_SIZE) + 1 do
       local everyOther = (column + row) % 2 == 1
-      if (self.p.column + self.p.row) % 2 == 0 then
-        everyOther = not everyOther
-      end
       local color =
         everyOther and
         {
-          ["r"] = self.p.color.r,
-          ["g"] = self.p.color.g,
-          ["b"] = self.p.color.b,
+          ["r"] = 0.3,
+          ["g"] = 0.3,
+          ["b"] = 0.3,
           ["a"] = 0.5
         } or
         {
-          ["r"] = self.p.color.r,
-          ["g"] = self.p.color.g,
-          ["b"] = self.p.color.b,
+          ["r"] = 0.3,
+          ["g"] = 0.3,
+          ["b"] = 0.3,
           ["a"] = 0.3
         }
 
       grid[column][row] = {
         ["column"] = column,
         ["row"] = row,
-        ["size"] = self.p.size,
+        ["size"] = CELL_SIZE,
         ["color"] = color
       }
     end
@@ -43,7 +34,7 @@ function VictoryState:enter(params)
   self.canvas = self:getCanvas()
 end
 
-function VictoryState:update(dt)
+function GameoverState:update(dt)
   if love.keyboard.wasPressed("escape") then
     love.event.quit()
   end
@@ -53,25 +44,21 @@ function VictoryState:update(dt)
   end
 end
 
-function VictoryState:render()
+function GameoverState:render()
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setBlendMode("alpha", "premultiplied")
   love.graphics.draw(self.canvas)
 end
 
-function VictoryState:getCanvas()
-  local p = self.p
-  local world = self.world
+function GameoverState:getCanvas()
   local grid = self.grid
+
   local canvas = love.graphics.newCanvas(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setCanvas(canvas)
   love.graphics.clear()
-  love.graphics.push()
-
-  love.graphics.translate(p.translate.column * p.size, p.translate.row * p.size)
 
   love.graphics.setColor(1, 1, 1)
-  love.graphics.rectangle("fill", 0, 0, world.columns * p.size, world.rows * p.size)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
   for c = 1, #grid do
     for r = 1, #grid[c] do
@@ -85,10 +72,6 @@ function VictoryState:getCanvas()
       )
     end
   end
-
-  p:render()
-
-  love.graphics.pop()
 
   love.graphics.setCanvas()
 
