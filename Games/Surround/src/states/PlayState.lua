@@ -15,9 +15,9 @@ function PlayState:enter()
     math.floor(world.columns / 4) + love.math.random(math.floor(world.columns / 2)),
     math.floor(world.rows / 4) + love.math.random(math.floor(world.rows / 2)),
     {
-      ["r"] = 0.16,
-      ["g"] = 0.83,
-      ["b"] = 0.69
+      ["r"] = COLORS.p1.r,
+      ["g"] = COLORS.p1.g,
+      ["b"] = COLORS.p1.b
     },
     {
       ["up"] = "w",
@@ -32,9 +32,9 @@ function PlayState:enter()
     math.floor(world.columns / 4) + love.math.random(math.floor(world.columns / 2)),
     math.floor(world.rows / 4) + love.math.random(math.floor(world.rows / 2)),
     {
-      ["r"] = 0.62,
-      ["g"] = 0,
-      ["b"] = 1
+      ["r"] = COLORS.p2.r,
+      ["g"] = COLORS.p2.g,
+      ["b"] = COLORS.p2.b
     },
     {
       ["up"] = "up",
@@ -81,9 +81,10 @@ function PlayState:enter()
   self:updateCanvases()
 
   Timer:after(
-    1.5,
+    DELAY_INSTRUCTIONS,
     function()
       for i, p in ipairs({p1, p2}) do
+        -- move the player if it's not already moving
         if p.d.c == 0 and p.d.r == 0 then
           local dc = p.column - world.columns / 2
           local dr = p.row - world.rows / 2
@@ -96,7 +97,7 @@ function PlayState:enter()
         end
       end
       Timer:tween(
-        0.5,
+        TWEEN_INSTRUCTIONS,
         {
           [self.instructions] = {["alpha"] = 0}
         }
@@ -125,17 +126,19 @@ function PlayState:render()
     love.graphics.draw(canvas, (i - 1) * CANVAS_WIDTH)
   end
 
-  love.graphics.setBlendMode("alpha")
-  love.graphics.setFont(gFonts["normal"])
-  for i, message in ipairs(self.instructions.messages) do
-    love.graphics.setColor(message.color.r, message.color.g, message.color.b, self.instructions.alpha)
-    love.graphics.printf(
-      message.text,
-      (i - 1) * CANVAS_WIDTH,
-      WINDOW_HEIGHT / 4 - gFonts["normal"]:getHeight(),
-      CANVAS_WIDTH - CELL_SIZE,
-      "center"
-    )
+  if self.instructions.alpha > 0 then
+    love.graphics.setBlendMode("alpha")
+    love.graphics.setFont(gFonts["normal"])
+    for i, message in ipairs(self.instructions.messages) do
+      love.graphics.setColor(message.color.r, message.color.g, message.color.b, self.instructions.alpha)
+      love.graphics.printf(
+        message.text,
+        (i - 1) * CANVAS_WIDTH,
+        WINDOW_HEIGHT / 4 - gFonts["normal"]:getHeight(),
+        CANVAS_WIDTH - CELL_SIZE,
+        "center"
+      )
+    end
   end
 end
 
@@ -170,7 +173,7 @@ end
 
 function PlayState:updateCanvases()
   Timer:every(
-    INTERVAL,
+    INTERVAL_UPDATE,
     function()
       local isGameover = false
       local winner = nil
@@ -212,9 +215,9 @@ function PlayState:updateCanvases()
           end
 
           if isGameover then
+            -- if the heads of the players overlap, remove the winner to describe a tie
             if self.p1.column == self.p2.column and self.p1.row == self.p2.row then
               winner = nil
-
               for i, p in ipairs({self.p1, self.p2}) do
                 p.column = p.column + p.d.c
                 p.row = p.row + p.d.r
@@ -240,7 +243,7 @@ function PlayState:updateCanvases()
         gSounds["gameover"]:play()
         Timer:reset()
         Timer:after(
-          1,
+          DELAY_GAMEOVER,
           function()
             gStateMachine:change(
               "gameover",

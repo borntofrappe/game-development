@@ -6,9 +6,9 @@ function GameoverState:enter(params)
   local color =
     self.winner and self.winner.color or
     {
-      ["r"] = 0.3,
-      ["g"] = 0.3,
-      ["b"] = 0.3
+      ["r"] = COLORS.text.r,
+      ["g"] = COLORS.text.g,
+      ["b"] = COLORS.text.b
     }
 
   grid = {}
@@ -24,13 +24,13 @@ function GameoverState:enter(params)
             ["r"] = color.r,
             ["g"] = color.g,
             ["b"] = color.b,
-            ["a"] = 0.5
+            ["a"] = OPACITY
           } or
           {
             ["r"] = color.r,
             ["g"] = color.g,
             ["b"] = color.b,
-            ["a"] = 0.3
+            ["a"] = OPACITY / 2
           }
       }
     end
@@ -65,11 +65,11 @@ function GameoverState:render()
     love.graphics.printf("Gameover", 4, WINDOW_HEIGHT / 2 - gFonts["big"]:getHeight() + 4, WINDOW_WIDTH, "center")
     love.graphics.setFont(gFonts["normal"])
     love.graphics.printf(string.upper("Congrats"), 2, WINDOW_HEIGHT / 2 + 26, WINDOW_WIDTH, "center")
-    love.graphics.setColor(0.3, 0.3, 0.3)
+    love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
     love.graphics.printf(string.upper("Congrats"), 0, WINDOW_HEIGHT / 2 + 24, WINDOW_WIDTH, "center")
   end
 
-  love.graphics.setColor(0.3, 0.3, 0.3)
+  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
   love.graphics.setFont(gFonts["big"])
   love.graphics.printf("Gameover", 0, WINDOW_HEIGHT / 2 - gFonts["big"]:getHeight(), WINDOW_WIDTH, "center")
 end
@@ -86,14 +86,9 @@ function GameoverState:getCanvas()
 
   for c = 1, #grid do
     for r = 1, #grid[c] do
-      love.graphics.setColor(grid[c][r].color.r, grid[c][r].color.g, grid[c][r].color.b, grid[c][r].color.a)
-      love.graphics.rectangle(
-        "fill",
-        (grid[c][r].column - 1) * grid[c][r].size,
-        (grid[c][r].row - 1) * grid[c][r].size,
-        grid[c][r].size,
-        grid[c][r].size
-      )
+      local cell = grid[c][r]
+      love.graphics.setColor(cell.color.r, cell.color.g, cell.color.b, cell.color.a)
+      love.graphics.rectangle("fill", (cell.column - 1) * cell.size, (cell.row - 1) * cell.size, cell.size, cell.size)
     end
   end
 

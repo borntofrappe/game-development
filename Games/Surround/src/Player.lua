@@ -13,9 +13,9 @@ function Player:new(column, row, color, keys)
     ["trail"] = {},
     ["color"] = color or
       {
-        ["r"] = 0.16,
-        ["g"] = 0.83,
-        ["b"] = 0.69
+        ["r"] = COLORS.p1.r,
+        ["g"] = COLORS.p1.g,
+        ["b"] = COLORS.p1.b
       },
     ["keys"] = keys or
       {
@@ -56,7 +56,7 @@ function Player:update(dt)
 end
 
 function Player:render()
-  love.graphics.setColor(self.color.r, self.color.g, self.color.b, 0.5)
+  love.graphics.setColor(self.color.r, self.color.g, self.color.b, OPACITY)
   for i, tail in ipairs(self.trail) do
     love.graphics.rectangle("fill", (tail.column - 1) * self.size, (tail.row - 1) * self.size, self.size, self.size)
   end

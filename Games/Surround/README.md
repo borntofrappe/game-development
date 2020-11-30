@@ -1,7 +1,7 @@
 # Surround
 
-A game for two players, where each player is asked to surround the opposing side and have it collide against a solid trail. It is a small game, introduced to explore the section of Love2D wiki discussing [the canvas](https://love2d.org/wiki/Canvas).
+A game for two players, where each player fills the white background with a distinct color, and the game ends as one of the two sides collides with a trail or exits the world.
 
-## Prep
+## Canvas
 
-In the `Canvas` folder I develop a few demos to illustrate how a canvas works in the context of Love2D. Refer to the dedicated markdown document for more information.
+The project is created to practice with the [Canvas](https://love2d.org/wiki/Canvas) from the Love2D wiki. The topic is first introduced `Canvas` , with a couple of small, independent demos, and is finally used in `PlayState`, but also `GameoverState`.
