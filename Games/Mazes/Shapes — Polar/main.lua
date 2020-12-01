@@ -8,7 +8,7 @@ RINGS = 8
 RINGS_COUNT = 6
 
 function love.load()
-  love.window.setTitle("Polar Maze")
+  love.window.setTitle("Shapes — Polar")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.18, 0.18, 0.18)
 

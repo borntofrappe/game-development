@@ -2,7 +2,7 @@
 
 With this folder I set out to implement a series of algorithms to create perfect mazes, mazes in which any two cells can be connected by one path. It is inspired by the book [_Mazes for Programmers Code Your Own Twisty Little Passages_](http://www.mazesforprogrammers.com/), and specifically the first part of the volume.
 
-There is no game, currently, but a series of demos creating mazes with the different algorithms. A circle represents the player, but its only feature is the ability to walk in the maze constrained by the existing gates.
+There is no game, currently, but a series of demos creating mazes with the different algorithms and shapes.
 
 ## Algorithms
 
@@ -167,7 +167,7 @@ _Please note_: unlike the previous demos, using the constants `COLUMNS` and `ROW
 
 _Please note_: the demo uses the algorithm developed in the project _Recursive Backtracker_, but other algorithms would work as well. All except the binary tree and sidewinder algorithm, which rely on the grid having non-nil cells.
 
-### Circle Maze
+### Circle
 
 The `love.graphics` module provides the `arc` function to the different cells around the center. The function accepts an optional second argument for the arc type which embodies the desired result.
 
@@ -181,7 +181,7 @@ Past this detail, the folder implements a circular shape with polar coordinates 
 
 _Please note_: the rings have an equal number of slices, which leads to the maze having a rather uneven structure. This is fixed in a different demo fully implementing a theta maze. I decided to preserve this project as well to illustrate how the code changes from the grid-based demos.
 
-### Polar Mae
+### Polar
 
 Building on top of the previous project, the game tries to make a more realistic maze, one in which the cells are not excessively disparate in size. This is achieved by doubling the number of slices every other ring, and requires a few adjustments to the codebase.
 
@@ -201,7 +201,7 @@ The same measure is then used not only to describe how many arcs should be in th
 ```lua
 local angle = 2 * math.pi / count
 for ringCount = 1, count do
-  -- add ring
+  -- add slice
 end
 ```
 

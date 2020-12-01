@@ -8,7 +8,7 @@ COLUMNS = 10
 ROWS = 10
 
 function love.load()
-  love.window.setTitle("Wilson")
+  love.window.setTitle("Algorithms — Wilson")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.18, 0.18, 0.18)
 
@@ -31,11 +31,6 @@ function love.load()
   local visitedCell = table.remove(unvisited, love.math.random(#unvisited))
   grid.cells[visitedCell.column][visitedCell.row].visited = true
 
-  player = {
-    ["column"] = grid.cells[visitedCell.column][visitedCell.row].column,
-    ["row"] = grid.cells[visitedCell.column][visitedCell.row].row
-  }
-
   wilson()
 end
 
@@ -43,35 +38,11 @@ function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
-  if key == "up" then
-    if not grid.cells[player.column][player.row].gates.up and player.row > 1 then
-      player.row = player.row - 1
-    end
-  elseif key == "right" then
-    if not grid.cells[player.column][player.row].gates.right and player.column < COLUMNS then
-      player.column = player.column + 1
-    end
-  elseif key == "down" then
-    if not grid.cells[player.column][player.row].gates.down and player.row < ROWS then
-      player.row = player.row + 1
-    end
-  elseif key == "left" then
-    if not grid.cells[player.column][player.row].gates.left and player.column > 1 then
-      player.column = player.column - 1
-    end
-  end
 end
 
 function love.draw()
   love.graphics.translate(PADDING, PADDING)
   grid:render()
-
-  love.graphics.circle(
-    "fill",
-    (player.column - 1) * grid.cellWidth + grid.cellWidth / 2,
-    (player.row - 1) * grid.cellHeight + grid.cellHeight / 2,
-    math.min(grid.cellWidth, grid.cellHeight) / 4
-  )
 end
 
 --[[ wilson algorithm
