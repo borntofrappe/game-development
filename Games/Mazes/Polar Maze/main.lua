@@ -8,12 +8,13 @@ RINGS = 8
 RINGS_COUNT = 6
 
 function love.load()
-  love.window.setTitle("Circle Maze")
+  love.window.setTitle("Polar Maze")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.18, 0.18, 0.18)
 
   grid = Grid:new()
   stack = {grid.cells[1][1]}
+
   recursiveBacktracker()
 end
 
@@ -25,7 +26,6 @@ end
 
 function love.draw()
   love.graphics.translate(math.floor(WINDOW_WIDTH / 2), math.floor(WINDOW_HEIGHT / 2))
-
   grid:render()
 end
 
@@ -56,6 +56,17 @@ function recursiveBacktracker()
       }
     }
 
+    if cell.ring % 2 ~= 0 then
+      table.insert(
+        connections,
+        {
+          ["gates"] = {"up", "down"},
+          ["dr"] = 1,
+          ["dc"] = -1
+        }
+      )
+    end
+
     for i = #connections, 1, -1 do
       local ring = cell.ring + connections[i].dr
       if not grid.cells[ring] then
@@ -66,6 +77,14 @@ function recursiveBacktracker()
     local connection = connections[love.math.random(#connections)]
     local ring = cell.ring + connection.dr
     local ringCount = cell.ringCount + connection.dc
+
+    if cell.ring % 2 ~= 0 and connection.dr == 1 then
+      ringCount = cell.ringCount * 2 + connection.dc
+    end
+
+    if cell.ring % 2 == 0 and connection.dr == -1 then
+      ringCount = math.ceil(cell.ringCount / 2) + connection.dc
+    end
 
     if ringCount < 1 then
       ringCount = #grid.cells[ring]
@@ -79,8 +98,8 @@ function recursiveBacktracker()
       cell.gates[connection.gates[1]] = false
       neighboringCell.gates[connection.gates[2]] = false
       neighboringCell.visited = true
-      table.insert(stack, neighboringCell)
 
+      table.insert(stack, neighboringCell)
       recursiveBacktracker()
     else
       while #stack > 0 do
@@ -108,6 +127,17 @@ function recursiveBacktracker()
           }
         }
 
+        if cell.ring % 2 ~= 0 then
+          table.insert(
+            connections,
+            {
+              ["gates"] = {"up", "down"},
+              ["dr"] = 1,
+              ["dc"] = 1
+            }
+          )
+        end
+
         for i = #connections, 1, -1 do
           local ring = (cell.ring + connections[i].dr)
           if not grid.cells[ring] then
@@ -120,6 +150,14 @@ function recursiveBacktracker()
         for i, connection in ipairs(connections) do
           local ring = cell.ring + connection.dr
           local ringCount = cell.ringCount + connection.dc
+
+          if cell.ring % 2 ~= 0 and connection.dr == 1 then
+            ringCount = cell.ringCount * 2 + connection.dc
+          end
+
+          if cell.ring % 2 == 0 and connection.dr == -1 then
+            ringCount = math.ceil(cell.ringCount / 2) + connection.dc
+          end
 
           if ringCount < 1 then
             ringCount = #grid.cells[ring]
@@ -142,12 +180,13 @@ function recursiveBacktracker()
           cell.gates[gates[1]] = false
           neighboringCell.gates[gates[2]] = false
           neighboringCell.visited = true
+
           table.insert(stack, cell)
           table.insert(stack, neighboringCell)
           break
         end
       end
-      recursiveBacktracker()
     end
+    recursiveBacktracker()
   end
 end
