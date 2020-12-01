@@ -6,18 +6,18 @@ WINDOW_HEIGHT = 500
 PADDING = 25
 
 function love.load()
-  love.window.setTitle("Masking")
+  love.window.setTitle("Shapes — Masking")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.18, 0.18, 0.18)
 
   grid = Grid:new()
 
-  player = {
+  local cell = {
     ["column"] = 2,
     ["row"] = 2
   }
 
-  stack = {grid.cells[player.column][player.row]}
+  stack = {grid.cells[cell.column][cell.row]}
   recursiveBacktracker()
 end
 
@@ -25,35 +25,11 @@ function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
-  if key == "up" then
-    if not grid.cells[player.column][player.row].gates.up and player.row > 1 then
-      player.row = player.row - 1
-    end
-  elseif key == "right" then
-    if not grid.cells[player.column][player.row].gates.right and player.column < grid.columns then
-      player.column = player.column + 1
-    end
-  elseif key == "down" then
-    if not grid.cells[player.column][player.row].gates.down and player.row < grid.rows then
-      player.row = player.row + 1
-    end
-  elseif key == "left" then
-    if not grid.cells[player.column][player.row].gates.left and player.column > 1 then
-      player.column = player.column - 1
-    end
-  end
 end
 
 function love.draw()
   love.graphics.translate(PADDING, PADDING)
   grid:render()
-
-  love.graphics.circle(
-    "fill",
-    (player.column - 1) * grid.cellWidth + grid.cellWidth / 2,
-    (player.row - 1) * grid.cellHeight + grid.cellHeight / 2,
-    math.min(grid.cellWidth, grid.cellHeight) / 4
-  )
 end
 
 --[[ Recursive backtracker algorithm

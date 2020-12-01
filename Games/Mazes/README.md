@@ -2,7 +2,7 @@
 
 With this folder I set out to implement a series of algorithms to create perfect mazes, mazes in which any two cells can be connected by one path. It is inspired by the book [_Mazes for Programmers Code Your Own Twisty Little Passages_](http://www.mazesforprogrammers.com/), and specifically the first part of the volume.
 
-There is no game, currently, but a series of demos creating mazes with the different algorithms. A circle represents the player, but its only feature is the ability to walk in the maze constrained by the existing gates.
+There is no game, currently, but a series of demos creating mazes with the different algorithms and shapes.
 
 ## Algorithms
 
@@ -166,3 +166,76 @@ end
 _Please note_: unlike the previous demos, using the constants `COLUMNS` and `ROWS`, the project aptly considers the columns and rows on the basis of the mask and its length.
 
 _Please note_: the demo uses the algorithm developed in the project _Recursive Backtracker_, but other algorithms would work as well. All except the binary tree and sidewinder algorithm, which rely on the grid having non-nil cells.
+
+### Circle
+
+The `love.graphics` module provides the `arc` function to the different cells around the center. The function accepts an optional second argument for the arc type which embodies the desired result.
+
+```lua
+love.graphics.arc("line", "open", 0, 0, 20, 0, math.pi / 2)
+```
+
+Without specifying the type as `open`, the result is that the function draws two straight lines connecting the arc to the center of the grid.
+
+Past this detail, the folder implements a circular shape with polar coordinates and the recursive backtracker algorithm. The structure of the grid is modified from one using columns and rows to one using rings and slices of each ring.
+
+_Please note_: the rings have an equal number of slices, which leads to the maze having a rather uneven structure. This is fixed in a different demo fully implementing a theta maze. I decided to preserve this project as well to illustrate how the code changes from the grid-based demos.
+
+### Polar
+
+Building on top of the previous project, the game tries to make a more realistic maze, one in which the cells are not excessively disparate in size. This is achieved by doubling the number of slices every other ring, and requires a few adjustments to the codebase.
+
+In `Grid.lua`, `count` is used to keep track of the number of slices in the ring. The idea is to double this measure according to the modulo operator, and when the ring describes an even ring (second, fourth and so forth).
+
+```lua
+local count = ringsCount
+for ring = 1, rings do
+  if ring % 2 == 0 then
+    count = count * 2
+  end
+end
+```
+
+The same measure is then used not only to describe how many arcs should be in the specific ring, but also the angle of the mentioned arcs.
+
+```lua
+local angle = 2 * math.pi / count
+for ringCount = 1, count do
+  -- add slice
+end
+```
+
+This takes care of populating a grid with more cells as the structure progresses outwards. It does not, however, solve the way the recursive backtracker algorithm works. Now the cells have more than four neighbors, or at least the cells in the odd ring have more than four neighbors (five). To fix this, `connections` considers an addditional connection.
+
+```lua
+if cell.ring % 2 ~= 0 then
+  table.insert(
+    connections,
+    {
+      ["gates"] = {"up", "down"},
+      ["dr"] = 1,
+      ["dc"] = -1
+    }
+  )
+end
+```
+
+The idea is to consider two neighbors in the outer ring. Since the the number of cells in ring changes however, it is necessary to double the counter variable describing the individual slice.
+
+```lua
+if cell.ring % 2 ~= 0 and connection.dr == 1 then
+  ringCount = cell.ringCount * 2 + connection.dc
+end
+```
+
+This takes care of the outer ring. However, going inwards, it is necessary to consider the instance in which the destination ring has half the number of arcs. In this instance, and conversely to the previous operation, the counter is halved.
+
+```lua
+if cell.ring % 2 == 0 and connection.dr == -1 then
+  ringCount = math.ceil(cell.ringCount / 2) + connection.dc
+end
+```
+
+_Please note_: `connection.dc` is `0`, so it is actually unnecessary to add the measure
+
+_Please note_: this is but one approach to solving the problem. An alternative, perhaps more declarative approach adds a field to the `Cell` class which describes the neighbors, and picks from one of said neighbors at each iteration.

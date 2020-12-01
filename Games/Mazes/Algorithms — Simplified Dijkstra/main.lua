@@ -9,7 +9,7 @@ COLUMNS = 10
 ROWS = 10
 
 function love.load()
-  love.window.setTitle("Simplified Dijkstra")
+  love.window.setTitle("Algorithms — Simplified Dijkstra")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.18, 0.18, 0.18)
 
