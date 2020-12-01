@@ -2,7 +2,7 @@
 
 With this folder I set out to implement a series of algorithms to create perfect mazes, mazes in which any two cells can be connected by one path. It is inspired by the book [_Mazes for Programmers Code Your Own Twisty Little Passages_](http://www.mazesforprogrammers.com/), and specifically the first part of the volume.
 
-There is no game, currently, but a series of demos creating mazes with the different algorithms and shapes.
+There is no game, currently, but a series of demos creating mazes with different algorithms and shapes.
 
 ## Algorithms
 
@@ -16,10 +16,6 @@ There is no game, currently, but a series of demos creating mazes with the diffe
 
 The instructions mean that the first row and the last column will have the same pattern for every maze, with an uninterrupted corridor leading up to the top right corner. This feature describes the texture and the bias of the specific maze.
 
-It is a simple algorithm, which is yet capable of building useful structure. If the bottom left corner provides a clear-cut solution inspired by the maze's bias, consider a situation in which the starting point is moved elsewhere in the structure.
-
-It is also efficient. To build the maze it is necessary to visit each cell only once. Moreover, it is only necessary to store in memory the value of a single cell at a time.
-
 ### Sidewinder
 
 - visit every cell, traversing each row left to right
@@ -28,7 +24,7 @@ It is also efficient. To build the maze it is necessary to visit each cell only 
 
 - do not create any exit
 
-In detail, and as you traverse the grid, one row at a time and from the left to the right, you select a gate east or north.
+The second point warrants a detail explanation. As you traverse the grid, one row at a time and from the left to the right, you select a gate east or north.
 
 If east, remove the gate.
 
@@ -40,7 +36,7 @@ Unlike the binary tree algorithm, there's no guarantee that the last column will
 
 ### Simplified Dijkstra
 
-This is a first attempt at describing the path between a point and any other point in the grid. In the spirit of making the experience more interactive, the demo waits for a key press on the enter key, and then proceeds to populate the grid with the distance from the selected cell.
+This is a first attempt at describing the path between a point and any other point in the grid.The demo waits for a key press on the enter key, and then proceeds to populate the grid with the distance from the selected cell.
 
 The function works as follows:
 
@@ -48,9 +44,9 @@ The function works as follows:
 
 - mark the current cell with the distance value
 
-- look for accessible neighbords. That is neighbors which can be visited, without a gate between the two cells
+- look for accessible neighbors; these are neighbors which can be visited, without a gate between the two cells
 
-- call the function again, for the neighboring cell, and for an incremented distance value
+- call the function again, for the neighboring cell, and with an incremented distance value
 
 To illustrate the recursive process even further, I've decided to include a `Timer` utility. The idea is to here add a delay between successive function calls, and show the different steps taken through Dijkstra's algorithm.
 

@@ -14,47 +14,58 @@ function love.load()
   love.graphics.setBackgroundColor(0.18, 0.18, 0.18)
 
   grid = Grid:new()
+  grid:sidewinder()
 
+  -- starting point for Dijkstra
   cell = {
     ["column"] = 1,
-    ["row"] = 1
+    ["row"] = 1,
+    ["width"] = grid.cells[1][1].width,
+    ["height"] = grid.cells[1][1].height
   }
+end
 
-  sidewinder()
+function love.mousepressed(x, y, button)
+  if button == 1 then
+    Timer:reset()
+
+    grid = Grid:new()
+    grid:sidewinder()
+  end
 end
 
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
+
+  if key == "r" then
+    Timer:reset()
+
+    grid = Grid:new()
+    grid:sidewinder()
+  end
+
   if key == "up" then
-    if cell.row > 1 then
-      cell.row = cell.row - 1
-    end
+    cell.row = math.max(1, cell.row - 1)
   elseif key == "right" then
-    if cell.column < COLUMNS then
-      cell.column = cell.column + 1
-    end
+    cell.column = math.min(grid.columns, cell.column + 1)
   elseif key == "down" then
-    if cell.row < ROWS then
-      cell.row = cell.row + 1
-    end
+    cell.row = math.min(grid.rows, cell.row + 1)
   elseif key == "left" then
-    if cell.column > 1 then
-      cell.column = cell.column - 1
-    end
+    cell.column = math.max(1, cell.column - 1)
   end
 
   if key == "return" then
-    for c = 1, COLUMNS do
-      for r = 1, ROWS do
-        grid.cells[c][r].distance = nil
+    for r = 1, grid.rows do
+      for c = 1, grid.columns do
+        grid.cells[r][c].distance = nil
       end
     end
 
     Timer:reset()
 
-    dijkstra(grid.cells[cell.column][cell.row], 0)
+    dijkstra(grid.cells[cell.row][cell.column], 0)
   end
 end
 
@@ -67,49 +78,7 @@ function love.draw()
   grid:render()
 
   love.graphics.setColor(1, 1, 1, 0.2)
-  love.graphics.rectangle(
-    "fill",
-    (cell.column - 1) * grid.cellWidth,
-    (cell.row - 1) * grid.cellHeight,
-    grid.cellWidth,
-    grid.cellHeight
-  )
-end
-
-function sidewinder()
-  for row = ROWS, 1, -1 do
-    local visited = {}
-    for column = 1, COLUMNS do
-      visited[#visited + 1] = column
-
-      local openEast = love.math.random(2) == 1
-      if openEast then
-        if column < COLUMNS then
-          grid.cells[column][row].gates.right = nil
-          grid.cells[column + 1][row].gates.left = nil
-        else
-          if row > 1 then
-            local index = love.math.random(#visited)
-            grid.cells[visited[index]][row - 1].gates.down = nil
-            grid.cells[visited[index]][row].gates.up = nil
-            visited = {}
-          end
-        end
-      else
-        if row > 1 then
-          local index = love.math.random(#visited)
-          grid.cells[visited[index]][row - 1].gates.down = nil
-          grid.cells[visited[index]][row].gates.up = nil
-          visited = {}
-        else
-          if column < COLUMNS then
-            grid.cells[column][row].gates.right = nil
-            grid.cells[column + 1][row].gates.left = nil
-          end
-        end
-      end
-    end
-  end
+  love.graphics.rectangle("fill", (cell.column - 1) * cell.width, (cell.row - 1) * cell.height, cell.width, cell.height)
 end
 
 --[[ Dijkstra algorithm
@@ -117,7 +86,7 @@ end
 - call the function for any accessible neighbor and with an incremented "distance" value 
 ]]
 function dijkstra(cell, distance)
-  grid.cells[cell.column][cell.row].distance = distance
+  grid.cells[cell.row][cell.column].distance = distance
 
   local connections = {
     {
@@ -144,9 +113,9 @@ function dijkstra(cell, distance)
 
   for i = #connections, 1, -1 do
     if
-      cell.column + connections[i].dc < 1 or cell.column + connections[i].dc > COLUMNS or
+      cell.column + connections[i].dc < 1 or cell.column + connections[i].dc > grid.columns or
         cell.row + connections[i].dr < 1 or
-        cell.row + connections[i].dr > ROWS
+        cell.row + connections[i].dr > grid.rows
      then
       table.remove(connections, i)
     end
@@ -155,13 +124,13 @@ function dijkstra(cell, distance)
   for i, connection in ipairs(connections) do
     -- consider the distance to avoid visiting the same cell twice
     if
-      not grid.cells[cell.column][cell.row].gates[connection.gate] and
-        not grid.cells[cell.column + connection.dc][cell.row + connection.dr].distance
+      not grid.cells[cell.row][cell.column].gates[connection.gate] and
+        not grid.cells[cell.row + connection.dr][cell.column + connection.dc].distance
      then
       Timer:after(
         0.5,
         function()
-          dijkstra(grid.cells[cell.column + connection.dc][cell.row + connection.dr], distance + 1)
+          dijkstra(grid.cells[cell.row + connection.dr][cell.column + connection.dc], distance + 1)
         end
       )
     end
