@@ -106,23 +106,27 @@ In detailed steps:
 
   - loop through the grid top to bottom, left to right
 
-  - look for the first unvisited cell with a visited neighbor
+  - look for the first unvisited cell with visited neighbor(s)
 
-  - connect the cell with the neighbor, and visit the same cell
+  - connect the cell with one of its neighbors
 
   - resume the random walk picking a neighbor at random
 
-In the implementation, I rely on a `goto` statement to break out of the nested loop.
+- repeat the random walk until every cell has been visited
+
+_Please note_: in the implementation, I rely on a `goto` statement to break out of the nested loop.
 
 ### Recursive Backtracker
 
 The algorithm is similar to Hunt and Kill (and therefore Aldous-Broder), but it does differ in the way it seeks an unvisited cell. Faced against a visited cell, it goes through the previous cells (backtracking its way on the beaten path), and looks for unvisited neighbors cell by cell.
 
-It is based on the concept of a stack, a data structure where you add items to and remove items from the end. In lua, with `table.insert` and `table.remove`.
+It is based on the concept of a stack, a data structure where you add items to and remove items from the end. In lua, with the table library supports this data structure with `table.insert` and `table.remove`.
 
-- pick a cell at random and add it to the stack (above)
+- pick a cell at random, visit it and add it to the stack
 
-- from the top of the stack, pick a neighbor at random
+- pick a cell from the top of the stack,
+
+- pick a neighbor at random
 
 - if the neighbor has not already been visited, connect the current cell to said neighbor
 
@@ -137,6 +141,8 @@ It is based on the concept of a stack, a data structure where you add items to a
   - look for unvisited neighbors
 
   - connect the already visited cell with one of its unvisited neighbors
+
+  - add the cell to the stack (there might be more than a single unvisited neighbor)
 
   - add the neighbor to the stack
 

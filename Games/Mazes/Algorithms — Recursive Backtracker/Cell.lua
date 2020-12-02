@@ -1,38 +1,38 @@
 Cell = {}
 Cell.__index = Cell
 
-function Cell:new(column, row, cellWidth, cellHeight)
+function Cell:new(column, row, width, height)
   this = {
     ["column"] = column,
     ["row"] = row,
-    ["cellWidth"] = cellWidth,
-    ["cellHeight"] = cellHeight,
-    ["x0"] = (column - 1) * cellWidth,
-    ["y0"] = (row - 1) * cellHeight,
+    ["width"] = width,
+    ["height"] = height,
+    ["x0"] = (column - 1) * width,
+    ["y0"] = (row - 1) * height,
     ["gates"] = {
       ["up"] = {
         ["x1"] = 0,
         ["y1"] = 0,
-        ["x2"] = cellWidth,
+        ["x2"] = width,
         ["y2"] = 0
       },
       ["right"] = {
-        ["x1"] = cellWidth,
+        ["x1"] = width,
         ["y1"] = 0,
-        ["x2"] = cellWidth,
-        ["y2"] = cellHeight
+        ["x2"] = width,
+        ["y2"] = height
       },
       ["down"] = {
         ["x1"] = 0,
-        ["y1"] = cellHeight,
-        ["x2"] = cellWidth,
-        ["y2"] = cellHeight
+        ["y1"] = height,
+        ["x2"] = width,
+        ["y2"] = height
       },
       ["left"] = {
         ["x1"] = 0,
         ["y1"] = 0,
         ["x2"] = 0,
-        ["y2"] = cellHeight
+        ["y2"] = height
       }
     },
     ["visited"] = false
