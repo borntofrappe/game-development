@@ -54,41 +54,39 @@ _Please note_: the demo creates a maze with the sidewinder algorithm, but any al
 
 ### Aldous-Broder Algorithm
 
-- pick a cell in the grid
+- visit a cell at random
 
 - choose a neighbor at random
 
-- if not visited, link to it by removing the connecting border
+  - if not visited, visit and remove the connecting border
 
-- if visited, do nothing
+  - if visited, do nothing
 
-- move to the selected cell and repeat from step 2, selecting a new neighbor
+- move to the neighboring cell and repeat from step 2
 
 - repeat until every cell has been visited
 
-This algorithm allows to remove any bias, at the price of slower runtime.
+The algorithm allows to remove any bias, at the price of slower runtime. This is because the random walk might take few interations to actually visit every cell in the grid.
 
 ### Wilson Algorithm
 
 Instead of a purely random walk, such as the one described in the previous algorithm, Wilson's approach leverages a loop-erased random walk. It has the same benefit of Aldous Broder, in being unbiased, but is suffers from a similar drawback, being slow (technically slow to start, as will be explained briefly).
 
-You can break down the algorithm's logic in two phases:
+You can break down the algorithm's logic as follows:
 
-- immediately, pick a cell at random and mark it as visited
+- pick a cell at random and visit it
 
-- recursively, proceed to create connection with a random walk:
+- pick an unvisited cell, and take note of its position
 
-  - pick an unvisited cell, and take note of its position
+- pick a neighbor at random. Note its position while moving to the cell
 
-  - pick a neighbor at random. Note its position while moving to the cell
+- continue picking neighboring cells until you reach a visited cell
 
-  - continue picking neighboring cells until you reach a visited cell
+- when you reach a visited cell, remove the gates of the noted cells in the manner described by the random walk
 
-  - when you reach a visited cell, remove the gates of the noted cells in the manner described by the path
+- if the noted cells create a loop, erase said loop
 
-  - if the noted cells create a loop, erase said loop
-
-  - repeat the random walk until every cell has been visited
+- repeat the random walk until every cell has been visited
 
 As you progress and find visited cells, it becomes easier and easier to find a path, meaning the algorithm is slow to start, and increases in speed once there are a few visited cells.
 
