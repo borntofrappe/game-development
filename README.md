@@ -41,7 +41,6 @@ The goal of this repo is two-fold:
   | Lunar Lander     | Lunar Lander with Box2D and `love.math.noise`                    |
   | Side Pocket      | Billiard with rounded rectangles and Box2D                       |
   | Petri Dish       | Time events and `love.math.noise` to animate irregular particles |
-  | Mazes            | A series of demos to create twisty little passages               |
   | Surround         | A game for two players playing side by side in splitscreen       |
 
 ## How to run a game
