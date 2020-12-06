@@ -1,4 +1,3 @@
--- good luck
 WINDOW_WIDTH = 620
 WINDOW_HEIGHT = 440
 
@@ -15,5 +14,5 @@ function love.keypressed(key)
 end
 
 function love.draw()
-  love.graphics.printf("Bang bang\nYou shot me down", 0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, "center")
+  love.graphics.printf("Good luck", 0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, "center")
 end
