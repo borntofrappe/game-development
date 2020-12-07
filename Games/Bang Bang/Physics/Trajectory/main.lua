@@ -6,7 +6,7 @@ SPEED = 100
 GRAVITY = 9.81
 
 function love.load()
-  love.window.setTitle("Range")
+  love.window.setTitle("Trajectory")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(1, 1, 1)
 
@@ -30,6 +30,8 @@ function love.load()
     table.insert(terrain, x)
     table.insert(terrain, y)
   end
+
+  trajectory = getTrajectory(point.x, point.y, point.velocity, point.angle)
 end
 
 function love.keypressed(key)
@@ -70,6 +72,7 @@ function love.update(dt)
       point.angle = math.min(90, math.floor(point.angle + SPEED * dt))
     end
     point.range = getRange(point.velocity, point.angle)
+    trajectory = getTrajectory(point.x, point.y, point.velocity, point.angle)
   elseif love.keyboard.isDown("down") then
     if selection == "velocity" then
       point.velocity = math.max(0, math.floor(point.velocity - SPEED * dt))
@@ -77,6 +80,7 @@ function love.update(dt)
       point.angle = math.max(0, math.floor(point.angle - SPEED * dt))
     end
     point.range = getRange(point.velocity, point.angle)
+    trajectory = getTrajectory(point.x, point.y, point.velocity, point.angle)
   end
 end
 
@@ -95,9 +99,35 @@ function love.draw()
   love.graphics.setColor(0.2, 0.2, 0.22)
   love.graphics.line(terrain)
 
+  love.graphics.setLineWidth(1)
+  love.graphics.line(trajectory)
+
   love.graphics.circle("fill", point.x, point.y, point.r)
 
   love.graphics.circle("line", point.x + point.range, point.y, point.r)
+end
+
+function getTrajectory(xOffset, yOffset, v, a)
+  local points = {}
+  local theta = math.rad(a)
+
+  local t = 0
+  local tDelta = (terrain[3] - terrain[1]) / (v * math.cos(theta))
+
+  while true do
+    x = v * t * math.cos(theta)
+    y = v * t * math.sin(theta) - 1 / 2 * GRAVITY * t ^ 2
+
+    table.insert(points, xOffset + x)
+    table.insert(points, yOffset - y)
+    t = t + tDelta
+
+    if yOffset - y > WINDOW_HEIGHT then
+      break
+    end
+  end
+
+  return points
 end
 
 function getRange(v, a)
