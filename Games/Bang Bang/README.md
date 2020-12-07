@@ -4,11 +4,11 @@ The goal is to recreate the Windows 3 game Bangbang, where two players fire cann
 
 ## Prep
 
-In dedicated folders I develop the building blocks behind the game.
+In dedicated folders I develop the building blocks for the final project.
 
-- `Terrain` creates a few demos to explore how to render terrain and cannoball holes.
+- `Terrain` explores how to render the game's terrain and cannoball holes
 
-- `Physics` considers the trajectory of the cannonballs, considering a velocity `v` and angle `theta`
+- `Physics` considers projectile motion and the rules governing the game
 
 ## Resources
 

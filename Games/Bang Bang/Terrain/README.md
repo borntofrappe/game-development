@@ -2,17 +2,17 @@
 
 Here I explore how to create the terrain for the eventual game.
 
-## Flat line
+## Line
 
 Render a line by connecting a series of points. This allows to later create holes by modifying the `y` coordinates of consecutive points.
 
-## Trigonometric holes
+## Holes
 
 Include holes in the form of a series of points with varying `y` coordinates. The value is modified through the `sin` function and considering the range `[math.pi, 0]`, describing a counter-clockwise arc.
 
-## Normal distribution
+## Hill
 
-Alter the default flat line to draw a hill. The idea is to use the result of a function returning the value for a normal distribution.
+Alter the default terrain to draw a hill. The idea is to use the result of a function returning the value for a normal distribution.
 
 ```lua
 function getNormalDistribution(x, mu, sigma)
@@ -20,7 +20,7 @@ function getNormalDistribution(x, mu, sigma)
 end
 ```
 
-Euler's number is prefaced at the top of the script as `2.71828`, `mu` and `sigma` relate to the key parameters of the functions, more on these in a bit, and `x` describes instead the coordinate on the horizontal axis. The value returned by the function is scaled to have a clear impact on the terrain.
+Euler's number is included at the top of the script as `2.71828`, `mu` and `sigma` relate to the key parameters of the functions (more on these in a bit) and `x` describes instead the coordinate on the horizontal axis. The value returned by the function is scaled to have a clear impact on the terrain.
 
 ```lua
 local y = WINDOW_HEIGHT * 3 / 4 - getNormalDistribution(x, mu, sigma) * NORMAL_DISTRIBUTION_SCALE
@@ -34,7 +34,7 @@ For `mu` and `sigma`, remember the following:
 
 Notice that the hole included through the makeshift cannonball from the previous demo still works with the uneven terrain. This is because ultimately, the hole is created by adding a value to the `y` coordinate of consecutive points.
 
-## Normal distributions
+## Asymmetric Hill
 
 The goal is to have the line describing the terrain start and end at different `y` values. This is achieved by scaling the normal distribution with two different values.
 
