@@ -51,9 +51,10 @@ end
 
 _Please note_: instead of incrementing the counter variable by an arbitrary, small amount, it is possible to consider the value `t` describing time between two consecutive points.
 
-```
-
-
+```lua
+local tDelta = (terrain[3] - terrain[1]) / (v * math.cos(theta))
 ```
 
 In this manner `points` and `trajectory` have a comparable number of points.
+
+## Contact
