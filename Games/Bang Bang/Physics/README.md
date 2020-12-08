@@ -62,3 +62,36 @@ local tDelta = (terrain[3] - terrain[1]) / (v * math.cos(theta))
 ```
 
 In this manner `points` and `trajectory` have a comparable number of points.
+
+## Fire
+
+Up to the previous demo, the goal was to showcase the motion of a projectile. However, this projectile needs to impact and modify the terrain. Here I stagger the movement of a circle to move away from the player, and considering the points detailed by the trajectory. The `Timer` utility allows to modify the coordinates at an interval, but the core of the demo is in the `fire` function.
+
+The `fire` function considers the points described by `trajectory`, and loops through the table in order to set the `x` and `y` coordinate of the cannonball.
+
+```lua
+local index = 1
+Timer:every(
+  0.01,
+  function()
+    player.cannonball.x = trajectory[index]
+    player.cannonball.y = trajectory[index + 1]
+
+    index = index + 2
+  end
+)
+```
+
+As `index` reaches the end of the table then, the cannonball is reset to its original position.
+
+```lua
+if not trajectory[index] then
+  player.cannonball.x = player.x
+  player.cannonball.y = player.y
+  Timer:reset()
+end
+```
+
+_Please note_: I decided to include a boolean `isFiring` so that while the firing animation is taking place, the game is not allowed to update the speed, angle, and therefore trajectory of the projectile.
+
+_Please note_: the demo does not consider the collision between cannonball and terrain. This is the topic of the demo which follows.
