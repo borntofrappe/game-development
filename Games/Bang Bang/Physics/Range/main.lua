@@ -2,7 +2,7 @@ WINDOW_WIDTH = 620
 WINDOW_HEIGHT = 440
 POINTS = 300
 RADIUS = 12
-SPEED = 100
+UPDATE_SPEED = 100
 GRAVITY = 9.81
 
 function love.load()
@@ -10,26 +10,19 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(1, 1, 1)
 
-  yStart = WINDOW_HEIGHT * 3 / 4
-
-  point = {
-    ["r"] = RADIUS,
+  player = {
     ["x"] = RADIUS * 2,
-    ["y"] = yStart,
+    ["y"] = WINDOW_HEIGHT * 3 / 4,
+    ["r"] = RADIUS,
     ["velocity"] = 50,
     ["angle"] = 30
   }
+
   selection = "velocity"
 
-  point.range = getRange(point.velocity, point.angle)
+  player.range = getRange(player.velocity, player.angle)
 
-  terrain = {}
-  for i = 1, POINTS + 1 do
-    local x = (i - 1) * WINDOW_WIDTH / POINTS
-    local y = yStart
-    table.insert(terrain, x)
-    table.insert(terrain, y)
-  end
+  terrain = getPoints()
 end
 
 function love.keypressed(key)
@@ -49,13 +42,13 @@ function love.keypressed(key)
   end
 
   if key == "return" then
-    local xStart = point.x + point.range - point.r
-    local xEnd = point.x + point.range + point.r
+    local xStart = player.x + player.range - player.r
+    local xEnd = player.x + player.range + player.r
     local angle = math.pi
-    local dAngle = math.pi / (point.r * 2) * WINDOW_WIDTH / POINTS
+    local dAngle = math.pi / (player.r * 2) * WINDOW_WIDTH / POINTS
     for i = 1, #terrain, 2 do
       if terrain[i] >= xStart and terrain[i] <= xEnd then
-        terrain[i + 1] = terrain[i + 1] + math.sin(angle) * point.r
+        terrain[i + 1] = terrain[i + 1] + math.sin(angle) * player.r
         angle = math.max(0, angle - dAngle)
       end
     end
@@ -65,42 +58,53 @@ end
 function love.update(dt)
   if love.keyboard.isDown("up") then
     if selection == "velocity" then
-      point.velocity = math.min(100, math.floor(point.velocity + SPEED * dt))
+      player.velocity = math.min(100, math.floor(player.velocity + UPDATE_SPEED * dt))
     else
-      point.angle = math.min(90, math.floor(point.angle + SPEED * dt))
+      player.angle = math.min(90, math.floor(player.angle + UPDATE_SPEED * dt))
     end
-    point.range = getRange(point.velocity, point.angle)
+    player.range = getRange(player.velocity, player.angle)
   elseif love.keyboard.isDown("down") then
     if selection == "velocity" then
-      point.velocity = math.max(0, math.floor(point.velocity - SPEED * dt))
+      player.velocity = math.max(0, math.floor(player.velocity - UPDATE_SPEED * dt))
     else
-      point.angle = math.max(0, math.floor(point.angle - SPEED * dt))
+      player.angle = math.max(0, math.floor(player.angle - UPDATE_SPEED * dt))
     end
-    point.range = getRange(point.velocity, point.angle)
+    player.range = getRange(player.velocity, player.angle)
   end
 end
 
 function love.draw()
-  love.graphics.setColor(0.2, 0.2, 0.22)
+  love.graphics.setColor(0.2, 0.2, 0.2)
   if selection == "velocity" then
     love.graphics.circle("fill", 8, 16, 4)
   else
     love.graphics.circle("fill", 8, 32, 4)
   end
-  love.graphics.print("Velocity: " .. point.velocity, 14, 8)
-  love.graphics.print("Angle: " .. point.angle, 14, 24)
-  love.graphics.print("Range: " .. point.range, 14, 40)
+  love.graphics.print("Velocity: " .. player.velocity, 14, 8)
+  love.graphics.print("Angle: " .. player.angle, 14, 24)
+  love.graphics.print("Range: " .. player.range, 14, 40)
 
   love.graphics.setLineWidth(2)
-  love.graphics.setColor(0.2, 0.2, 0.22)
   love.graphics.line(terrain)
 
-  love.graphics.circle("fill", point.x, point.y, point.r)
-
-  love.graphics.circle("line", point.x + point.range, point.y, point.r)
+  love.graphics.circle("fill", player.x, player.y, player.r)
+  love.graphics.circle("line", player.x + player.range, player.y, player.r)
 end
 
 function getRange(v, a)
   local theta = math.rad(a)
   return math.floor((v ^ 2 * math.sin(2 * theta)) / GRAVITY)
+end
+
+function getPoints()
+  local points = {}
+
+  for i = 1, POINTS + 1 do
+    local x = (i - 1) * WINDOW_WIDTH / POINTS
+    local y = WINDOW_HEIGHT * 3 / 4
+    table.insert(points, x)
+    table.insert(points, y)
+  end
+
+  return points
 end
