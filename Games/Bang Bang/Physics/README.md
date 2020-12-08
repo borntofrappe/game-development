@@ -95,3 +95,36 @@ end
 _Please note_: I decided to include a boolean `isFiring` so that while the firing animation is taking place, the game is not allowed to update the speed, angle, and therefore trajectory of the projectile.
 
 _Please note_: the demo does not consider the collision between cannonball and terrain. This is the topic of the demo which follows.
+
+## Hit
+
+The demo considers a collision between the moving cannonball and the terrain. It does so by checking the `y` coordinates of the cannonball as it travels on the arc describing its trajectory.
+
+`terrain` and `trajectory` share a comparable number of points, in that each `x` coordinate is shared by the same amount, but it is still necessary to consider the offset of the player. Indeed the first point of the trajectory doesn match the first point of the terrain.
+
+This explains the snippet setting the value of `indexStart`.
+
+```lua
+local indexStart
+
+for i = 1, #terrain, 2 do
+  if terrain[i] >= trajectory[1] then
+    indexStart = i
+    break
+  end
+end
+```
+
+Knowing this offset, the comparison is between the `y` coordinates of the two tables.
+
+```lua
+if trajectory[index + 1] > terrain[indexStart + index + 2] then
+  -- collision
+end
+```
+
+A couple of notes on this conditional:
+
+- `+ 2` is to consier the y coordinate for the terrain, and is the result of `indexStart + 1` plus `index + 1`
+
+- checking if the value is greater, `>` and not greater or equal is necessary to avoid signalling a collision with the first point of the trajectory
