@@ -4,12 +4,17 @@ Player.__index = Player
 function Player:create(x, y)
   local sprite = 2
   local angle = 45
-  local velocity = 30
+  local velocity = 80
 
   local offsetHeight = gTextures["cannon"]:getHeight()
   local offsetWidth = gTextures["cannon"]:getWidth() / #gQuads["cannon"]
 
   local isDestroyed = false
+  local cannonball = {
+    ["x"] = x + offsetWidth / 2,
+    ["y"] = y - 18,
+    ["r"] = CANNONBALL_SIZE / 2
+  }
 
   this = {
     x = x,
@@ -19,7 +24,8 @@ function Player:create(x, y)
     sprite = sprite,
     isDestroyed = isDestroyed,
     offsetHeight = offsetHeight,
-    offsetWidth = offsetWidth
+    offsetWidth = offsetWidth,
+    cannonball = cannonball
   }
 
   setmetatable(this, self)
@@ -28,9 +34,9 @@ function Player:create(x, y)
 end
 
 function Player:update(dt)
-  if love.keyboard.isDown("up") then
+  if love.keyboard.isDown("down") then
     self.angle = math.max(0, self.angle - dt * UPDATE_SPEED)
-  elseif love.keyboard.isDown("down") then
+  elseif love.keyboard.isDown("up") then
     self.angle = math.min(90, self.angle + dt * UPDATE_SPEED)
   end
 
@@ -55,11 +61,22 @@ function Player:render()
     )
   else
     love.graphics.draw(
+      gTextures["cannonball"],
+      self.cannonball.x,
+      self.cannonball.y,
+      0,
+      1,
+      1,
+      self.cannonball.r,
+      self.cannonball.r
+    )
+
+    love.graphics.draw(
       gTextures["cannon"],
       gQuads["cannon"][self.sprite],
       self.x + self.offsetWidth / 2,
       self.y - 18,
-      math.rad(self.angle),
+      math.rad(90 - self.angle),
       1,
       1,
       self.offsetWidth / 2,
