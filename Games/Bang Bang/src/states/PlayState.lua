@@ -3,23 +3,25 @@ PlayState = BaseState:create()
 function PlayState:enter()
   self.terrain = self:getPoints()
 
-  local xPlayer = love.math.random(5) * 2 + 1
-  self.player = Player:create(self.terrain[xPlayer], self.terrain[xPlayer + 1])
+  local xPlayer1 = love.math.random(10) * 2 + 1
+  local xPlayer2 = #self.terrain - 30 - love.math.random(10) * 2 + 1
+
+  self.player1 = Player:create(self.terrain[xPlayer1], self.terrain[xPlayer1 + 1], true)
+  self.player2 = Player:create(self.terrain[xPlayer2], self.terrain[xPlayer2 + 1], false)
 end
 
 function PlayState:update(dt)
   if love.keyboard.wasPressed("escape") then
     gStateMachine:change("title")
   end
-  if love.keyboard.wasPressed("r") then
-    self.terrain = self:getPoints()
-  end
 
-  self.player:update(dt)
+  self.player1:update(dt)
+  self.player2:update(dt)
 end
 
 function PlayState:render()
-  self.player:render()
+  self.player1:render()
+  self.player2:render()
 
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b)
   love.graphics.setLineWidth(5)
