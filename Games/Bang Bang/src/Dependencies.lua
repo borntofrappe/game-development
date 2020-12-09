@@ -36,3 +36,7 @@ gColors = {
     ["b"] = 0.89
   }
 }
+
+function getNormalDistribution(x, mu, sigma)
+  return 1 / (sigma * (2 * math.pi) ^ 0.5) * EULER_NUMBER ^ ((-1 / 2) * ((x - mu) / sigma) ^ 2)
+end
