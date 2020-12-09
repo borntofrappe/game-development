@@ -3,11 +3,8 @@ PlayState = BaseState:create()
 function PlayState:enter()
   self.terrain = self:getPoints()
 
-  local xPlayer1 = love.math.random(10) * 2 + 1
-  local xPlayer2 = #self.terrain - 30 - love.math.random(10) * 2 + 1
-
-  self.player1 = Player:create(self.terrain[xPlayer1], self.terrain[xPlayer1 + 1], true)
-  self.player2 = Player:create(self.terrain[xPlayer2], self.terrain[xPlayer2 + 1], false)
+  local xPlayer = love.math.random(10) * 2 + 1
+  self.player = Player:create(self.terrain[xPlayer], self.terrain[xPlayer + 1])
 end
 
 function PlayState:update(dt)
@@ -15,17 +12,22 @@ function PlayState:update(dt)
     gStateMachine:change("title")
   end
 
-  self.player1:update(dt)
-  self.player2:update(dt)
+  self.player:update(dt)
 end
 
 function PlayState:render()
-  self.player1:render()
-  self.player2:render()
+  self.player:render()
 
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b)
   love.graphics.setLineWidth(5)
   love.graphics.line(self.terrain)
+
+  love.graphics.setFont(gFonts["normal"])
+  love.graphics.print(
+    "Angle " .. formatData(self.player.angle) .. "\nVelocity " .. formatData(self.player.velocity),
+    8,
+    8
+  )
 end
 
 function PlayState:getPoints()
