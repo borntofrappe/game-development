@@ -18,9 +18,9 @@ The `.png` images in the `res` folder are designed with GIMP, to have solid, bla
 
 - `cannon` provides three pieces to build the cannons for both sides.
 
-  Each piece is sized `42*92`, and the second/third sprites are meant to describe the body of the left/right cannon respectively. This piece is drawn behind the first sprite, and is meant to be rotated from the bottom center. Consider turning the shape from `(21,66)`
+  Each piece is sized `42*92`, and the second/third sprites are meant to describe the body of the left/right cannon respectively. This piece is drawn behind the first sprite, and is meant to be rotated from the bottom center. Consider turning the shape from `(21,64)`
 
-- `background` and `title` match the size of the window
+- `background` matches the size of the window
 
 ## Resources
 

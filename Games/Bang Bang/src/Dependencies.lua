@@ -1,6 +1,8 @@
 require "src/constants"
 require "src/Utils"
 
+require "src/Player"
+
 require "src/states/BaseState"
 require "src/states/TitleState"
 require "src/states/PlayState"

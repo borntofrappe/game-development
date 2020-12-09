@@ -2,6 +2,9 @@ PlayState = BaseState:create()
 
 function PlayState:enter()
   self.terrain = self:getPoints()
+
+  local xPlayer = love.math.random(5) * 2 + 1
+  self.player = Player:create(self.terrain[xPlayer], self.terrain[xPlayer + 1])
 end
 
 function PlayState:update(dt)
@@ -11,11 +14,15 @@ function PlayState:update(dt)
   if love.keyboard.wasPressed("r") then
     self.terrain = self:getPoints()
   end
+
+  self.player:update(dt)
 end
 
 function PlayState:render()
+  self.player:render()
+
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b)
-  love.graphics.setLineWidth(3)
+  love.graphics.setLineWidth(5)
   love.graphics.line(self.terrain)
 end
 
