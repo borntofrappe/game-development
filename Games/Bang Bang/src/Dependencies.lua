@@ -20,6 +20,19 @@ gQuads = {
 }
 
 gFonts = {
-  ["bold"] = love.graphics.newFont("res/fonts/font-bold.ttf", 24),
+  ["title"] = love.graphics.newFont("res/fonts/font-title.ttf", 36),
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 18)
+}
+
+gColors = {
+  ["dark"] = {
+    ["r"] = 0.047,
+    ["g"] = 0.062,
+    ["b"] = 0.067
+  },
+  ["light"] = {
+    ["r"] = 0.89,
+    ["g"] = 0.89,
+    ["b"] = 0.89
+  }
 }

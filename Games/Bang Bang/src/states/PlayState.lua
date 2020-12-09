@@ -10,5 +10,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  love.graphics.draw(gTextures["background"], 0, 0)
+  love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b)
+
+  love.graphics.printf("PlayState", 0, WINDOW_HEIGHT / 2 - gFonts["title"]:getHeight() / 2, WINDOW_WIDTH, "center")
 end
