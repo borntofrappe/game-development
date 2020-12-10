@@ -2,8 +2,8 @@ Menu = {}
 Menu.__index = Menu
 
 function Menu:create(player)
-  local paddingLabel = 16
-  local paddingButton = 8
+  local paddingLabel = 24
+  local paddingButton = 16
 
   local widthButtonSmall = 28
   local heightButtonSmall = 28

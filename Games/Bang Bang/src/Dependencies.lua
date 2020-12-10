@@ -28,7 +28,7 @@ gQuads = {
 
 gFonts = {
   ["title"] = love.graphics.newFont("res/fonts/font-title.ttf", 42),
-  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 18)
+  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 20)
 }
 
 gColors = {

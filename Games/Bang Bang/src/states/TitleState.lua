@@ -2,18 +2,11 @@ TitleState = BaseState:create()
 
 function TitleState:enter()
   self.message = {
-    ["text"] = "Aim\n\nShoot\n\nRepeat",
+    ["text"] = "Aim\tShoot\tRepeat",
     ["alpha"] = 1
   }
 
-  local newLines = 0
-  for i = 1, #self.message.text do
-    if self.message.text:sub(i, i) == "\n" then
-      newLines = newLines + 1
-    end
-  end
-
-  self.message.newLines = newLines
+  self.gap = 48
 
   Timer:every(
     2.5,
@@ -52,15 +45,13 @@ end
 
 function TitleState:render()
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(gTextures["title"], 64, WINDOW_HEIGHT / 2 - gTextures["title"]:getHeight() / 2)
+  love.graphics.draw(
+    gTextures["title"],
+    WINDOW_WIDTH / 2 - gTextures["title"]:getWidth() / 2,
+    WINDOW_HEIGHT / 2 - gTextures["title"]:getHeight()
+  )
 
   love.graphics.setFont(gFonts["title"])
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b, self.message.alpha)
-  love.graphics.printf(
-    self.message.text,
-    WINDOW_WIDTH / 2,
-    WINDOW_HEIGHT / 2 - gFonts["title"]:getHeight() * self.message.newLines / 2,
-    WINDOW_WIDTH / 2,
-    "center"
-  )
+  love.graphics.printf(self.message.text, 0, WINDOW_HEIGHT / 2 + self.gap, WINDOW_WIDTH, "center")
 end
