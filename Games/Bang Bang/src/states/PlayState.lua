@@ -6,11 +6,11 @@ function PlayState:enter()
 end
 
 function PlayState:update(dt)
-  Timer:update(dt)
-
+  self.level:update(dt)
   self.menu:update(dt)
 
   if love.keyboard.wasPressed("escape") then
+    Timer:reset()
     gStateMachine:change("title")
   end
 

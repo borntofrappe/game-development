@@ -43,7 +43,7 @@ function Menu:create(level)
       cannon.angle = math.max(ANGLE_MIN, cannon.angle - INCREMENT)
       angleDataLabel.text = cannon.angle
     end,
-    OFFSET_LABEL
+    LABEL_OFFSET_Y
   )
 
   local increaseAngleButton =
@@ -59,7 +59,7 @@ function Menu:create(level)
       cannon.angle = math.min(ANGLE_MAX, cannon.angle + INCREMENT)
       angleDataLabel.text = cannon.angle
     end,
-    OFFSET_LABEL
+    LABEL_OFFSET_Y
   )
 
   local velocityLabel = Label:create(xLabel, yLabelVelocity, "Velocity")
@@ -81,7 +81,7 @@ function Menu:create(level)
       cannon.velocity = math.max(VELOCITY_MIN, cannon.velocity - INCREMENT)
       velocityDataLabel.text = cannon.velocity
     end,
-    OFFSET_LABEL
+    LABEL_OFFSET_Y
   )
 
   local increaseVelocityButton =
@@ -97,7 +97,7 @@ function Menu:create(level)
       cannon.velocity = math.min(VELOCITY_MAX, cannon.velocity + INCREMENT)
       velocityDataLabel.text = cannon.velocity
     end,
-    OFFSET_LABEL
+    LABEL_OFFSET_Y
   )
 
   local fireButton =

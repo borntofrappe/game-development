@@ -4,6 +4,7 @@ require "src/Utils"
 require "src/Terrain"
 require "src/Cannon"
 require "src/Cannonball"
+require "src/Target"
 require "src/Level"
 
 require "src/gui/Button"
@@ -22,6 +23,7 @@ gTextures = {
   ["cannon"] = love.graphics.newImage("res/graphics/cannon.png"),
   ["cannonball"] = love.graphics.newImage("res/graphics/cannonball.png"),
   ["gameover"] = love.graphics.newImage("res/graphics/gameover.png"),
+  ["target"] = love.graphics.newImage("res/graphics/target.png"),
   ["title"] = love.graphics.newImage("res/graphics/title.png")
 }
 

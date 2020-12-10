@@ -40,12 +40,12 @@ function Cannon:render()
       gTextures["cannon"],
       gQuads["cannon"][self.sprite],
       self.x + self.width / 2,
-      self.y - OFFSET_HEIGHT,
+      self.y - CANNON_OFFSET_HEIGHT,
       math.rad(90 - self.angle),
       1,
       1,
       self.width / 2,
-      self.height - OFFSET_HEIGHT
+      self.height - CANNON_OFFSET_HEIGHT
     )
     love.graphics.draw(gTextures["cannon"], gQuads["cannon"][1], self.x, self.y - self.height)
   end

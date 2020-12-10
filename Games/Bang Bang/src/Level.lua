@@ -4,20 +4,28 @@ Level.__index = Level
 function Level:create()
   local terrain = Terrain:create()
 
-  local index = love.math.random(10) * 2 + 1
-  local xCannon = terrain.points[index]
-  local yCannon = terrain.points[index + 1]
+  local indexCannon = love.math.random(CANNON_POINTS) * 2 + 1
+  local xCannon = terrain.points[indexCannon]
+  local yCannon = terrain.points[indexCannon + 1]
   local cannon = Cannon:create(xCannon, yCannon)
 
-  local xCannonball = cannon.x + cannon.width / 2 + math.cos(math.rad(cannon.angle)) * (cannon.height - OFFSET_HEIGHT)
+  local xCannonball =
+    cannon.x + cannon.width / 2 + math.cos(math.rad(cannon.angle)) * (cannon.height - CANNON_OFFSET_HEIGHT)
   local yCannonball =
-    cannon.y - OFFSET_HEIGHT - cannon.width / 2 + math.sin(math.rad(cannon.angle)) * (cannon.height - OFFSET_HEIGHT)
+    cannon.y - CANNON_OFFSET_HEIGHT - cannon.width / 2 +
+    math.sin(math.rad(cannon.angle)) * (cannon.height - CANNON_OFFSET_HEIGHT)
   local cannonball = Cannonball:create(xCannonball, yCannonball)
+
+  local indexTarget = #terrain.points - love.math.random(TARGET_POINTS) * 2 + 1
+  local xTarget = terrain.points[indexTarget]
+  local yTarget = terrain.points[indexTarget + 1]
+  local target = Target:create(xTarget, yTarget)
 
   this = {
     terrain = terrain,
     cannon = cannon,
     cannonball = cannonball,
+    target = target,
     isFiring = false
   }
 
@@ -26,20 +34,27 @@ function Level:create()
   return this
 end
 
+function Level:update(dt)
+  Timer:update(dt)
+end
+
 function Level:render()
   if self.isFiring then
     self.cannonball:render()
   end
 
   self.cannon:render()
+  self.target:render()
   self.terrain:render()
 end
 
 function Level:getTrajectory()
   local xOffset =
-    self.cannon.x + self.cannon.width / 2 + math.cos(math.rad(self.cannon.angle)) * (self.cannon.height - OFFSET_HEIGHT)
+    self.cannon.x + self.cannon.width / 2 +
+    math.cos(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
   local yOffset =
-    self.cannon.y - OFFSET_HEIGHT - math.sin(math.rad(self.cannon.angle)) * (self.cannon.height - OFFSET_HEIGHT)
+    self.cannon.y - CANNON_OFFSET_HEIGHT -
+    math.sin(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
   local a = self.cannon.angle
   local v = self.cannon.velocity
 
@@ -108,22 +123,23 @@ function Level:fire()
           self.isFiring = false
           self.cannonball.x =
             self.cannon.x + self.cannon.width / 2 +
-            math.cos(math.rad(self.cannon.angle)) * (self.cannon.height - OFFSET_HEIGHT)
+            math.cos(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
           self.cannonball.y =
-            self.cannon.y - OFFSET_HEIGHT - math.sin(math.rad(self.cannon.angle)) * (self.cannon.height - OFFSET_HEIGHT)
+            self.cannon.y - CANNON_OFFSET_HEIGHT -
+            math.sin(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
           Timer:reset()
         end
 
         if not hasCollided then
           index = index + 2
-          if not trajectory[index] then
+          if not self.terrain.points[indexStart + index + 2] or not trajectory[index] then
             self.isFiring = false
             self.cannonball.x =
               self.cannon.x + self.cannon.width / 2 +
-              math.cos(math.rad(self.cannon.angle)) * (self.cannon.height - OFFSET_HEIGHT)
+              math.cos(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
             self.cannonball.y =
-              self.cannon.y - OFFSET_HEIGHT -
-              math.sin(math.rad(self.cannon.angle)) * (self.cannon.height - OFFSET_HEIGHT)
+              self.cannon.y - CANNON_OFFSET_HEIGHT -
+              math.sin(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
 
             Timer:reset()
           end
