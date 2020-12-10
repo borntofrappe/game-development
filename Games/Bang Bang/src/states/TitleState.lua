@@ -51,7 +51,7 @@ function TitleState:render()
     WINDOW_HEIGHT / 2 - gTextures["title"]:getHeight()
   )
 
-  love.graphics.setFont(gFonts["title"])
+  love.graphics.setFont(gFonts["big"])
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b, self.message.alpha)
   love.graphics.printf(self.message.text, 0, WINDOW_HEIGHT / 2 + self.gap, WINDOW_WIDTH, "center")
 end

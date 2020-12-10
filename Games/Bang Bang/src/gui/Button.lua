@@ -1,14 +1,15 @@
 Button = {}
 Button.__index = Button
 
-function Button:create(x, y, width, height, text, callback)
+function Button:create(x, y, width, height, text, callback, offsetY)
   this = {
     x = x,
     y = y,
     width = width,
     height = height,
     text = text,
-    callback = callback
+    callback = callback,
+    offsetY = offsetY or 0
   }
 
   setmetatable(this, self)
@@ -28,14 +29,14 @@ end
 function Button:render()
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b, 1)
 
-  love.graphics.setLineWidth(2)
+  love.graphics.setLineWidth(4)
   love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 8)
 
   love.graphics.setFont(gFonts["normal"])
   love.graphics.printf(
     self.text,
     self.x,
-    self.y + self.height / 2 - gFonts["normal"]:getHeight() / 2,
+    self.y + self.height / 2 - gFonts["normal"]:getHeight() / 2 - self.offsetY,
     self.width,
     "center"
   )

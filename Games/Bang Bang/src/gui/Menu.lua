@@ -5,22 +5,22 @@ function Menu:create(player)
   local paddingLabel = 24
   local paddingButton = 16
 
-  local widthButtonSmall = 28
-  local heightButtonSmall = 28
+  local widthButtonSmall = 30
+  local heightButtonSmall = 30
 
   local widthButtonLarge =
     gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
     gFonts["normal"]:getWidth(formatData(player.angle)) +
     paddingButton +
     widthButtonSmall
-  local heightButtonLarge = 32
+  local heightButtonLarge = 36
 
   local xLabel = 16
-  local yLabelAngle = 24
-  local yLabelVelocity = 64
+  local yLabelAngle = 18
+  local yLabelVelocity = 60
 
   local xFireButton = 16
-  local yFireButton = 104
+  local yFireButton = 100
 
   local angleLabel = Label:create(xLabel, yLabelAngle, "Angle")
   local angleDataLabel =
@@ -40,7 +40,8 @@ function Menu:create(player)
     function()
       player.angle = math.max(5, player.angle - 5)
       angleDataLabel.text = formatData(player.angle)
-    end
+    end,
+    OFFSET_LABEL
   )
 
   local increaseAngleButton =
@@ -55,7 +56,8 @@ function Menu:create(player)
     function()
       player.angle = math.min(90, player.angle + 5)
       angleDataLabel.text = formatData(player.angle)
-    end
+    end,
+    OFFSET_LABEL
   )
 
   local velocityLabel = Label:create(xLabel, yLabelVelocity, "Velocity")
@@ -76,7 +78,8 @@ function Menu:create(player)
     function()
       player.velocity = math.max(5, player.velocity - 5)
       velocityDataLabel.text = formatData(player.velocity)
-    end
+    end,
+    OFFSET_LABEL
   )
 
   local increaseVelocityButton =
@@ -91,7 +94,8 @@ function Menu:create(player)
     function()
       player.velocity = math.min(100, player.velocity + 5)
       velocityDataLabel.text = formatData(player.velocity)
-    end
+    end,
+    OFFSET_LABEL
   )
 
   local fireButton =

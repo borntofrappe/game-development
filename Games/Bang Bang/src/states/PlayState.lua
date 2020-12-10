@@ -40,7 +40,7 @@ function PlayState:render()
   self.player:render()
 
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b)
-  love.graphics.setLineWidth(5)
+  love.graphics.setLineWidth(6)
   love.graphics.line(self.terrain)
 end
 
