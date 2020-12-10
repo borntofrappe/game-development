@@ -3,6 +3,8 @@ require "src/Utils"
 
 require "src/Player"
 
+require "src/gui/Button"
+
 require "src/states/BaseState"
 require "src/states/TitleState"
 require "src/states/PlayState"
@@ -24,7 +26,7 @@ gQuads = {
 
 gFonts = {
   ["title"] = love.graphics.newFont("res/fonts/font-title.ttf", 42),
-  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 18)
 }
 
 gColors = {

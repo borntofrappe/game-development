@@ -9,10 +9,23 @@ function PlayState:enter()
   self.trajectory = self:getTrajectory(self.player)
   self.showTrajectory = false
   self.isFiring = false
+
+  self.fireButton =
+    Button:create(
+    WINDOW_WIDTH / 2,
+    8,
+    128,
+    48,
+    "Fire!",
+    function()
+      self:fire()
+    end
+  )
 end
 
 function PlayState:update(dt)
   Timer:update(dt)
+  self.fireButton:update(dt)
 
   if love.keyboard.wasPressed("escape") then
     gStateMachine:change("title")
@@ -23,7 +36,6 @@ function PlayState:update(dt)
 
   if love.keyboard.wasPressed("return") and not self.isFiring then
     self.isFiring = true
-    self.trajectory = self:getTrajectory(self.player)
     self:fire()
   end
 
@@ -48,6 +60,8 @@ function PlayState:render()
     8,
     8
   )
+
+  self.fireButton:render()
 end
 
 function PlayState:getPoints()
@@ -103,6 +117,8 @@ function PlayState:getTrajectory(player)
 end
 
 function PlayState:fire()
+  self.trajectory = self:getTrajectory(self.player)
+
   local index = 1
 
   local indexStart
