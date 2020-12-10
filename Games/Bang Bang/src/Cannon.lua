@@ -1,11 +1,11 @@
-Player = {}
-Player.__index = Player
+Cannon = {}
+Cannon.__index = Cannon
 
-function Player:create(terrain)
+function Cannon:create(terrain)
   local index = love.math.random(10) * 2 + 1
 
-  local x = terrain[index]
-  local y = terrain[index + 1]
+  local x = terrain.points[index]
+  local y = terrain.points[index + 1]
 
   local width = CANNON_WIDTH
   local height = CANNON_HEIGHT
@@ -41,7 +41,7 @@ function Player:create(terrain)
   return this
 end
 
-function Player:render()
+function Cannon:render()
   love.graphics.setColor(1, 1, 1, 1)
   if self.isDestroyed then
     love.graphics.draw(
@@ -78,7 +78,7 @@ function Player:render()
   end
 end
 
-function Player:getTrajectory()
+function Cannon:getTrajectory()
   local xOffset = self.x + self.width / 2 + math.cos(math.rad(self.angle)) * (self.height - OFFSET_HEIGHT)
   local yOffset = self.y - OFFSET_HEIGHT - math.sin(math.rad(self.angle)) * (self.height - OFFSET_HEIGHT)
   local a = self.angle
@@ -88,7 +88,7 @@ function Player:getTrajectory()
   local theta = math.rad(a)
 
   local t = 0
-  local tDelta = (self.terrain[3] - self.terrain[1]) / (v * math.cos(theta))
+  local tDelta = (self.terrain.points[3] - self.terrain.points[1]) / (v * math.cos(theta))
 
   while true do
     x = v * t * math.cos(theta)
@@ -106,7 +106,7 @@ function Player:getTrajectory()
   return points
 end
 
-function Player:fire()
+function Cannon:fire()
   if not self.isFiring then
     self.isFiring = true
     self.trajectory = self:getTrajectory()
@@ -117,8 +117,8 @@ function Player:fire()
 
     local indexStart
 
-    for i = 1, #self.terrain, 2 do
-      if self.terrain[i] >= self.trajectory[1] then
+    for i = 1, #self.terrain.points, 2 do
+      if self.terrain.points[i] >= self.trajectory[1] then
         indexStart = i
         break
       end
@@ -132,16 +132,16 @@ function Player:fire()
         self.cannonball.x = self.trajectory[index]
         self.cannonball.y = self.trajectory[index + 1]
 
-        if self.trajectory[index + 1] + self.cannonball.r > self.terrain[indexStart + index + 2] then
+        if self.trajectory[index + 1] + self.cannonball.r > self.terrain.points[indexStart + index + 2] then
           hasCollided = true
 
           local xStart = self.cannonball.x - self.cannonball.r
           local xEnd = self.cannonball.x + self.cannonball.r
           local angle = math.pi
           local dAngle = math.pi / (self.cannonball.r * 2) * WINDOW_WIDTH / POINTS
-          for i = 1, #self.terrain, 2 do
-            if self.terrain[i] >= xStart and self.terrain[i] <= xEnd then
-              self.terrain[i + 1] = self.terrain[i + 1] + math.sin(angle) * self.cannonball.r
+          for i = 1, #self.terrain.points, 2 do
+            if self.terrain.points[i] >= xStart and self.terrain.points[i] <= xEnd then
+              self.terrain.points[i + 1] = self.terrain.points[i + 1] + math.sin(angle) * self.cannonball.r
               angle = math.max(0, angle - dAngle)
             end
           end

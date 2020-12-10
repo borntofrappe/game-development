@@ -1,7 +1,9 @@
 Menu = {}
 Menu.__index = Menu
 
-function Menu:create(player)
+function Menu:create(level)
+  local cannon = level.cannon
+
   local paddingLabel = 26
   local paddingButton = 18
 
@@ -10,7 +12,7 @@ function Menu:create(player)
 
   local widthButtonLarge =
     gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-    gFonts["normal"]:getWidth(player.angle) +
+    gFonts["normal"]:getWidth(cannon.angle) +
     paddingButton +
     widthButtonSmall
   local heightButtonLarge = 36
@@ -27,7 +29,7 @@ function Menu:create(player)
     Label:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton,
     yLabelAngle,
-    player.angle
+    cannon.angle
   )
 
   local decreaseAngleButton =
@@ -38,8 +40,8 @@ function Menu:create(player)
     heightButtonSmall,
     "-",
     function()
-      player.angle = math.max(ANGLE_MIN, player.angle - INCREMENT)
-      angleDataLabel.text = player.angle
+      cannon.angle = math.max(ANGLE_MIN, cannon.angle - INCREMENT)
+      angleDataLabel.text = cannon.angle
     end,
     OFFSET_LABEL
   )
@@ -47,15 +49,15 @@ function Menu:create(player)
   local increaseAngleButton =
     Button:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-      gFonts["normal"]:getWidth(player.angle) +
+      gFonts["normal"]:getWidth(cannon.angle) +
       paddingButton,
     yLabelAngle + gFonts["normal"]:getHeight() / 2 - heightButtonSmall / 2,
     widthButtonSmall,
     heightButtonSmall,
     "+",
     function()
-      player.angle = math.min(ANGLE_MAX, player.angle + INCREMENT)
-      angleDataLabel.text = player.angle
+      cannon.angle = math.min(ANGLE_MAX, cannon.angle + INCREMENT)
+      angleDataLabel.text = cannon.angle
     end,
     OFFSET_LABEL
   )
@@ -65,7 +67,7 @@ function Menu:create(player)
     Label:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton,
     yLabelVelocity,
-    player.velocity
+    cannon.velocity
   )
 
   local decreaseVelocityButton =
@@ -76,8 +78,8 @@ function Menu:create(player)
     heightButtonSmall,
     "-",
     function()
-      player.velocity = math.max(VELOCITY_MIN, player.velocity - INCREMENT)
-      velocityDataLabel.text = player.velocity
+      cannon.velocity = math.max(VELOCITY_MIN, cannon.velocity - INCREMENT)
+      velocityDataLabel.text = cannon.velocity
     end,
     OFFSET_LABEL
   )
@@ -85,15 +87,15 @@ function Menu:create(player)
   local increaseVelocityButton =
     Button:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-      gFonts["normal"]:getWidth(player.velocity) +
+      gFonts["normal"]:getWidth(cannon.velocity) +
       paddingButton,
     yLabelVelocity + gFonts["normal"]:getHeight() / 2 - heightButtonSmall / 2,
     widthButtonSmall,
     heightButtonSmall,
     "+",
     function()
-      player.velocity = math.min(VELOCITY_MAX, player.velocity + INCREMENT)
-      velocityDataLabel.text = player.velocity
+      cannon.velocity = math.min(VELOCITY_MAX, cannon.velocity + INCREMENT)
+      velocityDataLabel.text = cannon.velocity
     end,
     OFFSET_LABEL
   )
@@ -106,12 +108,11 @@ function Menu:create(player)
     heightButtonLarge,
     "Fire!",
     function()
-      player:fire()
+      cannon:fire()
     end
   )
 
   this = {
-    player = player,
     buttons = {
       ["decreaseAngleButton"] = decreaseAngleButton,
       ["increaseAngleButton"] = increaseAngleButton,
