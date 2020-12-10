@@ -2,15 +2,15 @@ Menu = {}
 Menu.__index = Menu
 
 function Menu:create(player)
-  local paddingLabel = 24
-  local paddingButton = 16
+  local paddingLabel = 26
+  local paddingButton = 18
 
   local widthButtonSmall = 30
   local heightButtonSmall = 30
 
   local widthButtonLarge =
     gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-    gFonts["normal"]:getWidth(formatData(player.angle)) +
+    gFonts["normal"]:getWidth(player.angle) +
     paddingButton +
     widthButtonSmall
   local heightButtonLarge = 36
@@ -27,7 +27,7 @@ function Menu:create(player)
     Label:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton,
     yLabelAngle,
-    formatData(player.angle)
+    player.angle
   )
 
   local decreaseAngleButton =
@@ -38,8 +38,8 @@ function Menu:create(player)
     heightButtonSmall,
     "-",
     function()
-      player.angle = math.max(5, player.angle - 5)
-      angleDataLabel.text = formatData(player.angle)
+      player.angle = math.max(ANGLE_MIN, player.angle - INCREMENT)
+      angleDataLabel.text = player.angle
     end,
     OFFSET_LABEL
   )
@@ -47,15 +47,15 @@ function Menu:create(player)
   local increaseAngleButton =
     Button:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-      gFonts["normal"]:getWidth(formatData(player.angle)) +
+      gFonts["normal"]:getWidth(player.angle) +
       paddingButton,
     yLabelAngle + gFonts["normal"]:getHeight() / 2 - heightButtonSmall / 2,
     widthButtonSmall,
     heightButtonSmall,
     "+",
     function()
-      player.angle = math.min(90, player.angle + 5)
-      angleDataLabel.text = formatData(player.angle)
+      player.angle = math.min(ANGLE_MAX, player.angle + INCREMENT)
+      angleDataLabel.text = player.angle
     end,
     OFFSET_LABEL
   )
@@ -65,7 +65,7 @@ function Menu:create(player)
     Label:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton,
     yLabelVelocity,
-    formatData(player.velocity)
+    player.velocity
   )
 
   local decreaseVelocityButton =
@@ -76,8 +76,8 @@ function Menu:create(player)
     heightButtonSmall,
     "-",
     function()
-      player.velocity = math.max(5, player.velocity - 5)
-      velocityDataLabel.text = formatData(player.velocity)
+      player.velocity = math.max(VELOCITY_MIN, player.velocity - INCREMENT)
+      velocityDataLabel.text = player.velocity
     end,
     OFFSET_LABEL
   )
@@ -85,15 +85,15 @@ function Menu:create(player)
   local increaseVelocityButton =
     Button:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-      gFonts["normal"]:getWidth(formatData(player.velocity)) +
+      gFonts["normal"]:getWidth(player.velocity) +
       paddingButton,
     yLabelVelocity + gFonts["normal"]:getHeight() / 2 - heightButtonSmall / 2,
     widthButtonSmall,
     heightButtonSmall,
     "+",
     function()
-      player.velocity = math.min(100, player.velocity + 5)
-      velocityDataLabel.text = formatData(player.velocity)
+      player.velocity = math.min(VELOCITY_MAX, player.velocity + INCREMENT)
+      velocityDataLabel.text = player.velocity
     end,
     OFFSET_LABEL
   )
@@ -113,17 +113,17 @@ function Menu:create(player)
   this = {
     player = player,
     buttons = {
-      decreaseAngleButton,
-      increaseAngleButton,
-      decreaseVelocityButton,
-      increaseVelocityButton,
-      fireButton
+      ["decreaseAngleButton"] = decreaseAngleButton,
+      ["increaseAngleButton"] = increaseAngleButton,
+      ["decreaseVelocityButton"] = decreaseVelocityButton,
+      ["increaseVelocityButton"] = increaseVelocityButton,
+      ["fireButton"] = fireButton
     },
     labels = {
-      velocityLabel,
-      velocityDataLabel,
-      angleLabel,
-      angleDataLabel
+      ["velocityLabel"] = velocityLabel,
+      ["velocityDataLabel"] = velocityDataLabel,
+      ["angleLabel"] = angleLabel,
+      ["angleDataLabel"] = angleDataLabel
     }
   }
 
@@ -133,17 +133,17 @@ function Menu:create(player)
 end
 
 function Menu:update(dt)
-  for i, button in ipairs(self.buttons) do
+  for i, button in pairs(self.buttons) do
     button:update(dt)
   end
 end
 
 function Menu:render()
-  for i, button in ipairs(self.buttons) do
+  for i, button in pairs(self.buttons) do
     button:render()
   end
 
-  for i, label in ipairs(self.labels) do
+  for i, label in pairs(self.labels) do
     label:render()
   end
 end

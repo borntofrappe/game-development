@@ -33,8 +33,7 @@ function Player:create(terrain)
     sprite = sprite,
     isDestroyed = isDestroyed,
     cannonball = cannonball,
-    terrain = terrain,
-    trajectory = {}
+    terrain = terrain
   }
 
   setmetatable(this, self)

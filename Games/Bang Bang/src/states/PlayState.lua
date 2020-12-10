@@ -18,20 +18,22 @@ function PlayState:update(dt)
     self.player:fire()
   end
 
-  if love.keyboard.isDown("down") then
-    self.player.angle = math.max(0, self.player.angle - dt * UPDATE_SPEED)
-  elseif love.keyboard.isDown("up") then
-    self.player.angle = math.min(90, self.player.angle + dt * UPDATE_SPEED)
+  if love.keyboard.wasPressed("up") or love.keyboard.wasPressed("down") then
+    if love.keyboard.wasPressed("up") then
+      self.player.angle = math.min(ANGLE_MAX, self.player.angle + INCREMENT)
+    elseif love.keyboard.wasPressed("down") then
+      self.player.angle = math.max(ANGLE_MIN, self.player.angle - INCREMENT)
+    end
+    self.menu.labels.angleDataLabel.text = self.player.angle
   end
 
-  if love.keyboard.isDown("right") then
-    self.player.velocity = math.min(100, self.player.velocity + dt * UPDATE_SPEED)
-  elseif love.keyboard.isDown("left") then
-    self.player.velocity = math.max(10, self.player.velocity - dt * UPDATE_SPEED)
-  end
-
-  if love.keyboard.wasPressed("d") then
-    self.player.isDestroyed = not self.player.isDestroyed
+  if love.keyboard.wasPressed("right") or love.keyboard.wasPressed("left") then
+    if love.keyboard.wasPressed("right") then
+      self.player.velocity = math.min(VELOCITY_MAX, self.player.velocity + INCREMENT)
+    elseif love.keyboard.wasPressed("left") then
+      self.player.velocity = math.max(VELOCITY_MIN, self.player.velocity - INCREMENT)
+    end
+    self.menu.labels.velocityDataLabel.text = self.player.velocity
   end
 end
 
