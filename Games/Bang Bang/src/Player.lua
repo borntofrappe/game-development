@@ -12,7 +12,7 @@ function Player:create(terrain)
 
   local sprite = 2
   local angle = 45
-  local velocity = 80
+  local velocity = 50
 
   local isFiring = false
   local isDestroyed = false

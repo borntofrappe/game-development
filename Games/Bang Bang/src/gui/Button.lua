@@ -20,7 +20,7 @@ function Button:update(dt)
   if love.mouse.wasPressed(1) then
     local x, y = love.mouse:getPosition()
     if x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height then
-      self.callback()
+      self.callback(dt)
     end
   end
 end

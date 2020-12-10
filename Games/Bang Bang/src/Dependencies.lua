@@ -4,6 +4,8 @@ require "src/Utils"
 require "src/Player"
 
 require "src/gui/Button"
+require "src/gui/Label"
+require "src/gui/Menu"
 
 require "src/states/BaseState"
 require "src/states/TitleState"

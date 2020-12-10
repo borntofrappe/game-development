@@ -3,23 +3,12 @@ PlayState = BaseState:create()
 function PlayState:enter()
   self.terrain = self:getTerrain()
   self.player = Player:create(self.terrain)
-
-  self.fireButton =
-    Button:create(
-    8,
-    8,
-    128,
-    48,
-    "Fire!",
-    function()
-      self.player:fire()
-    end
-  )
+  self.menu = Menu:create(self.player)
 end
 
 function PlayState:update(dt)
   Timer:update(dt)
-  self.fireButton:update(dt)
+  self.menu:update(dt)
 
   if love.keyboard.wasPressed("escape") then
     gStateMachine:change("title")
@@ -47,7 +36,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  self.fireButton:render()
+  self.menu:render()
   self.player:render()
 
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b)
