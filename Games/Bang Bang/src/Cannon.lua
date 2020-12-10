@@ -1,12 +1,7 @@
 Cannon = {}
 Cannon.__index = Cannon
 
-function Cannon:create(terrain)
-  local index = love.math.random(10) * 2 + 1
-
-  local x = terrain.points[index]
-  local y = terrain.points[index + 1]
-
+function Cannon:create(x, y)
   local width = CANNON_WIDTH
   local height = CANNON_HEIGHT
 
@@ -14,14 +9,7 @@ function Cannon:create(terrain)
   local angle = 45
   local velocity = 50
 
-  local isFiring = false
   local isDestroyed = false
-
-  local cannonball = {
-    ["x"] = x + width / 2 + math.cos(math.rad(angle)) * (height - OFFSET_HEIGHT),
-    ["y"] = y - OFFSET_HEIGHT - math.sin(math.rad(angle)) * (height - OFFSET_HEIGHT),
-    ["r"] = CANNONBALL_SIZE / 2
-  }
 
   this = {
     x = x,
@@ -31,9 +19,7 @@ function Cannon:create(terrain)
     angle = angle,
     velocity = velocity,
     sprite = sprite,
-    isDestroyed = isDestroyed,
-    cannonball = cannonball,
-    terrain = terrain
+    isDestroyed = isDestroyed
   }
 
   setmetatable(this, self)
@@ -50,19 +36,6 @@ function Cannon:render()
       self.y - gTextures["gameover"]:getHeight()
     )
   else
-    if self.isFiring then
-      love.graphics.draw(
-        gTextures["cannonball"],
-        self.cannonball.x,
-        self.cannonball.y,
-        0,
-        1,
-        1,
-        self.cannonball.r,
-        self.cannonball.r
-      )
-    end
-
     love.graphics.draw(
       gTextures["cannon"],
       gQuads["cannon"][self.sprite],
@@ -75,94 +48,5 @@ function Cannon:render()
       self.height - OFFSET_HEIGHT
     )
     love.graphics.draw(gTextures["cannon"], gQuads["cannon"][1], self.x, self.y - self.height)
-  end
-end
-
-function Cannon:getTrajectory()
-  local xOffset = self.x + self.width / 2 + math.cos(math.rad(self.angle)) * (self.height - OFFSET_HEIGHT)
-  local yOffset = self.y - OFFSET_HEIGHT - math.sin(math.rad(self.angle)) * (self.height - OFFSET_HEIGHT)
-  local a = self.angle
-  local v = self.velocity
-
-  local points = {}
-  local theta = math.rad(a)
-
-  local t = 0
-  local tDelta = (self.terrain.points[3] - self.terrain.points[1]) / (v * math.cos(theta))
-
-  while true do
-    x = v * t * math.cos(theta)
-    y = v * t * math.sin(theta) - 1 / 2 * GRAVITY * t ^ 2
-
-    table.insert(points, xOffset + x)
-    table.insert(points, yOffset - y)
-    t = t + tDelta
-
-    if yOffset - y > WINDOW_HEIGHT then
-      break
-    end
-  end
-
-  return points
-end
-
-function Cannon:fire()
-  if not self.isFiring then
-    self.isFiring = true
-    self.trajectory = self:getTrajectory()
-
-    local index = 1
-    self.cannonball.x = self.trajectory[index]
-    self.cannonball.y = self.trajectory[index + 1]
-
-    local indexStart
-
-    for i = 1, #self.terrain.points, 2 do
-      if self.terrain.points[i] >= self.trajectory[1] then
-        indexStart = i
-        break
-      end
-    end
-
-    Timer:every(
-      2 / #self.trajectory / 2,
-      function()
-        local hasCollided = false
-
-        self.cannonball.x = self.trajectory[index]
-        self.cannonball.y = self.trajectory[index + 1]
-
-        if self.trajectory[index + 1] + self.cannonball.r > self.terrain.points[indexStart + index + 2] then
-          hasCollided = true
-
-          local xStart = self.cannonball.x - self.cannonball.r
-          local xEnd = self.cannonball.x + self.cannonball.r
-          local angle = math.pi
-          local dAngle = math.pi / (self.cannonball.r * 2) * WINDOW_WIDTH / POINTS
-          for i = 1, #self.terrain.points, 2 do
-            if self.terrain.points[i] >= xStart and self.terrain.points[i] <= xEnd then
-              self.terrain.points[i + 1] = self.terrain.points[i + 1] + math.sin(angle) * self.cannonball.r
-              angle = math.max(0, angle - dAngle)
-            end
-          end
-
-          self.isFiring = false
-          self.cannonball.x = self.x + self.width / 2 + math.cos(math.rad(self.angle)) * (self.height - OFFSET_HEIGHT)
-          self.cannonball.y = self.y - OFFSET_HEIGHT - math.sin(math.rad(self.angle)) * (self.height - OFFSET_HEIGHT)
-          Timer:reset()
-        end
-
-        if not hasCollided then
-          index = index + 2
-          if not self.trajectory[index] then
-            self.isFiring = false
-            self.cannonball.x = self.x + self.width / 2 + math.cos(math.rad(self.angle)) * (self.height - OFFSET_HEIGHT)
-            self.cannonball.y = self.y - OFFSET_HEIGHT - math.sin(math.rad(self.angle)) * (self.height - OFFSET_HEIGHT)
-
-            Timer:reset()
-          end
-        end
-      end
-    )
   end
 end

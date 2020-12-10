@@ -108,7 +108,7 @@ function Menu:create(level)
     heightButtonLarge,
     "Fire!",
     function()
-      cannon:fire()
+      level:fire()
     end
   )
 

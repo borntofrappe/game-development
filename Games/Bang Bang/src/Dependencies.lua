@@ -1,14 +1,14 @@
 require "src/constants"
 require "src/Utils"
 
-require "src/gui/Button"
-require "src/gui/Label"
-require "src/gui/Menu"
-
 require "src/Terrain"
 require "src/Cannon"
 require "src/Cannonball"
 require "src/Level"
+
+require "src/gui/Button"
+require "src/gui/Label"
+require "src/gui/Menu"
 
 require "src/states/BaseState"
 require "src/states/TitleState"
