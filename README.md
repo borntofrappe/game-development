@@ -1,6 +1,5 @@
 ![github.com/borntofrappe/game-development](https://github.com/borntofrappe/game-development/blob/master/banner.svg)
 
-
 The goal of this repo is two-fold:
 
 - go through the games in the [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) recreating the demos and completing the assignment
@@ -43,6 +42,7 @@ The goal of this repo is two-fold:
   | Side Pocket      | Billiard with rounded rectangles and Box2D                       |
   | Petri Dish       | Time events and `love.math.noise` to animate irregular particles |
   | Surround         | A game for two players playing side by side in splitscreen       |
+  | Bang Bang        | Fire a cannonball to destroy a target behind a hill              |
 
 ## How to run a game
 
