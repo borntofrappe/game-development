@@ -2,12 +2,14 @@ Button = {}
 Button.__index = Button
 
 function Button:create(x, y, width, height, text, callback)
+  local panel = Panel:create(x, y, width, height)
   this = {
     x = x,
     y = y,
     width = width,
     height = height,
     text = text,
+    panel = panel,
     callback = callback
   }
 
@@ -26,9 +28,7 @@ function Button:update(dt)
 end
 
 function Button:render()
-  love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b, 1)
-  love.graphics.setLineWidth(4)
-  love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+  self.panel:render()
 
   love.graphics.setFont(gFonts["normal"])
   love.graphics.printf(

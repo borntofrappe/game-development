@@ -37,7 +37,9 @@ function TitleState:update(dt)
 
   if love.keyboard.wasPressed("escape") then
     love.event.quit()
-  elseif love.keyboard.wasPressed("return") then
+  end
+
+  if love.keyboard.wasPressed("return") or love.mouse.wasPressed(1) then
     Timer:reset()
     gStateMachine:change("play")
   end

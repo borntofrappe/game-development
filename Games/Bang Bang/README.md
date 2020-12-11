@@ -1,6 +1,6 @@
 # Bang Bang
 
-The goal is to recreate the Windows 3 game Bangbang, where two players fire cannon balls with the goal of hitting the opposing sides.
+The goal is to create a shooting game inspired by the [Windows 3 game BangBang](<(https://www.youtube.com/watch?v=Y89ByQPqODk)>), but with one player instead of two. The idea is create consider projectile motion to have a cannon throw a cannonball toward a target, and have this target separated from the player by a hill.
 
 ## Prep
 
@@ -12,19 +12,20 @@ In dedicated folders I develop the building blocks for the final project.
 
 ## res
 
-The `.png` images in the `res` folder are designed with GIMP, to have solid, black shapes above a texture visualizing scrapped paper.
+The game adopts a choppy art style inspired by the font [Arbutus](https://fonts.google.com/specimen/Arbutus).
 
-- `cannonball` describes a circle with a radius of `27` pixels
+In the `graphics` folder you find several images created with GIMP. While `cannon` is designed as a spritesheet, with the goal of rendering the body of the cannon above the small pedestal by using quads, the other assets are created as one-off images.
 
-- `cannon` provides three pieces to build the cannons for both sides.
+Finally, and in the `lib` folder, you find `Timer.lua`. This is a utility I first designed for _Petri Dish_, with the goal of providing a basic API for time-based events (delays, intervals, tweens).
 
-  Each piece is sized `42*92`, and the second/third sprites are meant to describe the body of the left/right cannon respectively. This piece is drawn behind the first sprite, and is meant to be rotated from the bottom center. Consider turning the shape from `(21,64)`
+## gui
 
-## Resources
+The `gui` folder describes a few classes to build the menu considering mouse input. The menu also works as a signifier when using the keyboard by highlight the angle and velocity attributed to the cannon.
 
-- [Gameplay footage](https://www.youtube.com/watch?v=Y89ByQPqODk)
+While `Panel` and `Label` are quite self-explanatory, and work to render the outline of a rectangle and a text label, `Button` is more complicated, and includes a few lines in the `update` function to execute some code if the mouse is pressed within the boundaries of the button itself
 
-MISSING
+`Menu` works then as a wrapper for the different labels and buttons.
 
-- show congratulatory message similar to lunar lander
-- docs
+## Collision
+
+In the `Level.lua`, the game considers whether or not the cannonball collides with the terrain. Only when the ball reaches the terrain, however, the script continues to evaluate an overlap between cannonball and target/cannon. The idea is to destroy both elements by checking the `x` coordinate only, and modify the terrain only if neither is destroyed.

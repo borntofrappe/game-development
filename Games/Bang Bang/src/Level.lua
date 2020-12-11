@@ -105,17 +105,10 @@ function Level:fire()
 
         self.cannonball.x = trajectory[index]
         self.cannonball.y = trajectory[index + 1]
-
-        --[[
-          collision detection
-          when checking the terrain consider if the ball hits the cannon/target
-          if so destroy the cannon/target        
-          ]]
         if
           self.terrain.points[indexStart + index + 2] and
             self.cannonball.y + self.cannonball.r - CANNONBALL_BORDER > self.terrain.points[indexStart + index + 2]
          then
-          -- consider only the x coordinate for the cannon/target
           if
             not (self.cannonball.x + self.cannonball.r < self.cannon.x or
               self.cannonball.x - self.cannonball.r > self.cannon.x + self.cannon.width)
