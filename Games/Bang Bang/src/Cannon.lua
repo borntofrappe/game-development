@@ -6,8 +6,8 @@ function Cannon:create(x, y)
   local height = CANNON_HEIGHT
 
   local sprite = 2
-  local angle = 45
-  local velocity = 50
+  local angle = love.math.random(math.floor(ANGLE_MAX / INCREMENT)) * INCREMENT
+  local velocity = love.math.random(math.floor(VELOCITY_MAX / INCREMENT)) * INCREMENT
 
   local isDestroyed = false
 
@@ -41,7 +41,7 @@ function Cannon:render()
       gQuads["cannon"][self.sprite],
       self.x + self.width / 2,
       self.y - CANNON_OFFSET_HEIGHT,
-      math.rad(90 - self.angle),
+      math.rad(ANGLE_MAX - self.angle),
       1,
       1,
       self.width / 2,

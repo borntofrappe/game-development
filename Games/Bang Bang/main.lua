@@ -17,7 +17,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("play")
+  gStateMachine:change("title")
   love.keyboard.keyPressed = {}
   love.mouse.buttonPressed = {}
 end

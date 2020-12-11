@@ -12,7 +12,7 @@ function Menu:create(level)
 
   local widthButtonLarge =
     gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-    gFonts["normal"]:getWidth(cannon.angle) +
+    gFonts["normal"]:getWidth(ANGLE_MAX) +
     paddingButton +
     widthButtonSmall
   local heightButtonLarge = 38
@@ -48,7 +48,7 @@ function Menu:create(level)
   local increaseAngleButton =
     Button:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-      gFonts["normal"]:getWidth(cannon.angle) +
+      gFonts["normal"]:getWidth(ANGLE_MAX) +
       paddingButton,
     yLabelAngle + gFonts["normal"]:getHeight() / 2 - heightButtonSmall / 2,
     widthButtonSmall,
@@ -84,7 +84,7 @@ function Menu:create(level)
   local increaseVelocityButton =
     Button:create(
     xLabel + gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
-      gFonts["normal"]:getWidth(cannon.velocity) +
+      gFonts["normal"]:getWidth(VELOCITY_MAX) +
       paddingButton,
     yLabelVelocity + gFonts["normal"]:getHeight() / 2 - heightButtonSmall / 2,
     widthButtonSmall,

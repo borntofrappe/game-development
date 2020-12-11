@@ -27,7 +27,4 @@ The `.png` images in the `res` folder are designed with GIMP, to have solid, bla
 MISSING
 
 - show congratulatory message similar to lunar lander
-- color target in title screen
-- increase delay to play state
 - docs
--
