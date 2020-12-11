@@ -6,7 +6,8 @@ function Target:create(x, y)
     ["x"] = x - TARGET_WIDTH,
     ["y"] = y - TARGET_HEIGHT + TARGET_OFFSET_HEIGHT,
     ["width"] = TARGET_WIDTH,
-    ["height"] = TARGET_HEIGHT
+    ["height"] = TARGET_HEIGHT,
+    ["isDestroyed"] = false
   }
 
   setmetatable(this, self)
@@ -15,5 +16,14 @@ function Target:create(x, y)
 end
 
 function Target:render()
-  love.graphics.draw(gTextures["target"], self.x, self.y)
+  love.graphics.setColor(1, 1, 1, 1)
+  if self.isDestroyed then
+    love.graphics.draw(
+      gTextures["gameover"],
+      self.x + self.width / 2 - gTextures["gameover"]:getWidth() / 2,
+      self.y + TARGET_HEIGHT - TARGET_OFFSET_HEIGHT - gTextures["gameover"]:getHeight()
+    )
+  else
+    love.graphics.draw(gTextures["target"], self.x, self.y)
+  end
 end

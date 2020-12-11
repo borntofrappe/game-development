@@ -81,7 +81,7 @@ function Level:getTrajectory()
 end
 
 function Level:fire()
-  if not self.isFiring then
+  if not self.isFiring and not self.cannon.isDestroyed then
     self.isFiring = true
     local trajectory = self:getTrajectory()
 
@@ -106,33 +106,47 @@ function Level:fire()
         self.cannonball.x = trajectory[index]
         self.cannonball.y = trajectory[index + 1]
 
-        if trajectory[index + 1] + self.cannonball.r > self.terrain.points[indexStart + index + 2] then
-          hasCollided = true
+        if self.terrain.points[indexStart + index + 2] then
+          if trajectory[index + 1] + self.cannonball.r - CANNONBALL_BORDER > self.terrain.points[indexStart + index + 2] then
+            hasCollided = true
 
-          local xStart = self.cannonball.x - self.cannonball.r
-          local xEnd = self.cannonball.x + self.cannonball.r
-          local angle = math.pi
-          local dAngle = math.pi / (self.cannonball.r * 2) * WINDOW_WIDTH / POINTS
-          for i = 1, #self.terrain.points, 2 do
-            if self.terrain.points[i] >= xStart and self.terrain.points[i] <= xEnd then
-              self.terrain.points[i + 1] = self.terrain.points[i + 1] + math.sin(angle) * self.cannonball.r
-              angle = math.max(0, angle - dAngle)
+            if self.cannonball.x - self.cannonball.r < self.cannon.x + self.cannon.width then
+              self.cannon.isDestroyed = true
+            else
+              local xStart = self.cannonball.x - self.cannonball.r
+              local xEnd = self.cannonball.x + self.cannonball.r
+              local angle = math.pi
+              local dAngle = math.pi / (self.cannonball.r * 2) * WINDOW_WIDTH / POINTS
+              for i = 1, #self.terrain.points, 2 do
+                if self.terrain.points[i] >= xStart and self.terrain.points[i] <= xEnd then
+                  self.terrain.points[i + 1] = self.terrain.points[i + 1] + math.sin(angle) * self.cannonball.r
+                  angle = math.max(0, angle - dAngle)
+                end
+              end
+            end
+
+            self.isFiring = false
+            self.cannonball.x =
+              self.cannon.x + self.cannon.width / 2 +
+              math.cos(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
+            self.cannonball.y =
+              self.cannon.y - CANNON_OFFSET_HEIGHT -
+              math.sin(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
+            Timer:reset()
+
+            if self.cannon.isDestroyed then
+              Timer:after(
+                2,
+                function()
+                  gStateMachine:change("play")
+                end
+              )
             end
           end
-
-          self.isFiring = false
-          self.cannonball.x =
-            self.cannon.x + self.cannon.width / 2 +
-            math.cos(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
-          self.cannonball.y =
-            self.cannon.y - CANNON_OFFSET_HEIGHT -
-            math.sin(math.rad(self.cannon.angle)) * (self.cannon.height - CANNON_OFFSET_HEIGHT)
-          Timer:reset()
         end
-
         if not hasCollided then
           index = index + 2
-          if not self.terrain.points[indexStart + index + 2] or not trajectory[index] then
+          if not trajectory[index] then
             self.isFiring = false
             self.cannonball.x =
               self.cannon.x + self.cannon.width / 2 +
