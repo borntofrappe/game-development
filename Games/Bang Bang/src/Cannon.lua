@@ -12,14 +12,14 @@ function Cannon:create(x, y)
   local isDestroyed = false
 
   this = {
-    x = x,
-    y = y,
-    width = width,
-    height = height,
-    angle = angle,
-    velocity = velocity,
-    sprite = sprite,
-    isDestroyed = isDestroyed
+    ["x"] = x,
+    ["y"] = y,
+    ["width"] = width,
+    ["height"] = height,
+    ["angle"] = angle,
+    ["velocity"] = velocity,
+    ["sprite"] = sprite,
+    ["isDestroyed"] = isDestroyed
   }
 
   setmetatable(this, self)

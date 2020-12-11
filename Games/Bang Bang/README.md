@@ -23,3 +23,11 @@ The `.png` images in the `res` folder are designed with GIMP, to have solid, bla
 ## Resources
 
 - [Gameplay footage](https://www.youtube.com/watch?v=Y89ByQPqODk)
+
+MISSING
+
+- show congratulatory message similar to lunar lander
+- color target in title screen
+- increase delay to play state
+- docs
+-

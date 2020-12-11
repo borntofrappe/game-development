@@ -62,8 +62,8 @@ function getTerrain()
   local points = {}
   local scale1 = love.math.random(NORMAL_DISTRIBUTION_SCALE_MIN, NORMAL_DISTRIBUTION_SCALE_MAX)
   local scale2 = yStart < WINDOW_HEIGHT * 3 / 4 and math.floor(scale1 * 1.5) or math.floor(scale1 * 0.75)
-  for i = 1, POINTS + 1 do
-    local x = (i - 1) * WINDOW_WIDTH / POINTS
+  for i = 1, TERRAIN_POINTS + 1 do
+    local x = (i - 1) * WINDOW_WIDTH / TERRAIN_POINTS
     local dy = getNormalDistribution(x, mu, sigma)
     if x < mu then
       dy = dy * scale1
