@@ -14,5 +14,6 @@ function Cannonball:create(x, y)
 end
 
 function Cannonball:render()
+  love.graphics.setColor(1, 1, 1, 1)
   love.graphics.draw(gTextures["cannonball"], self.x, self.y, 0, 1, 1, self.r, self.r)
 end

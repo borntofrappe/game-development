@@ -28,7 +28,7 @@ end
 function Button:render()
   love.graphics.setColor(gColors["dark"].r, gColors["dark"].g, gColors["dark"].b, 1)
   love.graphics.setLineWidth(4)
-  love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 8)
+  love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 
   love.graphics.setFont(gFonts["normal"])
   love.graphics.printf(
