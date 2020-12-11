@@ -7,6 +7,7 @@ require "src/Cannonball"
 require "src/Target"
 require "src/Level"
 
+require "src/gui/Panel"
 require "src/gui/Button"
 require "src/gui/Label"
 require "src/gui/Menu"
@@ -19,7 +20,6 @@ require "src/StateMachine"
 Timer = require "res/lib/Timer"
 
 gTextures = {
-  ["background"] = love.graphics.newImage("res/graphics/background.png"),
   ["cannon"] = love.graphics.newImage("res/graphics/cannon.png"),
   ["cannonball"] = love.graphics.newImage("res/graphics/cannonball.png"),
   ["gameover"] = love.graphics.newImage("res/graphics/gameover.png"),
@@ -32,7 +32,7 @@ gQuads = {
 }
 
 gFonts = {
-  ["big"] = love.graphics.newFont("res/fonts/font.ttf", 42),
+  ["big"] = love.graphics.newFont("res/fonts/font.ttf", 46),
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 22)
 }
 
@@ -43,9 +43,9 @@ gColors = {
     ["b"] = 0.067
   },
   ["light"] = {
-    ["r"] = 0.89,
-    ["g"] = 0.89,
-    ["b"] = 0.89
+    ["r"] = 0.92,
+    ["g"] = 0.96,
+    ["b"] = 0.96
   }
 }
 

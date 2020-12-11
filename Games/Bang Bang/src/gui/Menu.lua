@@ -4,25 +4,25 @@ Menu.__index = Menu
 function Menu:create(level)
   local cannon = level.cannon
 
-  local paddingLabel = 26
-  local paddingButton = 18
+  local paddingLabel = 28
+  local paddingButton = 20
 
-  local widthButtonSmall = 30
-  local heightButtonSmall = 30
+  local widthButtonSmall = 34
+  local heightButtonSmall = 34
 
   local widthButtonLarge =
     gFonts["normal"]:getWidth("Velocity") + paddingLabel + widthButtonSmall + paddingButton +
     gFonts["normal"]:getWidth(cannon.angle) +
     paddingButton +
     widthButtonSmall
-  local heightButtonLarge = 36
+  local heightButtonLarge = 38
 
-  local xLabel = 16
-  local yLabelAngle = 18
-  local yLabelVelocity = 60
+  local xLabel = 28
+  local yLabelAngle = 28
+  local yLabelVelocity = yLabelAngle + heightButtonSmall + paddingButton
 
-  local xFireButton = 16
-  local yFireButton = 100
+  local xFireButton = xLabel
+  local yFireButton = yLabelVelocity + heightButtonSmall + paddingButton
 
   local angleLabel = Label:create(xLabel, yLabelAngle, "Angle")
   local angleDataLabel =
@@ -112,7 +112,16 @@ function Menu:create(level)
     end
   )
 
+  local paddingMenu = 16
+  local xMenu = xLabel - paddingMenu
+  local yMenu = yLabelAngle - paddingMenu
+  local widthMenu = widthButtonLarge + paddingMenu * 2
+  local heightMenu = yFireButton + heightButtonLarge - yLabelAngle + paddingMenu * 2
+
+  local panel = Panel:create(xMenu, yMenu, widthMenu, heightMenu)
+
   this = {
+    panel = panel,
     buttons = {
       ["decreaseAngleButton"] = decreaseAngleButton,
       ["increaseAngleButton"] = increaseAngleButton,
@@ -140,6 +149,8 @@ function Menu:update(dt)
 end
 
 function Menu:render()
+  self.panel:render()
+
   for i, button in pairs(self.buttons) do
     button:render()
   end

@@ -2,8 +2,11 @@ Terrain = {}
 Terrain.__index = Terrain
 
 function Terrain:create()
+  local points = getTerrain()
+
   this = {
-    points = getTerrain()
+    points = points,
+    polygon = polygon
   }
 
   setmetatable(this, self)
