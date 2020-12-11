@@ -1,15 +1,14 @@
 Button = {}
 Button.__index = Button
 
-function Button:create(x, y, width, height, text, callback, offsetY)
+function Button:create(x, y, width, height, text, callback)
   this = {
     x = x,
     y = y,
     width = width,
     height = height,
     text = text,
-    callback = callback,
-    offsetY = offsetY or 0
+    callback = callback
   }
 
   setmetatable(this, self)
@@ -35,7 +34,7 @@ function Button:render()
   love.graphics.printf(
     self.text,
     self.x,
-    self.y + self.height / 2 - gFonts["normal"]:getHeight() / 2 - self.offsetY,
+    self.y + self.height / 2 - gFonts["normal"]:getHeight() / 2,
     self.width,
     "center"
   )

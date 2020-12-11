@@ -20,6 +20,7 @@ require "src/StateMachine"
 Timer = require "res/lib/Timer"
 
 gTextures = {
+  ["background"] = love.graphics.newImage("res/graphics/background.png"),
   ["cannon"] = love.graphics.newImage("res/graphics/cannon.png"),
   ["cannonball"] = love.graphics.newImage("res/graphics/cannonball.png"),
   ["gameover"] = love.graphics.newImage("res/graphics/gameover.png"),
@@ -38,14 +39,14 @@ gFonts = {
 
 gColors = {
   ["dark"] = {
-    ["r"] = 0.047,
-    ["g"] = 0.062,
-    ["b"] = 0.067
+    ["r"] = 0.12,
+    ["g"] = 0.13,
+    ["b"] = 0.12
   },
   ["light"] = {
-    ["r"] = 0.92,
-    ["g"] = 0.96,
-    ["b"] = 0.96
+    ["r"] = 0.97,
+    ["g"] = 0.93,
+    ["b"] = 0.86
   }
 }
 

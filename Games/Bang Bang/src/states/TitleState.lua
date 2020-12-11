@@ -2,7 +2,7 @@ TitleState = BaseState:create()
 
 function TitleState:enter()
   self.message = {
-    ["text"] = "Aim\tShoot\tRepeat",
+    ["text"] = "Aim\nShoot\nRepeat",
     ["alpha"] = 1
   }
 
