@@ -1,17 +1,15 @@
 Maze = {}
 Maze.__index = Maze
 
-function Maze:create()
-  local maze = Maze:new()
+function Maze:new(width, height)
+  local maze = Maze:create(width, height)
   maze:recursiveBacktracker()
   return maze
 end
 
-function Maze:new()
+function Maze:create(width, height)
   local columns = COLUMNS
   local rows = ROWS
-  local width = WINDOW_WIDTH
-  local height = WINDOW_HEIGHT
 
   local cellWidth = math.floor(width / columns)
   local cellHeight = math.floor(height / rows)
