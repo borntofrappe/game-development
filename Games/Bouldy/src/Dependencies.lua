@@ -1,5 +1,6 @@
 require "src/constants"
 
+require "src/gui/ProgressBar"
 require "src/Cell"
 require "src/Maze"
 
