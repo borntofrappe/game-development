@@ -1,24 +1,23 @@
 Maze = {}
 Maze.__index = Maze
 
-function Maze:new(width, height)
-  local maze = Maze:create(width, height)
+function Maze:new()
+  local maze = Maze:create()
   maze:recursiveBacktracker()
   return maze
 end
 
-function Maze:create(width, height)
-  local columns = COLUMNS
-  local rows = ROWS
+function Maze:create()
+  local size = MAZE_SIZE
+  local dimension = MAZE_DIMENSION
 
-  local cellWidth = math.floor(width / columns)
-  local cellHeight = math.floor(height / rows)
+  local cellSize = math.floor(size / dimension)
 
   local grid = {}
 
-  for column = 1, columns do
+  for column = 1, dimension do
     grid[column] = {}
-    for row = 1, rows do
+    for row = 1, dimension do
       local neighbors = {}
       if row > 1 then
         table.insert(
@@ -31,7 +30,7 @@ function Maze:create(width, height)
         )
       end
 
-      if row < rows then
+      if row < dimension then
         table.insert(
           neighbors,
           {
@@ -42,7 +41,7 @@ function Maze:create(width, height)
         )
       end
 
-      if column < columns then
+      if column < dimension then
         table.insert(
           neighbors,
           {
@@ -64,15 +63,13 @@ function Maze:create(width, height)
         )
       end
 
-      grid[column][row] = Cell:new(column, row, neighbors, cellWidth, cellHeight)
+      grid[column][row] = Cell:new(column, row, neighbors, cellSize)
     end
   end
 
   this = {
-    ["columns"] = columns,
-    ["rows"] = rows,
-    ["width"] = width,
-    ["height"] = height,
+    ["dimension"] = dimension,
+    ["size"] = size,
     ["grid"] = grid
   }
 
@@ -85,16 +82,16 @@ function Maze:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.setLineWidth(3)
 
-  for column = 1, self.columns do
-    for row = 1, self.rows do
+  for column = 1, self.dimension do
+    for row = 1, self.dimension do
       self.grid[column][row]:render()
     end
   end
 end
 
 function Maze:recursiveBacktracker()
-  local randomColumn = love.math.random(self.columns)
-  local randomRow = love.math.random(self.rows)
+  local randomColumn = love.math.random(self.dimension)
+  local randomRow = love.math.random(self.dimension)
   local randomCell = self.grid[randomColumn][randomRow]
   randomCell.visited = true
 
