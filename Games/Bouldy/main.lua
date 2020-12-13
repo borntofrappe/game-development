@@ -14,15 +14,9 @@ function love.load()
     WINDOW_WIDTH - WINDOW_PADDING - gFonts["normal"]:getWidth("Charge!"),
     WINDOW_PADDING,
     gFonts["normal"]:getWidth("Charge!"),
-    gFonts["normal"]:getHeight()
+    gFonts["normal"]:getHeight(),
+    0
   )
-
-  direction = {
-    ["column"] = 0,
-    ["row"] = 0
-  }
-
-  isMoving = false
 end
 
 function love.mousepressed(x, y, button)
@@ -41,98 +35,105 @@ function love.keypressed(key)
   end
 
   if key == "up" or key == "right" or key == "down" or key == "left" then
+    local column, row
     if key == "up" then
-      direction.column = 0
-      direction.row = -1
+      column = 0
+      row = -1
     elseif key == "right" then
-      direction.column = 1
-      direction.row = 0
+      column = 1
+      row = 0
     elseif key == "down" then
-      direction.column = 0
-      direction.row = 1
+      column = 0
+      row = 1
     elseif key == "left" then
-      direction.column = -1
-      direction.row = 0
+      column = -1
+      row = 0
     end
 
-    if not isMoving then
-      isMoving = true
-      local d = direction
+    bouldy:setDirection(
+      {
+        ["column"] = column,
+        ["row"] = row
+      }
+    )
+
+    if not bouldy.isMoving then
+      bouldy.isMoving = true
+      local d = bouldy.direction
       Timer:every(
         UPDATE_INTERVAL,
         function()
-          if isMoving then
-            local previousColumn = bouldy.column
-            local previousRow = bouldy.row
-            local hasBounced = false
+          local previousColumn = bouldy.column
+          local previousRow = bouldy.row
 
-            bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
-            bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
+          local hasBounced = false
 
-            if previousColumn == bouldy.column and previousRow == bouldy.row then
-              hasBounced = true
-            end
+          bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
+          bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
 
-            local gates = {
-              ["0-1"] = "up",
-              ["10"] = "right",
-              ["01"] = "down",
-              ["-10"] = "left"
-            }
+          if previousColumn == bouldy.column and previousRow == bouldy.row then
+            hasBounced = true
+          end
 
-            if not hasBounced and maze.grid[previousColumn][previousRow].gates[gates[d.column .. d.row]] then
-              hasBounced = true
-              bouldy.column = previousColumn
-              bouldy.row = previousRow
-            end
+          local gates = {
+            ["0-1"] = "up",
+            ["10"] = "right",
+            ["01"] = "down",
+            ["-10"] = "left"
+          }
 
-            if hasBounced then
-              Timer:tween(
-                UPDATE_TWEEN / 5,
-                {
-                  [bouldy] = {
-                    ["x"] = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding,
-                    ["y"] = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
-                  }
+          if not hasBounced and maze.grid[previousColumn][previousRow].gates[gates[d.column .. d.row]] then
+            hasBounced = true
+            bouldy.column = previousColumn
+            bouldy.row = previousRow
+          end
+
+          if hasBounced then
+            Timer:tween(
+              UPDATE_TWEEN / 5,
+              {
+                [bouldy] = {
+                  ["x"] = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding,
+                  ["y"] = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
                 }
-              )
-              Timer:after(
-                UPDATE_TWEEN / 5,
-                function()
-                  -- precautionary
-                  bouldy.x = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding
-                  bouldy.y = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
-                  Timer:tween(
-                    UPDATE_TWEEN / 5 * 4,
-                    {
-                      [bouldy] = {
-                        ["x"] = (bouldy.column - 1) * bouldy.size,
-                        ["y"] = (bouldy.row - 1) * bouldy.size
-                      }
+              }
+            )
+            Timer:after(
+              UPDATE_TWEEN / 5,
+              function()
+                -- precautionary
+                bouldy.x = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding
+                bouldy.y = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
+                Timer:tween(
+                  UPDATE_TWEEN / 5 * 4,
+                  {
+                    [bouldy] = {
+                      ["x"] = (bouldy.column - 1) * bouldy.size,
+                      ["y"] = (bouldy.row - 1) * bouldy.size
                     }
-                  )
-                  Timer:after(
-                    UPDATE_TWEEN / 5 * 4,
-                    function()
-                      d.column = 0
-                      d.row = 0
-                      -- precautionary
-                      bouldy.x = (bouldy.column - 1) * bouldy.size
-                      bouldy.y = (bouldy.row - 1) * bouldy.size
-                      Timer:reset()
-                      isMoving = false
-                    end
-                  )
-                end
-              )
-            else
-              Timer:tween(
-                UPDATE_TWEEN,
-                {
-                  [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size}
-                }
-              )
-            end
+                  }
+                )
+                Timer:after(
+                  UPDATE_TWEEN / 5 * 4,
+                  function()
+                    d.column = 0
+                    d.row = 0
+                    -- precautionary
+                    bouldy.x = (bouldy.column - 1) * bouldy.size
+                    bouldy.y = (bouldy.row - 1) * bouldy.size
+                    Timer:reset()
+                    bouldy.isMoving = false
+                  end
+                )
+              end
+            )
+          else
+            Timer:tween(
+              UPDATE_TWEEN,
+              {
+                [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size}
+              }
+            )
           end
         end,
         true
@@ -149,7 +150,7 @@ function love.draw()
   love.graphics.setColor(gColors["light"].r, gColors["light"].g, gColors["light"].b)
 
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.print("Bouldy...charge!", WINDOW_PADDING, WINDOW_PADDING)
+  love.graphics.print("Bouldy", WINDOW_PADDING, WINDOW_PADDING)
 
   progressBar:render()
 

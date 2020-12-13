@@ -7,7 +7,7 @@ function ProgressBar:new(x, y, width, height, progress)
     ["y"] = y,
     ["width"] = width,
     ["height"] = height,
-    ["progress"] = progress or 50,
+    ["progress"] = progress or 0,
     ["padding"] = {
       ["x"] = 4,
       ["y"] = 4

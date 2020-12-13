@@ -11,11 +11,21 @@ function Bouldy:new(column, row, size, padding)
     ["x"] = x,
     ["y"] = y,
     ["size"] = size,
-    ["padding"] = padding or 0
+    ["padding"] = padding or 0,
+    ["direction"] = {
+      ["column"] = 0,
+      ["row"] = 0
+    },
+    ["isMoving"] = false
   }
 
   setmetatable(this, self)
   return this
+end
+
+function Bouldy:setDirection(direction)
+  self.direction.column = direction.column
+  self.direction.row = direction.row
 end
 
 function Bouldy:render()
