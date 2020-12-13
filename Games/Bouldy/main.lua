@@ -6,8 +6,8 @@ function love.load()
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 
   maze = Maze:new()
-  local cellSize = maze.grid[1][1].size
-  bouldy = Bouldy:new(love.math.random(MAZE_DIMENSION), love.math.random(MAZE_DIMENSION), cellSize, cellSize / 4)
+  bouldy =
+    Bouldy:new(love.math.random(MAZE_DIMENSION), love.math.random(MAZE_DIMENSION), maze.cellSize, maze.cellSize / 4)
 
   progressBar =
     ProgressBar:new(
@@ -60,24 +60,61 @@ function love.keypressed(key)
       Timer:every(
         UPDATE_INTERVAL,
         function()
-          local previousColumn = bouldy.column
-          local previousRow = bouldy.row
+          if isMoving then
+            local previousColumn = bouldy.column
+            local previousRow = bouldy.row
+            local hasBounced = false
 
-          bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + direction.column))
-          bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + direction.row))
+            bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + direction.column))
+            bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + direction.row))
 
-          if previousColumn == bouldy.column and previousRow == bouldy.row then
-            direction.column = 0
-            direction.row = 0
-            Timer:reset()
-            isMoving = false
-          else
-            Timer:tween(
-              0.5,
-              {
-                [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size}
-              }
-            )
+            if previousColumn == bouldy.column and previousRow == bouldy.row then
+              hasBounced = true
+            end
+
+            if hasBounced then
+              isMoving = false
+              Timer:tween(
+                UPDATE_TWEEN / 4,
+                {
+                  [bouldy] = {
+                    ["x"] = (bouldy.column - 1) * bouldy.size +
+                      direction.column * (maze.cellSize - (bouldy.size - bouldy.padding)),
+                    ["y"] = (bouldy.row - 1) * bouldy.size +
+                      direction.row * (maze.cellSize - (bouldy.size - bouldy.padding))
+                  }
+                }
+              )
+              Timer:after(
+                UPDATE_TWEEN / 4,
+                function()
+                  Timer:tween(
+                    UPDATE_TWEEN / 4 * 3,
+                    {
+                      [bouldy] = {
+                        ["x"] = (bouldy.column - 1) * bouldy.size,
+                        ["y"] = (bouldy.row - 1) * bouldy.size
+                      }
+                    }
+                  )
+                  Timer:after(
+                    UPDATE_TWEEN / 4 * 3,
+                    function()
+                      direction.column = 0
+                      direction.row = 0
+                      Timer:reset()
+                    end
+                  )
+                end
+              )
+            else
+              Timer:tween(
+                UPDATE_TWEEN,
+                {
+                  [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size}
+                }
+              )
+            end
           end
         end,
         true

@@ -69,6 +69,7 @@ function Maze:create()
 
   this = {
     ["dimension"] = dimension,
+    ["cellSize"] = cellSize,
     ["size"] = size,
     ["grid"] = grid
   }
