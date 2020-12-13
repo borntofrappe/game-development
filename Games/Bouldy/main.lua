@@ -16,6 +16,13 @@ function love.load()
     gFonts["normal"]:getWidth("Charge!"),
     gFonts["normal"]:getHeight()
   )
+
+  direction = {
+    ["column"] = 0,
+    ["row"] = 0
+  }
+
+  isMoving = false
 end
 
 function love.mousepressed(x, y, button)
@@ -32,6 +39,55 @@ function love.keypressed(key)
   if key == "r" then
     maze = Maze:new()
   end
+
+  if key == "up" or key == "right" or key == "down" or key == "left" then
+    if key == "up" then
+      direction.column = 0
+      direction.row = -1
+    elseif key == "right" then
+      direction.column = 1
+      direction.row = 0
+    elseif key == "down" then
+      direction.column = 0
+      direction.row = 1
+    elseif key == "left" then
+      direction.column = -1
+      direction.row = 0
+    end
+
+    if not isMoving then
+      isMoving = true
+      Timer:every(
+        UPDATE_INTERVAL,
+        function()
+          local previousColumn = bouldy.column
+          local previousRow = bouldy.row
+
+          bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + direction.column))
+          bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + direction.row))
+
+          if previousColumn == bouldy.column and previousRow == bouldy.row then
+            direction.column = 0
+            direction.row = 0
+            Timer:reset()
+            isMoving = false
+          else
+            Timer:tween(
+              0.5,
+              {
+                [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size}
+              }
+            )
+          end
+        end,
+        true
+      )
+    end
+  end
+end
+
+function love.update(dt)
+  Timer:update(dt)
 end
 
 function love.draw()

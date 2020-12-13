@@ -1,3 +1,5 @@
+Timer = require "res/Timer"
+
 require "src/constants"
 
 require "src/gui/ProgressBar"
