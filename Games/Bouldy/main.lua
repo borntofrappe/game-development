@@ -6,6 +6,8 @@ function love.load()
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 
   maze = Maze:new()
+  local cellSize = maze.grid[1][1].size
+  bouldy = Bouldy:new(love.math.random(MAZE_DIMENSION), love.math.random(MAZE_DIMENSION), cellSize, cellSize / 4)
 
   progressBar =
     ProgressBar:new(
@@ -42,4 +44,5 @@ function love.draw()
 
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
   maze:render()
+  bouldy:render()
 end
