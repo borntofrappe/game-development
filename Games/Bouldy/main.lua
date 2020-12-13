@@ -14,8 +14,7 @@ function love.load()
     WINDOW_WIDTH - WINDOW_PADDING - gFonts["normal"]:getWidth("Charge!"),
     WINDOW_PADDING,
     gFonts["normal"]:getWidth("Charge!"),
-    gFonts["normal"]:getHeight(),
-    0
+    gFonts["normal"]:getHeight()
   )
 end
 
@@ -35,27 +34,26 @@ function love.keypressed(key)
   end
 
   if key == "up" or key == "right" or key == "down" or key == "left" then
-    local column, row
+    local direction = {
+      ["column"] = 0,
+      ["row"] = 0
+    }
     if key == "up" then
-      column = 0
-      row = -1
+      direction.column = 0
+      direction.row = -1
     elseif key == "right" then
-      column = 1
-      row = 0
+      direction.column = 1
+      direction.row = 0
     elseif key == "down" then
-      column = 0
-      row = 1
+      direction.column = 0
+      direction.row = 1
     elseif key == "left" then
-      column = -1
-      row = 0
+      direction.column = -1
+      direction.row = 0
     end
 
-    bouldy:setDirection(
-      {
-        ["column"] = column,
-        ["row"] = row
-      }
-    )
+    bouldy.direction.column = direction.column
+    bouldy.direction.row = direction.row
 
     if not bouldy.isMoving then
       bouldy.isMoving = true
@@ -95,6 +93,12 @@ function love.keypressed(key)
                 [bouldy] = {
                   ["x"] = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding,
                   ["y"] = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
+                },
+                [progressBar.progress] = {
+                  ["value"] = math.min(
+                    progressBar.progress.max,
+                    progressBar.progress.value + math.floor(progressBar.progress.step / 5)
+                  )
                 }
               }
             )
@@ -104,12 +108,21 @@ function love.keypressed(key)
                 -- precautionary
                 bouldy.x = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding
                 bouldy.y = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
+                progressBar.progress.value =
+                  math.min(
+                  progressBar.progress.max,
+                  progressBar.progress.value + math.floor(progressBar.progress.step / 5)
+                )
+
                 Timer:tween(
                   UPDATE_TWEEN / 5 * 4,
                   {
                     [bouldy] = {
                       ["x"] = (bouldy.column - 1) * bouldy.size,
                       ["y"] = (bouldy.row - 1) * bouldy.size
+                    },
+                    [progressBar.progress] = {
+                      ["value"] = 0
                     }
                   }
                 )
@@ -121,6 +134,7 @@ function love.keypressed(key)
                     -- precautionary
                     bouldy.x = (bouldy.column - 1) * bouldy.size
                     bouldy.y = (bouldy.row - 1) * bouldy.size
+                    progressBar.progress.value = 0
                     Timer:reset()
                     bouldy.isMoving = false
                   end
@@ -131,7 +145,10 @@ function love.keypressed(key)
             Timer:tween(
               UPDATE_TWEEN,
               {
-                [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size}
+                [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
+                [progressBar.progress] = {
+                  ["value"] = math.min(progressBar.progress.max, progressBar.progress.value + progressBar.progress.step)
+                }
               }
             )
           end

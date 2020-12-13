@@ -1,13 +1,17 @@
 ProgressBar = {}
 ProgressBar.__index = ProgressBar
 
-function ProgressBar:new(x, y, width, height, progress)
+function ProgressBar:new(x, y, width, height)
   this = {
     ["x"] = x,
     ["y"] = y,
     ["width"] = width,
     ["height"] = height,
-    ["progress"] = progress or 0,
+    ["progress"] = {
+      ["max"] = PROGRESS_MAX,
+      ["step"] = math.floor(PROGRESS_MAX / PROGRESS_STEPS),
+      ["value"] = PROGRESS_INITIAL
+    },
     ["padding"] = {
       ["x"] = 4,
       ["y"] = 4
@@ -16,10 +20,6 @@ function ProgressBar:new(x, y, width, height, progress)
 
   setmetatable(this, self)
   return this
-end
-
-function ProgressBar:setProgress(progress)
-  self.progress = progress
 end
 
 function ProgressBar:render()
@@ -32,7 +32,7 @@ function ProgressBar:render()
     "fill",
     self.x + self.padding.x,
     self.y + self.padding.y,
-    (self.width - self.padding.x * 2) * (self.progress / 100),
+    (self.width - self.padding.x * 2) * (self.progress.value / self.progress.max),
     self.height - self.padding.y * 2
   )
 end

@@ -23,11 +23,6 @@ function Bouldy:new(column, row, size, padding)
   return this
 end
 
-function Bouldy:setDirection(direction)
-  self.direction.column = direction.column
-  self.direction.row = direction.row
-end
-
 function Bouldy:render()
   love.graphics.setColor(gColors["light"].r, gColors["light"].g, gColors["light"].b, 1)
   love.graphics.rectangle(
