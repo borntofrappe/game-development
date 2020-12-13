@@ -69,21 +69,23 @@ function love.keypressed(key)
           bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
           bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
 
+          local gates = {
+            ["0-1"] = {"up", "down"},
+            ["10"] = {"right", "left"},
+            ["01"] = {"down", "up"},
+            ["-10"] = {"left", "right"}
+          }
+          local key
+
           if previousColumn == bouldy.column and previousRow == bouldy.row then
             hasBounced = true
-          end
-
-          local gates = {
-            ["0-1"] = "up",
-            ["10"] = "right",
-            ["01"] = "down",
-            ["-10"] = "left"
-          }
-
-          if not hasBounced and maze.grid[previousColumn][previousRow].gates[gates[d.column .. d.row]] then
-            hasBounced = true
-            bouldy.column = previousColumn
-            bouldy.row = previousRow
+          else
+            key = d.column .. d.row
+            if maze.grid[previousColumn][previousRow].gates[gates[key][1]] then
+              hasBounced = true
+              bouldy.column = previousColumn
+              bouldy.row = previousRow
+            end
           end
 
           if hasBounced then
@@ -114,31 +116,59 @@ function love.keypressed(key)
                   progressBar.progress.value + math.floor(progressBar.progress.step / 5)
                 )
 
-                Timer:tween(
-                  UPDATE_TWEEN / 5 * 4,
-                  {
-                    [bouldy] = {
-                      ["x"] = (bouldy.column - 1) * bouldy.size,
-                      ["y"] = (bouldy.row - 1) * bouldy.size
-                    },
-                    [progressBar.progress] = {
-                      ["value"] = 0
+                if key and progressBar.progress.value == progressBar.progress.max then
+                  bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
+                  bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
+                  local previousGate1 = maze.grid[previousColumn][previousRow].gates[gates[key][1]]
+                  local previousGate2 = maze.grid[bouldy.column][bouldy.row].gates[gates[key][2]]
+
+                  maze.grid[previousColumn][previousRow].gates[gates[key][1]] = nil
+                  maze.grid[bouldy.column][bouldy.row].gates[gates[key][2]] = nil
+
+                  Timer:tween(
+                    UPDATE_TWEEN / 5 * 4,
+                    {
+                      [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
+                      [progressBar.progress] = {
+                        ["value"] = progressBar.progress.value - progressBar.progress.step
+                      }
                     }
-                  }
-                )
-                Timer:after(
-                  UPDATE_TWEEN / 5 * 4,
-                  function()
-                    d.column = 0
-                    d.row = 0
-                    -- precautionary
-                    bouldy.x = (bouldy.column - 1) * bouldy.size
-                    bouldy.y = (bouldy.row - 1) * bouldy.size
-                    progressBar.progress.value = 0
-                    Timer:reset()
-                    bouldy.isMoving = false
-                  end
-                )
+                  )
+
+                  Timer:after(
+                    UPDATE_TWEEN / 5 * 4,
+                    function()
+                      maze.grid[previousColumn][previousRow].gates[gates[key][1]] = previousGate1
+                      maze.grid[bouldy.column][bouldy.row].gates[gates[key][2]] = previousGate2
+                    end
+                  )
+                else
+                  Timer:tween(
+                    UPDATE_TWEEN / 5 * 4,
+                    {
+                      [bouldy] = {
+                        ["x"] = (bouldy.column - 1) * bouldy.size,
+                        ["y"] = (bouldy.row - 1) * bouldy.size
+                      },
+                      [progressBar.progress] = {
+                        ["value"] = 0
+                      }
+                    }
+                  )
+                  Timer:after(
+                    UPDATE_TWEEN / 5 * 4,
+                    function()
+                      d.column = 0
+                      d.row = 0
+                      -- precautionary
+                      bouldy.x = (bouldy.column - 1) * bouldy.size
+                      bouldy.y = (bouldy.row - 1) * bouldy.size
+                      progressBar.progress.value = 0
+                      Timer:reset()
+                      bouldy.isMoving = false
+                    end
+                  )
+                end
               end
             )
           else
