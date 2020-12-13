@@ -57,6 +57,7 @@ function love.keypressed(key)
 
     if not isMoving then
       isMoving = true
+      local d = direction
       Timer:every(
         UPDATE_INTERVAL,
         function()
@@ -65,31 +66,44 @@ function love.keypressed(key)
             local previousRow = bouldy.row
             local hasBounced = false
 
-            bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + direction.column))
-            bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + direction.row))
+            bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
+            bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
 
             if previousColumn == bouldy.column and previousRow == bouldy.row then
               hasBounced = true
             end
 
+            local gates = {
+              ["0-1"] = "up",
+              ["10"] = "right",
+              ["01"] = "down",
+              ["-10"] = "left"
+            }
+
+            if not hasBounced and maze.grid[previousColumn][previousRow].gates[gates[d.column .. d.row]] then
+              hasBounced = true
+              bouldy.column = previousColumn
+              bouldy.row = previousRow
+            end
+
             if hasBounced then
-              isMoving = false
               Timer:tween(
-                UPDATE_TWEEN / 4,
+                UPDATE_TWEEN / 5,
                 {
                   [bouldy] = {
-                    ["x"] = (bouldy.column - 1) * bouldy.size +
-                      direction.column * (maze.cellSize - (bouldy.size - bouldy.padding)),
-                    ["y"] = (bouldy.row - 1) * bouldy.size +
-                      direction.row * (maze.cellSize - (bouldy.size - bouldy.padding))
+                    ["x"] = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding,
+                    ["y"] = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
                   }
                 }
               )
               Timer:after(
-                UPDATE_TWEEN / 4,
+                UPDATE_TWEEN / 5,
                 function()
+                  -- precautionary
+                  bouldy.x = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding
+                  bouldy.y = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
                   Timer:tween(
-                    UPDATE_TWEEN / 4 * 3,
+                    UPDATE_TWEEN / 5 * 4,
                     {
                       [bouldy] = {
                         ["x"] = (bouldy.column - 1) * bouldy.size,
@@ -98,11 +112,15 @@ function love.keypressed(key)
                     }
                   )
                   Timer:after(
-                    UPDATE_TWEEN / 4 * 3,
+                    UPDATE_TWEEN / 5 * 4,
                     function()
-                      direction.column = 0
-                      direction.row = 0
+                      d.column = 0
+                      d.row = 0
+                      -- precautionary
+                      bouldy.x = (bouldy.column - 1) * bouldy.size
+                      bouldy.y = (bouldy.row - 1) * bouldy.size
                       Timer:reset()
+                      isMoving = false
                     end
                   )
                 end
