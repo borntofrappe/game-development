@@ -23,3 +23,7 @@ gColors = {
 gFonts = {
   ["normal"] = love.graphics.newFont("res/font.ttf", 16)
 }
+
+gTextures = {
+  ["particle-dust"] = love.graphics.newImage("res/particle-dust.png")
+}
