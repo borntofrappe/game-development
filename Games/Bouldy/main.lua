@@ -77,32 +77,48 @@ function love.keypressed(key)
           local previousRow = bouldy.row
 
           local hasBounced = false
-          local key = d.column .. d.row
 
           bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
           bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
 
-          Timer:after(
-            PARTICLE_SYSTEM_DUST_DELAY,
-            function()
-              particleSystemDust:setPosition(bouldy.x + bouldy.size / 2, bouldy.y + bouldy.size / 2)
-              particleSystemDust:setLinearAcceleration(
-                PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[key].x[1],
-                PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[key].y[1],
-                PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[key].x[2],
-                PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[key].y[2]
-              )
+          -- + / 4 to compensate for the movement
+          local x = bouldy.x + bouldy.size / 2 + bouldy.size / 4 * d.column
+          local y = bouldy.y + bouldy.size / 2 + bouldy.size / 4 * d.row
 
-              particleSystemDust:emit(PARTICLE_SYSTEM_DUST_PARTICLES)
-            end
-          )
+          particleSystemDust:setPosition(x, y)
+          local min = PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[1]
+          local max = PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[2]
+          local xMin, xMax, yMin, yMax
 
+          if d.column == 0 then
+            xMin = min
+            xMax = max
+
+            yMin = max * d.row * -1
+            yMax = max * d.row * -1 * 2
+          else
+            xMin = max * d.column * -1
+            xMax = max * d.column * -1 * 2
+
+            yMin = min
+            yMax = max
+          end
+          particleSystemDust:setLinearAcceleration(xMin, yMin, xMax, yMax)
+
+          particleSystemDust:emit(PARTICLE_SYSTEM_DUST_PARTICLES)
+
+          local gates = {
+            ["0-1"] = {"up", "down"},
+            ["10"] = {"right", "left"},
+            ["01"] = {"down", "up"},
+            ["-10"] = {"left", "right"}
+          }
           local gatePair
 
           if previousColumn == bouldy.column and previousRow == bouldy.row then
             hasBounced = true
           else
-            gatePair = GATES[key]
+            gatePair = gates[d.column .. d.row]
             if maze.grid[previousColumn][previousRow].gates[gatePair[1]] then
               hasBounced = true
               bouldy.column = previousColumn

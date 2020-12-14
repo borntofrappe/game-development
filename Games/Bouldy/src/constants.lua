@@ -15,34 +15,9 @@ PROGRESS_MAX = 100
 PROGRESS_INITIAL = 0
 PROGRESS_STEPS = 5
 
-PARTICLE_SYSTEM_DUST_DELAY = 0.15
 PARTICLE_SYSTEM_DUST_PARTICLES = 50
 PARTICLE_SYSTEM_DUST_BUFFER = PARTICLE_SYSTEM_DUST_PARTICLES * PROGRESS_STEPS
 PARTICLE_SYSTEM_DUST_LIFETIME_MIN = 0.2
-PARTICLE_SYSTEM_DUST_LIFETIME_MAX = 0.5
-PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION = {
-  ["0-1"] = {
-    ["x"] = {-80, 80},
-    ["y"] = {80, 160}
-  },
-  ["10"] = {
-    ["x"] = {-80, -160},
-    ["y"] = {-80, 80}
-  },
-  ["01"] = {
-    ["x"] = {-80, 80},
-    ["y"] = {-80, -160}
-  },
-  ["-10"] = {
-    ["x"] = {80, 160},
-    ["y"] = {-80, 80}
-  }
-}
-PARTICLE_SYSTEM_DUST_RADIAL_ACCELERATION = {20, 50}
-
-GATES = {
-  ["0-1"] = {"up", "down"},
-  ["10"] = {"right", "left"},
-  ["01"] = {"down", "up"},
-  ["-10"] = {"left", "right"}
-}
+PARTICLE_SYSTEM_DUST_LIFETIME_MAX = 0.45
+PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION = {-60, 60}
+PARTICLE_SYSTEM_DUST_RADIAL_ACCELERATION = {20, 100}
