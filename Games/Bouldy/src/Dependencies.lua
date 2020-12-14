@@ -1,4 +1,4 @@
-Timer = require "res/Timer"
+Timer = require "res/lib/Timer"
 
 require "src/constants"
 
@@ -32,10 +32,19 @@ gColors = {
 }
 
 gFonts = {
-  ["normal"] = love.graphics.newFont("res/font.ttf", 16)
+  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
 }
 
 gTextures = {
-  ["particle-debris"] = love.graphics.newImage("res/particle-debris.png"),
-  ["particle-dust"] = love.graphics.newImage("res/particle-dust.png")
+  ["particle-debris"] = love.graphics.newImage("res/graphics/particle-debris.png"),
+  ["particle-dust"] = love.graphics.newImage("res/graphics/particle-dust.png")
+}
+
+gSounds = {
+  ["bouldy"] = love.audio.newSource("res/sounds/bouldy.wav", "static"),
+  ["bounce"] = love.audio.newSource("res/sounds/bounce.wav", "static"),
+  ["coin"] = love.audio.newSource("res/sounds/coin.wav", "static"),
+  ["gameover"] = love.audio.newSource("res/sounds/gameover.wav", "static"),
+  ["gate"] = love.audio.newSource("res/sounds/gate.wav", "static"),
+  ["speed"] = love.audio.newSource("res/sounds/speed.wav", "static")
 }

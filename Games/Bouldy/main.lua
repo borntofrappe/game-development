@@ -106,6 +106,7 @@ function love.keypressed(key)
         UPDATE_INTERVAL,
         function()
           if not isGameOver then
+            gSounds["bouldy"]:play()
             -- at an interval pick the value described by the direction table to change the movement of bouldy
             local d = {
               ["column"] = bouldy.direction.column,
@@ -200,9 +201,6 @@ function love.keypressed(key)
               Timer:after(
                 UPDATE_TWEEN * UPDATE_FRACTION,
                 function()
-                  --[[ 
-                  repeat the final values to avoid rounding errors
-                ]]
                   bouldy.x = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding
                   bouldy.y = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
                   progressBarSpeed.progress.value =
@@ -223,6 +221,7 @@ function love.keypressed(key)
                     local previousGate = previousCell.gates[gatePair[1]]
                     local gate = cell.gates[gatePair[2]]
 
+                    gSounds["gate"]:play()
                     previousCell.gates[gatePair[1]] = nil
                     cell.gates[gatePair[2]] = nil
 
@@ -295,6 +294,7 @@ function love.keypressed(key)
                         end
 
                         if hasCoin then
+                          gSounds["coin"]:play()
                           Timer:tween(
                             UPDATE_TWEEN,
                             {
@@ -312,6 +312,7 @@ function love.keypressed(key)
                     )
                   else
                     -- COMPLETE SECOND MOVEMENT BACK
+                    gSounds["bounce"]:play()
                     progressBarSpeed.colorStroke = "light"
                     bouldy.colorFill = "light"
 
@@ -367,6 +368,9 @@ function love.keypressed(key)
                 UPDATE_TWEEN,
                 function()
                   if math.ceil(progressBarSpeed.progress.value) == progressBarSpeed.progress.max then
+                    if bouldy.colorFill ~= "speed" then
+                      gSounds["speed"]:play()
+                    end
                     progressBarSpeed.colorStroke = "speed"
                     bouldy.colorFill = "speed"
                   end
@@ -383,6 +387,7 @@ function love.keypressed(key)
                   end
 
                   if hasCoin then
+                    gSounds["coin"]:play()
                     Timer:tween(
                       UPDATE_TWEEN,
                       {
@@ -402,6 +407,7 @@ function love.keypressed(key)
           else
             -- GAMEOVER
             -- remove interval before highlighting the gameover through the progress bars
+            gSounds["gameover"]:play()
             Timer.intervals = {}
             progressBarCoins.colorStroke = "coin"
             bouldy.colorFill = "coin"
@@ -421,6 +427,7 @@ function love.keypressed(key)
                 Timer:after(
                   UPDATE_TWEEN,
                   function()
+                    maze = Maze:new()
                     coins = getCoins(maze.dimension, bouldy.column, bouldy.row)
                     progressBarSpeed.colorStroke = "light"
                     progressBarCoins.colorStroke = "light"
