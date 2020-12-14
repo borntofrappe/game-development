@@ -65,10 +65,14 @@ function love.keypressed(key)
 
     if not bouldy.isMoving then
       bouldy.isMoving = true
-      local d = bouldy.direction
       Timer:every(
         UPDATE_INTERVAL,
         function()
+          -- d = bouldy.direction would not work as intended, as the table would be modified between tweens
+          local d = {
+            ["column"] = bouldy.direction.column,
+            ["row"] = bouldy.direction.row
+          }
           local previousColumn = bouldy.column
           local previousRow = bouldy.row
 
