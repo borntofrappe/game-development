@@ -43,6 +43,7 @@ The goal of this repo is two-fold:
   | Petri Dish       | Time events and `love.math.noise` to animate irregular particles |
   | Surround         | A game for two players playing side by side in splitscreen       |
   | Bang Bang        | Fire a cannonball to destroy a target behind a hill              |
+  | Bouldy           | A maze runner with gates, coins and particle systems             |
 
 ## How to run a game
 
