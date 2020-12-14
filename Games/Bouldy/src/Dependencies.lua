@@ -25,5 +25,6 @@ gFonts = {
 }
 
 gTextures = {
+  ["particle-debris"] = love.graphics.newImage("res/particle-debris.png"),
   ["particle-dust"] = love.graphics.newImage("res/particle-dust.png")
 }

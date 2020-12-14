@@ -24,6 +24,16 @@ function love.load()
     PARTICLE_SYSTEM_DUST_RADIAL_ACCELERATION[2]
   )
   particleSystemDust:setColors(1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)
+
+  particleSystemDebris = love.graphics.newParticleSystem(gTextures["particle-debris"], PARTICLE_SYSTEM_DEBRIS_BUFFER)
+  particleSystemDebris:setParticleLifetime(PARTICLE_SYSTEM_DEBRIS_LIFETIME_MIN, PARTICLE_SYSTEM_DEBRIS_LIFETIME_MAX)
+  particleSystemDebris:setRadialAcceleration(
+    PARTICLE_SYSTEM_DEBRIS_RADIAL_ACCELERATION[1],
+    PARTICLE_SYSTEM_DEBRIS_RADIAL_ACCELERATION[2]
+  )
+  particleSystemDebris:setSpin(0, math.pi * 2)
+  particleSystemDebris:setRotation(0, math.pi * 2)
+  particleSystemDebris:setSizes(0, 1, 1, 1, 0)
 end
 
 function love.mousepressed(x, y, button)
@@ -81,6 +91,9 @@ function love.keypressed(key)
           bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
           bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
 
+          local previousCell = maze.grid[previousColumn][previousRow]
+          local cell = maze.grid[bouldy.column][bouldy.row]
+
           -- + / 4 to compensate for the movement
           local x = bouldy.x + bouldy.size / 2 + bouldy.size / 4 * d.column
           local y = bouldy.y + bouldy.size / 2 + bouldy.size / 4 * d.row
@@ -119,7 +132,7 @@ function love.keypressed(key)
             hasBounced = true
           else
             gatePair = gates[d.column .. d.row]
-            if maze.grid[previousColumn][previousRow].gates[gatePair[1]] then
+            if previousCell.gates[gatePair[1]] then
               hasBounced = true
               bouldy.column = previousColumn
               bouldy.row = previousRow
@@ -157,11 +170,45 @@ function love.keypressed(key)
                 if gatePair and progressBar.progress.value == progressBar.progress.max then
                   bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
                   bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
-                  local previousGate1 = maze.grid[previousColumn][previousRow].gates[gatePair[1]]
-                  local previousGate2 = maze.grid[bouldy.column][bouldy.row].gates[gatePair[2]]
 
-                  maze.grid[previousColumn][previousRow].gates[gatePair[1]] = nil
-                  maze.grid[bouldy.column][bouldy.row].gates[gatePair[2]] = nil
+                  local previousGate = previousCell.gates[gatePair[1]]
+                  local gate = cell.gates[gatePair[2]]
+
+                  previousCell.gates[gatePair[1]] = nil
+                  cell.gates[gatePair[2]] = nil
+
+                  -- particle system debris
+                  --  set position, emission area and linear acceleration
+                  local x = (previousCell.column - 1) * previousCell.size + (previousGate.x1 + previousGate.x2) / 2
+                  local y = (previousCell.row - 1) * previousCell.size + (previousGate.y1 + previousGate.y2) / 2
+
+                  particleSystemDebris:setPosition(x, y)
+                  particleSystemDebris:setEmissionArea(
+                    "uniform",
+                    (previousGate.x1 + previousGate.x2) / 2 / 2,
+                    (previousGate.y1 + previousGate.y2) / 2 / 2
+                  )
+
+                  local min = PARTICLE_SYSTEM_DEBRIS_LINEAR_ACCELERATION[1]
+                  local max = PARTICLE_SYSTEM_DEBRIS_LINEAR_ACCELERATION[2]
+                  local xMin, xMax, yMin, yMax
+
+                  if d.column == 0 then
+                    xMin = min
+                    xMax = max
+
+                    yMin = max * d.row
+                    yMax = max * d.row * 2
+                  else
+                    xMin = max * d.column
+                    xMax = max * d.column * 2
+
+                    yMin = min
+                    yMax = max
+                  end
+                  particleSystemDebris:setLinearAcceleration(xMin, yMin, xMax, yMax)
+
+                  particleSystemDebris:emit(PARTICLE_SYSTEM_DEBRIS_PARTICLES)
 
                   Timer:tween(
                     UPDATE_TWEEN / 5 * 4,
@@ -176,8 +223,8 @@ function love.keypressed(key)
                   Timer:after(
                     UPDATE_TWEEN / 5 * 4,
                     function()
-                      maze.grid[previousColumn][previousRow].gates[gatePair[1]] = previousGate1
-                      maze.grid[bouldy.column][bouldy.row].gates[gatePair[2]] = previousGate2
+                      previousCell.gates[gatePair[1]] = previousGate
+                      cell.gates[gatePair[2]] = gate
                     end
                   )
                 else
@@ -230,6 +277,7 @@ end
 function love.update(dt)
   Timer:update(dt)
   particleSystemDust:update(dt)
+  particleSystemDebris:update(dt)
 end
 
 function love.draw()
@@ -243,5 +291,6 @@ function love.draw()
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
   maze:render()
   love.graphics.draw(particleSystemDust)
+  love.graphics.draw(particleSystemDebris)
   bouldy:render()
 end
