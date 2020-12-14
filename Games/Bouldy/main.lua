@@ -1,35 +1,31 @@
 require "src/Dependencies"
 
-function love.load()
-  love.window.setTitle("Bouldy")
-  love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
-
-  maze = Maze:new()
-  bouldy =
-    Bouldy:new(love.math.random(MAZE_DIMENSION), love.math.random(MAZE_DIMENSION), maze.cellSize, maze.cellSize / 4)
-
-  coins = {}
+function getCoins(dimension, skipColumn, skipRow)
+  local coins = {}
   while #coins < COINS_MAX do
-    local column = love.math.random(MAZE_DIMENSION)
-    local row = love.math.random(MAZE_DIMENSION)
-    if column ~= bouldy.column or row ~= bouldy.row then
+    local column = love.math.random(dimension)
+    local row = love.math.random(dimension)
+    if column ~= skipColumn or row ~= skipRow then
       local coin = Coin:new(column, row, maze.cellSize, maze.cellSize / 3)
       table.insert(coins, coin)
     end
   end
 
-  progressBarSpeed =
-    ProgressBar:new(
-    WINDOW_WIDTH - WINDOW_PADDING - gFonts["normal"]:getWidth("Bouldy"),
-    WINDOW_PADDING,
-    gFonts["normal"]:getWidth("Bouldy"),
-    gFonts["normal"]:getHeight(),
-    PROGRESS_INITIAL,
-    PROGRESS_MAX,
-    PROGRESS_STEPS,
-    "speed"
-  )
+  return coins
+end
+
+function love.load()
+  love.window.setTitle("Bouldy")
+
+  love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
+  love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
+
+  maze = Maze:new()
+
+  bouldy =
+    Bouldy:new(love.math.random(MAZE_DIMENSION), love.math.random(MAZE_DIMENSION), maze.cellSize, maze.cellSize / 4)
+
+  coins = getCoins(MAZE_DIMENSION, bouldy.column, bouldy.row)
 
   progressBarCoins =
     ProgressBar:new(
@@ -41,6 +37,18 @@ function love.load()
     COINS_MAX,
     COINS_MAX,
     "coin"
+  )
+
+  progressBarSpeed =
+    ProgressBar:new(
+    WINDOW_WIDTH - WINDOW_PADDING - gFonts["normal"]:getWidth("Bouldy"),
+    WINDOW_PADDING,
+    gFonts["normal"]:getWidth("Bouldy"),
+    gFonts["normal"]:getHeight(),
+    PROGRESS_INITIAL,
+    PROGRESS_MAX,
+    PROGRESS_STEPS,
+    "speed"
   )
 
   particleSystemDust = love.graphics.newParticleSystem(gTextures["particle-dust"], PARTICLE_SYSTEM_DUST_BUFFER)
@@ -60,21 +68,14 @@ function love.load()
   particleSystemDebris:setSpin(0, math.pi * 2)
   particleSystemDebris:setRotation(0, math.pi * 2)
   particleSystemDebris:setSizes(0, 1, 1, 1, 0)
-end
 
-function love.mousepressed(x, y, button)
-  if button == 1 then
-    maze = Maze:new()
-  end
+  isUpdating = false
+  isGameOver = false
 end
 
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
-  end
-
-  if key == "r" then
-    maze = Maze:new()
   end
 
   if key == "up" or key == "right" or key == "down" or key == "left" then
@@ -99,270 +100,340 @@ function love.keypressed(key)
     bouldy.direction.column = direction.column
     bouldy.direction.row = direction.row
 
-    if not bouldy.isMoving then
-      bouldy.isMoving = true
+    if not isUpdating then
+      isUpdating = true
       Timer:every(
         UPDATE_INTERVAL,
         function()
-          -- d = bouldy.direction would not work as intended, as the table would be modified between tweens
-          local d = {
-            ["column"] = bouldy.direction.column,
-            ["row"] = bouldy.direction.row
-          }
-          local previousColumn = bouldy.column
-          local previousRow = bouldy.row
+          if not isGameOver then
+            -- at an interval pick the value described by the direction table to change the movement of bouldy
+            local d = {
+              ["column"] = bouldy.direction.column,
+              ["row"] = bouldy.direction.row
+            }
+            -- controlling variable to describe if bouldy hits a wall/gate
+            local hasBounced = false
+            -- integers to restore the position in the grid if necessary
+            local previousColumn = bouldy.column
+            local previousRow = bouldy.row
+            -- cells matching the position of bouldy, before and after the movement
+            local previousCell = maze.grid[previousColumn][previousRow]
+            local cell = maze.grid[bouldy.column][bouldy.row]
 
-          local hasBounced = false
+            -- MOVE BOULDY IN THE MAZE
+            -- ! remember to revert the operation if bouldy bounces against a wall
+            bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
+            bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
 
-          bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
-          bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
+            -- EMIT DUST PARTICLES
+            -- + / 4 to compensate for the movement already taking place
+            local particleSytemDustX = bouldy.x + bouldy.size / 2 + bouldy.size / 4 * d.column
+            local particleSytemDustY = bouldy.y + bouldy.size / 2 + bouldy.size / 4 * d.row
 
-          local previousCell = maze.grid[previousColumn][previousRow]
-          local cell = maze.grid[bouldy.column][bouldy.row]
+            particleSystemDust:setPosition(particleSytemDustX, particleSytemDustY)
+            local min = PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[1]
+            local max = PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[2]
+            local xMin, xMax, yMin, yMax
 
-          -- + / 4 to compensate for the movement
-          local x = bouldy.x + bouldy.size / 2 + bouldy.size / 4 * d.column
-          local y = bouldy.y + bouldy.size / 2 + bouldy.size / 4 * d.row
+            if d.column == 0 then
+              xMin = min
+              xMax = max
 
-          particleSystemDust:setPosition(x, y)
-          local min = PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[1]
-          local max = PARTICLE_SYSTEM_DUST_LINEAR_ACCELERATION[2]
-          local xMin, xMax, yMin, yMax
+              yMin = max * d.row * -1
+              yMax = max * d.row * -1 * 2
+            else
+              xMin = max * d.column * -1
+              xMax = max * d.column * -1 * 2
 
-          if d.column == 0 then
-            xMin = min
-            xMax = max
-
-            yMin = max * d.row * -1
-            yMax = max * d.row * -1 * 2
-          else
-            xMin = max * d.column * -1
-            xMax = max * d.column * -1 * 2
-
-            yMin = min
-            yMax = max
-          end
-          particleSystemDust:setLinearAcceleration(xMin, yMin, xMax, yMax)
-
-          particleSystemDust:emit(PARTICLE_SYSTEM_DUST_PARTICLES)
-
-          local gates = {
-            ["0-1"] = {"up", "down"},
-            ["10"] = {"right", "left"},
-            ["01"] = {"down", "up"},
-            ["-10"] = {"left", "right"}
-          }
-          local gatePair
-
-          if previousColumn == bouldy.column and previousRow == bouldy.row then
-            hasBounced = true
-          else
-            gatePair = gates[d.column .. d.row]
-            if previousCell.gates[gatePair[1]] then
-              hasBounced = true
-              bouldy.column = previousColumn
-              bouldy.row = previousRow
+              yMin = min
+              yMax = max
             end
-          end
+            particleSystemDust:setLinearAcceleration(xMin, yMin, xMax, yMax)
+            particleSystemDust:emit(PARTICLE_SYSTEM_DUST_PARTICLES)
 
-          if hasBounced then
-            Timer:tween(
-              UPDATE_TWEEN / 5,
-              {
-                [bouldy] = {
-                  ["x"] = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding,
-                  ["y"] = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
-                },
-                [progressBarSpeed.progress] = {
-                  ["value"] = math.min(
-                    progressBarSpeed.progress.max,
-                    progressBarSpeed.progress.value + math.floor(progressBarSpeed.progress.step / 5)
-                  )
+            -- CONSIDER WALL/ GATES
+            --[[
+            hitting a wall column and row are already considered by math.max/math.min
+            hitting a gate it is necessary to revert the operation
+          
+            gates and gatePair are used to consider the gate being hit
+            the idea is to remove the gate with enough speed
+          ]]
+            local gates = {
+              ["0-1"] = {"up", "down"},
+              ["10"] = {"right", "left"},
+              ["01"] = {"down", "up"},
+              ["-10"] = {"left", "right"}
+            }
+            local gatePair
+
+            if previousColumn == bouldy.column and previousRow == bouldy.row then
+              hasBounced = true
+            else
+              gatePair = gates[d.column .. d.row]
+              if previousCell.gates[gatePair[1]] then
+                hasBounced = true
+                bouldy.column = previousColumn
+                bouldy.row = previousRow
+              end
+            end
+
+            -- if bouncing animate bouldy toward the wall/gate and back
+            -- move faster in the first segment (see UPDATE_FRACTION)
+            if hasBounced then
+              -- FIRST MOVEMENT
+              Timer:tween(
+                UPDATE_TWEEN * UPDATE_FRACTION,
+                {
+                  [bouldy] = {
+                    ["x"] = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding,
+                    ["y"] = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
+                  },
+                  [progressBarSpeed.progress] = {
+                    ["value"] = math.min(
+                      progressBarSpeed.progress.max,
+                      progressBarSpeed.progress.value + math.floor(progressBarSpeed.progress.step * UPDATE_FRACTION)
+                    )
+                  }
                 }
-              }
-            )
+              )
+              Timer:after(
+                UPDATE_TWEEN * UPDATE_FRACTION,
+                function()
+                  --[[ 
+                  repeat the final values to avoid rounding errors
+                ]]
+                  bouldy.x = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding
+                  bouldy.y = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
+                  progressBarSpeed.progress.value =
+                    math.min(
+                    progressBarSpeed.progress.max,
+                    progressBarSpeed.progress.value + math.floor(progressBarSpeed.progress.step * UPDATE_FRACTION)
+                  )
+
+                  -- SECOND MOVEMENT
+                  -- let bouldy through when the speed bar describes the maximum value
+                  -- ! only for a gate
+                  if gatePair and progressBarSpeed.progress.value == progressBarSpeed.progress.max then
+                    -- ! repeat the movement erased when checking a gate
+                    bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
+                    bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
+
+                    -- ! keep a reference to the gate to restore the value after bouldy gets through
+                    local previousGate = previousCell.gates[gatePair[1]]
+                    local gate = cell.gates[gatePair[2]]
+
+                    previousCell.gates[gatePair[1]] = nil
+                    cell.gates[gatePair[2]] = nil
+
+                    -- EMIT DEBRIS PARTICLES
+                    local particleSystemDebrisX =
+                      (previousCell.column - 1) * previousCell.size + (previousGate.x1 + previousGate.x2) / 2
+                    local particleSystemDebrisY =
+                      (previousCell.row - 1) * previousCell.size + (previousGate.y1 + previousGate.y2) / 2
+
+                    particleSystemDebris:setPosition(particleSystemDebrisX, particleSystemDebrisY)
+                    particleSystemDebris:setEmissionArea(
+                      "uniform",
+                      (previousGate.x1 + previousGate.x2) / 2 / 2,
+                      (previousGate.y1 + previousGate.y2) / 2 / 2
+                    )
+
+                    local min = PARTICLE_SYSTEM_DEBRIS_LINEAR_ACCELERATION[1]
+                    local max = PARTICLE_SYSTEM_DEBRIS_LINEAR_ACCELERATION[2]
+                    local xMin, xMax, yMin, yMax
+
+                    if d.column == 0 then
+                      xMin = min
+                      xMax = max
+
+                      yMin = max * d.row
+                      yMax = max * d.row * 2
+                    else
+                      xMin = max * d.column
+                      xMax = max * d.column * 2
+
+                      yMin = min
+                      yMax = max
+                    end
+                    particleSystemDebris:setLinearAcceleration(xMin, yMin, xMax, yMax)
+
+                    -- stepsDecrease to randomly decrease the speed bar
+                    local stepsDecrease = love.math.random(PROGRESS_STEPS)
+                    particleSystemDebris:emit(PARTICLE_SYSTEM_DEBRIS_PARTICLES * stepsDecrease)
+
+                    -- COMPLETE SECOND MOVEMENT THROUGH
+                    Timer:tween(
+                      UPDATE_TWEEN * (1 - UPDATE_FRACTION),
+                      {
+                        [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
+                        [progressBarSpeed.progress] = {
+                          ["value"] = progressBarSpeed.progress.value - (progressBarSpeed.progress.step) * stepsDecrease
+                        }
+                      }
+                    )
+
+                    -- UPDATE GAME by restoring the gates/checking for coins
+                    Timer:after(
+                      UPDATE_TWEEN * (1 - UPDATE_FRACTION),
+                      function()
+                        progressBarSpeed.colorStroke = "light"
+                        bouldy.colorFill = "light"
+
+                        previousCell.gates[gatePair[1]] = previousGate
+                        cell.gates[gatePair[2]] = gate
+
+                        -- use a boolean to conditionally update the progress bar for the coins/checking if all coins are collected
+                        local hasCoin = false
+
+                        for i = #coins, 1, -1 do
+                          if coins[i].column == bouldy.column and coins[i].row == bouldy.row then
+                            table.remove(coins, i)
+                            hasCoin = true
+                            break
+                          end
+                        end
+
+                        if hasCoin then
+                          Timer:tween(
+                            UPDATE_TWEEN,
+                            {
+                              [progressBarCoins.progress] = {
+                                ["value"] = COINS_MAX - #coins
+                              }
+                            }
+                          )
+
+                          if #coins == 0 then
+                            isGameOver = true
+                          end
+                        end
+                      end
+                    )
+                  else
+                    -- COMPLETE SECOND MOVEMENT BACK
+                    progressBarSpeed.colorStroke = "light"
+                    bouldy.colorFill = "light"
+
+                    Timer:tween(
+                      UPDATE_TWEEN * (1 - UPDATE_FRACTION),
+                      {
+                        [bouldy] = {
+                          ["x"] = (bouldy.column - 1) * bouldy.size,
+                          ["y"] = (bouldy.row - 1) * bouldy.size
+                        },
+                        -- tweeing the bar speed to 0 has an annoying rounding error
+                        [progressBarSpeed.progress] = {
+                          ["value"] = 5
+                        }
+                      }
+                    )
+
+                    -- UPDATE GAME by stopping bouldy
+                    Timer:after(
+                      UPDATE_TWEEN * (1 - UPDATE_FRACTION),
+                      function()
+                        d.column = 0
+                        d.row = 0
+
+                        bouldy.x = (bouldy.column - 1) * bouldy.size
+                        bouldy.y = (bouldy.row - 1) * bouldy.size
+                        progressBarSpeed.progress.value = 0
+                        Timer.intervals = {}
+                        isUpdating = false
+                      end
+                    )
+                  end
+                end
+              )
+            else
+              -- NOT BOUNCING
+              -- move bouldy in a single motion toward the new cell
+              Timer:tween(
+                UPDATE_TWEEN,
+                {
+                  [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
+                  [progressBarSpeed.progress] = {
+                    ["value"] = math.min(
+                      progressBarSpeed.progress.max,
+                      progressBarSpeed.progress.value + progressBarSpeed.progress.step
+                    )
+                  }
+                }
+              )
+
+              -- UPDATE GAME by highlighting if the speed bar reaches the max value and checking for coins
+              Timer:after(
+                UPDATE_TWEEN,
+                function()
+                  if math.ceil(progressBarSpeed.progress.value) == progressBarSpeed.progress.max then
+                    progressBarSpeed.colorStroke = "speed"
+                    bouldy.colorFill = "speed"
+                  end
+
+                  -- same operation for when bouldy gets through a wall
+                  local hasCoin = false
+
+                  for i = #coins, 1, -1 do
+                    if coins[i].column == bouldy.column and coins[i].row == bouldy.row then
+                      table.remove(coins, i)
+                      hasCoin = true
+                      break
+                    end
+                  end
+
+                  if hasCoin then
+                    Timer:tween(
+                      UPDATE_TWEEN,
+                      {
+                        [progressBarCoins.progress] = {
+                          ["value"] = COINS_MAX - #coins
+                        }
+                      }
+                    )
+
+                    if #coins == 0 then
+                      isGameOver = true
+                    end
+                  end
+                end
+              )
+            end
+          else
+            -- GAMEOVER
+            -- remove interval before highlighting the gameover through the progress bars
+            Timer.intervals = {}
+            progressBarCoins.colorStroke = "coin"
+            bouldy.colorFill = "coin"
+
+            -- reset game with new coins/ progress values
             Timer:after(
-              UPDATE_TWEEN / 5,
+              GAMEOVER_DELAY,
               function()
-                -- precautionary
-                bouldy.x = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding
-                bouldy.y = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
-                progressBarSpeed.progress.value =
-                  math.min(
-                  progressBarSpeed.progress.max,
-                  progressBarSpeed.progress.value + math.floor(progressBarSpeed.progress.step / 5)
+                Timer:tween(
+                  UPDATE_TWEEN,
+                  {
+                    [progressBarSpeed.progress] = {["value"] = 0},
+                    [progressBarCoins.progress] = {["value"] = 0}
+                  }
                 )
 
-                if gatePair and progressBarSpeed.progress.value == progressBarSpeed.progress.max then
-                  bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
-                  bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
-
-                  local previousGate = previousCell.gates[gatePair[1]]
-                  local gate = cell.gates[gatePair[2]]
-
-                  previousCell.gates[gatePair[1]] = nil
-                  cell.gates[gatePair[2]] = nil
-
-                  local x = (previousCell.column - 1) * previousCell.size + (previousGate.x1 + previousGate.x2) / 2
-                  local y = (previousCell.row - 1) * previousCell.size + (previousGate.y1 + previousGate.y2) / 2
-
-                  particleSystemDebris:setPosition(x, y)
-                  particleSystemDebris:setEmissionArea(
-                    "uniform",
-                    (previousGate.x1 + previousGate.x2) / 2 / 2,
-                    (previousGate.y1 + previousGate.y2) / 2 / 2
-                  )
-
-                  local min = PARTICLE_SYSTEM_DEBRIS_LINEAR_ACCELERATION[1]
-                  local max = PARTICLE_SYSTEM_DEBRIS_LINEAR_ACCELERATION[2]
-                  local xMin, xMax, yMin, yMax
-
-                  if d.column == 0 then
-                    xMin = min
-                    xMax = max
-
-                    yMin = max * d.row
-                    yMax = max * d.row * 2
-                  else
-                    xMin = max * d.column
-                    xMax = max * d.column * 2
-
-                    yMin = min
-                    yMax = max
+                Timer:after(
+                  UPDATE_TWEEN,
+                  function()
+                    coins = getCoins(maze.dimension, bouldy.column, bouldy.row)
+                    progressBarSpeed.colorStroke = "light"
+                    progressBarCoins.colorStroke = "light"
+                    bouldy.colorFill = "light"
+                    isUpdating = false
+                    isGameOver = false
                   end
-                  particleSystemDebris:setLinearAcceleration(xMin, yMin, xMax, yMax)
-
-                  local stepsDecrease = love.math.random(PROGRESS_STEPS)
-                  particleSystemDebris:emit(PARTICLE_SYSTEM_DEBRIS_PARTICLES * stepsDecrease)
-
-                  Timer:tween(
-                    UPDATE_TWEEN / 5 * 4,
-                    {
-                      [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
-                      [progressBarSpeed.progress] = {
-                        ["value"] = progressBarSpeed.progress.value - (progressBarSpeed.progress.step) * stepsDecrease
-                      }
-                    }
-                  )
-
-                  Timer:after(
-                    UPDATE_TWEEN / 5 * 4,
-                    function()
-                      progressBarSpeed.colorStroke = "light"
-                      bouldy.colorFill = "light"
-                      previousCell.gates[gatePair[1]] = previousGate
-                      cell.gates[gatePair[2]] = gate
-
-                      local hasCoin = false
-
-                      for i = #coins, 1, -1 do
-                        if coins[i].column == bouldy.column and coins[i].row == bouldy.row then
-                          table.remove(coins, i)
-                          hasCoin = true
-                          break
-                        end
-                      end
-
-                      if hasCoin then
-                        Timer:tween(
-                          UPDATE_TWEEN,
-                          {
-                            [progressBarCoins.progress] = {
-                              ["value"] = COINS_MAX - #coins
-                            }
-                          }
-                        )
-
-                        if #coins == 0 then
-                          progressBarCoins.colorStroke = "coin"
-                          bouldy.colorFill = "coin"
-                        end
-                      end
-                    end
-                  )
-                else
-                  progressBarSpeed.colorStroke = "light"
-                  bouldy.colorFill = "light"
-                  Timer:tween(
-                    UPDATE_TWEEN / 5 * 4,
-                    {
-                      [bouldy] = {
-                        ["x"] = (bouldy.column - 1) * bouldy.size,
-                        ["y"] = (bouldy.row - 1) * bouldy.size
-                      },
-                      -- ???
-                      [progressBarSpeed.progress] = {
-                        ["value"] = 5
-                      }
-                    }
-                  )
-                  Timer:after(
-                    UPDATE_TWEEN / 5 * 4,
-                    function()
-                      d.column = 0
-                      d.row = 0
-                      -- precautionary
-
-                      bouldy.x = (bouldy.column - 1) * bouldy.size
-                      bouldy.y = (bouldy.row - 1) * bouldy.size
-                      progressBarSpeed.progress.value = 0
-                      Timer:reset()
-                      bouldy.isMoving = false
-                    end
-                  )
-                end
-              end
-            )
-          else
-            Timer:tween(
-              UPDATE_TWEEN,
-              {
-                [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
-                [progressBarSpeed.progress] = {
-                  ["value"] = math.min(
-                    progressBarSpeed.progress.max,
-                    progressBarSpeed.progress.value + progressBarSpeed.progress.step
-                  )
-                }
-              }
-            )
-            Timer:after(
-              UPDATE_TWEEN,
-              function()
-                if math.ceil(progressBarSpeed.progress.value) == progressBarSpeed.progress.max then
-                  progressBarSpeed.colorStroke = "speed"
-                  bouldy.colorFill = "speed"
-                end
-
-                local hasCoin = false
-
-                for i = #coins, 1, -1 do
-                  if coins[i].column == bouldy.column and coins[i].row == bouldy.row then
-                    table.remove(coins, i)
-                    hasCoin = true
-                    break
-                  end
-                end
-
-                if hasCoin then
-                  Timer:tween(
-                    UPDATE_TWEEN,
-                    {
-                      [progressBarCoins.progress] = {
-                        ["value"] = COINS_MAX - #coins
-                      }
-                    }
-                  )
-
-                  if #coins == 0 then
-                    progressBarCoins.colorStroke = "coin"
-                    bouldy.colorFill = "coin"
-                  end
-                end
+                )
               end
             )
           end
         end,
+        -- execute the callback immediately
         true
       )
     end
@@ -378,14 +449,16 @@ end
 function love.draw()
   love.graphics.setColor(gColors["light"].r, gColors["light"].g, gColors["light"].b)
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.printf("Bouldy", 0, WINDOW_PADDING, WINDOW_WIDTH, "center")
+  love.graphics.printf("Bouldy", 0, WINDOW_PADDING + 2, WINDOW_WIDTH, "center")
 
   progressBarCoins:render()
   progressBarSpeed:render()
 
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
+
   maze:render()
 
+  -- color the particle systems with bouldy's fill
   love.graphics.setColor(gColors[bouldy.colorFill].r, gColors[bouldy.colorFill].g, gColors[bouldy.colorFill].b)
   love.graphics.draw(particleSystemDust)
   love.graphics.draw(particleSystemDebris)
@@ -393,5 +466,6 @@ function love.draw()
   for i, coin in ipairs(coins) do
     coin:render()
   end
+
   bouldy:render()
 end

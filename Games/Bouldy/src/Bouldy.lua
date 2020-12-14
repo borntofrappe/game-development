@@ -16,7 +16,6 @@ function Bouldy:new(column, row, size, padding, colorFill)
       ["column"] = 0,
       ["row"] = 0
     },
-    ["isMoving"] = false,
     ["colorFill"] = colorFill or "light"
   }
 
