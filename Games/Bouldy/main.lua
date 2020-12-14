@@ -9,14 +9,15 @@ function love.load()
   bouldy =
     Bouldy:new(love.math.random(MAZE_DIMENSION), love.math.random(MAZE_DIMENSION), maze.cellSize, maze.cellSize / 4)
 
-  progressBarCoins =
-    ProgressBar:new(
-    WINDOW_PADDING,
-    WINDOW_PADDING,
-    gFonts["normal"]:getWidth("Bouldy"),
-    gFonts["normal"]:getHeight(),
-    "coins"
-  )
+  coins = {}
+  while #coins < COINS_MAX do
+    local column = love.math.random(MAZE_DIMENSION)
+    local row = love.math.random(MAZE_DIMENSION)
+    if column ~= bouldy.column or row ~= bouldy.row then
+      local coin = Coin:new(column, row, maze.cellSize, maze.cellSize / 3)
+      table.insert(coins, coin)
+    end
+  end
 
   progressBarSpeed =
     ProgressBar:new(
@@ -24,7 +25,22 @@ function love.load()
     WINDOW_PADDING,
     gFonts["normal"]:getWidth("Bouldy"),
     gFonts["normal"]:getHeight(),
+    PROGRESS_INITIAL,
+    PROGRESS_MAX,
+    PROGRESS_STEPS,
     "speed"
+  )
+
+  progressBarCoins =
+    ProgressBar:new(
+    WINDOW_PADDING,
+    WINDOW_PADDING,
+    gFonts["normal"]:getWidth("Bouldy"),
+    gFonts["normal"]:getHeight(),
+    COINS_INITIAL,
+    COINS_MAX,
+    COINS_MAX,
+    "coin"
   )
 
   particleSystemDust = love.graphics.newParticleSystem(gTextures["particle-dust"], PARTICLE_SYSTEM_DUST_BUFFER)
@@ -216,14 +232,15 @@ function love.keypressed(key)
                   end
                   particleSystemDebris:setLinearAcceleration(xMin, yMin, xMax, yMax)
 
-                  particleSystemDebris:emit(PARTICLE_SYSTEM_DEBRIS_PARTICLES)
+                  local stepsDecrease = love.math.random(PROGRESS_STEPS)
+                  particleSystemDebris:emit(PARTICLE_SYSTEM_DEBRIS_PARTICLES * stepsDecrease)
 
                   Timer:tween(
                     UPDATE_TWEEN / 5 * 4,
                     {
                       [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
                       [progressBarSpeed.progress] = {
-                        ["value"] = progressBarSpeed.progress.value - progressBarSpeed.progress.step
+                        ["value"] = progressBarSpeed.progress.value - (progressBarSpeed.progress.step) * stepsDecrease
                       }
                     }
                   )
@@ -235,6 +252,32 @@ function love.keypressed(key)
                       bouldy.colorFill = "light"
                       previousCell.gates[gatePair[1]] = previousGate
                       cell.gates[gatePair[2]] = gate
+
+                      local hasCoin = false
+
+                      for i = #coins, 1, -1 do
+                        if coins[i].column == bouldy.column and coins[i].row == bouldy.row then
+                          table.remove(coins, i)
+                          hasCoin = true
+                          break
+                        end
+                      end
+
+                      if hasCoin then
+                        Timer:tween(
+                          UPDATE_TWEEN,
+                          {
+                            [progressBarCoins.progress] = {
+                              ["value"] = COINS_MAX - #coins
+                            }
+                          }
+                        )
+
+                        if #coins == 0 then
+                          progressBarCoins.colorStroke = "coin"
+                          bouldy.colorFill = "coin"
+                        end
+                      end
                     end
                   )
                 else
@@ -290,6 +333,32 @@ function love.keypressed(key)
                   progressBarSpeed.colorStroke = "speed"
                   bouldy.colorFill = "speed"
                 end
+
+                local hasCoin = false
+
+                for i = #coins, 1, -1 do
+                  if coins[i].column == bouldy.column and coins[i].row == bouldy.row then
+                    table.remove(coins, i)
+                    hasCoin = true
+                    break
+                  end
+                end
+
+                if hasCoin then
+                  Timer:tween(
+                    UPDATE_TWEEN,
+                    {
+                      [progressBarCoins.progress] = {
+                        ["value"] = COINS_MAX - #coins
+                      }
+                    }
+                  )
+
+                  if #coins == 0 then
+                    progressBarCoins.colorStroke = "coin"
+                    bouldy.colorFill = "coin"
+                  end
+                end
               end
             )
           end
@@ -321,5 +390,8 @@ function love.draw()
   love.graphics.draw(particleSystemDust)
   love.graphics.draw(particleSystemDebris)
 
+  for i, coin in ipairs(coins) do
+    coin:render()
+  end
   bouldy:render()
 end

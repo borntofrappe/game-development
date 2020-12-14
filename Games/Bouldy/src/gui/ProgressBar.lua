@@ -1,16 +1,18 @@
 ProgressBar = {}
 ProgressBar.__index = ProgressBar
 
-function ProgressBar:new(x, y, width, height, colorFill)
+function ProgressBar:new(x, y, width, height, value, max, steps, colorFill)
+  local step = math.floor(max / steps)
   this = {
     ["x"] = x,
     ["y"] = y,
     ["width"] = width,
     ["height"] = height,
     ["progress"] = {
-      ["max"] = PROGRESS_MAX,
-      ["step"] = math.floor(PROGRESS_MAX / PROGRESS_STEPS),
-      ["value"] = PROGRESS_INITIAL
+      ["value"] = value,
+      ["max"] = max,
+      ["steps"] = steps,
+      ["step"] = step
     },
     ["padding"] = {
       ["x"] = 4,

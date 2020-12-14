@@ -4,6 +4,7 @@ require "src/constants"
 
 require "src/gui/ProgressBar"
 require "src/Bouldy"
+require "src/Coin"
 require "src/Cell"
 require "src/Maze"
 
@@ -18,17 +19,12 @@ gColors = {
     ["g"] = 0.97,
     ["b"] = 0.97
   },
-  ["bouldy"] = {
-    ["r"] = 0.97,
-    ["g"] = 0.97,
-    ["b"] = 0.97
-  },
   ["speed"] = {
     ["r"] = 0.19,
     ["g"] = 0.82,
     ["b"] = 0.67
   },
-  ["coins"] = {
+  ["coin"] = {
     ["r"] = 0.95,
     ["g"] = 0.89,
     ["b"] = 0.05
