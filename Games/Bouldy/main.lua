@@ -231,11 +231,15 @@ function love.keypressed(key)
                   Timer:after(
                     UPDATE_TWEEN / 5 * 4,
                     function()
+                      progressBarSpeed.colorStroke = "light"
+                      bouldy.colorFill = "light"
                       previousCell.gates[gatePair[1]] = previousGate
                       cell.gates[gatePair[2]] = gate
                     end
                   )
                 else
+                  progressBarSpeed.colorStroke = "light"
+                  bouldy.colorFill = "light"
                   Timer:tween(
                     UPDATE_TWEEN / 5 * 4,
                     {
@@ -255,6 +259,7 @@ function love.keypressed(key)
                       d.column = 0
                       d.row = 0
                       -- precautionary
+
                       bouldy.x = (bouldy.column - 1) * bouldy.size
                       bouldy.y = (bouldy.row - 1) * bouldy.size
                       progressBarSpeed.progress.value = 0
@@ -277,6 +282,15 @@ function love.keypressed(key)
                   )
                 }
               }
+            )
+            Timer:after(
+              UPDATE_TWEEN,
+              function()
+                if math.ceil(progressBarSpeed.progress.value) == progressBarSpeed.progress.max then
+                  progressBarSpeed.colorStroke = "speed"
+                  bouldy.colorFill = "speed"
+                end
+              end
             )
           end
         end,
@@ -303,7 +317,9 @@ function love.draw()
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
   maze:render()
 
+  love.graphics.setColor(gColors[bouldy.colorFill].r, gColors[bouldy.colorFill].g, gColors[bouldy.colorFill].b)
   love.graphics.draw(particleSystemDust)
   love.graphics.draw(particleSystemDebris)
+
   bouldy:render()
 end

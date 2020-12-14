@@ -1,7 +1,7 @@
 Bouldy = {}
 Bouldy.__index = Bouldy
 
-function Bouldy:new(column, row, size, padding)
+function Bouldy:new(column, row, size, padding, colorFill)
   local x = (column - 1) * size
   local y = (row - 1) * size
 
@@ -16,7 +16,8 @@ function Bouldy:new(column, row, size, padding)
       ["column"] = 0,
       ["row"] = 0
     },
-    ["isMoving"] = false
+    ["isMoving"] = false,
+    ["colorFill"] = colorFill or "light"
   }
 
   setmetatable(this, self)
@@ -24,7 +25,7 @@ function Bouldy:new(column, row, size, padding)
 end
 
 function Bouldy:render()
-  love.graphics.setColor(gColors["light"].r, gColors["light"].g, gColors["light"].b, 1)
+  love.graphics.setColor(gColors[self.colorFill].r, gColors[self.colorFill].g, gColors[self.colorFill].b, 1)
   love.graphics.rectangle(
     "fill",
     (self.x + self.padding),

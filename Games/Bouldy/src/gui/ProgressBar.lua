@@ -1,7 +1,7 @@
 ProgressBar = {}
 ProgressBar.__index = ProgressBar
 
-function ProgressBar:new(x, y, width, height, label)
+function ProgressBar:new(x, y, width, height, colorFill)
   this = {
     ["x"] = x,
     ["y"] = y,
@@ -16,7 +16,7 @@ function ProgressBar:new(x, y, width, height, label)
       ["x"] = 4,
       ["y"] = 4
     },
-    ["colorFill"] = label,
+    ["colorFill"] = colorFill or "light",
     ["colorStroke"] = "light"
   }
 
@@ -25,6 +25,10 @@ function ProgressBar:new(x, y, width, height, label)
 end
 
 function ProgressBar:render()
+  love.graphics.setColor(gColors[self.colorStroke].r, gColors[self.colorStroke].g, gColors[self.colorStroke].b, 1)
+  love.graphics.setLineWidth(2)
+  love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+
   love.graphics.setColor(gColors[self.colorFill].r, gColors[self.colorFill].g, gColors[self.colorFill].b, 1)
 
   love.graphics.rectangle(
@@ -34,10 +38,4 @@ function ProgressBar:render()
     (self.width - self.padding.x * 2) * (self.progress.value / self.progress.max),
     self.height - self.padding.y * 2
   )
-
-  if self.progress.value ~= self.progress.max then
-    love.graphics.setColor(gColors["light"].r, gColors["light"].g, gColors["light"].b, 1)
-  end
-  love.graphics.setLineWidth(2)
-  love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
