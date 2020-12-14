@@ -9,12 +9,22 @@ function love.load()
   bouldy =
     Bouldy:new(love.math.random(MAZE_DIMENSION), love.math.random(MAZE_DIMENSION), maze.cellSize, maze.cellSize / 4)
 
-  progressBar =
+  progressBarCoins =
     ProgressBar:new(
-    WINDOW_WIDTH - WINDOW_PADDING - gFonts["normal"]:getWidth("Charge!"),
     WINDOW_PADDING,
-    gFonts["normal"]:getWidth("Charge!"),
-    gFonts["normal"]:getHeight()
+    WINDOW_PADDING,
+    gFonts["normal"]:getWidth("Bouldy"),
+    gFonts["normal"]:getHeight(),
+    "coins"
+  )
+
+  progressBarSpeed =
+    ProgressBar:new(
+    WINDOW_WIDTH - WINDOW_PADDING - gFonts["normal"]:getWidth("Bouldy"),
+    WINDOW_PADDING,
+    gFonts["normal"]:getWidth("Bouldy"),
+    gFonts["normal"]:getHeight(),
+    "speed"
   )
 
   particleSystemDust = love.graphics.newParticleSystem(gTextures["particle-dust"], PARTICLE_SYSTEM_DUST_BUFFER)
@@ -147,10 +157,10 @@ function love.keypressed(key)
                   ["x"] = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding,
                   ["y"] = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
                 },
-                [progressBar.progress] = {
+                [progressBarSpeed.progress] = {
                   ["value"] = math.min(
-                    progressBar.progress.max,
-                    progressBar.progress.value + math.floor(progressBar.progress.step / 5)
+                    progressBarSpeed.progress.max,
+                    progressBarSpeed.progress.value + math.floor(progressBarSpeed.progress.step / 5)
                   )
                 }
               }
@@ -161,13 +171,13 @@ function love.keypressed(key)
                 -- precautionary
                 bouldy.x = (bouldy.column - 1) * bouldy.size + d.column * bouldy.padding
                 bouldy.y = (bouldy.row - 1) * bouldy.size + d.row * bouldy.padding
-                progressBar.progress.value =
+                progressBarSpeed.progress.value =
                   math.min(
-                  progressBar.progress.max,
-                  progressBar.progress.value + math.floor(progressBar.progress.step / 5)
+                  progressBarSpeed.progress.max,
+                  progressBarSpeed.progress.value + math.floor(progressBarSpeed.progress.step / 5)
                 )
 
-                if gatePair and progressBar.progress.value == progressBar.progress.max then
+                if gatePair and progressBarSpeed.progress.value == progressBarSpeed.progress.max then
                   bouldy.column = math.min(maze.dimension, math.max(1, bouldy.column + d.column))
                   bouldy.row = math.min(maze.dimension, math.max(1, bouldy.row + d.row))
 
@@ -177,8 +187,6 @@ function love.keypressed(key)
                   previousCell.gates[gatePair[1]] = nil
                   cell.gates[gatePair[2]] = nil
 
-                  -- particle system debris
-                  --  set position, emission area and linear acceleration
                   local x = (previousCell.column - 1) * previousCell.size + (previousGate.x1 + previousGate.x2) / 2
                   local y = (previousCell.row - 1) * previousCell.size + (previousGate.y1 + previousGate.y2) / 2
 
@@ -214,8 +222,8 @@ function love.keypressed(key)
                     UPDATE_TWEEN / 5 * 4,
                     {
                       [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
-                      [progressBar.progress] = {
-                        ["value"] = progressBar.progress.value - progressBar.progress.step
+                      [progressBarSpeed.progress] = {
+                        ["value"] = progressBarSpeed.progress.value - progressBarSpeed.progress.step
                       }
                     }
                   )
@@ -235,8 +243,9 @@ function love.keypressed(key)
                         ["x"] = (bouldy.column - 1) * bouldy.size,
                         ["y"] = (bouldy.row - 1) * bouldy.size
                       },
-                      [progressBar.progress] = {
-                        ["value"] = 0
+                      -- ???
+                      [progressBarSpeed.progress] = {
+                        ["value"] = 5
                       }
                     }
                   )
@@ -248,7 +257,7 @@ function love.keypressed(key)
                       -- precautionary
                       bouldy.x = (bouldy.column - 1) * bouldy.size
                       bouldy.y = (bouldy.row - 1) * bouldy.size
-                      progressBar.progress.value = 0
+                      progressBarSpeed.progress.value = 0
                       Timer:reset()
                       bouldy.isMoving = false
                     end
@@ -261,8 +270,11 @@ function love.keypressed(key)
               UPDATE_TWEEN,
               {
                 [bouldy] = {["x"] = (bouldy.column - 1) * bouldy.size, ["y"] = (bouldy.row - 1) * bouldy.size},
-                [progressBar.progress] = {
-                  ["value"] = math.min(progressBar.progress.max, progressBar.progress.value + progressBar.progress.step)
+                [progressBarSpeed.progress] = {
+                  ["value"] = math.min(
+                    progressBarSpeed.progress.max,
+                    progressBarSpeed.progress.value + progressBarSpeed.progress.step
+                  )
                 }
               }
             )
@@ -282,14 +294,15 @@ end
 
 function love.draw()
   love.graphics.setColor(gColors["light"].r, gColors["light"].g, gColors["light"].b)
-
   love.graphics.setFont(gFonts["normal"])
-  love.graphics.print("Bouldy", WINDOW_PADDING, WINDOW_PADDING)
+  love.graphics.printf("Bouldy", 0, WINDOW_PADDING, WINDOW_WIDTH, "center")
 
-  progressBar:render()
+  progressBarCoins:render()
+  progressBarSpeed:render()
 
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
   maze:render()
+
   love.graphics.draw(particleSystemDust)
   love.graphics.draw(particleSystemDebris)
   bouldy:render()
