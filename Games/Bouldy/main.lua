@@ -3,9 +3,23 @@ require "src/Dependencies"
 function getCoins(dimension, skipColumn, skipRow)
   local coins = {}
   while #coins < COINS_MAX do
+    local hasOverlap = false
+
     local column = love.math.random(dimension)
     local row = love.math.random(dimension)
-    if column ~= skipColumn or row ~= skipRow then
+
+    if column == skipColumn and row == skipRow then
+      hasOverlap = true
+    else
+      for i, coin in ipairs(coins) do 
+        if column == coin.column and row == coin.row then 
+          hasOverlap = true 
+          break
+        end
+      end
+    end
+
+    if not hasOverlap then
       local coin = Coin:new(column, row, maze.cellSize, maze.cellSize / 3)
       table.insert(coins, coin)
     end
