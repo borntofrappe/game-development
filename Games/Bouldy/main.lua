@@ -11,9 +11,9 @@ function getCoins(dimension, skipColumn, skipRow)
     if column == skipColumn and row == skipRow then
       hasOverlap = true
     else
-      for i, coin in ipairs(coins) do 
-        if column == coin.column and row == coin.row then 
-          hasOverlap = true 
+      for i, coin in ipairs(coins) do
+        if column == coin.column and row == coin.row then
+          hasOverlap = true
           break
         end
       end
@@ -430,6 +430,34 @@ function love.keypressed(key)
             Timer:after(
               GAMEOVER_DELAY,
               function()
+                -- destroy every gate before creating a new maze
+                gSounds["gate"]:play()
+                for column = 1, maze.dimension do
+                  for row = 1, maze.dimension do
+                    local cell = maze.grid[column][row]
+                    for i, gate in pairs(cell.gates) do
+                      local particleSystemDebrisX = (cell.column - 1) * cell.size + (gate.x1 + gate.x2) / 2
+                      local particleSystemDebrisY = (cell.row - 1) * cell.size + (gate.y1 + gate.y2) / 2
+
+                      particleSystemDebris:setPosition(particleSystemDebrisX, particleSystemDebrisY)
+                      particleSystemDebris:setEmissionArea(
+                        "uniform",
+                        (gate.x1 + gate.x2) / 2 / 2,
+                        (gate.y1 + gate.y2) / 2 / 2
+                      )
+
+                      local min = PARTICLE_SYSTEM_DEBRIS_LINEAR_ACCELERATION[1]
+                      local max = PARTICLE_SYSTEM_DEBRIS_LINEAR_ACCELERATION[2]
+
+                      particleSystemDebris:setLinearAcceleration(min, min, max, max)
+
+                      particleSystemDebris:emit(PARTICLE_SYSTEM_DEBRIS_PARTICLES)
+
+                      cell.gates[i] = nil
+                    end
+                  end
+                end
+
                 Timer:tween(
                   UPDATE_TWEEN,
                   {
