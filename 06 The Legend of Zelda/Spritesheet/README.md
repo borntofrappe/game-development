@@ -8,7 +8,7 @@ _Please note_: the `GenerateQuadsEntities` function is considerably different fr
 
 `entities.png` provides a spritesheet for eight entities, each with four possible directions and each direction with three possible frames; these last frames are used to animate the movement of the entities. Considering this structure, the goal of `GenerateQuadsEntities` is to build a data structure similar to the following (and for each entity):
 
-```lua
+```text
 entity
   \_ direction
       \_ frame
@@ -41,3 +41,19 @@ The demo creates the quads and proceeds to render a specific entity/direction/fr
 - by pressing `tab` or `r`, pick a different entity
 
 - by pressing an arrow key, consider the previous direction. If this direction matches the key, increment the frame to show the character's movement; else, change the direction altogether
+
+## Character
+
+_Please note_: the image `character.png` has been modified to follow the same scheme set up in `entities.png`, and specifically regarding the order of the directions.
+
+`character.png` describes the characters with in different directions/frames, but also specific modes (walking, picking up a pot, walking with a pot) and different sizes (using the sword). `GenerateQuadsCharacter` needs to therefore account for all possible scenarios.
+
+Starting with the desired data structure, it is possible to sketch a table similar to the one designed for the entities.
+
+```text
+mode
+  \_ direction (n times)
+      \_ frame (m times)
+```
+
+The first three modes are separated horizontally by `16` pixels, but all share the same surface of `16x32`. The last mode, however, covers an area of `32x32`. This means that ultimately, and in order to avoid a shift in the position of the sprite, the render function needs to compensate the different width.
