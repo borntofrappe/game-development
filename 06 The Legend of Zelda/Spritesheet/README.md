@@ -57,3 +57,13 @@ mode
 ```
 
 The first three modes are separated horizontally by `16` pixels, but all share the same surface of `16x32`. The last mode, however, covers an area of `32x32`. This means that ultimately, and in order to avoid a shift in the position of the sprite, the render function needs to compensate the different width.
+
+## Room
+
+Considering `tilesheet.png`, the `GenerateQuads` function is able to divvy up the larger texture in quads of `16x16` size. This is more immediate than the previous demos, but additional work is required to actually draw the room in `main.lua`. This is because specific quads are positioned in a specific configuration.
+
+`ROOM_IDS` is initialized as a reference table, describing the number of particular tiles. The `newRoom` function proceeds to then create a two-dimensional table consisting of the room's corner, sides and terrain. Please note that these are nested one level in the table to accommodate for the doors, which themselves occupy an area of `2x2` each. A tile, labeled "empty" is used in the edges to compensate for this offset.
+
+## Others
+
+The game makes use of two additional quads, for the hearts and switch. Their structure is however exceedingly straightforward, as the frames are laid horizontally in rectangles of `16x16` and `16x18` respectively.
