@@ -59,18 +59,18 @@ function love.keypressed(key)
   end
 
   if key == "up" or key == "right" or key == "down" or key == "left" then
-    if entity.direction == key then
-      entity.frame = entity.frame == #gFrames[entity.entity][entity.direction] and 1 or entity.frame + 1
+    if character.direction == key then
+      character.frame = character.frame == #gFrames[character.entity][character.direction] and 1 or character.frame + 1
     else
-      entity.direction = key
+      character.direction = key
     end
   end
 
   if key == "tab" or key == "r" then
     while true do
       local entity = love.math.random(#gFrames)
-      if entity ~= entity.entity then
-        entity.entity = love.math.random(#gFrames)
+      if entity ~= character.entity then
+        character.entity = entity
         break
       end
     end
