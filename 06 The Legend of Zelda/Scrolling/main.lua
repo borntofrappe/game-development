@@ -96,6 +96,7 @@ ROOM_TRANSLATIONS = {
     ["y"] = 0
   }
 }
+TWEEN_DURATION = 1
 
 function GenerateQuads(atlas)
   local sheetWidth = atlas:getWidth() / TILE_SIZE
@@ -151,20 +152,20 @@ function love.keypressed(key)
       translate.nextRoom.x = translation.x
       translate.nextRoom.y = translation.y
       Timer:tween(
-        1,
+        TWEEN_DURATION,
         {
           [translate.currentRoom] = {["x"] = translation.x * -1, ["y"] = translation.y * -1}
         }
       )
       Timer:after(
-        1.1,
+        TWEEN_DURATION + 0.1,
         function()
           currentRoom = nextRoom
+          nextRoom = nil
           translate.currentRoom.x = 0
           translate.currentRoom.y = 0
           translate.nextRoom.x = 0
           translate.nextRoom.y = 0
-          nextRoom = nil
         end
       )
     end
