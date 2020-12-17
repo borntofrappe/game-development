@@ -22,7 +22,7 @@ A stencil is set up in two steps:
   end
   ```
 
-  It does not however render the specific shape. In the demo, this is supplemented by drawing a circle before the stencil.
+  It does not however render the specific shape. In the demo, this is supplemented by drawing a circle before the stencil
 
 - describe which elements are impacted by the stencil in between two calls to the `love.graphics.setStencilTest` function
 
@@ -39,3 +39,13 @@ A stencil is set up in two steps:
   ```lua
   love.graphics.setStencilTest()
   ```
+
+## Hide
+
+In the previous demo, the stencil is introduced to show shapes in a speficic area. However, it is possible to use the stencil for the opposite reason, to hide shapes in an arbitrary surface. This is ultimately why stencils are used in the game, to hide the player in the area covered by the doors.
+
+What matters here is the mode set by the `setStencilTest` function.
+
+```lua
+love.graphics.setStencilTest("less", 1)
+```
