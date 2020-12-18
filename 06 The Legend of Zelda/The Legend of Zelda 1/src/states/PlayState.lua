@@ -14,13 +14,17 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  love.graphics.setColor(0, 0, 0, 1)
+  love.graphics.setColor(0.05, 0.027, 0.067)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   love.graphics.setColor(1, 1, 1, 1)
+
+  love.graphics.push()
+  love.graphics.translate(0, MARGIN_TOP)
   self.room:render()
+  love.graphics.pop()
 
   for i = 1, 4 do
-    love.graphics.draw(gTextures["hearts"], gFrames["hearts"][5], 6 + (i - 1) * (TILE_SIZE + 2), 6)
+    love.graphics.draw(gTextures["hearts"], gFrames["hearts"][5], PADDING + (i - 1) * (TILE_SIZE + 2), PADDING)
   end
 end
