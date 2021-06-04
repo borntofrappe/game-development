@@ -13,7 +13,6 @@ function love.load()
   })
 end
 
--- on update print a string in the middle of the screen
 function love.draw()
   love.graphics.printf(
     'Hello There',

@@ -1,6 +1,6 @@
 ![github.com/borntofrappe/game-development](https://github.com/borntofrappe/game-development/blob/master/banner.svg)
 
-# Hello there 👋
+# game-development
 
 With this folder I set out to explore in the alluring world of game development, starting from [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz), and continuing with lots of practice.
 
