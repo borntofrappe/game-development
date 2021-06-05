@@ -175,8 +175,8 @@ end
 
 -- on draw print a string in the middle of the screen
 function love.draw()
-  -- wrap any drawing logic in between the push:apply('start') and push:apply('end') functions
-  push:apply('start')
+  -- wrap any drawing logic in between the push:start and push:finish functions
+  push:start()
 
   -- before any other visual, include a solid color as background
   love.graphics.clear(6/255, 17/255, 23/255, 1)
@@ -236,7 +236,7 @@ function love.draw()
   -- display the frame rate through the custom function
   displayFPS()
 
-  push:apply('end')
+  push:finish()
 end
 
 

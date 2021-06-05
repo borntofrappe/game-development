@@ -1,6 +1,6 @@
-Here you describe a serving player, and a serving state.
+# Pong 10
 
-**requires push.lua, font.ttf, class.lua**
+_Please note:_ `main.lua` depends on `push.lua`, `class.lua` and `font.ttf` being available in the same folder
 
 ## Serving
 

@@ -1,12 +1,12 @@
-Here you render the visuals in a pixellated fashion.
+# Pong 2
 
-**requires push.lua**
+_Please note:_ `main.lua` depends on `push.lua` being available in the same folder
 
 ## push
 
-The code makes use of a library called `push`. It is available on github [right here](https://github.com/Ulydev/push), and it allows to achieve a resolution based on the actual/virtual dimensions defined atop the script.
+The code makes use of a library called `push`. It is available on github [right here](https://github.com/Ulydev/push/blob/master/push.lua), and it allows to achieve a resolution based on the actual/virtual dimensions defined atop the script.
 
-Here's how to update the resolution
+To update the resolution:
 
 - require the `push` library
 
@@ -14,7 +14,7 @@ Here's how to update the resolution
   push = require 'push'
   ```
 
-- define two sets of variables for the actual/virtual dimensions
+- define two sets of variables for the actual andvirtual dimensions
 
   ```lua
   WINDOW_WIDTH = 864
@@ -24,7 +24,7 @@ Here's how to update the resolution
   VIRTUAL_HEIGHT = 243
   ```
 
-  `push` works by "projecting" the image comparing the actual versus virtual measures
+  `push` works by projecting the image comparing the actual versus virtual measures
 
 - in the `load` function, add a line to set up a filter
 
@@ -44,7 +44,7 @@ Here's how to update the resolution
 
   The colon operator `:` allows to use the `setupScreen` function from the `push` module
 
-- in the `draw` function, draw/render the shapes in between `push:apply('start')` and `push:apply('end')`.
+- in the `draw` function, draw/render the shapes in between `push:start` and `push:finish`.
 
 ## keypress
 
@@ -58,6 +58,4 @@ function love.keypressed(key)
 end
 ```
 
-In this instance pressing the character `esc` is used as a signal to quite the window.
-
-Refer to [KeyConstant](https://love2d.org/wiki/KeyConstant) for a list of the possible keys.
+In this instance pressing the escape key is used as a signal to quit the window.

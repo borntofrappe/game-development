@@ -1,6 +1,6 @@
-Here you refactor the codebase to use classes.
+# Pong 6
 
-**requires push.lua, font.ttf, class.lua**
+_Please note:_ `main.lua` depends on `push.lua`, `class.lua` and `font.ttf` being available in the same folder
 
 ## Class
 
@@ -22,7 +22,7 @@ require 'Ball'
 
 ## Paddles
 
-Moving on with classes, they work as follows:
+Considering the library included with `class.lua`
 
 - create a class through the `Class{}` keyword. By convention these are capitalized.
 

@@ -1,8 +1,6 @@
-Here you clamp the paddles to the window's height and move the puck at random.
+# Pong 5
 
-You also introduce the concept of _game state_.
-
-**requires push.lua and font.ttf**
+_Please note:_ `main.lua` depends on `push.lua` and `font.ttf` being available in the same folder
 
 ## Clamping
 

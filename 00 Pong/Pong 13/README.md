@@ -1,6 +1,6 @@
-Here you allow to resize the window.
+# Pong 13
 
-**requires a res folder with push.lua, font.ttf, class.lua and the sounds folder**
+_Please note:_ `main.lua` depends on `push.lua`, `class.lua`, `font.ttf` and the sound files in a `sound` folder being available a `res` folder
 
 ## Resize
 

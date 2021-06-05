@@ -15,7 +15,7 @@ end
 
 function love.draw()
   love.graphics.printf(
-    'Hello There',
+    'Hello World',
     0,
     WINDOW_HEIGHT / 2 - 6, -- by default strings are 6px tall
     WINDOW_WIDTH, -- align relative to the window's width 

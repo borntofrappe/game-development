@@ -1,6 +1,6 @@
-Here you detect collision between the ball and the paddles.
+# Pong 8
 
-**requires push.lua, font.ttf, class.lua**
+_Please note:_ `main.lua` depends on `push.lua`, `class.lua` and `font.ttf` being available in the same folder
 
 ## Title
 

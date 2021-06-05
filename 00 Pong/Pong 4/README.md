@@ -1,10 +1,10 @@
-Here you draw the score and move the paddles following user input.
+# Pong 4
 
-**requires push.lua and font.ttf**
+_Please note:_ `main.lua` depends on `push.lua` and `font.ttf` being available in the same folder
 
 ## Fonts
 
-The code renders two strings of text using a larger font.
+The score is rendered with a larger font.
 
 For every font family, for every font size, you need to repeat the process described in a previous section.
 
@@ -33,14 +33,14 @@ In the project, one of the fonts is also and immediately set in the load functio
 
 To render the score, the `printf` function doesn't use hard-coded strings, but two variables referring to integer values.
 
-These are initialized in `love.load()`
+- initialized in `love.load()`
 
 ```lua
 player1Score = 0
 player2Score = 0
 ```
 
-And rendered through the `tostring()` function.
+- render through the `tostring()` function.
 
 ```lua
 love.graphics.printf(
@@ -163,33 +163,3 @@ In the project at hand:
 | 1      | s          | down     |
 | 2      | arrow up   | up       |
 | 2      | arrow down | down     |
-
-## Aside
-
-Instead of `printf`, the project originally used the `print` function.
-
-```lua
-love.graphics.print(
-  tostring(player1Score),
-  VIRTUAL_WIDTH / 4,
-  VIRTUAL_HEIGHT / 8
-)
-```
-
-This one renders text without specifying the alignment. The difference being that the text begins at `VIRTUAL_WIDTH / 4`.
-
-With the following snippet instead:
-
-```lua
-love.graphics.printf(
-  tostring(player1Score),
-  0,
-  VIRTUAL_HEIGHT / 8,
-  VIRTUAL_WIDTH / 2,
-  'center'
-)
-```
-
-The text is _centered_ in `VIRTUAL_WIDTH/4`.
-
-For more differences, refer to the docs for [printf](https://love2d.org/wiki/love.graphics.printf) and [print](https://love2d.org/wiki/love.graphics.print)

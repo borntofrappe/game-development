@@ -1,8 +1,8 @@
-Here you display how fast the game runs.
+# Pong 7
 
-**requires push.lua, font.ttf, class.lua**
+_Please note:_ `main.lua` depends on `push.lua`, `class.lua` and `font.ttf` being available in the same folder
 
-## Code
+## displayFPS
 
 Love2D offers a `love.timer.getFPS()` to display the frames per seconds at which the game runs.
 

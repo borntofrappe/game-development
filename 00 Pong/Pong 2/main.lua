@@ -12,7 +12,7 @@ WINDOW_HEIGHT = 608
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
--- on load set the size of the window, using the push library to apply the desired resolution
+-- on load set the size of the window using the push library to apply the desired resolution
 function love.load()
   -- filter to avoid blur
   love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -35,16 +35,16 @@ end
 
 -- on update print a string in the middle of the screen
 function love.draw()
-  -- wrap any drawing logic in between the push:apply('start') and push:apply('end') functions
-  push:apply('start')
+  -- wrap any drawing logic in between the push:start and push:finish functions
+  push:start()
 
   -- ! use the virtual dimensions, which are projected to the real ones through the push libraru
   love.graphics.printf(
-    'Playing Pong Here',
+    'Playing pong here',
     0,
     VIRTUAL_HEIGHT / 2 - 6, -- strings are 6px tall by defaut
     VIRTUAL_WIDTH, -- centered in connection to the screen's width
     'center')
 
-  push:apply('end')
+  push:finish()
 end

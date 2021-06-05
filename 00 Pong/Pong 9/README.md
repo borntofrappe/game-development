@@ -1,6 +1,6 @@
-Here you consider when the ball exceeds the horizontal boundaries, and you keep track of the score.
+# Pong 9
 
-**requires push.lua, font.ttf, class.lua**
+_Please note:_ `main.lua` depends on `push.lua`, `class.lua` and `font.ttf` being available in the same folder
 
 ## Score
 

@@ -1,12 +1,12 @@
-Here you set up a custom font and draw a few shapes.
+# Pong 3
 
-**requires push.lua and font.ttf**
+_Please note:_ `main.lua` depends on `push.lua` and `font.ttf` being available in the same folder
 
 ## Font
 
-The font is included through a local `.ttf` file and as follows:
+The font is included through a local `.ttf` file :
 
-- in the `load()` function include the font through the `love.graphics.newFont()` function, specifying the font and the size
+- in `love.load()` include the font through the `love.graphics.newFont()` function, specifying the path to the font and its size
 
   ```lua
   -- assuming the font resides in the same folder:

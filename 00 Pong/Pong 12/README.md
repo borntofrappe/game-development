@@ -1,3 +1,7 @@
+# Pong 12
+
+_Please note:_ `main.lua` depends on `push.lua`, `class.lua`, `font.ttf` and the sound files in a `sound` folder being available a `res` folder
+
 Here you add audio.
 
 **requires a res folder with push.lua, font.ttf, class.lua and the sounds folder**

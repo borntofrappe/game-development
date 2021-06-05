@@ -1,10 +1,6 @@
 # Pong 0
 
-- run a `.lua` script with the LOVE framework
-
-- learn about the game loop and the 2D coordinate system
-
-## Getting started
+## LOVE2D
 
 1. [Install LOVE2D](https://love2d.org/)
 
@@ -28,16 +24,6 @@ To run the program you have at least two options:
    # "application" "path to the folder containing main.lua"
    "C:\Program Files\LOVE\love.exe" "C:\game-development\00 Pong\Pong 0"
    ```
-
-## Game loop
-
-A game is an infinite loop. In this loop, we continuously go through a series of steps
-
-- listen for input
-
-- update the game according to the input
-
-- render whatever was updated
 
 ## 2D Coordinate System
 

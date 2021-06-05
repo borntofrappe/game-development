@@ -1,17 +1,14 @@
 # Pong 1
 
-- print a string in the center of a window
+## Game loop
 
-- learn about the main functions in LOVE: `load()`, `update(dt)`, `draw()`
+A game is an infinite loop. In this loop, we continuously go through a series of steps
 
-## Dimensions
+- listen for input
 
-`love.window.setMode` specifies the dimensions of the window through the value stored in two variables and at the top of the script.
+- update the game according to the input
 
-```lua
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
-```
+- render whatever was updated
 
 ## Functions
 
@@ -23,12 +20,31 @@ To update the game LOVE executes the code in `love.update()`. The function recei
 
 _Please note:_ `main.lua` defines only the load and draw function, as the demo is not updated in any sort of way
 
-## Print
+## More functions
 
-Text is rendered on the screen through the `printf` method. It works as follows:
+- `love.window.setMode` specifies the dimensions of the window through the value stored in two variables and at the top of the script.
 
-```lua
-love.graphics.printf(text, x, y, centerScope, centerKeyword)
-```
+  ```lua
+  WINDOW_WIDTH = 1280
+  WINDOW_HEIGHT = 720
+  ```
 
-`x` and `y` dictate where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width of the screen). Finally `centerKeyword` is a keyword like `center` to determine the actual position.
+- `printf` renders text on the screen
+
+  ```lua
+  love.graphics.printf(text, x, y, centerScope, centerKeyword)
+  ```
+
+  `x` and `y` dictate where the text ought to be positioned. `centerScope` relates to the scope in which the text ought to be centered (in the snippet the text is centered in relation to the width of the screen). Finally `centerKeyword` is a keyword like `center` to determine the actual position.
+
+  ```lua
+  love.graphics.printf('Hello World', 0, WINDOW_HEIGHT / 2 - 6, WINDOW_WIDTH, 'center')
+  ```
+
+  `6` is the default size for the text in LOVE2D.
+
+  `love.graphics.print` includes text without a specific alignment
+
+  ```lua
+  love.graphics.print(text, x, y)
+  ```
