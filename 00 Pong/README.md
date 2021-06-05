@@ -4,37 +4,25 @@
 
 ## Topics
 
-- Lua, the programming language
+- Lua as the programming language
 
-- Love2D, primary game framework
+- Love2D as the game framework
 
-- drawing shapes, text
+- delta time to keep track of the amount of time lapsed since the previous frame
 
-- delta time, the amount of time lapsed since the previous frame, and velocity
+- velocity to manage movement
 
-- game state, the title screen, playing screen
+- game state to manage multiple screens
 
-- basic object-oriented programming to encapsulate data in dedicated entitites
+- object-oriented programming to encapsulate data and logic
 
 - hitboxes to check the collision of boxes
 
 - sound effects with bfxr
 
-## Lecture Scope
-
-- draw shapes to the screen
-
-- control the vertical position of the paddles
-
-- detect collision between paddles and ball
-
-- detect collision between boundaries and ball
-
-- add sound effects
-
-- keep track of score
-
 ## Increments
+
+The game is developed step by step in `Pong *` folders:
 
 0. launch LOVE2D
 
@@ -62,7 +50,7 @@
 
 12. add audio
 
-13. resize window
+13. allow to resize window
 
 ## Resources
 
