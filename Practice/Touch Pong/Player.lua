@@ -1,6 +1,6 @@
-require 'Paddle'
+require "Paddle"
 
-Player = Class{}
+Player = Class {}
 
 function Player:init(x, y)
   self.paddle = Paddle(x, y, PADDLE_RADIUS)
@@ -13,12 +13,11 @@ function Player:isReady()
 end
 
 function Player:setReady(ready)
-  self.ready = ready == nil and true or ready
+  self.ready = ready
 end
 
 function Player:score()
   self.points = self.points + 1
-
   self.paddle.innerRadius = self.paddle.r * self.points / VICTORY
 end
 
@@ -26,11 +25,12 @@ function Player:hasWon()
   return self.points == VICTORY
 end
 
-function Player:reset() 
+function Player:reset()
   self.paddle:reset()
 
   self.ready = false
   self.points = 0
+  self.paddle.innerRadius = 0
 end
 
 function Player:stop()
@@ -38,7 +38,7 @@ function Player:stop()
 end
 
 function Player:move(direction)
-  self.paddle.dx = direction == 'right' and PADDLE_SPEED or PADDLE_SPEED * -1
+  self.paddle.dx = direction == "right" and PADDLE_SPEED or PADDLE_SPEED * -1
 end
 
 function Player:update(dt)

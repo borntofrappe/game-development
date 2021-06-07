@@ -8,9 +8,69 @@ The players are represented by two paddles on opposing end of the screen. By cli
 
 ## Resources
 
-In the `res` folder you find [`class.lua`]() to work with object-oriented programming. A later version might refactor the code to implement classes with of Lua's metatables, but the library offers a quicker alternative.
+In the `res` folder you find [`class.lua`](https://github.com/vrld/hump/blob/master/class.lua) to work with object-oriented programming. A later version might refactor the code to implement classes with of Lua's metatables, but the library offers a quick alternative.
 
-`font.ttf` includes the font [Train One](https://fonts.google.com/specimen/Train+One).
+The folder includes also the font [Train One](https://fonts.google.com/specimen/Train+One) and a few sound files created with [bfxr](https://www.bfxr.net/)
+
+## Ball
+
+Bounce collision.
+
+```lua
+if (self.dx > 0 and self.x < paddle.x) or (self.dx < 0 and self.x > paddle.x) then
+  self.dx = self.dx * -1
+end
+```
+
+```lua
+if (self.dx * (self.x - paddle.x) < 0) then
+  self.dx = self.dx * -1
+end
+```
+
+## Paddle
+
+Instead of limiting the paddles' moveent.
+
+```lua
+self.x = math.min(WINDOW_WIDTH - self.r, math.max(self.r, self.x + self.dx * dt))
+```
+
+The shapes move to the opposite side of the window.
+
+```lua
+if self.dx < 0 and self.x < -self.r then
+  self.x = WINDOW_WIDTH + self.r
+end
+
+if self.dx > 0 and self.x > WINDOW_WIDTH + self.r then
+  self.x = -self.r
+end
+```
+
+The same logic is applied to the ball in `main.lua`. The circle moves to the opposing side instead of bouncing.
+
+## Player
+
+Paddle describes the basic shape and movement.
+
+Player includes the logic with the ready state and the number of points.
+
+The class also updates the side with a rather declarative syntax: move, stop.
+
+Note that in `main.lua` you need to refer to `player.paddle` when comparing the ball against the circle making up the paddle.
+
+## Points
+
+Points, victory and inner radius.
+
+## Countdown
+
+`COUNTDOWN`, `COUNTDOWN_SPEED` constant. `countdown` and `time` variables.
+
+## State
+
+`gameState` stores a string to manage the state of the game between four possible values: waiting, countdown, playing, and gameover.
 
 ## love.graphics
 
@@ -22,7 +82,7 @@ function love.load()
 end
 ```
 
-- `love.graphics.translate` and `love.graphics.rotate` allow to render the instructions from the perspective of the two opposing sides.
+- `love.graphics.translate` and `love.graphics.rotate` allow to render the instructions from the perspective of the two opposing sides
 
   The idea is to move the origin to the center of the canvas, draw the instructions for one player, rotate the reference 180 degrees and repeat the instructions on the other player.
 
@@ -44,16 +104,3 @@ end
   ```lua
   love.graphics.circle('fill', cx, cy, r)
   ```
-
-## State
-
-`gameState` stores a string to manage the state of the game between four possible values `{ 'waiting', 'countdown', 'playing', 'gameover' }`.
-
-## Classes
-
-- Paddle -> Player ???
-- Ball
-
-## Collision
-
-## Points, goal
