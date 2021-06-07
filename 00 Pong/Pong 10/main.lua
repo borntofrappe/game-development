@@ -1,12 +1,12 @@
 -- require the push library
-push = require 'push'
+push = require "push"
 
 -- require the class library
-Class = require 'class'
+Class = require "class"
 
 -- require the Paddle and Ball classes
-require 'Paddle'
-require 'Ball'
+require "Paddle"
+require "Ball"
 
 --[[
 global variables for the screen size
@@ -25,29 +25,35 @@ PADDLE_SPEED = 200
 -- on load set the size of the window, using the push library to apply the desired resolution
 function love.load()
   -- filter to avoid blur
-  love.graphics.setDefaultFilter('nearest', 'nearest')
+  love.graphics.setDefaultFilter("nearest", "nearest")
 
   -- set the title on the window
-  love.window.setTitle('Pong')
+  love.window.setTitle("Pong")
 
   -- based on the current os time, set the seed for the random number generator, for math.random
   math.randomseed(os.time())
 
   -- create a new font through the local ttf file
-  appFont = love.graphics.newFont('font.ttf', 8)
+  appFont = love.graphics.newFont("font.ttf", 8)
 
   -- create another instance of the font for the score, larger in size
-  scoreFont = love.graphics.newFont('font.ttf', 32)
+  scoreFont = love.graphics.newFont("font.ttf", 32)
 
   -- set the font to be used in the application
   love.graphics.setFont(appFont)
 
   -- push:setupScreen works similarly to setMode, but with two additional arguments in the virtual dimensions
-  push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
-    fullscreen = false,
-    resizable = false,
-    vsync = true
-  })
+  push:setupScreen(
+    VIRTUAL_WIDTH,
+    VIRTUAL_HEIGHT,
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
+    {
+      fullscreen = false,
+      resizable = false,
+      vsync = true
+    }
+  )
 
   -- create the paddles through the Paddle class
   player1 = Paddle(5, VIRTUAL_HEIGHT / 4, 5, 20)
@@ -60,52 +66,49 @@ function love.load()
   servingPlayer = 1
 
   -- initialize a variable to update the game's state
-  gameState = 'waiting'
-
+  gameState = "waiting"
 end
 
 -- function responding to a key being pressed
 -- accepting as argument the key being pressed
 function love.keypressed(key)
   -- when pressing q close the program
-  if key == 'escape' then
-    love.event.quit()
-  --[[
+  if key == "escape" then
+    --[[
     when pressing enter change the state according to the following logic
     waiting or serving --> playing
     otherwise --> waiting
   ]]
-  elseif key == 'enter' or key == 'return' then
-    if gameState == 'waiting' or gameState == 'serving' then
-      gameState = 'playing'
+    love.event.quit()
+  elseif key == "enter" or key == "return" then
+    if gameState == "waiting" or gameState == "serving" then
+      gameState = "playing"
     else
-      gameState = 'waiting'
+      gameState = "waiting"
       -- when stopping the game, set the ball back in the middle screen
       -- through the ball:reset function
       ball:reset()
     end -- end of if .. else statement
-
   end -- end of if .. elseif statement
 end -- end of function
-
 
 -- on update, react to the keys being pressed and the game state
 function love.update(dt)
   -- if serving modify the horizontal movement of the ball to direct it toward the serving player
-  if gameState == 'serving' then
-    if servingPlayer == 1 then
-      ball.dx = -math.random(140, 200)
-    else
-      ball.dx = math.random(140, 200)
-    end
-  --[[
+  if gameState == "serving" then
+    --[[
     if playing, update the game with the following logic
     - update the position of the ball according to the ball:update() function
     - check for a collision with the paddles
     - check for a collision with the top and bottom edges of the window
     - check for a point being scored
   ]]
-  elseif gameState == 'playing' then
+    if servingPlayer == 1 then
+      ball.dx = -math.random(140, 200)
+    else
+      ball.dx = math.random(140, 200)
+    end
+  elseif gameState == "playing" then
     -- update the position of the ball
     ball:update(dt)
 
@@ -114,6 +117,7 @@ function love.update(dt)
 
     -- collision player1
     if ball:collides(player1) then
+      -- collision player2
       ball.dx = -ball.dx * 1.03
       ball.x = player1.x + player1.width
 
@@ -122,8 +126,6 @@ function love.update(dt)
       else
         ball.dy = math.random(10, 150)
       end
-
-    -- collision player2
     elseif ball:collides(player2) then
       ball.dx = -ball.dx * 1.03
       ball.x = player2.x - ball.width
@@ -133,7 +135,6 @@ function love.update(dt)
       else
         ball.dy = math.random(10, 150)
       end
-
     end -- end of if .. else if statement for the collision with paddles
 
     -- collision with top or bottom edge
@@ -153,33 +154,31 @@ function love.update(dt)
       player2:score()
       ball:reset()
       servingPlayer = 1
-      gameState = 'serving'
+      gameState = "serving"
     elseif ball.x > VIRTUAL_WIDTH then
       player1:score()
       ball:reset()
       servingPlayer = 2
-      gameState = 'serving'
+      gameState = "serving"
     end
-
   end -- end of if..else if statement for the gameState
-
 
   -- change the dy coordinate of the classes and later call the :update function to use this value and change the vertical coordinate
   -- ! dt is already accounted for in the :update function, therefore change dy according to the speed value only
-  if love.keyboard.isDown('w') then
+  if love.keyboard.isDown("w") then
     player1.dy = -PADDLE_SPEED
-  elseif love.keyboard.isDown('s') then
+  elseif love.keyboard.isDown("s") then
+    --! the update function is run at each frame, so you need to provide a default case for those instances in which neither key is being pressed
+    -- set dy back to 0, otherwise the :update() function would keep adding/removing values to the vertical coordinate
     player1.dy = PADDLE_SPEED
-  --! the update function is run at each frame, so you need to provide a default case for those instances in which neither key is being pressed
-  -- set dy back to 0, otherwise the :update() function would keep adding/removing values to the vertical coordinate
   else
     player1.dy = 0
   end
 
   -- similar considerations for right paddle, but with different keys
-  if love.keyboard.isDown('up') then
+  if love.keyboard.isDown("up") then
     player2.dy = -PADDLE_SPEED
-  elseif love.keyboard.isDown('down') then
+  elseif love.keyboard.isDown("down") then
     player2.dy = PADDLE_SPEED
   else
     player2.dy = 0
@@ -189,9 +188,7 @@ function love.update(dt)
   -- ! remember to pass delta time as argument
   player1:update(dt)
   player2:update(dt)
-
 end -- end of update function
-
 
 -- on draw display the strings and the rectangles making up the game
 function love.draw()
@@ -199,7 +196,7 @@ function love.draw()
   push:start()
 
   -- before any other visual, include a solid color as background
-  love.graphics.clear(6/255, 17/255, 23/255, 1)
+  love.graphics.clear(6 / 255, 17 / 255, 23 / 255, 1)
 
   -- include a simple string of text centered in the first half of the project's height
   -- ! use the virtual dimensions, which are projected to the real ones through the push library
@@ -207,33 +204,33 @@ function love.draw()
   love.graphics.setFont(appFont)
 
   -- ! based on the state, show a different string value
-  if gameState == 'waiting' or gameState == 'serving' then
+  if gameState == "waiting" or gameState == "serving" then
     love.graphics.printf(
-      'Press enter to play',
+      "Press enter to play",
       0,
       VIRTUAL_HEIGHT / 24,
       VIRTUAL_WIDTH, -- centered in connection to the screen's width
-      'center'
+      "center"
     )
   else
     love.graphics.printf(
-      'Press enter to stop',
+      "Press enter to stop",
       0,
       VIRTUAL_HEIGHT / 24,
       VIRTUAL_WIDTH, -- centered in connection to the screen's width
-      'center'
+      "center"
     )
   end
 
   -- below the general statement, highlight the serving player, but only if the gameState is serving
-  if gameState == 'serving' then
+  if gameState == "serving" then
     love.graphics.printf(
-        'Now serving: player ' .. tostring(servingPlayer),
-        0,
-        VIRTUAL_HEIGHT / 12,
-        VIRTUAL_WIDTH, -- centered in connection to the screen's width
-        'center'
-      )
+      "Now serving: player " .. tostring(servingPlayer),
+      0,
+      VIRTUAL_HEIGHT / 12,
+      VIRTUAL_WIDTH, -- centered in connection to the screen's width
+      "center"
+    )
   end
 
   -- show the score below the game text, with the other font
@@ -248,16 +245,10 @@ function love.draw()
     VIRTUAL_WIDTH / 4,
     VIRTUAL_HEIGHT / 5,
     VIRTUAL_WIDTH / 4,
-    'center'
+    "center"
   )
 
-  love.graphics.printf(
-    tostring(player2.points),
-    VIRTUAL_WIDTH / 2,
-    VIRTUAL_HEIGHT / 5,
-    VIRTUAL_WIDTH / 4,
-    'center'
-  )
+  love.graphics.printf(tostring(player2.points), VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH / 4, "center")
 
   -- render the paddles through the :render function
   player1:render()
@@ -272,12 +263,11 @@ function love.draw()
   push:finish()
 end
 
-
 -- create a function to add the frame rate in the top left corner
 function displayFPS()
   -- set a font and color
   love.graphics.setFont(appFont)
   love.graphics.setColor(0, 1, 0, 1)
   -- display the frame rate using Love2D native method
-  love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
+  love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 10, 10)
 end

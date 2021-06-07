@@ -1,5 +1,5 @@
 -- create a Paddle class
-Paddle = Class{}
+Paddle = Class {}
 
 -- in the :init function detail the variables which define the class
 function Paddle:init(x, y, width, height)
@@ -25,5 +25,5 @@ end
 
 -- in the :render function, use the love.graphics function to draw a rectangle
 function Paddle:render()
-  love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+  love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 end

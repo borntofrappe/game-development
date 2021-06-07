@@ -58,6 +58,6 @@ The game is developed step by step in `Pong *` folders:
 
 - [push library](https://github.com/Ulydev/push/blob/master/push.lua)
 
-- [class library](https://github.com/vrld/hump/class/master/class.lua)
+- [class library](https://github.com/vrld/hump/blob/master/class.lua)
 
 - [Project assignment](https://docs.cs50.net/ocw/games/assignments/0/assignment0.html)

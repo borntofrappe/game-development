@@ -1,5 +1,5 @@
 -- create a Ball class
-Ball = Class{}
+Ball = Class {}
 
 -- in the :init function detail the variables which define the class
 function Ball:init(x, y, width, height)
@@ -31,5 +31,5 @@ end
 
 -- in the :render function, use the love.graphics function to draw a rectangle
 function Ball:render()
-  love.graphics.rectangle('fill', self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
+  love.graphics.rectangle("fill", self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
 end
