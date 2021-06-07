@@ -35,16 +35,6 @@ end
 function Ball:update(dt)
   self.x = self.x + self.dx * dt
   self.y = self.y + self.dy * dt
-
-  if self.x > WINDOW_WIDTH - self.r then 
-    self.x = WINDOW_WIDTH - self.r
-    self.dx = self.dx * -1
-  end
-
-  if self.x < self.r then 
-    self.x = self.r
-    self.dx = self.dx * -1
-  end
 end
 
 function Ball:collides(paddle)
