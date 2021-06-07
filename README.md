@@ -2,6 +2,8 @@
 
 # game-development
 
-With this folder I set out to explore in the alluring world of game development, starting from [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz), and continuing with lots of practice.
+With this folder I set out to explore in the alluring world of game development, starting from [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz).
 
-If you are interested in the project, or just want to try one of the games, [the wiki is a good place to start](https://github.com/borntofrappe/game-development/wiki).
+In the numbered folders I develop the games introduced in the course. In the `Practice` folder I create additional demos to solidify the lessons learned.
+
+Check out [the wiki](https://github.com/borntofrappe/game-development/wiki) for more information.
