@@ -20,7 +20,7 @@ function Bird:init()
 end
 ```
 
-`dy` is used to change the vertical coordinate the matching coordinate.
+`dy` is used to change the vertical coordinate.
 
 ```lua
 function Bird:update(dt)

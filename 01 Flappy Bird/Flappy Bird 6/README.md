@@ -59,7 +59,7 @@ love.graphics.draw(
 )
 ```
 
-The image is "flipped" vertically and using the top left corner as a hinge. Keep this in mind once you describe the coordinates of the pipes.
+The image is flipped vertically and using the top left corner as a hinge. Keep this in mind once you describe the coordinates of the pipes.
 
 ### Update
 

@@ -1,6 +1,6 @@
 # 01 Flappy Bird
 
-The second video continues with lua and love2d to create the game Flappy Bird.
+The second video continues with Lua and LOVE2D to create the game Flappy Bird.
 
 ## Topics
 

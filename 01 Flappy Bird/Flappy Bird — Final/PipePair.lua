@@ -2,8 +2,7 @@ require "Pipe"
 
 PipePair = Class {}
 
-local GAP_HEIGHT = 80
-local PAIR_SCROLL = -50
+local PAIR_SCROLL = 60
 local PIPE_WIDTH = Pipe().width
 local PIPE_HEIGHT = Pipe().height
 
@@ -21,7 +20,7 @@ function PipePair:init(y)
 end
 
 function PipePair:update(dt)
-    self.x = self.x + PAIR_SCROLL * dt
+    self.x = self.x - PAIR_SCROLL * dt
     for k, pipe in pairs(self.pipes) do
         pipe.x = self.x
     end

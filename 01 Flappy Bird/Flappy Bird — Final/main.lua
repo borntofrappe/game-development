@@ -25,13 +25,14 @@ OPTIONS = {
     vsync = true
 }
 
-BACKGROUND_OFFSET_SPEED = 10
-GROUND_OFFSET_SPEED = 30
+BACKGROUND_OFFSET_SPEED = 30
+GROUND_OFFSET_SPEED = 60
 BACKGROUND_LOOPING_POINT = 512
 GROUND_LOOPING_POINT = 512
-THRESHOLD_UPPER = VIRTUAL_HEIGHT / 5
-THRESHOLD_LOWER = VIRTUAL_HEIGHT / 5 * 4 - 16
-Y_CHANGE = 50
+Y_CHANGE = 80
+GAP_HEIGHT = 80
+THRESHOLD_UPPER = GAP_HEIGHT + 24
+THRESHOLD_LOWER = VIRTUAL_HEIGHT - 16 - 24
 
 local background = love.graphics.newImage("res/graphics/background.png")
 local ground = love.graphics.newImage("res/graphics/ground.png")
@@ -40,11 +41,8 @@ function love.load()
     love.window.setTitle("Flappy Bird")
     math.randomseed(os.time())
 
-    font_small = love.graphics.newFont("res/fonts/font.ttf", 8)
-    font_normal = love.graphics.newFont("res/fonts/font.ttf", 16)
-    font_big = love.graphics.newFont("res/fonts/font.ttf", 48)
-
-    love.graphics.setFont(font_normal)
+    love.graphics.setDefaultFilter("nearest", "nearest")
+    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
     background_offset = 0
     ground_offset = 0
@@ -72,6 +70,12 @@ function love.load()
 
     gStateMachine:change("title")
 
+    font_small = love.graphics.newFont("res/fonts/font.ttf", 8)
+    font_normal = love.graphics.newFont("res/fonts/font.ttf", 16)
+    font_big = love.graphics.newFont("res/fonts/font.ttf", 48)
+
+    love.graphics.setFont(font_normal)
+
     sounds = {
         ["countdown"] = love.audio.newSource("res/sounds/countdown.wav", "static"),
         ["hit"] = love.audio.newSource("res/sounds/hit.wav", "static"),
@@ -83,9 +87,6 @@ function love.load()
 
     sounds["soundtrack"]:setLooping(true)
     sounds["soundtrack"]:play()
-
-    love.graphics.setDefaultFilter("nearest", "nearest")
-    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 end
 
 function love.resize(width, height)
@@ -104,8 +105,10 @@ function love.keyboard.waspressed(key)
     return love.keyboard.key_pressed[key]
 end
 
-function love.mousepressed()
-    love.mouse.waspressed = true
+function love.mousepressed(x, y, button)
+    if button == 1 then
+        love.mouse.waspressed = true
+    end
 end
 
 function love.update(dt)
@@ -122,9 +125,8 @@ function love.draw()
     push:start()
 
     love.graphics.draw(background, -background_offset, 0)
-
     gStateMachine:render()
-
     love.graphics.draw(ground, -ground_offset, VIRTUAL_HEIGHT - 16)
+
     push:finish()
 end

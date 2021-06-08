@@ -26,7 +26,6 @@ Pipes are included much similarly to the bird:
 
       self.x = VIRTUAL_WIDTH / 4 * 3
       self.y = VIRTUAL_HEIGHT - self.height
-
   end
   ```
 

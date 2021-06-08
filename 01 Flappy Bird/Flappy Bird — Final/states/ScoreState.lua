@@ -16,8 +16,8 @@ end
 
 function ScoreState:render()
     love.graphics.setFont(font_big)
-    love.graphics.printf("Score: " .. self.score, 0, VIRTUAL_HEIGHT / 3, VIRTUAL_WIDTH, "center")
+    love.graphics.printf("Score: " .. self.score, 0, VIRTUAL_HEIGHT / 2 - font_big:getHeight(), VIRTUAL_WIDTH, "center")
 
     love.graphics.setFont(font_normal)
-    love.graphics.printf("Press enter to play once more", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, "center")
+    love.graphics.printf("Press enter to play once more", 0, VIRTUAL_HEIGHT / 2 + 12, VIRTUAL_WIDTH, "center")
 end

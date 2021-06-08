@@ -8,9 +8,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder:
 
 ## Class
 
-The project lean on the `class` library as provided [on GitHub](https://github.com/vrld/hump/blob/master/class.lua). This to work with classes, a concept not available in the lua programming language.
-
-The basic structure of a class is as follows:
+The project leans on the `class` library to work with object oriented programming:
 
 - create a class
 
@@ -85,8 +83,8 @@ Once initialized, you have access to every additional attribute and method. In `
 ```lua
 function love.draw()
     push:start()
-    -- background and ground
 
+    -- background and ground
     bird:render()
 
     push:finish()
