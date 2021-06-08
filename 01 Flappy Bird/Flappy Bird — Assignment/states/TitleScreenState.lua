@@ -12,8 +12,8 @@ end
 
 function TitleScreenState:render()
     love.graphics.setFont(font_big)
-    love.graphics.printf("Flappy Bird", 0, VIRTUAL_HEIGHT / 2 - 48, VIRTUAL_WIDTH, "center")
+    love.graphics.printf("Flappy Bird", 0, VIRTUAL_HEIGHT / 2 - font_big:getHeight(), VIRTUAL_WIDTH, "center")
 
     love.graphics.setFont(font_normal)
-    love.graphics.printf("Press enter to play", 0, VIRTUAL_HEIGHT / 2 + 8, VIRTUAL_WIDTH, "center")
+    love.graphics.printf("Press enter to play", 0, VIRTUAL_HEIGHT / 2 + 12, VIRTUAL_WIDTH, "center")
 end

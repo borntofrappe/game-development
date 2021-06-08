@@ -1,14 +1,14 @@
 # Flappy Bird — Assignment
 
-Following [the goals from the assignment](https://docs.cs50.net/ocw/games/assignments/1/assignment1.html):
+Following [the assignment](https://docs.cs50.net/ocw/games/assignments/1/assignment1.html), the update achieves the following:
 
 - [x] randomize the gap between pipes
 
 - [x] randomize the interval at which pairs of pipes spawn
 
-- [x] when a player enters the ScoreState, award them a “medal” via an image displayed along with the score. Choose 3 different ones, as well as the minimum score needed for each one
+- [x] when a player enters the score state, award them a medal via an image displayed along with the score. Choose 3 different ones, as well as the minimum score needed for each one
 
-- implement a pause feature, such that the user can simply press “P” (or some other key) and pause the state of the game. When pausing the game, a simple sound effect should play. At the same time, the music should pause, and once the user presses P again, the gameplay and the music should resume just as they were. Display a pause icon in the middle of the screen, so as to make it clear the game is paused
+- [x] from the play state, allow to pause the game by pressing a key. When pausing the game, a simple sound effect should play, while the music should pause. When resuming the game the gameplay and the music should resume just as they were. Display a pause icon in the middle of the screen, so as to make it clear the game is paused
 
 ## Randomize
 
@@ -16,27 +16,42 @@ The first two parts of the assignment are connected in that they both rely on `m
 
 ### Random gap
 
-To have each pipe with a different, random gap, the value is included in the `init` function
+The gap is set in `PlayState.lua` and passed to the `PipePair` class through the `init` function.
 
 ```lua
-function PipePair:init(y)
-    self.gap = math.random(70, 90)
+-- PlayState.lua
+function PlayState:init()
+    self.gap = math.random(GAP_MIN, GAP_MAX)
+    self.y = math.random(THRESHOLD_UPPER + self.gap, THRESHOLD_LOWER)
+    self.pipePairs = {PipePair(self.y, self.gap)}
+end
+
+
+-- PipePair.lua
+function PipePair:init(y, gap)
+    self.gap = gap
 end
 ```
 
-Every time a pipe pair is initialized, it gets a random gap in the prescribed range.
+This is because it is necessary to know the gap in order to ensure that the pipes are included in the boundaries of the window.
+
+```lua
+self.y = math.random(THRESHOLD_UPPER + self.gap, THRESHOLD_LOWER)
+```
+
+The same is true when the pair is included at an interval. Update `self.gap`, update `self.y` and pass the value to the new instance.
 
 ### Random interval
 
-The interval is initialized in the `init` function of the play state.
+The duration of the interval is initialized in the `init` function of the play state.
 
 ```lua
 function PlayState:init()
-    self.interval = 4
+    self.interval = math.random(INTERVAL_MIN, INTERVAL_MAX)
 end
 ```
 
-To have the value change, assign a random value every time a new pipe is created.
+`interval` is then updated similarly to the gap and the vertical coordinate of the pipe pair, when the timer exceeds the existing value.
 
 ```lua
 function PlayState:update(dt)
@@ -51,11 +66,11 @@ Keep in mind that in lua, using `math.random` with two integers has the effect o
 
 ## Medal(s)
 
-Upon entering the score state, the game displays up to three medals. The medals are awarded by crossing arbitrary thresholds: 5, 10 and 15 points. In the _res/graphics_ folder you find the different assets.
+Upon entering the score state, the game displays up to three medals. The medals are awarded by crossing arbitrary thresholds: 5, 10 and 15 points. In the `res/graphics` folder you find the different assets.
 
 In `ScoreState.lua`, these are included as follows:
 
-- initialize the images in the `init` function
+- stores the images in a table and according to the number of points associated with each asset
 
   ```lua
   function ScoreState:init()
@@ -84,30 +99,28 @@ In `ScoreState.lua`, these are included as follows:
 
   This ensures the table is now in ascending order of points.
 
-- include only the images required by the score in the `enter` function
+- when receiving the score from the play state, include the images strictly necessary in a different table
 
   ```lua
   function ScoreState:enter(params)
       self.score = params.score
 
-      medals = {}
+      awards = {}
       for k, medal in pairs(self.medals) do
           if self.score >= medal.points then
-              table.insert(medals, medal.image)
+              table.insert(awards, medal.image)
           end
       end
 
-      self.medals = medals
+      self.awards = awards
   end
   ```
 
-`self.medals` is overwritten so that it includes only the images for the necessary points.
-
-- render the medals in `self.medals`, using the index in the table and the length of the table itself to have the images separated from the center.
+- render the medals in `self.awards`, using the index in the table and the length of the table itself to have the images separated from the center.
 
   ```lua
-  for i, medal in ipairs(self.medals) do
-      love.graphics.draw(medal, VIRTUAL_WIDTH / 2 - 12 - 28 * (#self.medals - 1) + 56 * (i - 1), VIRTUAL_HEIGHT / 1.5)
+  for i, award in ipairs(self.awards) do
+      love.graphics.draw(award, VIRTUAL_WIDTH / 2 - 12 - 28 * (#self.awards - 1) + 56 * (i - 1), VIRTUAL_HEIGHT / 1.5)
   end
   ```
 
@@ -119,7 +132,7 @@ In `ScoreState.lua`, these are included as follows:
 
 ## PauseState
 
-By pressing `p`, the game moves to te pause state.
+From the play state, the game pauses by pressing the `p` key.
 
 ```lua
 function PlayState:update(dt)
@@ -181,7 +194,7 @@ end
 
 ### Sound
 
-love2d removes `love.audio.resume()` in version 11.0. As instructed in [the docs](https://love2d.org/wiki/11.0), using `love.audio.play()` after `love.audio.pause()` is enough to have the audio pick up from where it left.
+LOVE2D removes `love.audio.resume()` in version 11.0. As instructed in [the docs](https://love2d.org/wiki/11.0), using `love.audio.play()` after `love.audio.pause()` is enough to have the audio pick up from where it left.
 
 Pause the soundtrack in the pause state.
 

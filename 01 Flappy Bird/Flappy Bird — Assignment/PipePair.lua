@@ -2,15 +2,15 @@ require "Pipe"
 
 PipePair = Class {}
 
-local PAIR_SCROLL = -50
+local PAIR_SCROLL = 60
 local PIPE_WIDTH = Pipe().width
 local PIPE_HEIGHT = Pipe().height
 
-function PipePair:init(y)
+function PipePair:init(y, gap)
     self.x = VIRTUAL_WIDTH
     self.y = y
     self.width = PIPE_WIDTH
-    self.gap = math.random(70, 90)
+    self.gap = gap
     self.pipes = {
         upper = Pipe(self.x, self.y - self.gap - PIPE_HEIGHT, "top"),
         lower = Pipe(self.x, self.y, "bottom")
@@ -21,7 +21,7 @@ function PipePair:init(y)
 end
 
 function PipePair:update(dt)
-    self.x = self.x + PAIR_SCROLL * dt
+    self.x = self.x - PAIR_SCROLL * dt
     for k, pipe in pairs(self.pipes) do
         pipe.x = self.x
     end

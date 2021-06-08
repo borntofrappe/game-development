@@ -1,7 +1,7 @@
 ScoreState = Class {__includes = BaseState}
 
 function ScoreState:init()
-    medals = {
+    local medals = {
         {points = 5, image = love.graphics.newImage("res/graphics/medal-points-5.png")},
         {points = 10, image = love.graphics.newImage("res/graphics/medal-points-10.png")},
         {points = 15, image = love.graphics.newImage("res/graphics/medal-points-15.png")}
@@ -18,14 +18,14 @@ end
 function ScoreState:enter(params)
     self.score = params.score
 
-    medals = {}
+    local awards = {}
     for k, medal in pairs(self.medals) do
         if self.score >= medal.points then
-            table.insert(medals, medal.image)
+            table.insert(awards, medal.image)
         end
     end
 
-    self.medals = medals
+    self.awards = awards
 end
 
 function ScoreState:update(dt)
@@ -40,12 +40,16 @@ end
 
 function ScoreState:render()
     love.graphics.setFont(font_big)
-    love.graphics.printf("Score: " .. self.score, 0, VIRTUAL_HEIGHT / 2 - 48, VIRTUAL_WIDTH, "center")
+    love.graphics.printf("Score: " .. self.score, 0, VIRTUAL_HEIGHT / 2 - font_big:getHeight(), VIRTUAL_WIDTH, "center")
 
     love.graphics.setFont(font_normal)
-    love.graphics.printf("Press enter to play once more", 0, VIRTUAL_HEIGHT / 2 + 8, VIRTUAL_WIDTH, "center")
+    love.graphics.printf("Press enter to play once more", 0, VIRTUAL_HEIGHT / 2 + 12, VIRTUAL_WIDTH, "center")
 
-    for i, medal in ipairs(self.medals) do
-        love.graphics.draw(medal, VIRTUAL_WIDTH / 2 - 12 - 28 * (#self.medals - 1) + 56 * (i - 1), VIRTUAL_HEIGHT / 1.5)
+    for i, award in ipairs(self.awards) do
+        love.graphics.draw(
+            award,
+            VIRTUAL_WIDTH / 2 - award:getWidth() / 2 - 28 * (#self.awards - 1) + 56 * (i - 1),
+            VIRTUAL_HEIGHT / 2 + 12 + 12 + font_normal:getHeight()
+        )
     end
 end

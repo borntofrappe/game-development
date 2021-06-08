@@ -1,24 +1,26 @@
 PlayState = Class {__includes = BaseState}
 
 function PlayState:init()
-    self.bird = Bird()
-    self.pipePairs = {}
     self.timer = 0
-    self.interval = 4
+    self.interval = math.random(INTERVAL_MIN, INTERVAL_MAX)
     self.score = 0
 
-    self.y = math.random(THRESHOLD_UPPER, THRESHOLD_LOWER)
+    self.bird = Bird()
+    self.gap = math.random(GAP_MIN, GAP_MAX)
+    self.y = math.random(THRESHOLD_UPPER + self.gap, THRESHOLD_LOWER)
+    self.pipePairs = {PipePair(self.y, self.gap)}
 end
 
 function PlayState:enter(params)
     if params then
-        sounds["soundtrack"]:play()
         self.bird = params.bird
         self.pipePairs = params.pipePairs
         self.timer = params.timer
         self.interval = params.interval
         self.score = params.score
         self.y = params.y
+
+        sounds["soundtrack"]:play()
     end
 end
 
@@ -26,11 +28,12 @@ function PlayState:update(dt)
     self.timer = self.timer + dt
     if self.timer > self.interval then
         self.timer = self.timer % self.interval
-        self.interval = math.random(3, 5)
+        self.interval = math.random(INTERVAL_MIN, INTERVAL_MAX)
 
-        table.insert(self.pipePairs, PipePair(self.y))
-        following_y = self.y + math.random(Y_CHANGE, Y_CHANGE * -1)
-        self.y = math.min(math.max(THRESHOLD_UPPER, following_y), THRESHOLD_LOWER)
+        self.gap = math.random(GAP_MIN, GAP_MAX)
+        local following_y = self.y + math.random(Y_CHANGE, Y_CHANGE * -1)
+        self.y = math.min(THRESHOLD_LOWER, math.max(following_y, THRESHOLD_UPPER + self.gap))
+        table.insert(self.pipePairs, PipePair(self.y, self.gap))
     end
 
     self.bird:update(dt)
