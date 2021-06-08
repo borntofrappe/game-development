@@ -1,6 +1,10 @@
-Add pairs of pipes vertically opposed to one another.
+# Flappy Bird 6
 
-> assumes a _res_ folder with the necessary dependencies and assets
+_Please note:_ `main.lua` depends on a few assets in the `res` folder:
+
+- `push.lua` and `class.lua` in `res/lib`
+
+- a series of images in `res/graphics`
 
 ## Pairs
 

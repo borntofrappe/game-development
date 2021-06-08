@@ -1,6 +1,12 @@
-Keep track of the score.
+# Flappy Bird 9
 
-> assumes a _res_ folder with the necessary dependencies and assets
+_Please note:_ `main.lua` depends on a few assets in the `res` folder:
+
+- `push.lua` and `class.lua` in `res/lib`
+
+- a series of images in `res/graphics`
+
+- `font.ttf` in `res/fonts`
 
 ## Score
 

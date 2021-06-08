@@ -1,6 +1,10 @@
-Include gravity.
+# Flappy Bird 3
 
-> assumes a _res_ folder with the necessary dependencies and assets
+_Please note:_ `main.lua` depends on a few assets in the `res` folder:
+
+- `push.lua` and `class.lua` in `res/lib`
+
+- a series of images in `res/graphics`
 
 ## Bird movement
 
@@ -16,15 +20,15 @@ function Bird:init()
 end
 ```
 
-In Pong, you'd use `dy` to increment/decrement the matching coordinate.
+`dy` is used to change the vertical coordinate the matching coordinate.
 
 ```lua
-function Ball:update(dt)
+function Bird:update(dt)
   self.y = self.y + self.dy
 end
 ```
 
-In this game, and in order to fake gravity, you also modify `dy`
+Over time, however, `dy` is also modified with a constant amount.
 
 ```lua
 GRAVITY = 5
@@ -45,7 +49,7 @@ This is already enough to move the sprite down and at an increasing speed, but i
 
 With regards to the last point, it is also necessary to reset `dy` as the bird "jumps" back up. Fail to reset this value and the bird plummets with an ever increasing speed toward the bottom.
 
-## main
+### Bottom
 
 To stop the bird when it reaches the bottom of the window, call the `:update` method only when the vertical coordinates is within a desired threshold.
 
@@ -58,6 +62,8 @@ end
 ```
 
 `16` being the height of the sprite making up the ground.
+
+### User interaction
 
 To move the bird in the opposite direction, listen to key presses with `love.keypressed`.
 

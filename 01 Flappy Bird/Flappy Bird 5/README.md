@@ -1,10 +1,14 @@
-Add pipes.
+# Flappy Bird 5
 
-> assumes a _res_ folder with the necessary dependencies and assets
+_Please note:_ `main.lua` depends on a few assets in the `res` folder:
+
+- `push.lua` and `class.lua` in `res/lib`
+
+- a series of images in `res/graphics`
 
 ## Pipes
 
-Pipes are included much similarly to the bird. Without considering the movement (described in the next section):
+Pipes are included much similarly to the bird:
 
 - define a class
 
@@ -56,7 +60,7 @@ The image is `288` pixels tall, which means the pipe occupies the entirety of th
 
 ### Update
 
-The section illustrates how to include the pipe similarly to the bird. For efficiency's sake however, it is better to load the image of the pipe outside of the `init` function.
+The previous section illustrates how to include the pipe similarly to the bird. For efficiency's sake however, it is better to load the image of the pipe outside of the `init` function.
 
 ```lua
 local PIPE_IMAGE = love.graphics.newImage('res/graphics/pipe.png')
@@ -71,18 +75,16 @@ In `Pipe.lua`, update the code to then use the variable `PIPE_IMAGE` instead of 
 The pipe(s) is(are) meant to move horizontally.
 
 ```lua
-local PIPE_SCROLL = -40
+local PIPE_SCROLL = 60
 
 function Pipe:update(dt)
-    self.x = self.x + PIPE_SCROLL * dt
+    self.x = self.x - PIPE_SCROLL * dt
 end
 ```
 
 Just be sure to update the graphic in `main.lua`
 
 ```lua
-local PIPE_SCROLL = -40
-
 function love.update(dt)
   pipe:update(dt)
 end

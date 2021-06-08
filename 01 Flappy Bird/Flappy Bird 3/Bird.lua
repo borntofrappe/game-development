@@ -1,9 +1,9 @@
-Bird = Class{}
+Bird = Class {}
 
 GRAVITY = 5
 
 function Bird:init()
-    self.image = love.graphics.newImage('res/graphics/bird.png')
+    self.image = love.graphics.newImage("res/graphics/bird.png")
     self.width = self.image:getWidth()
     self.height = self.image:getHeight()
 

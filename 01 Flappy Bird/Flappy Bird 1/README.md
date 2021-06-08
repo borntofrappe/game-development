@@ -1,6 +1,10 @@
-Have the raster images scroll indefinitely.
+# Flappy Bird 1
 
-> assumes a _res_ folder with the necessary dependencies and assets
+_Please note:_ `main.lua` depends on a few assets in the `res` folder:
+
+- `push.lua` in `res/lib`
+
+- a series of images in `res/graphics`
 
 ## Infinite scroll
 

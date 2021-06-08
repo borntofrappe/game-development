@@ -1,10 +1,14 @@
-Draw text, include images.
+# Flappy Bird 0
 
-> assumes a _res_ folder with the necessary dependencies and assets
+_Please note:_ `main.lua` depends on a few assets in the `res` folder:
+
+- `push.lua` in `res/lib`
+
+- a series of images in `res/graphics`
 
 ## push
 
-The library is used to project the game to a pixelated resolution.
+The library is used to project the game to a pixelated resolution:
 
 - set up the game's window not with `love.window.setMode`, but `push:setupScreen`.
 
@@ -28,10 +32,8 @@ The library is used to project the game to a pixelated resolution.
   ```lua
   function love.draw()
       push:start()
-
       -- draw
-
-      push:end()
+      push:finish()
   end
   ```
 
@@ -45,7 +47,7 @@ end
 
 ## Images
 
-Instead of rendering shapes with `love.graphics.circle`, or `love.graphics.rectangle`, include raster images in two steps.
+Instead of rendering shapes with `love.graphics.circle`, or `love.graphics.rectangle`, include raster images in two steps:
 
 - load images with `love.graphics.newImage()`
 
@@ -54,9 +56,9 @@ Instead of rendering shapes with `love.graphics.circle`, or `love.graphics.recta
   local ground = love.graphics.newImage('res/graphics/ground.png')
   ```
 
-  The function takes as argument the path of the images.
+  The function takes as argument the path of an image.
 
-  `local` means that the variables are accessible only within the file in which they are created (`main.lua`).
+  `local` means that the variables are accessible only within the file in which they are created. In this instance `main.lua`.
 
 - render images with `love.graphics.draw()`
 
@@ -67,16 +69,14 @@ Instead of rendering shapes with `love.graphics.circle`, or `love.graphics.recta
 
   The function takes as argument a drawable, and the `(x, y)` coordinates
 
+Note that order matters. Later images are drawn above previous ones.
+
 ## Size
 
-The images in the _res/graphics_ folder have a meaningul size.
+The images in the _res/graphics_ folder have a specific size:
 
 - both images are `1024` wide, which is double the `VIRTUAL_WIDTH`. This allows to translate the assets horizontally and then reset the position without jumps between iterations
 
 - the background is `288` tall, which matches the height of `VIRTUAL_HEIGHT`
 
 - the ground is `16` tall, which explans the offset introduced in the `draw` function
-
-## Order matters
-
-The images are drawn on the screen in order. This means that if you print a string before the images, it would be hidden behind them.
