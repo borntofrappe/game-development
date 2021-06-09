@@ -2,6 +2,7 @@ Class = require "res/lib/class"
 
 require "Android"
 require "Lollipop"
+require "LollipopPair"
 
 require "StateMachine"
 require "states/BaseState"

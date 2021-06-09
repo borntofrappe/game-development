@@ -20,7 +20,7 @@ function Android:init()
 end
 
 function Android:collides(lollipop)
-  if self.y + self.height / 2 < lollipop.y then
+  if self.y + self.height / 2 < lollipop.y or self.y - self.height / 2 > lollipop.y + lollipop.height then
     return false
   end
 
@@ -28,17 +28,25 @@ function Android:collides(lollipop)
     return false
   end
 
-  if self.y - self.height / 2 < lollipop.y + lollipop.topRadius * 2 then
-    local cx = lollipop.x + lollipop.topRadius
-    local cy = lollipop.y + lollipop.topRadius
-    return ((self.x - cx) ^ 2 + (self.y - cy) ^ 2) ^ 0.5 < lollipop.topRadius + self.width / 2
-  else
-    if
-      self.x + self.width / 2 < lollipop.x + lollipop.padding or
-        self.x - self.width / 2 > lollipop.x + lollipop.width - lollipop.padding
-     then
-      return false
+  if lollipop.flip then
+    if self.y - self.height / 2 > lollipop.y + lollipop.height - lollipop.topRadius * 2 then
+      local cx = lollipop.x + lollipop.topRadius
+      local cy = lollipop.y + lollipop.height - lollipop.topRadius
+      return ((self.x - cx) ^ 2 + (self.y - cy) ^ 2) ^ 0.5 < lollipop.topRadius + self.width / 2
     end
+  else
+    if self.y - self.height / 2 < lollipop.y + lollipop.topRadius * 2 then
+      local cx = lollipop.x + lollipop.topRadius
+      local cy = lollipop.y + lollipop.topRadius
+      return ((self.x - cx) ^ 2 + (self.y - cy) ^ 2) ^ 0.5 < lollipop.topRadius + self.width / 2
+    end
+  end
+
+  if
+    self.x + self.width / 2 < lollipop.x + lollipop.padding or
+      self.x - self.width / 2 > lollipop.x + lollipop.width - lollipop.padding
+   then
+    return false
   end
 
   return true
