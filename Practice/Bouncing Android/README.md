@@ -46,7 +46,33 @@ To move from the title to the waiting screen, the idea is to register a mouse pr
 
 ### Waiting
 
-Fixed moon. Scroll buildings.
+The waiting state introduces a parallax effect in the form of three images of buildings, moving at different speeds toward the left.
+
+The effect needs to be preserved in the play state as well, while the gameover state should render the buildings as immovable. Knowing this, it is preferable to have a global table in `main.lua` describe the images, their offset and offset speed.
+
+```lua
+gParallax = {
+  {"buildings-3", 0, 5},
+  {"buildings-2", 0, 10},
+  {"buildings-1", 0, 30}
+}
+```
+
+As needed then, the table is updated to offset the images. This would be in the `update` function of the waiting and playing state.
+
+```lua
+for i, parallax in ipairs(gParallax) do
+  parallax[2] = (parallax[2] + parallax[3] * dt) % WINDOW_WIDTH
+end
+```
+
+Where necessary, finally, the table is used to draw the images. This would be everywhere except the title state.
+
+```lua
+for i, parallax in ipairs(gParallax) do
+  love.graphics.draw(gImages[parallax[1]], -parallax[2], 0)
+end
+```
 
 ### Playing
 

@@ -1,19 +1,15 @@
-WaitingScreenState = Class {__includes = BaseState}
+GameoverScreenState = Class {__includes = BaseState}
 
-function WaitingScreenState:init()
+function GameoverScreenState:init()
 end
 
-function WaitingScreenState:update(dt)
+function GameoverScreenState:update(dt)
   if love.mouse.waspressed then
     gStateMachine:change("play")
   end
-
-  for i, parallax in ipairs(gParallax) do
-    parallax[2] = (parallax[2] + parallax[3] * dt) % WINDOW_WIDTH
-  end
 end
 
-function WaitingScreenState:render()
+function GameoverScreenState:render()
   love.graphics.setColor(1, 1, 1)
 
   for i, parallax in ipairs(gParallax) do
@@ -21,4 +17,7 @@ function WaitingScreenState:render()
   end
 
   love.graphics.draw(gImages.moon, 64, WINDOW_HEIGHT / 2)
+
+  love.graphics.setFont(gFonts.normal)
+  love.graphics.print("here you'd show the score", 8, 8)
 end

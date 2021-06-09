@@ -1,11 +1,11 @@
-WaitingScreenState = Class {__includes = BaseState}
+PlayScreenState = Class {__includes = BaseState}
 
-function WaitingScreenState:init()
+function PlayScreenState:init()
 end
 
-function WaitingScreenState:update(dt)
+function PlayScreenState:update(dt)
   if love.mouse.waspressed then
-    gStateMachine:change("play")
+    gStateMachine:change("gameover")
   end
 
   for i, parallax in ipairs(gParallax) do
@@ -13,7 +13,7 @@ function WaitingScreenState:update(dt)
   end
 end
 
-function WaitingScreenState:render()
+function PlayScreenState:render()
   love.graphics.setColor(1, 1, 1)
 
   for i, parallax in ipairs(gParallax) do
@@ -21,4 +21,7 @@ function WaitingScreenState:render()
   end
 
   love.graphics.draw(gImages.moon, 64, WINDOW_HEIGHT / 2)
+
+  love.graphics.setFont(gFonts.normal)
+  love.graphics.print("bip bop android hops here", 8, 8)
 end
