@@ -1,6 +1,8 @@
 GameoverScreenState = Class {__includes = BaseState}
 
-function GameoverScreenState:init()
+function GameoverScreenState:enter(params)
+  self.android = params.android
+  self.lollipops = params.lollipops
 end
 
 function GameoverScreenState:update(dt)
@@ -18,6 +20,9 @@ function GameoverScreenState:render()
 
   love.graphics.draw(gImages.moon, 64, WINDOW_HEIGHT / 2)
 
-  love.graphics.setFont(gFonts.normal)
-  love.graphics.print("here you'd show the score", 8, 8)
+  for k, lollipop in pairs(self.lollipops) do
+    lollipop:render()
+  end
+
+  self.android:render()
 end

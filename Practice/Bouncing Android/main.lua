@@ -1,5 +1,8 @@
 Class = require "res/lib/class"
 
+require "Android"
+require "Lollipop"
+
 require "StateMachine"
 require "states/BaseState"
 require "states/TitleScreenState"
@@ -15,6 +18,7 @@ local background = love.graphics.newImage("res/graphics/background.png")
 function love.load()
   love.window.setTitle("Bouncing Android")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
+  math.randomseed(os.time())
 
   gStateMachine =
     StateMachine(
@@ -34,7 +38,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("title")
+  gStateMachine:change("play")
 
   gFonts = {
     ["big"] = love.graphics.newFont("res/fonts/font.ttf", 48),
