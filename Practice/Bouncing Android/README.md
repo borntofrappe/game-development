@@ -4,6 +4,8 @@ The goal of this project is to create the game inspired by flappy bird and inclu
 
 Consider this a follow up of `01 Flappy Bird`, to rehearse the powerful concept of state machines.
 
+![A few frames from the demo "Bouncing Android"](https://github.com/borntofrappe/game-development/blob/master/Practice/Bouncing%20Android/showcase.gif)
+
 ## Resources
 
 In the `res` folder you find:

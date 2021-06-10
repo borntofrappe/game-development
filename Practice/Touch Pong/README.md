@@ -2,6 +2,8 @@
 
 The goal of this project is to create the game pong with touch controls and basic shapes. Consider it a follow-up of `00 Pong`, and a good excuse to practice with `love.mousepressed` and functions from the `love.graphics` module.
 
+![Touch Pong in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Touch%20Pong/showcase.gif)
+
 ## Gameplay
 
 The players are represented by two paddles on opposing end of the screen. By clicking the left or right half of the window, the paddles move horizontally to have the ball bounce in the opposite direction. The paddles are represented with the outline of a circle, but when a point is scored, the appearance is modified with a growing circle. The idea is to have this filled circle expand point by point, until the paddle is completely filled and the player wins the game.
