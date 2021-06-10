@@ -1,3 +1,13 @@
+TODO:
+
+- [x] clean code and refactor
+
+- [ ] document README
+
+- [ ] update lollipop-\*.png with more contrast and colors/patterns
+
+---
+
 # Bouncing Android
 
 The goal of this project is to create the game inspired by flappy bird and included as an easter egg in the lollipop version of the android operating system.

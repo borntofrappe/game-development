@@ -1,13 +1,15 @@
 LollipopPair = Class {}
 
 local SCROLL = 80
+local OFFSET = 10
+local PADDING = 80
 local GAP_MIN = 70
 local GAP_MAX = 120
 
 function LollipopPair:init()
   local gap = math.random(GAP_MIN, GAP_MAX)
-  self.x = WINDOW_WIDTH + 20
-  self.y = math.random(gap + 20, WINDOW_HEIGHT - 20)
+  self.x = WINDOW_WIDTH + OFFSET
+  self.y = math.random(gap + PADDING, WINDOW_HEIGHT - PADDING)
 
   self.lollipops = {
     Lollipop(self.x, self.y),

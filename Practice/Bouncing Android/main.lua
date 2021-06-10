@@ -1,5 +1,7 @@
 Class = require "res/lib/class"
 
+require "globals"
+
 require "Android"
 require "Lollipop"
 require "LollipopPair"
@@ -39,26 +41,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("play")
-
-  gFonts = {
-    ["big"] = love.graphics.newFont("res/fonts/font.ttf", 48),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 22)
-  }
-
-  gImages = {
-    ["moon"] = love.graphics.newImage("res/graphics/moon.png"),
-    ["buildings-1"] = love.graphics.newImage("res/graphics/buildings-1.png"),
-    ["buildings-2"] = love.graphics.newImage("res/graphics/buildings-2.png"),
-    ["buildings-3"] = love.graphics.newImage("res/graphics/buildings-3.png")
-  }
-
-  -- key, offset, speed
-  gParallax = {
-    {"buildings-3", 0, 5},
-    {"buildings-2", 0, 10},
-    {"buildings-1", 0, 30}
-  }
+  gStateMachine:change("title")
 end
 
 function love.keypressed(key)
@@ -78,6 +61,7 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(1, 1, 1)
   love.graphics.draw(background, 0, 0)
   gStateMachine:render()
 end

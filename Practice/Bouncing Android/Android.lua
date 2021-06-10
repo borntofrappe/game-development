@@ -11,14 +11,17 @@ function Android:init()
 
   self.x = WINDOW_WIDTH / 2
   self.y = WINDOW_HEIGHT / 2
-  self.angle = 0
-
+  -- immediately jump upwards
   self.dy = -JUMP
+
+  self.angle = 0
   self.dangle = 0
 
+  -- highlight collision
   self.collided = false
 end
 
+-- self.x and self.y describe the center of the android
 function Android:collides(lollipop)
   if self.y + self.height / 2 < lollipop.y or self.y - self.height / 2 > lollipop.y + lollipop.height then
     return false
@@ -53,20 +56,23 @@ function Android:collides(lollipop)
 end
 
 function Android:update(dt)
+  -- update y and angle
   self.y = self.y + self.dy
   self.dy = self.dy + GRAVITY_CHANGE * dt
 
   self.angle = math.min(math.pi * 6 / 7, self.angle + self.dangle)
   self.dangle = self.dangle + ANGLE_CHANGE * dt
 
+  -- jump
   if love.mouse.waspressed then
     self.dy = -JUMP
     self.dangle = 0
     self.angle = math.pi / 7
   end
 
-  if self.y + self.height >= WINDOW_HEIGHT then
-    self.y = WINDOW_HEIGHT - self.height
+  -- bottom edge collision
+  if self.y + self.height / 2 >= WINDOW_HEIGHT then
+    self.y = WINDOW_HEIGHT - self.height / 2
     self.collided = true
   end
 end

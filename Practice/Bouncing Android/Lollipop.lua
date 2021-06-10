@@ -1,7 +1,14 @@
 Lollipop = Class {}
 
+-- TYPES as * from lollipop-*.png
+local TYPES = 6
+-- size of the colorful circle
+local TOP_SIZE = 70
+-- size of the white rectangle
+local INNER_WIDTH = 10
+
 function Lollipop:init(x, y, flip)
-  self.type = math.random(4)
+  self.type = math.random(TYPES)
   self.image = love.graphics.newImage("res/graphics/lollipop-" .. self.type .. ".png")
   self.width = self.image:getWidth()
   self.height = self.image:getHeight()
@@ -10,10 +17,8 @@ function Lollipop:init(x, y, flip)
   self.x = x
   self.y = self.flip and y - self.height or y
 
-  local topSize = 70
-  self.topRadius = topSize / 2
-  local innerWidth = 10
-  self.padding = (self.width - innerWidth) / 2
+  self.topRadius = TOP_SIZE / 2
+  self.padding = (self.width - INNER_WIDTH) / 2
 end
 
 function Lollipop:render()

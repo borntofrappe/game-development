@@ -1,12 +1,19 @@
 PlayScreenState = Class {__includes = BaseState}
 
+local SIZE_MULTIPLIER = 1.5
+local PADDING = 10
+local INTERVAL = 3
+
 function PlayScreenState:init()
   self.score = 0
-  self.interval = 3
+  self.interval = INTERVAL
   self.timer = 0
 
   self.android = Android()
   self.lollipopPairs = {LollipopPair()}
+
+  self.size = gFonts.normal:getWidth("10") * SIZE_MULTIPLIER
+  self.padding = PADDING
 end
 
 function PlayScreenState:update(dt)
@@ -51,7 +58,7 @@ function PlayScreenState:update(dt)
   end
 
   for i, parallax in ipairs(gParallax) do
-    parallax[2] = (parallax[2] + parallax[3] * dt) % WINDOW_WIDTH
+    parallax.offset = (parallax.offset + parallax.speed * dt) % WINDOW_WIDTH
   end
 end
 
@@ -59,7 +66,7 @@ function PlayScreenState:render()
   love.graphics.setColor(1, 1, 1)
 
   for i, parallax in ipairs(gParallax) do
-    love.graphics.draw(gImages[parallax[1]], -parallax[2], 0)
+    love.graphics.draw(gImages[parallax.key], -parallax.offset, 0)
   end
 
   love.graphics.draw(gImages.moon, 64, WINDOW_HEIGHT / 2)
@@ -71,6 +78,15 @@ function PlayScreenState:render()
   self.android:render()
 
   love.graphics.setColor(1, 1, 1)
+  love.graphics.rectangle("fill", self.padding, self.padding, self.size, self.size, 4)
+
+  love.graphics.setColor(0.17, 0.17, 0.17)
   love.graphics.setFont(gFonts.normal)
-  love.graphics.print(self.score, 8, 8)
+  love.graphics.printf(
+    self.score,
+    self.padding,
+    self.padding + self.size / 2 - gFonts.normal:getHeight() / 2,
+    self.size,
+    "center"
+  )
 end
