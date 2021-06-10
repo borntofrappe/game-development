@@ -9,7 +9,7 @@ local INNER_WIDTH = 10
 
 function Lollipop:init(x, y, flip)
   self.type = math.random(TYPES)
-  self.image = love.graphics.newImage("res/graphics/lollipop-" .. self.type .. ".png")
+  self.image = gImages["lollipop-" .. self.type]
   self.width = self.image:getWidth()
   self.height = self.image:getHeight()
 

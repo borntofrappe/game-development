@@ -4,10 +4,18 @@ gFonts = {
 }
 
 gImages = {
-  ["moon"] = love.graphics.newImage("res/graphics/moon.png"),
+  ["android"] = love.graphics.newImage("res/graphics/android.png"),
+  ["background"] = love.graphics.newImage("res/graphics/background.png"),
   ["buildings-1"] = love.graphics.newImage("res/graphics/buildings-1.png"),
   ["buildings-2"] = love.graphics.newImage("res/graphics/buildings-2.png"),
-  ["buildings-3"] = love.graphics.newImage("res/graphics/buildings-3.png")
+  ["buildings-3"] = love.graphics.newImage("res/graphics/buildings-3.png"),
+  ["lollipop-1"] = love.graphics.newImage("res/graphics/lollipop-1.png"),
+  ["lollipop-2"] = love.graphics.newImage("res/graphics/lollipop-2.png"),
+  ["lollipop-3"] = love.graphics.newImage("res/graphics/lollipop-3.png"),
+  ["lollipop-4"] = love.graphics.newImage("res/graphics/lollipop-4.png"),
+  ["lollipop-5"] = love.graphics.newImage("res/graphics/lollipop-5.png"),
+  ["lollipop-6"] = love.graphics.newImage("res/graphics/lollipop-6.png"),
+  ["moon"] = love.graphics.newImage("res/graphics/moon.png")
 }
 
 -- key, offset, speed

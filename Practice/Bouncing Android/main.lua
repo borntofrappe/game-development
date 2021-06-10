@@ -16,8 +16,6 @@ require "states/GameoverScreenState"
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 550
 
-local background = love.graphics.newImage("res/graphics/background.png")
-
 function love.load()
   love.window.setTitle("Bouncing Android")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -62,6 +60,6 @@ end
 
 function love.draw()
   love.graphics.setColor(1, 1, 1)
-  love.graphics.draw(background, 0, 0)
+  love.graphics.draw(gImages.background, 0, 0)
   gStateMachine:render()
 end

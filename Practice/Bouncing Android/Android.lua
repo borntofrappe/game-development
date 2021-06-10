@@ -5,7 +5,7 @@ local GRAVITY_CHANGE = 12
 local ANGLE_CHANGE = 0.15
 
 function Android:init()
-  self.image = love.graphics.newImage("res/graphics/android.png")
+  self.image = gImages.android
   self.width = self.image:getWidth()
   self.height = self.image:getHeight()
 
