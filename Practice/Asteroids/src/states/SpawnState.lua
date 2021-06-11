@@ -3,12 +3,15 @@ SpawnState = Class {__includes = BaseState}
 local INTERVAL = 0.25
 local LOOPS = 7
 local ASTEROIDS = 3
+local LIVES = 3
 
 function SpawnState:init()
   self.interval = INTERVAL
   self.loops = LOOPS
   self.loop = 0
   self.time = 0
+
+  self.lives = LIVES
 end
 
 function SpawnState:enter(params)
@@ -46,11 +49,14 @@ function SpawnState:update(dt)
 end
 
 function SpawnState:render()
-  for k, asteroid in pairs(self.asteroids) do
-    asteroid:render()
-  end
+  displayRecord()
 
   if self.loop % 2 == 0 then
+    displayStats(gStats)
     self.player:render()
+  end
+
+  for k, asteroid in pairs(self.asteroids) do
+    asteroid:render()
   end
 end

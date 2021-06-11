@@ -87,12 +87,14 @@ dx and dy are determined by the angle of the player. Each instance has a lifespa
 
 Keep track of score, lives, record.
 
+Global values set in `love.load`. Global functions to draw the record, score and lives consistently and from multiple states.
+
 ## States / 2
 
-Teleport, victory, gameover.
+Victory, gameover.
 
 ## Gameplay / 2
 
-Difficulty
+Teleport, difficulty
 
 ## Sound

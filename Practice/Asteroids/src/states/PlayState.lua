@@ -21,10 +21,12 @@ function PlayState:update(dt)
       self:destroy(asteroid)
       table.remove(self.asteroids, k)
 
+      gStats.lives = gStats.lives - 1
       self.player:reset()
       gStateMachine:change(
         "spawn",
         {
+          -- not necessary to actually pass the player
           player = self.player,
           asteroids = self.asteroids
         }
@@ -45,6 +47,7 @@ end
 
 function PlayState:destroy(asteroid)
   local type = asteroid.type
+  gStats.score = gStats.score + asteroid.points
   if type > 1 then
     local x = asteroid.x
     local y = asteroid.y
@@ -55,9 +58,12 @@ function PlayState:destroy(asteroid)
 end
 
 function PlayState:render()
+  displayRecord()
+  displayStats(gStats)
+
+  self.player:render()
+
   for k, asteroid in pairs(self.asteroids) do
     asteroid:render()
   end
-
-  self.player:render()
 end
