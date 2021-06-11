@@ -1,12 +1,12 @@
 Player = Class {}
 
 local ANGLE_FRICTION = 0.003
-local ANGLE_CHANGE = 0.08
+local ANGLE_CHANGE = 0.07
 
 local SPEED_FRICTION = 1.5
 local SPEED_CHANGE = 150
 
-local RADIUS = 10
+local RADIUS = 9
 
 function Player:init()
   self.x = WINDOW_WIDTH / 2
@@ -18,6 +18,8 @@ function Player:init()
 
   self.angle = 0
   self.dangle = 0
+
+  self.projectiles = {}
 end
 
 function Player:reset()
@@ -88,9 +90,25 @@ function Player:update(dt)
   if self.y > WINDOW_WIDTH + self.r then
     self.y = -self.r
   end
+
+  for k, projectile in pairs(self.projectiles) do
+    projectile:update(dt)
+
+    if projectile.removed then
+      table.remove(self.projectiles, k)
+    end
+  end
+end
+
+function Player:shoot()
+  table.insert(self.projectiles, Projectile(self.x, self.y, self.angle))
 end
 
 function Player:render()
+  for k, projectile in pairs(self.projectiles) do
+    projectile:render()
+  end
+
   love.graphics.push()
   love.graphics.translate(self.x, self.y)
   love.graphics.rotate(self.angle)

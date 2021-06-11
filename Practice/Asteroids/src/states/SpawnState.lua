@@ -1,7 +1,7 @@
 SpawnState = Class {__includes = BaseState}
 
-local INTERVAL = 0.3
-local LOOPS = 5
+local INTERVAL = 0.25
+local LOOPS = 7
 local ASTEROIDS = 3
 
 function SpawnState:init()

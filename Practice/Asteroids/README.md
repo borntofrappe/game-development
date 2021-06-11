@@ -81,8 +81,18 @@ When destroyed, the idea is to spawn two additional asteroids, with a minimum sp
 
 ## Projectiles
 
+dx and dy are determined by the angle of the player. Each instance has a lifespan and keeps track of the passing of time to remove the element after `x` seconds.
+
 ## Gameplay
 
-Teleport. Keep track of score, lives, record.
+Keep track of score, lives, record.
+
+## States / 2
+
+Teleport, victory, gameover.
+
+## Gameplay / 2
+
+Difficulty
 
 ## Sound

@@ -1,8 +1,8 @@
 Asteroid = Class {}
 
 local SPEED_MIN = 20
-local SPEED_MAX = 120
-local RADIUS_BASE = 5
+local SPEED_MAX = 90
+local RADIUS_BASE = 4
 local RADIUS_TYPE = 4
 local TYPES = 3
 

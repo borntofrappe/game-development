@@ -2,6 +2,7 @@ Class = require "res/lib/class"
 
 require "src/constants"
 
+require "src/Projectile"
 require "src/Player"
 require "src/Asteroid"
 
