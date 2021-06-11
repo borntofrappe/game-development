@@ -3,6 +3,7 @@ Class = require "res/lib/class"
 require "src/constants"
 
 require "src/Player"
+require "src/Asteroid"
 
 require "src/StateMachine"
 require "src/states/BaseState"

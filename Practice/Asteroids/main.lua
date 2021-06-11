@@ -26,7 +26,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("title")
+  gStateMachine:change("spawn")
 
   love.keyboard.keyPressed = {}
 end

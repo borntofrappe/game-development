@@ -72,3 +72,17 @@ end
 The movement itself is dictated by the angle, so it's good to start with that: andle and dangle, change and friction.
 
 `x` and `y` are updated much similarly, but the offset is dictated by the angle itself, using sine and cosine functions.
+
+## Asteroid
+
+Moving at a random speed, provided an angle. Radius according to the type. The type also dictates whether, after removing the asteroid from the table, it is necessary to add two more.
+
+When destroyed, the idea is to spawn two additional asteroids, with a minimum speed matching the destroyed asteroid own speed.
+
+## Projectiles
+
+## Gameplay
+
+Teleport. Keep track of score, lives, record.
+
+## Sound

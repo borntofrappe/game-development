@@ -20,6 +20,21 @@ function Player:init()
   self.dangle = 0
 end
 
+function Player:reset()
+  self.x = WINDOW_WIDTH / 2
+  self.y = WINDOW_HEIGHT / 2
+
+  self.dx = 0
+  self.dy = 0
+
+  self.angle = 0
+  self.dangle = 0
+end
+
+function Player:collides(asteroid)
+  return ((self.x - asteroid.x) ^ 2 + (self.y - asteroid.y) ^ 2) ^ 0.5 < self.r + asteroid.r
+end
+
 function Player:update(dt)
   self.angle = (self.angle + self.dangle) % (math.pi * 2)
   self.x = self.x + self.dx * dt
