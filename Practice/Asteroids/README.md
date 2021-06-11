@@ -40,3 +40,35 @@ function love.keyboard.wasPressed(key)
   return love.keyboard.keyPressed[key]
 end
 ```
+
+## State
+
+- from title to spawn by pressing enter
+
+- from spawn to play after a predetermined countdown. The countdown happens in intervals, so that it is possible to have the `render` function draw the player intermittently
+
+```text
+title -> spawn -> play
+  ^                |
+  |________________|
+```
+
+## Player
+
+Translate, rotate. This in between a push and pop.
+
+```lua
+function Player:render()
+  love.graphics.push()
+  love.graphics.translate(self.x, self.y)
+  love.graphics.rotate(self.angle)
+
+  -- draw
+
+  love.graphics.pop()
+end
+```
+
+The movement itself is dictated by the angle, so it's good to start with that: andle and dangle, change and friction.
+
+`x` and `y` are updated much similarly, but the offset is dictated by the angle itself, using sine and cosine functions.

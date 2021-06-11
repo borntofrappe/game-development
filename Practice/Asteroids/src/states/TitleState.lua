@@ -5,6 +5,13 @@ function TitleState:init()
 end
 
 function TitleState:update(dt)
+  if love.keyboard.wasPressed("escape") then
+    love.event.quit()
+  end
+
+  if love.keyboard.wasPressed("return") then
+    gStateMachine:change("spawn")
+  end
 end
 
 function TitleState:render()

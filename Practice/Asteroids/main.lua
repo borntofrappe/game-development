@@ -7,8 +7,8 @@ function love.load()
   love.graphics.setBackgroundColor(0.98, 0.98, 0.98)
 
   gFonts = {
-    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 48),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 52),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 20)
   }
 
   gStateMachine =
@@ -16,6 +16,12 @@ function love.load()
     {
       ["title"] = function()
         return TitleState()
+      end,
+      ["spawn"] = function()
+        return SpawnState()
+      end,
+      ["play"] = function()
+        return PlayState()
       end
     }
   )
@@ -40,6 +46,7 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setLineWidth(2)
   love.graphics.setColor(0.1, 0.1, 0.1)
   gStateMachine:render()
 end
