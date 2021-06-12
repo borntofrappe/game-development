@@ -2,6 +2,7 @@ TitleState = Class {__includes = BaseState}
 
 function TitleState:init()
   self.title = "Asteroids"
+  self.level = 1
 end
 
 function TitleState:update(dt)
@@ -10,15 +11,28 @@ function TitleState:update(dt)
   end
 
   if love.keyboard.wasPressed("return") then
-    gStateMachine:change("spawn")
+    gStateMachine:change(
+      "spawn",
+      {
+        level = self.level
+      }
+    )
   end
 
   if love.keyboard.wasPressed("right") then
-    gStats.level = math.min(ASTEROIDS_INITIAL_LEVELS, gStats.level + 1)
+    if self.level < ASTEROIDS_INITIAL_LEVELS then
+      self.level = self.level + 1
+
+      gSounds["select"]:play()
+    end
   end
 
   if love.keyboard.wasPressed("left") then
-    gStats.level = math.max(1, gStats.level - 1)
+    if self.level > 1 then
+      self.level = self.level - 1
+
+      gSounds["select"]:play()
+    end
   end
 end
 
@@ -29,7 +43,7 @@ function TitleState:render()
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf("Press enter to play", 0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, "center")
   love.graphics.printf("Difficulty: ", 0, WINDOW_HEIGHT / 2 + gFonts.normal:getHeight() * 2, WINDOW_WIDTH / 2, "right")
-  for i = 1, gStats.level do
+  for i = 1, self.level do
     love.graphics.circle("fill", WINDOW_WIDTH / 2 + 24 * i, WINDOW_HEIGHT / 2 + gFonts.normal:getHeight() * 2.5, 10)
   end
 end

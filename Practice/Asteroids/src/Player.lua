@@ -7,16 +7,20 @@ local SPEED_FRICTION = 1.5
 local SPEED_CHANGE = 150
 
 local RADIUS = 8
+local LIVES = 3
 
 function Player:init(x, y, angle)
-  self.x = x or math.random(0, WINDOW_WIDTH)
-  self.y = y or math.random(0, WINDOW_HEIGHT)
+  self.x = x or WINDOW_WIDTH / 2
+  self.y = y or WINDOW_HEIGHT / 2
   self.r = RADIUS
+
+  self.points = 0
+  self.lives = LIVES
 
   self.dx = 0
   self.dy = 0
 
-  self.angle = angle or math.rad(math.random(360))
+  self.angle = angle or 0
   self.dangle = 0
 
   self.projectiles = {}
@@ -30,6 +34,16 @@ function Player:reset()
   self.dy = 0
 
   self.angle = 0
+  self.dangle = 0
+end
+
+function Player:teleport()
+  self.x = math.random(0, WINDOW_WIDTH)
+  self.y = math.random(0, WINDOW_HEIGHT)
+  self.angle = math.rad(math.random(360))
+
+  self.dx = 0
+  self.dy = 0
   self.dangle = 0
 end
 
@@ -98,6 +112,15 @@ function Player:update(dt)
       table.remove(self.projectiles, k)
     end
   end
+end
+
+function Player:destroy()
+  self.lives = self.lives - 1
+  return self.lives == 0
+end
+
+function Player:score(points)
+  self.points = self.points + points
 end
 
 function Player:shoot()

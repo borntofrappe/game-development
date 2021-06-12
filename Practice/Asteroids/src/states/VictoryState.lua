@@ -4,14 +4,18 @@ local DELAY = 2
 
 function VictoryState:init()
   self.time = 0
+
+  gSounds["victory"]:play()
 end
 
 function VictoryState:enter(params)
   self.player = params.player
-  gStats.level = gStats.level + 1
+  self.level = params.level
+
+  self.level = self.level + 1
 
   self.asteroids = {}
-  for i = 1, gStats.level * ASTEROIDS_PER_LEVEL do
+  for i = 1, self.level * ASTEROIDS_PER_LEVEL do
     table.insert(self.asteroids, Asteroid())
   end
 end
@@ -21,6 +25,7 @@ function VictoryState:update(dt)
     gStateMachine:change(
       "play",
       {
+        level = self.level,
         player = self.player,
         asteroids = self.asteroids
       }
@@ -32,7 +37,7 @@ function VictoryState:update(dt)
 end
 
 function VictoryState:render()
-  displayRecord()
-  displayStats()
+  displayRecord(gRecord)
+  displayStats(self.player.points, self.player.lives)
   self.player:render()
 end

@@ -7,7 +7,13 @@ function TeleportState:init()
 end
 
 function TeleportState:enter(params)
+  self.level = params.level
+  self.player = params.player
   self.asteroids = params.asteroids
+
+  self.player:teleport()
+  gSounds["teleport"]:stop()
+  gSounds["teleport"]:play()
 end
 
 function TeleportState:update(dt)
@@ -16,7 +22,8 @@ function TeleportState:update(dt)
     gStateMachine:change(
       "play",
       {
-        player = Player(),
+        level = self.level,
+        player = self.player,
         asteroids = self.asteroids
       }
     )
@@ -28,8 +35,8 @@ function TeleportState:update(dt)
 end
 
 function TeleportState:render()
-  displayRecord()
-  displayStats(gStats)
+  displayRecord(gRecord)
+  displayStats(self.player.points, self.player.lives)
 
   for k, asteroid in pairs(self.asteroids) do
     asteroid:render()

@@ -21,6 +21,10 @@ function Asteroid:init(x, y, type, speed_min)
   self.dy = math.sin(angle) * self.speed
 end
 
+function Asteroid:destroy()
+  return self.type == 1
+end
+
 function Asteroid:update(dt)
   self.x = self.x + self.dx * dt
   self.y = self.y + self.dy * dt

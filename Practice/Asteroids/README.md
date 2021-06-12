@@ -101,8 +101,4 @@ Teleport, difficulty
 
 ## Refactor and add sound
 
-Projectiles into play state. Persist in gameover state.
-
-Score and lives into player.
-
-## Document
+## Document and remove Games/Asteroids

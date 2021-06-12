@@ -1,13 +1,16 @@
 PlayState = Class {__includes = BaseState}
 
 function PlayState:enter(params)
+  self.level = params.level
   self.player = params.player
   self.asteroids = params.asteroids
 
+  -- in case the newly spawn level is already cleared
   if #self.asteroids == 0 then
     gStateMachine:change(
       "victory",
       {
+        level = self.level,
         player = self.player
       }
     )
@@ -21,12 +24,16 @@ function PlayState:update(dt)
 
   if love.keyboard.wasPressed("space") then
     self.player:shoot()
+
+    gSounds["shoot"]:play()
   end
 
   if love.keyboard.wasPressed("down") then
     gStateMachine:change(
       "teleport",
       {
+        level = self.level,
+        player = self.player,
         asteroids = self.asteroids
       }
     )
@@ -39,19 +46,23 @@ function PlayState:update(dt)
       self:destroy(asteroid)
       table.remove(self.asteroids, k)
 
-      gStats.lives = gStats.lives - 1
+      gSounds["hurt"]:play()
 
-      if gStats.lives == 0 then
+      if self.player:destroy() then
         gStateMachine:change(
           "gameover",
           {
+            player = self.player,
             asteroids = self.asteroids
           }
         )
       else
+        self.player:reset()
         gStateMachine:change(
           "spawn",
           {
+            level = self.level,
+            player = self.player,
             asteroids = self.asteroids
           }
         )
@@ -67,6 +78,7 @@ function PlayState:update(dt)
           gStateMachine:change(
             "victory",
             {
+              level = self.level,
               player = self.player
             }
           )
@@ -80,11 +92,16 @@ end
 
 function PlayState:destroy(asteroid)
   local type = asteroid.type
-  gStats.score = gStats.score + asteroid.points
-  if gStats.score > gRecord then
-    gRecord = gStats.score
+
+  gSounds["destroy-" .. type]:stop()
+  gSounds["destroy-" .. type]:play()
+
+  self.player:score(asteroid.points)
+  if self.player.points > gRecord then
+    gRecord = self.player.points
   end
-  if type > 1 then
+
+  if not asteroid:destroy() then
     local x = asteroid.x
     local y = asteroid.y
     local speed = asteroid.speed
@@ -94,8 +111,8 @@ function PlayState:destroy(asteroid)
 end
 
 function PlayState:render()
-  displayRecord()
-  displayStats(gStats)
+  displayRecord(gRecord)
+  displayStats(self.player.points, self.player.lives)
 
   self.player:render()
 

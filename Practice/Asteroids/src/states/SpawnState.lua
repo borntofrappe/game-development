@@ -8,14 +8,17 @@ function SpawnState:init()
   self.loops = LOOPS
   self.loop = 0
   self.time = 0
+
+  gSounds["spawn"]:play()
 end
 
 function SpawnState:enter(params)
-  self.player = params and params.player or Player(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0)
-  self.asteroids = params and params.asteroids or {}
+  self.level = params.level or 1
+  self.player = params.player or Player()
+  self.asteroids = params.asteroids or {}
 
-  if not params then
-    for i = 1, gStats.level * ASTEROIDS_PER_LEVEL do
+  if not params.asteroids then
+    for i = 1, 1 do
       table.insert(self.asteroids, Asteroid())
     end
   end
@@ -30,6 +33,7 @@ function SpawnState:update(dt)
       gStateMachine:change(
         "play",
         {
+          level = self.level,
           player = self.player,
           asteroids = self.asteroids
         }
@@ -45,10 +49,10 @@ function SpawnState:update(dt)
 end
 
 function SpawnState:render()
-  displayRecord()
+  displayRecord(gRecord)
 
   if self.loop % 2 == 0 then
-    displayStats(gStats)
+    displayStats(self.player.points, self.player.lives)
     self.player:render()
   end
 

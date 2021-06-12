@@ -36,14 +36,22 @@ function love.load()
     }
   )
 
+  gSounds = {
+    ["destroy-1"] = love.audio.newSource("res/sounds/destroy-1.wav", "static"),
+    ["destroy-2"] = love.audio.newSource("res/sounds/destroy-2.wav", "static"),
+    ["destroy-3"] = love.audio.newSource("res/sounds/destroy-3.wav", "static"),
+    ["gameover"] = love.audio.newSource("res/sounds/gameover.wav", "static"),
+    ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),
+    ["select"] = love.audio.newSource("res/sounds/select.wav", "static"),
+    ["spawn"] = love.audio.newSource("res/sounds/spawn.wav", "static"),
+    ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static"),
+    ["teleport"] = love.audio.newSource("res/sounds/teleport.wav", "static"),
+    ["victory"] = love.audio.newSource("res/sounds/victory.wav", "static")
+  }
+
   gStateMachine:change("title")
 
   gRecord = RECORD
-  gStats = {
-    ["score"] = 0,
-    ["level"] = 1,
-    ["lives"] = LIVES
-  }
 
   love.keyboard.keyPressed = {}
 end
@@ -68,16 +76,16 @@ function love.draw()
   gStateMachine:render()
 end
 
-function displayRecord()
+function displayRecord(record)
   love.graphics.setFont(gFonts.small)
-  love.graphics.print(gRecord, gFonts.small:getHeight() / 2 + math.floor(WINDOW_WIDTH / 4), 6)
+  love.graphics.print(record, gFonts.small:getHeight() / 2 + math.floor(WINDOW_WIDTH / 4), 6)
 end
 
-function displayStats()
+function displayStats(score, lives)
   love.graphics.setFont(gFonts.small)
-  love.graphics.printf(gStats.score, 0, 28, math.floor(WINDOW_WIDTH / 4), "right")
+  love.graphics.printf(score, 0, 28, math.floor(WINDOW_WIDTH / 4), "right")
 
-  for i = 1, gStats.lives - 1 do
+  for i = 1, lives - 1 do
     love.graphics.polygon(
       "fill",
       i * gFonts.small:getHeight() / 2 + WINDOW_WIDTH / 4,
