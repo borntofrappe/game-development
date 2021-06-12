@@ -8,8 +8,8 @@ function love.load()
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/fonts/font.ttf", 48),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24),
-    ["small"] = love.graphics.newFont("res/fonts/font.ttf", 15)
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 20),
+    ["small"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
   gStateMachine =
@@ -29,6 +29,9 @@ function love.load()
       end,
       ["gameover"] = function()
         return GameoverState()
+      end,
+      ["teleport"] = function()
+        return TeleportState()
       end
     }
   )

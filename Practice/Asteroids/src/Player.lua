@@ -6,17 +6,17 @@ local ANGLE_CHANGE = 0.07
 local SPEED_FRICTION = 1.5
 local SPEED_CHANGE = 150
 
-local RADIUS = 9
+local RADIUS = 8
 
-function Player:init()
-  self.x = WINDOW_WIDTH / 2
-  self.y = WINDOW_HEIGHT / 2
+function Player:init(x, y, angle)
+  self.x = x or math.random(0, WINDOW_WIDTH)
+  self.y = y or math.random(0, WINDOW_HEIGHT)
   self.r = RADIUS
 
   self.dx = 0
   self.dy = 0
 
-  self.angle = 0
+  self.angle = angle or math.rad(math.random(360))
   self.dangle = 0
 
   self.projectiles = {}

@@ -99,8 +99,10 @@ If crashing and winning, go first to the spawn state. At the entrance of the pla
 
 Teleport, difficulty
 
-## Projectiles / 2
+## Refactor and add sound
 
 Projectiles into play state. Persist in gameover state.
 
-## Sound
+Score and lives into player.
+
+## Document

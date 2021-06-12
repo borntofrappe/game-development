@@ -23,6 +23,15 @@ function PlayState:update(dt)
     self.player:shoot()
   end
 
+  if love.keyboard.wasPressed("down") then
+    gStateMachine:change(
+      "teleport",
+      {
+        asteroids = self.asteroids
+      }
+    )
+  end
+
   for k, asteroid in pairs(self.asteroids) do
     asteroid:update(dt)
 

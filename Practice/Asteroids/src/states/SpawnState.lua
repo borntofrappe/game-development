@@ -11,7 +11,7 @@ function SpawnState:init()
 end
 
 function SpawnState:enter(params)
-  self.player = params and params.player or Player()
+  self.player = params and params.player or Player(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0)
   self.asteroids = params and params.asteroids or {}
 
   if not params then
