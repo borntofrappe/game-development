@@ -2,16 +2,12 @@ SpawnState = Class {__includes = BaseState}
 
 local INTERVAL = 0.25
 local LOOPS = 7
-local ASTEROIDS = 3
-local LIVES = 3
 
 function SpawnState:init()
   self.interval = INTERVAL
   self.loops = LOOPS
   self.loop = 0
   self.time = 0
-
-  self.lives = LIVES
 end
 
 function SpawnState:enter(params)
@@ -19,7 +15,7 @@ function SpawnState:enter(params)
   self.asteroids = params and params.asteroids or {}
 
   if not params then
-    for i = 1, ASTEROIDS do
+    for i = 1, gStats.level * ASTEROIDS_PER_LEVEL do
       table.insert(self.asteroids, Asteroid())
     end
   end

@@ -8,7 +8,8 @@ function love.load()
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/fonts/font.ttf", 48),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24),
+    ["small"] = love.graphics.newFont("res/fonts/font.ttf", 15)
   }
 
   gStateMachine =
@@ -22,16 +23,23 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState()
+      end,
+      ["victory"] = function()
+        return VictoryState()
+      end,
+      ["gameover"] = function()
+        return GameoverState()
       end
     }
   )
 
   gStateMachine:change("title")
 
-  gRecord = 10000
+  gRecord = RECORD
   gStats = {
     ["score"] = 0,
-    ["lives"] = 3
+    ["level"] = 1,
+    ["lives"] = LIVES
   }
 
   love.keyboard.keyPressed = {}
@@ -58,23 +66,23 @@ function love.draw()
 end
 
 function displayRecord()
-  love.graphics.setFont(gFonts.normal)
-  love.graphics.print(gRecord, gFonts.normal:getHeight() / 2 + math.floor(WINDOW_WIDTH / 4), 6)
+  love.graphics.setFont(gFonts.small)
+  love.graphics.print(gRecord, gFonts.small:getHeight() / 2 + math.floor(WINDOW_WIDTH / 4), 6)
 end
 
 function displayStats()
-  love.graphics.setFont(gFonts.normal)
+  love.graphics.setFont(gFonts.small)
   love.graphics.printf(gStats.score, 0, 28, math.floor(WINDOW_WIDTH / 4), "right")
 
-  for i = 1, gStats.lives do
+  for i = 1, gStats.lives - 1 do
     love.graphics.polygon(
       "fill",
-      i * gFonts.normal:getHeight() / 2 + WINDOW_WIDTH / 4,
+      i * gFonts.small:getHeight() / 2 + WINDOW_WIDTH / 4,
       28,
-      i * gFonts.normal:getHeight() / 2 + WINDOW_WIDTH / 4,
-      28 + gFonts.normal:getHeight(),
-      i * gFonts.normal:getHeight() / 2 + WINDOW_WIDTH / 4 + gFonts.normal:getHeight() / 3,
-      28 + gFonts.normal:getHeight() * 2 / 3
+      i * gFonts.small:getHeight() / 2 + WINDOW_WIDTH / 4,
+      28 + gFonts.small:getHeight(),
+      i * gFonts.small:getHeight() / 2 + WINDOW_WIDTH / 4 + gFonts.small:getHeight() / 3,
+      28 + gFonts.small:getHeight() * 2 / 3
     )
   end
 end

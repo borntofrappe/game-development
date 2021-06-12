@@ -3,6 +3,15 @@ PlayState = Class {__includes = BaseState}
 function PlayState:enter(params)
   self.player = params.player
   self.asteroids = params.asteroids
+
+  if #self.asteroids == 0 then
+    gStateMachine:change(
+      "victory",
+      {
+        player = self.player
+      }
+    )
+  end
 end
 
 function PlayState:update(dt)
@@ -22,15 +31,22 @@ function PlayState:update(dt)
       table.remove(self.asteroids, k)
 
       gStats.lives = gStats.lives - 1
-      self.player:reset()
-      gStateMachine:change(
-        "spawn",
-        {
-          -- not necessary to actually pass the player
-          player = self.player,
-          asteroids = self.asteroids
-        }
-      )
+
+      if gStats.lives == 0 then
+        gStateMachine:change(
+          "gameover",
+          {
+            asteroids = self.asteroids
+          }
+        )
+      else
+        gStateMachine:change(
+          "spawn",
+          {
+            asteroids = self.asteroids
+          }
+        )
+      end
     end
 
     for j, projectile in pairs(self.player.projectiles) do
@@ -38,6 +54,14 @@ function PlayState:update(dt)
         projectile.removed = true
         self:destroy(asteroid)
         table.remove(self.asteroids, k)
+        if #self.asteroids == 0 then
+          gStateMachine:change(
+            "victory",
+            {
+              player = self.player
+            }
+          )
+        end
       end
     end
   end
@@ -48,6 +72,9 @@ end
 function PlayState:destroy(asteroid)
   local type = asteroid.type
   gStats.score = gStats.score + asteroid.points
+  if gStats.score > gRecord then
+    gRecord = gStats.score
+  end
   if type > 1 then
     local x = asteroid.x
     local y = asteroid.y

@@ -93,8 +93,14 @@ Global values set in `love.load`. Global functions to draw the record, score and
 
 Victory, gameover.
 
+If crashing and winning, go first to the spawn state. At the entrance of the play state check for a victory.
+
 ## Gameplay / 2
 
 Teleport, difficulty
+
+## Projectiles / 2
+
+Projectiles into play state. Persist in gameover state.
 
 ## Sound
