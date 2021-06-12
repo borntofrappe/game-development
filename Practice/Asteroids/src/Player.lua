@@ -1,6 +1,6 @@
 Player = Class {}
 
-local ANGLE_FRICTION = 0.003
+local ANGLE_FRICTION = 0.005
 local ANGLE_CHANGE = 0.07
 
 local SPEED_FRICTION = 1.5
@@ -54,7 +54,7 @@ end
 function Player:update(dt)
   self.angle = (self.angle + self.dangle) % (math.pi * 2)
   self.x = self.x + self.dx * dt
-  self.y = self.y - self.dy * dt
+  self.y = self.y + self.dy * dt
 
   if self.dangle > 0 then
     self.dangle = math.max(0, self.dangle - ANGLE_FRICTION)
@@ -86,7 +86,7 @@ function Player:update(dt)
 
   if love.keyboard.isDown("up") then
     self.dx = math.sin(self.angle) * SPEED_CHANGE
-    self.dy = math.cos(self.angle) * SPEED_CHANGE
+    self.dy = math.cos(self.angle) * SPEED_CHANGE * -1
   end
 
   if self.x < -self.r then

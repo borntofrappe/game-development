@@ -37,7 +37,7 @@ function VictoryState:update(dt)
 end
 
 function VictoryState:render()
-  displayRecord(gRecord)
+  displayRecord(gRecord.points)
   displayStats(self.player.points, self.player.lives)
   self.player:render()
 end

@@ -5,8 +5,9 @@ local LIFESPAN = 0.9
 local SPEED = 250
 
 function Projectile:init(x, y, angle)
-  self.x = x
-  self.y = y
+  -- *5 to spawn the projectile from the top of the player
+  self.x = x + math.sin(angle) * 5
+  self.y = y - math.cos(angle) * 5
   self.r = RADIUS
 
   self.dx = math.sin(angle) * SPEED

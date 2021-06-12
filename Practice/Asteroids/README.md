@@ -4,7 +4,9 @@ Recreate the basic structure of the arcade game with a state machine and shapes 
 
 ## Dependencies and structure
 
-The project is organized to have `main.lua` reference a series of files in the `src` and `res` folders. At the top of the script, however, the idea is to require a single file, `src/Dependencies`.
+The project is organized to have `main.lua` lean on a series of files in the `res` and `src` folders. In the `res` folder you find static assets and external libraries, like `class.lua`. In the `src` folder you find the code developing the game, encapsulated with series of classes.
+
+From `main.lua`, the idea is to require a single file: `src/Dependencies`.
 
 ```lua
 require "src/Dependencies"
@@ -43,9 +45,7 @@ end
 
 ## State
 
-- from title to spawn by pressing enter
-
-- from spawn to play after a predetermined countdown. The countdown happens in intervals, so that it is possible to have the `render` function draw the player intermittently
+The game includes a series of states. A first basic structure has the player go from the title to a spawn state, where the spaceship blinks before the play state and the actual level.
 
 ```text
 title -> spawn -> play
@@ -53,9 +53,56 @@ title -> spawn -> play
   |________________|
 ```
 
+This structure is however complicated to make for a more complete game:
+
+- when the spaceship crashes against an asteroid, the game moves back to the spawn state, before returning to the full level
+
+- when the spaceship is out of lives, the game moves to the gameover state. Here a string highlights the situation before moving to the title state
+
+- when every asteroid is destroyed, the game moves to a victory state. Here a short jingle highlights the cleared level before initializing a new level in the play state
+
+- when the spaceship teleports to a random spot, it is convenient to use a teleport state to continue updating the level, reposition the player and then go back to the play state
+
+```text
+  *
+  |
+title -> spawn <-> play  <-->  victory
+  ^                 |    |-->  gameover -->*
+  |_________________|    <--> teleport
+```
+
 ## Player
 
-Translate, rotate. This in between a push and pop.
+The player is displayed with a spaceship and a triangular shape. The triangle itself is created with `love.graphics.polygon`, specifying the vertices after the desired mode.
+
+```lua
+love.graphics.polygon('line', x1, y1, x2, y2, .., xn, yn)
+```
+
+Since I want to rotate the shape from its center, it is preferable to have the vertices describe the coordinates around the center.
+
+The `love.graphics` module then provides the `translate` function to shift the center in the page.
+
+```lua
+function Player:render()
+  love.graphics.translate(self.x, self.y)
+
+  love.graphics.polygon()
+end
+```
+
+To rotate the shape, the same module provides the `rotate` function.
+
+```lua
+function Player:render()
+  love.graphics.translate(self.x, self.y)
+  love.graphics.rotate(self.angle)
+
+  love.graphics.polygon()
+end
+```
+
+This setup allows to position and rotate the triangle as wanted. However, the translation and rotation affect any other shape rendered after the player. This is because the transformation matrix is modified. `love.graphics.push()` and `love.graphics.pop()` allow to modify the matrix solely for the player.
 
 ```lua
 function Player:render()
@@ -63,42 +110,101 @@ function Player:render()
   love.graphics.translate(self.x, self.y)
   love.graphics.rotate(self.angle)
 
-  -- draw
+  love.graphics.polygon()
 
   love.graphics.pop()
 end
 ```
 
-The movement itself is dictated by the angle, so it's good to start with that: andle and dangle, change and friction.
+`push` saves the current transformation and `pop` reverts to the stored preference.
 
-`x` and `y` are updated much similarly, but the offset is dictated by the angle itself, using sine and cosine functions.
+## Movement
+
+The player is positioned and rotated at a given angle. To move the triangle, it is necessary to consider a bit of trigonometry to find the horizontal and vertical vector.
+
+```lua
+self.dx = math.sin(self.angle) * SPEED_CHANGE
+self.dy = math.cos(self.angle) * SPEED_CHANGE * -1
+```
+
+The functions are chosen considering the fact that the triangle points upwards.
 
 ## Asteroid
 
-Moving at a random speed, provided an angle. Radius according to the type. The type also dictates whether, after removing the asteroid from the table, it is necessary to add two more.
+Similarly to the player, the asteroids move starting from an angle.
 
-When destroyed, the idea is to spawn two additional asteroids, with a minimum speed matching the destroyed asteroid own speed.
+```lua
+local angle = math.rad(math.random(360))
+```
+
+By using the angle it is possible to have the shapes move in any direction.
+
+```lua
+self.speed = math.random(speed_min or SPEED_MIN, SPEED_MAX)
+self.dx = math.cos(angle) * self.speed
+self.dy = math.sin(angle) * self.speed
+```
+
+A `type` is included to have the asteroids spawn additional targets, as long as the type is greater than `1`. The type allows to have large asteroids spawn smaller and smaller units, until they are finally destroyed.
+
+```lua
+function Asteroid:isDestroyed()
+  return self.type == 1
+end
+```
+
+It is ultimately in the play state that the function is used to potentially add more asteroids.
+
+```lua
+if not asteroid:isDestroyed() then
+  -- spawn new asteroids
+end
+```
+
+New asteroids spawn from the location of the previous one, and with a minimum speed matching the destroyed asset.
 
 ## Projectiles
 
-dx and dy are determined by the angle of the player. Each instance has a lifespan and keeps track of the passing of time to remove the element after `x` seconds.
+Projectiles are included from the perspective of the player, starting from its location and angle.
 
-## Gameplay
+```lua
+function Projectile:init(x, y, angle)
+end
+```
 
-Keep track of score, lives, record.
+The angle allows to move the shapes in the direction toward which the player points.
 
-Global values set in `love.load`. Global functions to draw the record, score and lives consistently and from multiple states.
+```lua
+self.dx = math.sin(angle) * SPEED
+self.dy = -math.cos(angle) * SPEED
+```
 
-## States / 2
+The code is organized so that the player class has a table storing the projectiles.
 
-Victory, gameover.
+```lua
+function Player:init()
+  self.projectiles = {}
+end
+```
 
-If crashing and winning, go first to the spawn state. At the entrance of the play state check for a victory.
+## Score
 
-## Gameplay / 2
+The score and lives are two variables included in the `Player` class.
 
-Teleport, difficulty
+```lua
+function Player:init()
+  self.points = 0
+  self.lives = LIVES
+end
+```
 
-## Refactor and add sound
+`gRecord` is also included in `love.load` to keep track of the high score.
 
-## Document and remove Games/Asteroids
+```lua
+gRecord = {
+  ["current"] = false,
+  ["points"] = RECORD
+}
+```
+
+The value is ultimately updated when the player reaches a greater number of points. The `current` field is used to have the sound byte for the record play only once, as the player reaches the high score.

@@ -21,7 +21,7 @@ function Asteroid:init(x, y, type, speed_min)
   self.dy = math.sin(angle) * self.speed
 end
 
-function Asteroid:destroy()
+function Asteroid:isDestroyed()
   return self.type == 1
 end
 

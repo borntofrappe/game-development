@@ -18,7 +18,7 @@ function SpawnState:enter(params)
   self.asteroids = params.asteroids or {}
 
   if not params.asteroids then
-    for i = 1, 1 do
+    for i = 1, self.level * ASTEROIDS_PER_LEVEL do
       table.insert(self.asteroids, Asteroid())
     end
   end
@@ -49,7 +49,7 @@ function SpawnState:update(dt)
 end
 
 function SpawnState:render()
-  displayRecord(gRecord)
+  displayRecord(gRecord.points)
 
   if self.loop % 2 == 0 then
     displayStats(self.player.points, self.player.lives)

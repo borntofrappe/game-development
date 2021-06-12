@@ -12,6 +12,7 @@ function TeleportState:enter(params)
   self.asteroids = params.asteroids
 
   self.player:teleport()
+  -- stop existing audio for consecutive "teleportations"
   gSounds["teleport"]:stop()
   gSounds["teleport"]:play()
 end
@@ -35,7 +36,7 @@ function TeleportState:update(dt)
 end
 
 function TeleportState:render()
-  displayRecord(gRecord)
+  displayRecord(gRecord.points)
   displayStats(self.player.points, self.player.lives)
 
   for k, asteroid in pairs(self.asteroids) do

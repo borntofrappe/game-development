@@ -42,6 +42,7 @@ function love.load()
     ["destroy-3"] = love.audio.newSource("res/sounds/destroy-3.wav", "static"),
     ["gameover"] = love.audio.newSource("res/sounds/gameover.wav", "static"),
     ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),
+    ["record"] = love.audio.newSource("res/sounds/record.wav", "static"),
     ["select"] = love.audio.newSource("res/sounds/select.wav", "static"),
     ["spawn"] = love.audio.newSource("res/sounds/spawn.wav", "static"),
     ["shoot"] = love.audio.newSource("res/sounds/shoot.wav", "static"),
@@ -51,7 +52,10 @@ function love.load()
 
   gStateMachine:change("title")
 
-  gRecord = RECORD
+  gRecord = {
+    ["current"] = false,
+    ["points"] = RECORD
+  }
 
   love.keyboard.keyPressed = {}
 end

@@ -97,11 +97,16 @@ function PlayState:destroy(asteroid)
   gSounds["destroy-" .. type]:play()
 
   self.player:score(asteroid.points)
-  if self.player.points > gRecord then
-    gRecord = self.player.points
+  if self.player.points > gRecord.points then
+    if not gRecord.current then
+      gRecord.current = true
+
+      gSounds["record"]:play()
+    end
+    gRecord.points = self.player.points
   end
 
-  if not asteroid:destroy() then
+  if not asteroid:isDestroyed() then
     local x = asteroid.x
     local y = asteroid.y
     local speed = asteroid.speed
@@ -111,7 +116,7 @@ function PlayState:destroy(asteroid)
 end
 
 function PlayState:render()
-  displayRecord(gRecord)
+  displayRecord(gRecord.points)
   displayStats(self.player.points, self.player.lives)
 
   self.player:render()

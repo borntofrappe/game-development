@@ -27,7 +27,7 @@ function GameoverState:update(dt)
 end
 
 function GameoverState:render()
-  displayRecord(gRecord)
+  displayRecord(gRecord.points)
   displayStats(self.player.points, self.player.lives)
 
   for k, asteroid in pairs(self.asteroids) do
