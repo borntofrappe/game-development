@@ -31,6 +31,10 @@ function Snake:turn(direction)
   end
 end
 
+function Snake:collides(food)
+  return self.column == food.column and self.row == food.row
+end
+
 function Snake:update()
   self.column = (self.column + self.dcolumn) % COLUMNS
   self.row = (self.row + self.drow) % ROWS
