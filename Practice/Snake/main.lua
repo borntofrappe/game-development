@@ -48,14 +48,8 @@ function love.keypressed(key)
     end
   end
 
-  if key == "g" then
-    state = "gameover"
-  end
-
   if key == "return" then
-    if state == "waiting" then
-      state = "playing"
-    elseif state == "gameover" then
+    if state == "gameover" then
       snake:reset()
       food = Food:new()
       state = "waiting"
@@ -75,11 +69,16 @@ function love.update(dt)
     time = time + dt
     if time >= INTERVAL then
       time = time % INTERVAL
-      snake:update()
 
-      if snake:collides(food) then
-        snake:eat(food)
-        food = Food:new()
+      if snake:eatsItself() then
+        state = "gameover"
+      else
+        snake:update()
+
+        if snake:collides(food) then
+          snake:eat(food)
+          food = Food:new()
+        end
       end
     end
   end
@@ -110,7 +109,7 @@ function love.draw()
   snake:render()
 
   if state == "waiting" or state == "gameover" then
-    love.graphics.setColor(0.15, 0.15, 0.16, 0.1)
+    love.graphics.setColor(0.15, 0.15, 0.16, 0.2)
     love.graphics.rectangle("fill", 0, 0, GRID_WIDTH, GRID_HEIGHT)
     love.graphics.setColor(0.15, 0.15, 0.16)
     love.graphics.setFont(font)
