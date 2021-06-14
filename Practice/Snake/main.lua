@@ -14,6 +14,7 @@ GRID_HEIGHT = CELL_SIZE * ROWS
 
 local WINDOW_WIDTH = GRID_WIDTH + PADDING_X * 2
 local WINDOW_HEIGHT = GRID_HEIGHT + MARGIN_TOP + PADDING_Y * 2
+
 local INTERVAL = 0.2
 
 function love.load()
@@ -22,18 +23,19 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.51, 0.64, 0.51)
 
-  font = love.graphics.newFont("res/font.ttf", 38)
-  fontSmall = love.graphics.newFont("res/font.ttf", 22)
-  love.graphics.setFont(font)
+  gFonts = {
+    ["normal"] = love.graphics.newFont("res/font.ttf", 38),
+    ["small"] = love.graphics.newFont("res/font.ttf", 22)
+  }
 
-  --[[
-    waiting
-    playing
-    gameover
-  ]]
+  gSounds = {
+    ["eat"] = love.audio.newSource("res/eat.wav", "static"),
+    ["hurt"] = love.audio.newSource("res/hurt.wav", "static")
+  }
+
+  love.graphics.setFont(gFonts.normal)
+
   state = "waiting"
-
-  --
   snake = Snake:new()
   food = Food:new()
   time = 0
@@ -72,12 +74,16 @@ function love.update(dt)
 
       if snake:eatsItself() then
         state = "gameover"
+
+        gSounds["hurt"]:play()
       else
         snake:update()
 
         if snake:collides(food) then
           snake:eat(food)
           food = Food:new()
+
+          gSounds["eat"]:play()
         end
       end
     end
@@ -86,7 +92,7 @@ end
 
 function love.draw()
   love.graphics.setColor(0.15, 0.15, 0.16)
-  love.graphics.setFont(font)
+  love.graphics.setFont(gFonts.normal)
   love.graphics.print(snake.points, PADDING_X, PADDING_Y)
   love.graphics.setLineWidth(4)
   love.graphics.line(PADDING_X, MARGIN_TOP, WINDOW_WIDTH - PADDING_X, MARGIN_TOP)
@@ -109,18 +115,18 @@ function love.draw()
   snake:render()
 
   if state == "waiting" or state == "gameover" then
-    love.graphics.setColor(0.15, 0.15, 0.16, 0.2)
+    love.graphics.setColor(0.15, 0.15, 0.16, 0.15)
     love.graphics.rectangle("fill", 0, 0, GRID_WIDTH, GRID_HEIGHT)
     love.graphics.setColor(0.15, 0.15, 0.16)
-    love.graphics.setFont(font)
+    love.graphics.setFont(gFonts.normal)
     love.graphics.printf(
       state == "waiting" and "Snake" or "Gameover",
       0,
-      GRID_HEIGHT / 2 - font:getHeight(),
+      GRID_HEIGHT / 2 - gFonts.normal:getHeight(),
       GRID_WIDTH,
       "center"
     )
-    love.graphics.setFont(fontSmall)
+    love.graphics.setFont(gFonts.small)
     love.graphics.printf(
       state == "waiting" and "Move with arrow keys" or "Press enter to continue",
       0,

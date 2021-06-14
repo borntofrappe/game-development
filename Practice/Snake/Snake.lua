@@ -32,30 +32,6 @@ function Snake:turn(direction)
   end
 end
 
-function Snake:eatsItself()
-  for i = 1, #self.body do
-    if i == 1 then
-      if
-        (self.column + self.dcolumn) % COLUMNS == self.body[1].column and
-          (self.row + self.drow) % ROWS == self.body[1].row
-       then
-        return true
-      end
-    else
-      if
-        (self.column + self.dcolumn) % COLUMNS == self.body[i - 1].column and
-          (self.row + self.drow) % ROWS == self.body[i - 1].row
-       then
-        return true
-      end
-    end
-  end
-end
-
-function Snake:collides(food)
-  return self.column == food.column and self.row == food.row
-end
-
 function Snake:update()
   for k, section in pairs(self.body) do
     if not section.isMoving then
@@ -82,6 +58,10 @@ function Snake:update()
   self.row = (self.row + self.drow) % ROWS
 end
 
+function Snake:collides(food)
+  return self.column == food.column and self.row == food.row
+end
+
 function Snake:eat(food)
   self.points = self.points + food.points
 
@@ -95,6 +75,17 @@ function Snake:eat(food)
       padding = CELL_SIZE * 0.1
     }
   )
+end
+
+function Snake:eatsItself()
+  for i = 1, #self.body do
+    if
+      (self.column + self.dcolumn) % COLUMNS == self.body[math.max(1, i - 1)].column and
+        (self.row + self.drow) % ROWS == self.body[math.max(1, i - 1)].row
+     then
+      return true
+    end
+  end
 end
 
 function Snake:reset()
