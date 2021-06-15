@@ -50,13 +50,17 @@ The idea is to here check through a series of conditional statements, considerin
 
 1. check whether the ball is moving to the right/left, to the top/bottom
 
-   Based on this first set of conditionals, you are able to narrow down the possible collisions. If moving to the right and to the bottom, indeed the brick can only be hit on the left or top edge.
+   Based on this first set of conditionals, you are able to narrow down the possible collisions.
 
-2. check the horizontal coordinate of the ball vis a vis the horizontal coordinate of the brick
+   If moving to the right and to the bottom, indeed the brick can only be hit on the left or top edge.
 
-   This is a simplified AABB test, and it allows to decipher whether the ball hits the brick on its left/right side or on its top/bottom edge. Case in point: if he horizontal coordinate falls within the coordinates provided by the brick, the collision must be on the top/bottom edge. If the horizontal coordinate describe a position before/after the brick, the collision must be on the left/right side.
+2. check the horizontal coordinate of the ball vis-a-vis the horizontal coordinate of the brick
 
-Barring edge cases, the approach is rather solid. Most importantly, it allows to have the ball estimate with good accuracy the behavior of the ball when it goes atop a row of contiguous bricks. This especially considering a slightly thinner bounding box.
+   A simplified AABB test allows to decipher whether the ball hits the brick on its left/right side or on its top/bottom edge.
+
+   Case in point: if the horizontal coordinate falls within the coordinates provided by the brick, the collision must be on the top/bottom edge. If the horizontal coordinate describes a position before/after the brick, the collision must be on the left/right side.
+
+Barring edge cases, the approach is rather solid. Most importantly, it allows to have the ball estimate with good accuracy the behavior of the ball when it goes atop a row of contiguous bricks. This especially considering a slightly smaller bounding box.
 
 ```diff
 -isBefore = self.ball.x + self.ball.width < brick.x

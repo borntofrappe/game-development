@@ -12,7 +12,7 @@ The game introduces two additional states:
 
 ## Health points
 
-The heart icons are included in the _hearts.png_ image, side by side and each with a (10x9) size. Creating the quads is therefore a matter of using `GenerateQuads` with the given measure.
+The heart icons are included in the `hearts.png` image, side by side and each with a (10x9) size. Creating the quads is therefore a matter of using `GenerateQuads` with the given measure.
 
 ```lua
 gFrames = {
@@ -20,7 +20,7 @@ gFrames = {
 }
 ```
 
-To show the health, add a global function `displayHealth` in _main.lua_. This function consider the health points left, the maximum number of health points and renders the heart icons in the top right corner. The idea is to show here `n` number of hearts, and use the filled, red version to represent the remaining lives.
+To show the health, add a global function `displayHealth` in `main.lua`. This function consider the health points left, the maximum number of health points and renders the heart icons in the top right corner. The idea is to show here `n` number of hearts, and use the filled, red version to represent the remaining lives.
 
 ## Score
 

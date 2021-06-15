@@ -2,7 +2,17 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
-## Skip
+_Please note:_ the `ServeState` initializes a level of `12` to show a more elaborate level.
+
+```lua
+function ServeState:init()
+  self.level = 12
+
+  -- other variables
+end
+```
+
+## Level
 
 The idea is to pass the level to the `LevelMaker` function, and have this integer influence the structure of the table. With a higher level, for instance, you can include more bricks, or bricks of a different color, appearance.
 
@@ -34,5 +44,3 @@ color = math.random(1, maxColor)
 ```
 
 The way I use the level is tentative, but does the trick to provide more tiers and colors with a higher level.
-
-**Please note** the `ServeState` initializes a level of `12` to show the different tiers.

@@ -17,12 +17,9 @@ function love.load()
   gTextures = {
     ["arrows"] = love.graphics.newImage("res/graphics/arrows.png"),
     ["background"] = love.graphics.newImage("res/graphics/background.png"),
-    ["blocks"] = love.graphics.newImage("res/graphics/blocks.png"),
-    ["breakout_big"] = love.graphics.newImage("res/graphics/breakout_big.png"),
     ["breakout"] = love.graphics.newImage("res/graphics/breakout.png"),
     ["hearts"] = love.graphics.newImage("res/graphics/hearts.png"),
-    ["particle"] = love.graphics.newImage("res/graphics/particle.png"),
-    ["ui"] = love.graphics.newImage("res/graphics/ui.png")
+    ["particle"] = love.graphics.newImage("res/graphics/particle.png")
   }
 
   gSounds = {

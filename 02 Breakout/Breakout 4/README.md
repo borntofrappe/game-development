@@ -22,7 +22,7 @@ Once you have access to the sprites, bricks are included in a two-step process:
 
 - `Brick.lua` initializes and renders the appropriate brick
 
-This layered approach allows to have a dedicated file in which to create the different levels. In a future update, the idea is to create a more challenging gameplay by modifying the structure of the level, but for the current update, all that the `LeverMaker` class does is return a table in which bricks are positioned in rows and columns.
+This layered approach allows to have a dedicated file in which to create the different levels. In a future update, the idea is to create a more challenging game by modifying the structure of the level, but for the current update, all that the `LeverMaker` class does is return a table in which bricks are positioned in rows and columns.
 
 The most tricky bit relates to how the bricks are centered in the viewport width.
 
@@ -56,7 +56,7 @@ end
 
 ## Collision
 
-`Ball:collides()` is already equipped to detect a collision between the ball and the paddle. The function is however able to detect a collision with a brick as well. With any rectangular shape as a matter of fact.
+`Ball:collides()` is already equipped to detect a collision between the ball and the paddle. The function is however able to detect a collision with a brick as well.
 
 ```diff
 -function Ball:collides(paddle)

@@ -6,7 +6,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 The idea is to load a large image, and section the asset to only show a portion.
 
-If you browse the `res/graphics` folder, you'll find large images detailing the paddles, bricks of different color and sizes.
+If you browse the `res/graphics` folder, you'll find a few images for the paddles, balls and bricks with different types, varying in color and size.
 
 ## Quads
 
@@ -114,7 +114,7 @@ slice[#slice + 1] = table[i]
 
 Using `#slice + 1` to append the value at the end of the table.
 
-## Use quads
+## Draw quads
 
 In `main.lua`, the `load` function is updated to include a table with the desired quads.
 

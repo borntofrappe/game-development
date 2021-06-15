@@ -2,9 +2,7 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
-## Score
-
-To help with the development of the feature, the score is initialized with a big enough value to make sure a high score is registered. The health is also reduced to ensure a gameover happens more rapidly.
+_Please note:_ the serve state is initialized with a considerably large high score and one health point, to ensure that the game ends early and with a high score.
 
 ```lua
 function ServeState:init()
@@ -63,7 +61,7 @@ The state is responsible for saving the score, but first, it is tasked to consid
 
 ### Score name
 
-The approach is similar to the one allowing to choose between _start_ and _high scores_ in the first screen:
+The approach is similar to the one allowing to choose between "start" and "high scores" in the first screen:
 
 - show three options side by side. In this instance, three letter `A`
 

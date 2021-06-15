@@ -10,7 +10,7 @@ It helps to think of the particles as another asset, like a brick, a ball. You u
 
 ## Setup
 
-A particle system is based on an image, like the one provided in _particle.png_, but also a set of colors. The idea is to produce multiple copies of the image, tinted with the given hue, and animate their appearance in and out.
+A particle system is based on an image, like the one provided in `particle.png`, but also a set of colors. The idea is to produce multiple copies of the image, tinted with the given hue, and animate their appearance in and out.
 
 Start by defining the colors. In the instance of the breakout game, the colors are included in a table and match the hue chosen for the bricks.
 
@@ -31,7 +31,7 @@ Past this table, it is in the `init` function that we set up the particle system
 
 The function takes as argument:
 
-- an image, like _particle.png_
+- an image, like `particle.png`
 
 - the number of copies of the image to use
 

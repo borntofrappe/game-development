@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## Arrows
 
-The graphics folder provide a helpul asset in _arrows.png_. The idea is to create the quads with a method similar to the one described for the hearts.
+The graphics folder provide a helpul asset in `arrows.png`. The idea is to create the quads with a method similar to the one described for the hearts.
 
 ```lua
 gFrames = {
@@ -23,7 +23,7 @@ It's important to note that the table start with a key of `1`, so accessing the 
 
 ## Update
 
-The presence of the soundbyte `no-select` leads me to revise the way the arrows are rendered. This is most likely covered in the video, but I forgot to repeat the feature when recreating the game. The idea is to have the arrow semi-transparent if the paddle describes the first/last choice.
+The presence of the sound byte `no-select` leads me to revise the way the arrows are rendered. This is most likely covered in the video, but I forgot to repeat the feature when recreating the game. The idea is to have the arrow semi-transparent if the paddle describes the first/last choice.
 
 In the previuos version, the arrows are always representative of a choice. If you press the left arrow on the first choice, you'd obtain the last choice. Vice versa if pressing the right arrow for the last choice,
 
