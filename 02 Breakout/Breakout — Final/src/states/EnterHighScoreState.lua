@@ -1,11 +1,14 @@
 EnterHighScoreState = Class({__includes = BaseState})
 
+local CHARS_START = 65
+local CHARS = 25
+
 function EnterHighScoreState:init()
   self.choice = 1
   self.chars = {
-    [1] = 65,
-    [2] = 65,
-    [3] = 65
+    [1] = CHARS_START,
+    [2] = CHARS_START,
+    [3] = CHARS_START
   }
 end
 
@@ -64,12 +67,14 @@ function EnterHighScoreState:update(dt)
   end
 
   if love.keyboard.waspressed("up") then
-    self.chars[self.choice] = self.chars[self.choice] == 65 and 65 + 25 or self.chars[self.choice] - 1
+    self.chars[self.choice] =
+      self.chars[self.choice] == CHARS_START and CHARS_START + CHARS or self.chars[self.choice] - 1
     gSounds["select"]:play()
   end
 
   if love.keyboard.waspressed("down") then
-    self.chars[self.choice] = self.chars[self.choice] == 65 + 25 and 65 or self.chars[self.choice] + 1
+    self.chars[self.choice] =
+      self.chars[self.choice] == CHARS_START + CHARS and CHARS_START or self.chars[self.choice] + 1
     gSounds["select"]:play()
   end
 end

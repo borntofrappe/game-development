@@ -1,8 +1,8 @@
 push = require "res/lib/push"
 Class = require "res/lib/class"
 
-require "src/Utils"
 require "src/constants"
+require "src/Utils"
 
 require "src/Paddle"
 require "src/Ball"

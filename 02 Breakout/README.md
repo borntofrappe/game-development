@@ -52,7 +52,7 @@ After Pong and Flappy Bird, the course proceeds to recreate the game Breakout.
 
 13. allow to choose a paddle
 
-_Please note:_ the code of the final versions — Final, Assignment and Powerups — is slightly different than that produced with the increments. I've specifically commented out `displayFps` and made local a few variables which were unnecessarily global.
+_Please note:_ the code of the final versions — Final, Assignment and Powerups — is slightly different than that produced with the increments. I've specifically commented out `displayFps`, made local a few variables which were unnecessarily global and introduced additional variables to replace hard-coded "magic" numbers.
 
 ## Resources
 

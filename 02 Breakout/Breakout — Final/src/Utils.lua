@@ -64,8 +64,8 @@ function GenerateQuadsBalls(atlas)
   --[[ start at (96, 48)
     7 colors detailed in two rows containing 4 sprites max
   ]]
-  x = 96
-  y = 48
+  local x = 96
+  local y = 48
 
   local counter = 1
   local quads = {}

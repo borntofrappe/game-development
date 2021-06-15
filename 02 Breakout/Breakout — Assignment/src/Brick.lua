@@ -1,5 +1,15 @@
 Brick = Class {}
 
+local PARTICLES = 80
+local PARTICLES_LIFETIME_MIN = 0.2
+local PARTICLES_LIFETIME_MAX = 0.7
+local PARTICLES_ACCELERATION_X_MIN = -10
+local PARTICLES_ACCELERATION_X_MAX = 10
+local PARTICLES_ACCELERATION_Y_MIN = 10
+local PARTICLES_ACCELERATION_Y_MAX = 80
+local PARTICLES_EMISSION_X = 10
+local PARTICLES_EMISSION_Y = 10
+
 local colorBricks = {
   [1] = {
     ["r"] = 99 / 255,
@@ -31,8 +41,8 @@ local colorBricks = {
 function Brick:init(x, y, tier, color, showPowerup)
   self.x = x
   self.y = y
-  self.width = 32
-  self.height = 16
+  self.width = BRICK_WIDTH
+  self.height = BRICK_HEIGHT
 
   self.tier = tier
   self.color = color
@@ -42,10 +52,15 @@ function Brick:init(x, y, tier, color, showPowerup)
   self.showPowerup = showPowerup
   self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2)
 
-  self.particleSystem = love.graphics.newParticleSystem(gTextures["particle"], 80)
-  self.particleSystem:setParticleLifetime(0.2, 0.7)
-  self.particleSystem:setLinearAcceleration(-10, 10, 10, 80)
-  self.particleSystem:setEmissionArea("normal", 10, 10)
+  self.particleSystem = love.graphics.newParticleSystem(gTextures["particle"], PARTICLES)
+  self.particleSystem:setParticleLifetime(PARTICLES_LIFETIME_MIN, PARTICLES_LIFETIME_MAX)
+  self.particleSystem:setLinearAcceleration(
+    PARTICLES_ACCELERATION_X_MIN,
+    PARTICLES_ACCELERATION_Y_MIN,
+    PARTICLES_ACCELERATION_X_MAX,
+    PARTICLES_ACCELERATION_Y_MAX
+  )
+  self.particleSystem:setEmissionArea("normal", PARTICLES_EMISSION_X, PARTICLES_EMISSION_Y)
 end
 
 function Brick:hit()
@@ -59,7 +74,7 @@ function Brick:hit()
     colorBricks[self.color]["b"],
     0
   )
-  self.particleSystem:emit(80)
+  self.particleSystem:emit(PARTICLES)
 
   if self.color > 1 then
     self.color = self.color - 1
@@ -94,10 +109,15 @@ function Brick:render()
   end
 
   if self.inPlay then
-    love.graphics.draw(gTextures["breakout"], gFrames["bricks"][self.tier + 4 * (self.color - 1)], self.x, self.y)
+    love.graphics.draw(
+      gTextures["breakout"],
+      gFrames["bricks"][self.tier + BRICK_COLORS * (self.color - 1)],
+      self.x,
+      self.y
+    )
   end
 end
 
 function Brick:renderParticles()
-  love.graphics.draw(self.particleSystem, self.x + 16, self.y + 8)
+  love.graphics.draw(self.particleSystem, self.x + self.width / 2, self.y + self.height / 2)
 end

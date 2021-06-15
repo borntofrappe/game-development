@@ -1,4 +1,6 @@
-This project starts from _Breakout — Assignment_ to contemplate every powerup as included in the last row of the `breakout.png` graphic.
+# Breakout — Powerups
+
+This project starts from `Breakout — Assignment` to contemplate every powerup as included in the last row of the `breakout.png` graphic.
 
 ## Powerups
 

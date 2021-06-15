@@ -1,4 +1,8 @@
-The game introduces a more complex structure in terms of state. Consider the following made-up chart for a reference.
+# Breakout — Final
+
+## State
+
+The game introduces a more complex structure in terms of state. Consider the following chart as a reference.
 
 ```txt
          *
@@ -15,4 +19,4 @@ The game introduces a more complex structure in terms of state. Consider the fol
                     * ←-- victory ←-------
 ```
 
-The path described with an asterisk `*` is accessed by pressing `escape`. For the other states, pressing the same key has the effect of terminating the game.
+By pressing `escape` in the paddle select, serve, play or victory state the game moves back to the start screen (symbolized by the asterisk character `*`). Otherwise, the game is quit altogether.

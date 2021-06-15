@@ -1,15 +1,21 @@
 Ball = Class {}
 
+local BALL_DX_MIN = 60
+local BALL_DX_MAX = 100
+local BALL_DY_MIN = 60
+local BALL_DY_MAX = 120
+local BALL_COLORS = 7
+
 function Ball:init(x, y)
   self.x = x
   self.y = y
-  self.width = 8
-  self.height = 8
+  self.width = BALL_WIDTH
+  self.height = BALL_HEIGHT
 
-  self.dx = math.random(2) == 1 and math.random(60, 100) or math.random(60, 100) * -1
-  self.dy = math.random(60, 120) * -1
+  self.dx = math.random(2) == 1 and math.random(BALL_DX_MIN, BALL_DX_MAX) or math.random(BALL_DX_MIN, BALL_DX_MAX) * -1
+  self.dy = math.random(BALL_DY_MIN, BALL_DY_MAX) * -1
 
-  self.color = 1
+  self.color = math.random(BALL_COLORS)
 end
 
 function Ball:collides(shape)

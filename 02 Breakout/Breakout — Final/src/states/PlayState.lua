@@ -1,5 +1,10 @@
 PlayState = Class({__includes = BaseState})
 
+local POINTS_TIER = 50
+local POINTS_COLOR = 200
+local DELTA_CENTER_MULTIPLER = 3
+local BRICK_X_PADDING = 5
+
 function PlayState:enter(params)
   self.level = params.level
   self.health = params.health
@@ -40,7 +45,7 @@ function PlayState:update(dt)
     self.ball.dy = self.ball.dy * -1
 
     deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
-    self.ball.dx = self.ball.dx + deltaCenter * 4
+    self.ball.dx = self.ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER
 
     gSounds["paddle_hit"]:play()
   end
@@ -49,7 +54,7 @@ function PlayState:update(dt)
     brick:update(dt)
 
     if self.ball:collides(brick) and brick.inPlay then
-      self.score = self.score + 50 * brick.tier + 200 * (brick.color - 1)
+      self.score = self.score + POINTS_TIER * brick.tier + POINTS_COLOR * (brick.color - 1)
       brick:hit()
 
       if self:isLevelCleared() then
@@ -68,7 +73,7 @@ function PlayState:update(dt)
       end
 
       if self.ball.dx > 0 then
-        isBefore = self.ball.x + self.ball.width < brick.x + 5
+        local isBefore = self.ball.x + self.ball.width < brick.x + BRICK_X_PADDING
         if isBefore then
           self.ball.x = brick.x - self.ball.width
           self.ball.dx = self.ball.dx * -1
@@ -77,7 +82,7 @@ function PlayState:update(dt)
           self.ball.dy = self.ball.dy * -1
         end
       else
-        isAfter = self.ball.x > brick.x + brick.width - 5
+        local isAfter = self.ball.x > brick.x + brick.width - BRICK_X_PADDING
         if isAfter then
           self.ball.x = brick.x + brick.width
           self.ball.dx = self.ball.dx * -1

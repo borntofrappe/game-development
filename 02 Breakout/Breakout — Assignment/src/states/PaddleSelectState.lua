@@ -1,7 +1,9 @@
 PaddleSelectState = Class({__includes = BaseState})
 
+local PADDLE_COLORS = 4
+
 function PaddleSelectState:init()
-  self.paddle = Paddle(VIRTUAL_WIDTH / 2 - 32, VIRTUAL_HEIGHT - 32)
+  self.paddle = Paddle(VIRTUAL_WIDTH / 2 - PADDLE_WIDTH / 2, VIRTUAL_HEIGHT - PADDLE_HEIGHT * 2)
 end
 
 function PaddleSelectState:update(dt)
@@ -21,7 +23,7 @@ function PaddleSelectState:update(dt)
   end
 
   if love.keyboard.waspressed("right") then
-    if self.paddle.color == 4 then
+    if self.paddle.color == PADDLE_COLORS then
       gSounds["no-select"]:play()
     else
       self.paddle.color = self.paddle.color + 1

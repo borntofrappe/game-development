@@ -1,5 +1,10 @@
 PlayState = Class({__includes = BaseState})
 
+local POINTS_TIER = 50
+local POINTS_COLOR = 200
+local DELTA_CENTER_MULTIPLER = 3
+local BRICK_X_PADDING = 5
+
 function PlayState:init()
   self.balls = {}
 end
@@ -52,7 +57,7 @@ function PlayState:update(dt)
       ball.dy = ball.dy * -1
 
       deltaCenter = (ball.x + ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
-      ball.dx = ball.dx + deltaCenter * 4
+      self.ball.dx = self.ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER
 
       gSounds["paddle_hit"]:play()
     end
@@ -93,7 +98,7 @@ function PlayState:update(dt)
     for key, ball in pairs(self.balls) do
       if testAABB(ball, brick) and brick.inPlay then
         if brick.tier and brick.color then
-          self.score = self.score + 50 * brick.tier + 200 * (brick.color - 1)
+          self.score = self.score + POINTS_TIER * brick.tier + POINTS_COLOR * (brick.color - 1)
         elseif not brick.isLocked then
           self.score = self.score + 1000
         end
@@ -116,7 +121,7 @@ function PlayState:update(dt)
         end
 
         if ball.dx > 0 then
-          isBefore = ball.x + ball.width < brick.x + 5
+          local isBefore = ball.x + ball.width < brick.x + 5
           if isBefore then
             ball.x = brick.x - ball.width
             ball.dx = ball.dx * -1
@@ -125,7 +130,7 @@ function PlayState:update(dt)
             ball.dy = ball.dy * -1
           end
         else
-          isAfter = ball.x > brick.x + brick.width - 5
+          local isAfter = ball.x > brick.x + brick.width - 5
           if isAfter then
             ball.x = brick.x + brick.width
             ball.dx = ball.dx * -1

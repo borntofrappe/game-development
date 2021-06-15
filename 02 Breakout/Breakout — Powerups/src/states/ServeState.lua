@@ -5,8 +5,8 @@ function ServeState:enter(params)
   self.health = params.health or 3
   self.maxHealth = params.maxHealth or 3
   self.score = params.score or 0
-  self.paddle = params.paddle or Paddle(VIRTUAL_WIDTH / 2 - 32, VIRTUAL_HEIGHT - 32)
-  self.ball = params.ball or Ball(VIRTUAL_WIDTH / 2 - 4, VIRTUAL_HEIGHT - 32 - 8)
+  self.paddle = params.paddle or Paddle(VIRTUAL_WIDTH / 2 - PADDLE_WIDTH / 2, VIRTUAL_HEIGHT - PADDLE_HEIGHT * 2)
+  self.ball = params.ball or Ball(VIRTUAL_WIDTH / 2 - BALL_WIDTH / 2, VIRTUAL_HEIGHT - PADDLE_HEIGHT * 2 - 8)
   self.bricks = params.bricks or LevelMaker.createMap(self.level)
 end
 

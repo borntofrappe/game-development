@@ -1,3 +1,5 @@
+# Breakout — Assignment
+
 [The assignment](https://docs.cs50.net/ocw/games/assignments/2/assignment2.html) has the following objectives:
 
 - [x] add a powerup to the game that spawns two extra `Ball`s
@@ -8,7 +10,7 @@
 
 ## Powerup
 
-The powerups are included in _breakout.png_ and in the last row of the image. In terms of coordinates, they begin at the point (0, 192) and continue with squares with a 16x16 size.
+The powerups are included in `breakout.png` and in the last row of the image. In terms of coordinates, they begin at the point (0, 192) and continue with squares with a 16x16 size.
 
 ### Quads
 
@@ -113,7 +115,7 @@ For the update function, the powerup is instructed to continuously move downward
 
 ### Collision
 
-Once the powerups are included, it's necessary to detect a collision between the powerups and the paddle. Instead of repeating the logic of the `Ball:collides()` function, I decided to add a global function in _main.lua_.
+Once the powerups are included, it's necessary to detect a collision between the powerups and the paddle. Instead of repeating the logic of the `Ball:collides()` function, I decided to add a global function in `main.lua`.
 
 ```lua
 function testAABB(box1, box2)
@@ -252,7 +254,7 @@ The final step is to resize the paddle when instructed:
 
 ### Bug
 
-In the _Utils_ function `GenerateQuadsPaddles` I found a mistake in the way the third size is included.
+In the function `GenerateQuadsPaddles` I found a mistake in the way the third size is included.
 
 ```diff
 -quads[counter] = love.graphics.newQuad(x + 96, y, 32, 16, atlas:getDimensions())
