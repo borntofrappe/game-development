@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## Particle System
 
-This is a considerable update, in that it requires the use of multiple love2d-specific functions.
+This is a considerable update, in that it requires the use of multiple LOVE-specific functions.
 
 It helps to think of the particles as another asset, like a brick, a ball. You update the asset through an `update()` function, and you show the visual through a `render()` function. The complication is that it is first necessary to set up the particles system and modify its behavior with a few functions.
 
@@ -25,7 +25,7 @@ colorBricks = {
 }
 ```
 
-Past this table, it is in the `init` function that we set up the particle system. This using a few essential love2d functions.
+Past this table, it is in the `init` function that we set up the particle system. This using a few essential LOVE functions.
 
 ### newParticleSystem
 
@@ -75,7 +75,7 @@ end
 
   Refer once more to [the docs](https://love2d.org/wiki/ParticleSystem:setEmissionArea) for more information.
 
-This functions are available on the particle system object — notice the colon operator — and are specified in the `init` function.
+These functions are available on the particle system object — notice the colon operator — and are specified in the `init` function.
 
 There are two additional method, but these are set in the `hit()` function. This is because they depend on the brick being actually hit.
 

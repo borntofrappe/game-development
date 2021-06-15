@@ -1,6 +1,6 @@
 Brick = Class {}
 
-colorBricks = {
+local colorBricks = {
   [1] = {
     ["r"] = 99 / 255,
     ["g"] = 155 / 255,

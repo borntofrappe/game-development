@@ -22,12 +22,12 @@ function EnterHighScoreState:update(dt)
   end
 
   if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
-    name = ""
+    local name = ""
     for k, char in pairs(self.chars) do
       name = name .. string.char(char)
     end
 
-    newHighScores = {}
+    local newHighScores = {}
     for k, highScore in pairs(self.highScores) do
       if k < self.index then
         newHighScores[k] = highScore
@@ -41,7 +41,7 @@ function EnterHighScoreState:update(dt)
       end
     end
 
-    highScores = ""
+    local highScores = ""
     for k, highScore in pairs(newHighScores) do
       highScores = highScores .. highScore.name .. "\n"
       highScores = highScores .. highScore.score .. "\n"
@@ -82,7 +82,7 @@ function EnterHighScoreState:render()
 
   love.graphics.setFont(gFonts["humongous"])
   for k, char in pairs(self.chars) do
-    offsetX = (k - (#self.chars + 1) / 2) * 48
+    local offsetX = (k - (#self.chars + 1) / 2) * 48
 
     if k == self.choice then
       love.graphics.setColor(0.4, 1, 1, 1)

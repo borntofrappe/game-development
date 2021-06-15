@@ -161,9 +161,9 @@ function loadHighScores()
     love.filesystem.write("highscores.lst", string.sub(highScores, 1, #highScores - 1))
   end
 
-  highScores = {}
-  counter = 1
-  isName = true
+  local highScores = {}
+  local counter = 1
+  local isName = true
 
   for i = 1, 10 do
     highScores[i] = {

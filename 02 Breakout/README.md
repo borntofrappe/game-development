@@ -2,6 +2,8 @@
 
 After Pong and Flappy Bird, the course proceeds to recreate the game Breakout.
 
+![A few frames from the assignment for "Breakout"](https://github.com/borntofrappe/game-development/blob/master/Showcase/breakout.gif)
+
 ## Topics
 
 - spritesheets, loading a single image and displaying portions of the larger whole
@@ -49,6 +51,8 @@ After Pong and Flappy Bird, the course proceeds to recreate the game Breakout.
 12. enter a high score following a gameover
 
 13. allow to choose a paddle
+
+_Please note:_ the code of the final versions — Final, Assignment and Powerups — is slightly different than that produced with the increments. I've specifically commented out `displayFps` and made local a few variables which were unnecessarily global.
 
 ## Resources
 

@@ -12,7 +12,7 @@ function HighScoresState:update(dt)
 end
 
 function HighScoresState:render()
-  y = 8
+  local y = 8
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setFont(gFonts["big"])
   love.graphics.printf("HIGHT SCORES", 0, y, VIRTUAL_WIDTH, "center")

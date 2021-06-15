@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## Data
 
-The idea is to store the data in a `lst` file, dedicating two lines for each high score.
+The idea is to store the data in a `.lst` file, dedicating two lines for each high score.
 
 ```lst
 name
