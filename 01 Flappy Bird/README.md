@@ -2,6 +2,8 @@
 
 The second video continues with Lua and LOVE2D to create the game Flappy Bird.
 
+![A few frames from the assignment for "Flappy Bird"](https://github.com/borntofrappe/game-development/blob/master/Showcase/flappy-bird.gif)
+
 ## Topics
 
 - loading images from memory in the form of sprites

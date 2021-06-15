@@ -2,7 +2,7 @@
 
 Recreate the basic structure of the arcade game with a state machine and shapes from the `love.graphics` module.
 
-![A few frames from the demo "Asteroids"](https://github.com/borntofrappe/game-development/blob/master/Practice/Asteroids/showcase.gif)
+![A few frames from the demo "Asteroids"](https://github.com/borntofrappe/game-development/blob/master/Showcase/asteroids.gif)
 
 ## Dependencies and structure
 
