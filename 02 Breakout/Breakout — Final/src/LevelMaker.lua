@@ -16,15 +16,15 @@ function LevelMaker.createMap(level)
 
   for row = 1, rows do
     for col = 1, cols do
-      skipFlag = math.random(SKIP_ODDS) == 1 and true or false
+      local skipFlag = math.random(SKIP_ODDS) == 1 and true or false
 
       if not skipFlag then
-        maxTier = math.min(BRICK_TIERS, math.ceil(level / 2)) -- magic numbers
-        maxColor = math.min(BRICK_COLORS, math.ceil(level / 4)) -- magic numbers
-        tier = math.random(maxTier)
-        color = math.random(maxColor)
+        local maxTier = math.min(BRICK_TIERS, math.ceil(level / 2)) -- magic numbers
+        local maxColor = math.min(BRICK_COLORS, math.ceil(level / 4)) -- magic numbers
+        local tier = math.random(maxTier)
+        local color = math.random(maxColor)
 
-        brick =
+        local brick =
           Brick((col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2, row * BRICK_HEIGHT, tier, color)
         table.insert(bricks, brick)
       end

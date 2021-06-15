@@ -18,22 +18,23 @@ function LevelMaker.createMap(level)
 
   for row = 1, rows do
     for col = 1, cols do
-      skipFlag = math.random(SKIP_ODDS) == 1
+      local skipFlag = math.random(SKIP_ODDS) == 1
 
       if not skipFlag then
-        lockFlag = math.random(LOCK_ODDS) == 1
+        local lockFlag = math.random(LOCK_ODDS) == 1
         if lockFlag then
-          brick = LockedBrick((col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2, row * BRICK_HEIGHT)
+          local brick =
+            LockedBrick((col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2, row * BRICK_HEIGHT)
           table.insert(bricks, brick)
         else
-          maxTier = math.min(BRICK_TIERS, math.ceil(level / 2)) -- magic numbers
-          maxColor = math.min(BRICK_COLORS, math.ceil(level / 4)) -- magic numbers
-          tier = math.random(maxTier)
-          color = math.random(maxColor)
+          local maxTier = math.min(BRICK_TIERS, math.ceil(level / 2)) -- magic numbers
+          local maxColor = math.min(BRICK_COLORS, math.ceil(level / 4)) -- magic numbers
+          local tier = math.random(maxTier)
+          local color = math.random(maxColor)
 
-          powerupFlag = math.random(POWERUP_ODDS) == 1
+          local powerupFlag = math.random(POWERUP_ODDS) == 1
 
-          brick =
+          local brick =
             Brick(
             (col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2,
             row * BRICK_HEIGHT,

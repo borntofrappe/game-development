@@ -5,6 +5,12 @@ local POINTS_COLOR = 200
 local DELTA_CENTER_MULTIPLER = 3
 local BRICK_X_PADDING = 5
 
+local POINTS_LOCK = 1000
+local POWERUP_KEY = 10
+local POWERUP_DOUBLE = 9
+
+local THRESHOLD_MULTIPLIER = 2.5
+
 function PlayState:init()
   self.balls = {}
 end
@@ -58,8 +64,8 @@ function PlayState:update(dt)
       ball.y = self.paddle.y - ball.height
       ball.dy = ball.dy * -1
 
-      deltaCenter = (ball.x + ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
-      self.ball.dx = self.ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER
+      local deltaCenter = (ball.x + ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
+      ball.dx = ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER
 
       gSounds["paddle_hit"]:play()
     end
@@ -103,11 +109,11 @@ function PlayState:update(dt)
         if brick.tier and brick.color then
           self.score = self.score + POINTS_TIER * brick.tier + POINTS_COLOR * (brick.color - 1)
         elseif not brick.isLocked then
-          self.score = self.score + 1000
+          self.score = self.score + POINTS_LOCK
         end
         if self.score > self.threshold then
           self.paddle:grow()
-          self.threshold = self.threshold * 2.5
+          self.threshold = self.threshold * THRESHOLD_MULTIPLIER
         end
 
         brick:hit()
@@ -128,7 +134,7 @@ function PlayState:update(dt)
         end
 
         if ball.dx > 0 then
-          isBefore = ball.x + ball.width < brick.x + 5
+          local isBefore = ball.x + ball.width < brick.x + BRICK_X_PADDING
           if isBefore then
             ball.x = brick.x - ball.width
             ball.dx = ball.dx * -1
@@ -137,7 +143,7 @@ function PlayState:update(dt)
             ball.dy = ball.dy * -1
           end
         else
-          isAfter = ball.x > brick.x + brick.width - 5
+          local isAfter = ball.x > brick.x + brick.width - BRICK_X_PADDING
           if isAfter then
             ball.x = brick.x + brick.width
             ball.dx = ball.dx * -1
@@ -152,9 +158,9 @@ function PlayState:update(dt)
     if brick.showPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
       brick.powerup.inPlay = false
       gSounds["power-up"]:play()
-      if brick.powerup.powerup == 9 then
+      if brick.powerup.powerup == POWERUP_DOUBLE then
         table.insert(self.balls, Ball(brick.powerup.x, brick.powerup.y))
-      elseif brick.isLocked and brick.powerup.powerup == 10 then
+      elseif brick.isLocked and brick.powerup.powerup == POWERUP_KEY then
         brick.isLocked = false
       end
     end

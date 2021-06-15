@@ -1,7 +1,5 @@
 Paddle = Class {}
 
-local COLORS = 4
-
 function Paddle:init(x, y)
   self.x = x
   self.y = y
@@ -31,5 +29,10 @@ function Paddle:update(dt)
 end
 
 function Paddle:render()
-  love.graphics.draw(gTextures["breakout"], gFrames["paddles"][self.size + COLORS * (self.color - 1)], self.x, self.y)
+  love.graphics.draw(
+    gTextures["breakout"],
+    gFrames["paddles"][self.size + PADDLE_COLORS * (self.color - 1)],
+    self.x,
+    self.y
+  )
 end

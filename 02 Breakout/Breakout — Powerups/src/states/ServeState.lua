@@ -1,12 +1,17 @@
 ServeState = Class({__includes = BaseState})
 
+local LEVEL = 1
+local HEALTH = 3
+local MAX_HEALTH = 3
+local SCORE = 0
+
 function ServeState:enter(params)
-  self.level = params.level or 1
-  self.health = params.health or 3
-  self.maxHealth = params.maxHealth or 3
-  self.score = params.score or 0
+  self.level = params.level or LEVEL
+  self.health = params.health or HEALTH
+  self.maxHealth = params.maxHealth or MAX_HEALTH
+  self.score = params.score or SCORE
   self.paddle = params.paddle or Paddle(VIRTUAL_WIDTH / 2 - PADDLE_WIDTH / 2, VIRTUAL_HEIGHT - PADDLE_HEIGHT * 2)
-  self.ball = params.ball or Ball(VIRTUAL_WIDTH / 2 - BALL_WIDTH / 2, VIRTUAL_HEIGHT - PADDLE_HEIGHT * 2 - 8)
+  self.ball = params.ball or Ball(VIRTUAL_WIDTH / 2 - BALL_WIDTH / 2, VIRTUAL_HEIGHT - PADDLE_HEIGHT * 2 - BALL_HEIGHT)
   self.bricks = params.bricks or LevelMaker.createMap(self.level)
 end
 
@@ -33,7 +38,7 @@ function ServeState:update(dt)
   end
 
   self.paddle:update(dt)
-  self.ball.x = self.paddle.x + self.paddle.width / 2 - 4
+  self.ball.x = self.paddle.x + self.paddle.width / 2 - self.ball.width / 2
 end
 
 function ServeState:render()

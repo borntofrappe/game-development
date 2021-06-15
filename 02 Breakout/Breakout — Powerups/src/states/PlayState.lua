@@ -5,6 +5,25 @@ local POINTS_COLOR = 200
 local DELTA_CENTER_MULTIPLER = 3
 local BRICK_X_PADDING = 5
 
+local POINTS_LOCK = 1000
+
+local POWERUPS = {
+  ["shrink"] = 1,
+  ["grow"] = 2,
+  ["increaseHealth"] = 3,
+  ["decreaseHealth"] = 4,
+  ["accelerate"] = 5,
+  ["decelerate"] = 6,
+  ["lift"] = 7,
+  ["plummet"] = 8,
+  ["extraBall"] = 9,
+  ["unlock"] = 10
+}
+
+local ACCELERATION = 1.15
+local DECELERATION = 0.85
+local EXTRA_GRAVITY = 1.2
+
 function PlayState:init()
   self.balls = {}
 end
@@ -56,8 +75,8 @@ function PlayState:update(dt)
       ball.y = self.paddle.y - ball.height
       ball.dy = ball.dy * -1
 
-      deltaCenter = (ball.x + ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
-      self.ball.dx = self.ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER
+      local deltaCenter = (ball.x + ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
+      ball.dx = ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER
 
       gSounds["paddle_hit"]:play()
     end
@@ -100,7 +119,7 @@ function PlayState:update(dt)
         if brick.tier and brick.color then
           self.score = self.score + POINTS_TIER * brick.tier + POINTS_COLOR * (brick.color - 1)
         elseif not brick.isLocked then
-          self.score = self.score + 1000
+          self.score = self.score + POINTS_LOCK
         end
 
         brick:hit()
@@ -121,7 +140,7 @@ function PlayState:update(dt)
         end
 
         if ball.dx > 0 then
-          local isBefore = ball.x + ball.width < brick.x + 5
+          local isBefore = ball.x + ball.width < brick.x + BRICK_X_PADDING
           if isBefore then
             ball.x = brick.x - ball.width
             ball.dx = ball.dx * -1
@@ -130,7 +149,7 @@ function PlayState:update(dt)
             ball.dy = ball.dy * -1
           end
         else
-          local isAfter = ball.x > brick.x + brick.width - 5
+          local isAfter = ball.x > brick.x + brick.width - BRICK_X_PADDING
           if isAfter then
             ball.x = brick.x + brick.width
             ball.dx = ball.dx * -1
@@ -145,16 +164,16 @@ function PlayState:update(dt)
     if brick.showPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
       brick.powerup.inPlay = false
       gSounds["power-up"]:play()
-      if brick.powerup.powerup == 1 then
+      if brick.powerup.powerup == POWERUPS["shrink"] then
         self.paddle:shrink()
-      elseif brick.powerup.powerup == 2 then
+      elseif brick.powerup.powerup == POWERUPS["grow"] then
         self.paddle:grow()
-      elseif brick.powerup.powerup == 3 then
+      elseif brick.powerup.powerup == POWERUPS["increaseHealth"] then
         if self.health == self.maxHealth then
           self.maxHealth = self.maxHealth + 1
         end
         self.health = self.health + 1
-      elseif brick.powerup.powerup == 4 then
+      elseif brick.powerup.powerup == POWERUPS["decreaseHealth"] then
         self.health = self.health - 1
         if self.health == 0 then
           gStateMachine:change(
@@ -164,27 +183,27 @@ function PlayState:update(dt)
             }
           )
         end
-      elseif brick.powerup.powerup == 5 then
+      elseif brick.powerup.powerup == POWERUPS["accelerate"] then
         for key, ball in pairs(self.balls) do
-          ball.dx = ball.dx * 1.15
-          ball.dy = ball.dy * 1.15
+          ball.dx = ball.dx * ACCELERATION
+          ball.dy = ball.dy * ACCELERATION
         end
-      elseif brick.powerup.powerup == 6 then
+      elseif brick.powerup.powerup == POWERUPS["decelerate"] then
         for key, ball in pairs(self.balls) do
-          ball.dx = ball.dx * 0.85
-          ball.dy = ball.dy * 0.85
+          ball.dx = ball.dx * DECELERATION
+          ball.dy = ball.dy * DECELERATION
         end
-      elseif brick.powerup.powerup == 7 then
+      elseif brick.powerup.powerup == POWERUPS["lift"] then
         for key, ball in pairs(self.balls) do
-          ball.dy = math.abs(ball.dy * 1.2) * -1
+          ball.dy = math.abs(ball.dy * EXTRA_GRAVITY) * -1
         end
-      elseif brick.powerup.powerup == 8 then
+      elseif brick.powerup.powerup == POWERUPS["plummet"] then
         for key, ball in pairs(self.balls) do
-          ball.dy = math.abs(ball.dy * 1.2)
+          ball.dy = math.abs(ball.dy * EXTRA_GRAVITY)
         end
-      elseif brick.powerup.powerup == 9 then
+      elseif brick.powerup.powerup == POWERUPS["extraBall"] then
         table.insert(self.balls, Ball(brick.powerup.x, brick.powerup.y))
-      elseif brick.isLocked and brick.powerup.powerup == 10 then
+      elseif brick.isLocked and brick.powerup.powerup == POWERUPS["unlock"] then
         brick.isLocked = false
       end
     end

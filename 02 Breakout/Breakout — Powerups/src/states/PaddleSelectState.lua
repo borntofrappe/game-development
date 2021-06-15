@@ -1,7 +1,5 @@
 PaddleSelectState = Class({__includes = BaseState})
 
-local PADDLE_COLORS = 4
-
 function PaddleSelectState:init()
   self.paddle = Paddle(VIRTUAL_WIDTH / 2 - PADDLE_WIDTH / 2, VIRTUAL_HEIGHT - PADDLE_HEIGHT * 2)
 end

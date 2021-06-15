@@ -1,7 +1,5 @@
 Paddle = Class {}
 
-local COLORS = 4
-
 function Paddle:init(x, y)
   self.x = x
   self.y = y
@@ -17,16 +15,16 @@ end
 function Paddle:shrink()
   if self.size > 1 then
     self.size = self.size - 1
-    self.width = self.size * 32
-    self.x = self.x + 16
+    self.width = self.size * PADDLE_WIDTH / 2
+    self.x = self.x + PADDLE_WIDTH / 2
   end
 end
 
 function Paddle:grow()
   if self.size < 4 then
     self.size = self.size + 1
-    self.width = self.size * 32
-    self.x = self.x - 16
+    self.width = self.size * PADDLE_WIDTH / 2
+    self.x = self.x - PADDLE_WIDTH / 2
   end
 end
 
@@ -47,5 +45,10 @@ function Paddle:update(dt)
 end
 
 function Paddle:render()
-  love.graphics.draw(gTextures["breakout"], gFrames["paddles"][self.size + COLORS * (self.color - 1)], self.x, self.y)
+  love.graphics.draw(
+    gTextures["breakout"],
+    gFrames["paddles"][self.size + PADDLE_COLORS * (self.color - 1)],
+    self.x,
+    self.y
+  )
 end

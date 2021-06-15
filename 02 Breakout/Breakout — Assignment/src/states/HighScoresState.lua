@@ -18,7 +18,7 @@ function HighScoresState:render()
   love.graphics.printf("HIGHT SCORES", 0, y, VIRTUAL_WIDTH, "center")
 
   y = y + 32 + 8
-  heightLeft = VIRTUAL_HEIGHT - y - 16 - 8
+  local heightLeft = VIRTUAL_HEIGHT - y - 16 - 8
   love.graphics.setFont(gFonts["normal"])
   for k, highScore in pairs(self.highScores) do
     love.graphics.print(highScore.name, VIRTUAL_WIDTH / 2 - VIRTUAL_WIDTH / 6, y)

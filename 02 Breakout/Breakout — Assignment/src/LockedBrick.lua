@@ -1,6 +1,21 @@
 LockedBrick = Class({__includes = Brick})
 
-colorBrick = {
+local POWERUP_KEY = 10
+
+local BRICK_LOCKED = 22
+local BRICK_UNLOCKED = 21
+
+local PARTICLES = 80
+local PARTICLES_LIFETIME_MIN = 0.2
+local PARTICLES_LIFETIME_MAX = 0.7
+local PARTICLES_ACCELERATION_X_MIN = -10
+local PARTICLES_ACCELERATION_X_MAX = 10
+local PARTICLES_ACCELERATION_Y_MIN = 10
+local PARTICLES_ACCELERATION_Y_MAX = 80
+local PARTICLES_EMISSION_X = 10
+local PARTICLES_EMISSION_Y = 10
+
+local colorBrick = {
   ["r"] = 0,
   ["g"] = 0,
   ["b"] = 0
@@ -9,18 +24,23 @@ colorBrick = {
 function LockedBrick:init(x, y)
   self.x = x
   self.y = y
-  self.width = 32
-  self.height = 16
+  self.width = BRICK_WIDTH
+  self.height = BRICK_HEIGHT
   self.inPlay = true
   self.isLocked = true
 
   self.showPowerup = true
-  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2, 10)
+  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2, POWERUP_KEY)
 
-  self.particleSystem = love.graphics.newParticleSystem(gTextures["particle"], 80)
-  self.particleSystem:setParticleLifetime(0.2, 0.7)
-  self.particleSystem:setLinearAcceleration(-10, 10, 10, 80)
-  self.particleSystem:setEmissionArea("normal", 10, 10)
+  self.particleSystem = love.graphics.newParticleSystem(gTextures["particle"], PARTICLES)
+  self.particleSystem:setParticleLifetime(PARTICLES_LIFETIME_MIN, PARTICLES_LIFETIME_MAX)
+  self.particleSystem:setLinearAcceleration(
+    PARTICLES_ACCELERATION_X_MIN,
+    PARTICLES_ACCELERATION_Y_MIN,
+    PARTICLES_ACCELERATION_X_MAX,
+    PARTICLES_ACCELERATION_Y_MAX
+  )
+  self.particleSystem:setEmissionArea("normal", PARTICLES_EMISSION_X, PARTICLES_EMISSION_Y)
 end
 
 function LockedBrick:hit()
@@ -42,7 +62,7 @@ function LockedBrick:hit()
       colorBrick["b"],
       0
     )
-    self.particleSystem:emit(80)
+    self.particleSystem:emit(PARTICLES)
 
     self.inPlay = false
     gSounds["score"]:stop()
@@ -57,9 +77,9 @@ function LockedBrick:render()
     end
 
     if self.isLocked then
-      love.graphics.draw(gTextures["breakout"], gFrames["bricks"][22], self.x, self.y)
+      love.graphics.draw(gTextures["breakout"], gFrames["bricks"][BRICK_LOCKED], self.x, self.y)
     else
-      love.graphics.draw(gTextures["breakout"], gFrames["bricks"][21], self.x, self.y)
+      love.graphics.draw(gTextures["breakout"], gFrames["bricks"][BRICK_UNLOCKED], self.x, self.y)
     end
   end
 end

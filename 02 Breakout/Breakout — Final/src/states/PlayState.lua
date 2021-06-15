@@ -44,7 +44,7 @@ function PlayState:update(dt)
     self.ball.y = self.paddle.y - self.ball.height
     self.ball.dy = self.ball.dy * -1
 
-    deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
+    local deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
     self.ball.dx = self.ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER
 
     gSounds["paddle_hit"]:play()
