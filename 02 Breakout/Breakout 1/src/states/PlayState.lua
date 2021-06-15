@@ -5,9 +5,9 @@ function PlayState:init()
 end
 
 function PlayState:update(dt)
-  if love.keyboard.waspressed('escape') then
-    gStateMachine:change('start')
-    gSounds['confirm']:play()
+  if love.keyboard.waspressed("escape") then
+    gStateMachine:change("start")
+    gSounds["confirm"]:play()
   end
 
   self.paddle:update(dt)

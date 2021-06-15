@@ -1,4 +1,6 @@
-Show particles when the ball hits a brick.
+# Breakout 9
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
 ## Particle System
 

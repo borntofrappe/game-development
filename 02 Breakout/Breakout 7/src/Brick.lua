@@ -1,4 +1,4 @@
-Brick = Class{}
+Brick = Class {}
 
 function Brick:init(x, y, tier, color)
   self.x = x
@@ -14,11 +14,11 @@ end
 
 function Brick:hit()
   self.inPlay = false
-  gSounds['brick-hit-2']:play()
+  gSounds["brick-hit-2"]:play()
 end
 
 function Brick:render()
   if self.inPlay then
-    love.graphics.draw(gTextures['breakout'], gFrames['bricks'][self.tier + 4 * (self.color - 1)], self.x, self.y)
+    love.graphics.draw(gTextures["breakout"], gFrames["bricks"][self.tier + 4 * (self.color - 1)], self.x, self.y)
   end
 end

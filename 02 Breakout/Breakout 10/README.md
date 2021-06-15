@@ -1,4 +1,6 @@
-Complete a level when every brick is destroyed.
+# Breakout 10
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
 ## Level cleared
 

@@ -1,8 +1,10 @@
-Modify the table returned by `LevelMarker:createMap()`, to provide a more varied, random configuration of bricks.
+# Breakout 7
 
-The idea is to pass the level to the `LevelMaker` function, and have this integer influence the structure of the table. With a higher level, for instance, you can include more bricks, or bricks of a different color, appearance.
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
 ## Skip
+
+The idea is to pass the level to the `LevelMaker` function, and have this integer influence the structure of the table. With a higher level, for instance, you can include more bricks, or bricks of a different color, appearance.
 
 The idea is to include bricks in rows and columns, but skip cells with a definite probability.
 

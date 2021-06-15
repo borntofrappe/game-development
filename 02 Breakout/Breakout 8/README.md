@@ -1,4 +1,6 @@
-Modify the way bricks react to a collision, iterating through the tiers until the brick is finally destroyed.
+# Breakout 8
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
 ## Tiers and colors
 

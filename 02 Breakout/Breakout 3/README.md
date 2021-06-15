@@ -1,10 +1,12 @@
-Add a ball to the play state, moving and bouncing according to the environment.
+# Breakout 3
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
 ## Quads
 
-I'll repeat the process of creating quads to solidify the concept.
+The instructions to create the quads mirror those included for the paddle, but are repeated to solidify the concept.
 
-In _main.lua_, the goal is to populate the `gFrames` table with tables of quads.
+In `main.lua`, the goal is to populate the `gFrames` table with tables of quads.
 
 ```lua
 gFrames = {
@@ -21,9 +23,9 @@ gFrames = {
 }
 ```
 
-This function is created in _Utils.lua_, similarly to the previous `GenerateQuadsPaddles`:
+This function is created in `Utils.lua`, similarly to the previous `GenerateQuadsPaddles`:
 
-- look at _breakout.png_
+- look at `breakout.png`
 
 - populate a table with as many rectangles as necessary
 
@@ -71,7 +73,7 @@ end
 
 ## Movement
 
-The ball is made to move in both the `x` and `y` dimensions, similarly to the puck in the game of pong.
+The ball is made to move in both the `x` and `y` dimensions, similarly to the puck in the game Pong.
 
 When checking for a collision, remember a couple of things:
 

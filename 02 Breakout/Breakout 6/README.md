@@ -1,4 +1,6 @@
-Add serve state, gameover state, health points and score.
+# Breakout 6
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
 ## States
 

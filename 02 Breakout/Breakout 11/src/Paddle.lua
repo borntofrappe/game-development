@@ -1,4 +1,4 @@
-Paddle = Class{}
+Paddle = Class {}
 
 function Paddle:init(x, y)
   self.x = x
@@ -7,15 +7,15 @@ function Paddle:init(x, y)
   self.height = 16
 
   self.dx = 0
-  
+
   self.color = 1
   self.size = 2
 end
 
 function Paddle:update(dt)
-  if love.keyboard.isDown('left') then
+  if love.keyboard.isDown("left") then
     self.dx = PADDLE_SPEED * dt * -1
-  elseif love.keyboard.isDown('right') then
+  elseif love.keyboard.isDown("right") then
     self.dx = PADDLE_SPEED * dt
   else
     self.dx = 0
@@ -29,5 +29,5 @@ function Paddle:update(dt)
 end
 
 function Paddle:render()
-  love.graphics.draw(gTextures['breakout'], gFrames['paddles'][self.size + 4 * (self.color - 1)], self.x, self.y)
+  love.graphics.draw(gTextures["breakout"], gFrames["paddles"][self.size + 4 * (self.color - 1)], self.x, self.y)
 end

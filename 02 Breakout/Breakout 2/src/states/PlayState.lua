@@ -11,16 +11,19 @@ function PlayState:enter(params)
 end
 
 function PlayState:update(dt)
-  if love.keyboard.waspressed('escape') then
-    gStateMachine:change('start')
-    gSounds['confirm']:play()
+  if love.keyboard.waspressed("escape") then
+    gStateMachine:change("start")
+    gSounds["confirm"]:play()
   end
 
-  if love.keyboard.waspressed('enter') or love.keyboard.waspressed('return') then
-    gStateMachine:change('pause', {
-      x = self.paddle.x
-    })
-    gSounds['pause']:play()
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    gStateMachine:change(
+      "pause",
+      {
+        x = self.paddle.x
+      }
+    )
+    gSounds["pause"]:play()
   end
 
   self.paddle:update(dt)

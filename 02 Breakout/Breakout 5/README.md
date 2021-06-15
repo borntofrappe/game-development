@@ -1,6 +1,8 @@
-Improve how collision changes the ball movement.
+# Breakout 5
 
-## Paddle
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
+
+## Paddle collision
 
 Beside changing the direction of the ball through `dy`, the idea is to adjust `dx` depending on where the ball hits the paddle.
 

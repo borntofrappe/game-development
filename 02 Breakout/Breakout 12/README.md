@@ -1,10 +1,14 @@
-Enter a high score following a gameover.
+# Breakout 12
 
-**Small note**: to help with the development of the feature, the score is initialized with a big enough value to make sure a high score is registered. The health is also reduced to ensure a gameover happens more rapidly.
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
+
+## Score
+
+To help with the development of the feature, the score is initialized with a big enough value to make sure a high score is registered. The health is also reduced to ensure a gameover happens more rapidly.
 
 ```lua
 function ServeState:init()
-  self.score = 20000
+  self.score = 50000
   self.health = 1
 end
 ```

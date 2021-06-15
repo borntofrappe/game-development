@@ -1,4 +1,6 @@
-Allow to choose a paddle.
+# Breakout 13
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
 ## Arrows
 

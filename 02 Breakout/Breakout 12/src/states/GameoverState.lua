@@ -16,51 +16,36 @@ function GameoverState:enter(params)
 end
 
 function GameoverState:update(dt)
-  if love.keyboard.waspressed('escape') then
+  if love.keyboard.waspressed("escape") then
     love.event.quit()
   end
 
-  if love.keyboard.waspressed('enter') or love.keyboard.waspressed('return') then
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
     if self.index == -1 then
-      gStateMachine:change('start')
+      gStateMachine:change("start")
     else
-      gStateMachine:change('enterhighscore', {
-        highScores = self.highScores,
-        score = self.score,
-        index = self.index
-      })
+      gStateMachine:change(
+        "enterhighscore",
+        {
+          highScores = self.highScores,
+          score = self.score,
+          index = self.index
+        }
+      )
     end
-    gSounds['confirm']:play()
+    gSounds["confirm"]:play()
   end
 end
 
 function GameoverState:render()
   love.graphics.setColor(1, 1, 1, 1)
 
-  love.graphics.setFont(gFonts['humongous'])
-  love.graphics.printf(
-    'GAME OVER',
-    0,
-    VIRTUAL_HEIGHT / 3 - 28,
-    VIRTUAL_WIDTH,
-    'center'
-  )
+  love.graphics.setFont(gFonts["humongous"])
+  love.graphics.printf("GAME OVER", 0, VIRTUAL_HEIGHT / 3 - 28, VIRTUAL_WIDTH, "center")
 
-  love.graphics.setFont(gFonts['big'])
-  love.graphics.printf(
-    'Score: ' .. self.score,
-    0,
-    VIRTUAL_HEIGHT / 2 - 8,
-    VIRTUAL_WIDTH,
-    'center'
-  )
+  love.graphics.setFont(gFonts["big"])
+  love.graphics.printf("Score: " .. self.score, 0, VIRTUAL_HEIGHT / 2 - 8, VIRTUAL_WIDTH, "center")
 
-  love.graphics.setFont(gFonts['normal'])
-  love.graphics.printf(
-    'Press enter to continue',
-    0,
-    VIRTUAL_HEIGHT * 3 / 4,
-    VIRTUAL_WIDTH,
-    'center'
-  )
+  love.graphics.setFont(gFonts["normal"])
+  love.graphics.printf("Press enter to continue", 0, VIRTUAL_HEIGHT * 3 / 4, VIRTUAL_WIDTH, "center")
 end

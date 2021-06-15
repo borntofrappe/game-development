@@ -1,14 +1,16 @@
-Render a paddle using the spritesheet.
+# Breakout 1
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
 ## Spritesheet
 
-The idea is to load a large image, and section the asset to show only a portion.
+The idea is to load a large image, and section the asset to only show a portion.
 
-If you browse the _res/graphics_ folder, you'll find large images detailing the paddles, bricks of different color and sizes.
+If you browse the `res/graphics` folder, you'll find large images detailing the paddles, bricks of different color and sizes.
 
 ## Quads
 
-A quad is a rectangle with specific coordinates, width and height. In love2D, this concept is materialized through the functions `love.graphics.newQuad()` and `love.graphics.draw()`
+A quad is a rectangle with specific coordinates, width and height. In LOVE2D, this concept is materialized through the functions `love.graphics.newQuad()` and `love.graphics.draw()`
 
 ### newQuad()
 
@@ -22,15 +24,15 @@ Use `image:getDimensions()` to retrieve this value.
 
 ### draw()
 
-The function accepts a variable number of arguments, and in the context of quads, it allows to draw a specific portion of the image using the image, and then the quad
+The function accepts a variable number of arguments, and in the context of quads, it allows to draw a specific portion of the image using the image, and then the quad.
 
 ```lua
 love.graphics.draw(image, quad, x, y)
 ```
 
-## Setup quads
+## Utils
 
-_Utils.lua_ introduces a few utility function to work with quads.
+`Utils.lua` introduces a few functions to work with quads.
 
 ### GenerateQuads()
 
@@ -40,11 +42,11 @@ It takes as arguments:
 
 - `atlas`, the image to be 'quadded', so to speak
 
-- `tileWidth`, the unit of measure detailing the smallest measure in which the image can be sectioned
+- `tileWidth`, the unit of measure detailing the smallest measure in which the image can be sectioned horizontally
 
 - `tileHeight`, the same of `tileWidth`, but with respect to the height
 
-Consider for instance the graphic in _arrows.png_:
+Consider for instance the graphic in `arrows.png`:
 
 - `atlas` refers to the entire image
 
@@ -56,12 +58,12 @@ Notice the use of the `newQuad` function, within the context of the loops updati
 
 ```lua
 love.graphics.newQuad(
-        x * tileWidth,
-        y * tileHeight,
-        tileWidth,
-        tileHeight,
-        atlas:getDimensions()
-      )
+  x * tileWidth,
+  y * tileHeight,
+  tileWidth,
+  tileHeight,
+  atlas:getDimensions()
+)
 ```
 
 As described in the previous section, these values relate to the coordinates, size and dimension of the quad.
@@ -78,21 +80,21 @@ spritesheet = {
 
 ### GenerateQuadsPaddles()
 
-This function works similarly to `GenerateQuads`, but in the context of creating the quads for the paddles. Before looking at the syntax, look at _breakout.png_. This is the source image from which the paddles are sectioned.
+This function works similarly to `GenerateQuads`, but in the context of creating the quads for the paddles. Before looking at the syntax, look at `breakout.png`. This is the source image from which the paddles are sectioned.
 
-In _breakout.png_, the paddles start at the coordinate (0, 64), and continue for eight rows, with paddles of different size and color. Each color comes in four sizes: (32x16), (64x16), (96x16) and finally (128x16).
+In `breakout.png`, the paddles start at the coordinate (0, 64), and continue for eight rows, with paddles of different size and color. Each color comes in four sizes: (32x16), (64x16), (96x16) and finally (128x16).
 
 This explains how the loop works, adding at each iteration the four paddles of different sizes, and using at each iteration precise values for the `x`, `y`, `width` and `height` arguments.
 
 ### table.slice()
 
-This utility function is specified to obtain a slice from the input table. It is not included in any `.lua` file, but it's worth mentioning for its general usefulness and the flexibility of its syntax.
+This utility function allows to slice an input table. It is not included in any `.lua` file, but it's worth mentioning for its general usefulness and the flexibility of its syntax.
 
 It takes as argument:
 
-- `table`, the spreadsheet table to-be-divided
+- `table`, in the project the spreadsheet table to-be-divided
 
-- `first`, `last` and `step`, This to slice the table from a certain point to another specified point, and at a described interval
+- `first`, `last` and `step`. The goal is to slice the table from a certain index to another specified index, and at a described interval
 
 Notice how in the for loop, the loop includes default values, in case `first`, `last`, `step` are left undefined.
 
@@ -114,7 +116,7 @@ Using `#slice + 1` to append the value at the end of the table.
 
 ## Use quads
 
-In _main.lua_, the `load` function is updated to include a table with the desired quads.
+In `main.lua`, the `load` function is updated to include a table with the desired quads.
 
 ```lua
 function love.load()
@@ -130,7 +132,7 @@ end
 
 By using `GenerateQuadsPaddles`, the table now includes a `paddles` field describing the different paddles. Four sizes, and four colors.
 
-In _Paddle.lua_, we can then use the global variable to draw the desired sprite.
+In `Paddle.lua`, we can then use the global variable to draw the desired sprite.
 
 ```lua
 function Paddle:render()

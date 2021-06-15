@@ -19,39 +19,42 @@ function PlayState:enter(params)
 end
 
 function PlayState:update(dt)
-  if love.keyboard.waspressed('escape') then
-    gStateMachine:change('start')
-    gSounds['confirm']:play()
+  if love.keyboard.waspressed("escape") then
+    gStateMachine:change("start")
+    gSounds["confirm"]:play()
   end
 
-  if love.keyboard.waspressed('enter') or love.keyboard.waspressed('return') then
-    gStateMachine:change('pause', {
-      paddle = {
-        x = self.paddle.x
-      },
-      ball = {
-        x = self.ball.x,
-        y = self.ball.y,
-        dx = self.ball.dx,
-        dy = self.ball.dy,
-        color = self.ball.color
-      },
-      bricks = self.bricks
-    })
-    gSounds['pause']:play()
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    gStateMachine:change(
+      "pause",
+      {
+        paddle = {
+          x = self.paddle.x
+        },
+        ball = {
+          x = self.ball.x,
+          y = self.ball.y,
+          dx = self.ball.dx,
+          dy = self.ball.dy,
+          color = self.ball.color
+        },
+        bricks = self.bricks
+      }
+    )
+    gSounds["pause"]:play()
   end
 
   self.paddle:update(dt)
   self.ball:update(dt)
 
-  if self.ball:collides(self.paddle) then    
+  if self.ball:collides(self.paddle) then
     self.ball.y = self.paddle.y - self.ball.height
     self.ball.dy = self.ball.dy * -1
 
     deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
     self.ball.dx = self.ball.dx + deltaCenter * 4
-    
-    gSounds['paddle_hit']:play()
+
+    gSounds["paddle_hit"]:play()
   end
 
   for k, brick in pairs(self.bricks) do
@@ -83,7 +86,7 @@ end
 
 function PlayState:render()
   for k, brick in pairs(self.bricks) do
-    brick:render()  
+    brick:render()
   end
   self.paddle:render()
   self.ball:render()

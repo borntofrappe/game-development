@@ -11,22 +11,25 @@ function ServeState:enter(params)
 end
 
 function ServeState:update(dt)
-  if love.keyboard.waspressed('escape') then
-    gStateMachine:change('start')
-    gSounds['confirm']:play()
+  if love.keyboard.waspressed("escape") then
+    gStateMachine:change("start")
+    gSounds["confirm"]:play()
   end
 
-  if love.keyboard.waspressed('enter') or love.keyboard.waspressed('return') then
-    gStateMachine:change('play', {
-      level = self.level,
-      health = self.health,
-      maxHealth = self.maxHealth,
-      score = self.score,
-      paddle = self.paddle,
-      ball = self.ball,
-      bricks = self.bricks
-    })
-    gSounds['confirm']:play()
+  if love.keyboard.waspressed("enter") or love.keyboard.waspressed("return") then
+    gStateMachine:change(
+      "play",
+      {
+        level = self.level,
+        health = self.health,
+        maxHealth = self.maxHealth,
+        score = self.score,
+        paddle = self.paddle,
+        ball = self.ball,
+        bricks = self.bricks
+      }
+    )
+    gSounds["confirm"]:play()
   end
 
   self.paddle:update(dt)
@@ -38,28 +41,15 @@ function ServeState:render()
   displayScore(self.score)
 
   for k, brick in pairs(self.bricks) do
-    brick:render()  
+    brick:render()
   end
   self.paddle:render()
   self.ball:render()
 
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.setFont(gFonts['big'])
-  love.graphics.printf(
-    'Level: ' .. self.level,
-    0,
-    VIRTUAL_HEIGHT / 2 - 20,
-    VIRTUAL_WIDTH,
-    'center'
-  )
+  love.graphics.setFont(gFonts["big"])
+  love.graphics.printf("Level: " .. self.level, 0, VIRTUAL_HEIGHT / 2 - 20, VIRTUAL_WIDTH, "center")
 
-  love.graphics.setFont(gFonts['normal'])
-  love.graphics.printf(
-    'Press enter to play',
-    0,
-    VIRTUAL_HEIGHT / 2 + 16,
-    VIRTUAL_WIDTH,
-    'center'
-  )
-
+  love.graphics.setFont(gFonts["normal"])
+  love.graphics.printf("Press enter to play", 0, VIRTUAL_HEIGHT / 2 + 16, VIRTUAL_WIDTH, "center")
 end

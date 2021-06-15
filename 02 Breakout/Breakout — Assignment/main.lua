@@ -88,10 +88,10 @@ function love.load()
 
   gStateMachine:change("start")
 
+  love.keyboard.keypressed = {}
+
   gSounds["music"]:setLooping(true)
   gSounds["music"]:play()
-
-  love.keyboard.keypressed = {}
 end
 
 function love.resize(width, height)
@@ -115,16 +115,13 @@ end
 function love.draw()
   push:start()
 
-  background_width = gTextures["background"]:getWidth()
-  background_height = gTextures["background"]:getHeight()
-
   love.graphics.draw(
     gTextures["background"],
     0,
     0,
     0,
-    VIRTUAL_WIDTH / background_width,
-    VIRTUAL_HEIGHT / background_height
+    VIRTUAL_WIDTH / (gTextures["background"]:getWidth() - 1),
+    VIRTUAL_HEIGHT / (gTextures["background"]:getHeight() - 1)
   )
 
   gStateMachine:render()

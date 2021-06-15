@@ -1,4 +1,4 @@
-Ball = Class{}
+Ball = Class {}
 
 function Ball:init()
   self.x = VIRTUAL_WIDTH / 2 - 4
@@ -18,7 +18,7 @@ function Ball:collides(paddle)
   if self.y + self.height < paddle.y or self.y > paddle.y + paddle.height then
     return false
   end
-  
+
   return true
 end
 
@@ -29,22 +29,22 @@ function Ball:update(dt)
   if self.x <= 0 then
     self.x = 0
     self.dx = self.dx * -1
-    gSounds['wall_hit']:play()
+    gSounds["wall_hit"]:play()
   end
 
   if self.x >= VIRTUAL_WIDTH - self.width then
     self.x = VIRTUAL_WIDTH - self.width
     self.dx = self.dx * -1
-    gSounds['wall_hit']:play()
+    gSounds["wall_hit"]:play()
   end
 
   if self.y <= 0 then
     self.y = 0
     self.dy = self.dy * -1
-    gSounds['wall_hit']:play()
+    gSounds["wall_hit"]:play()
   end
 end
 
 function Ball:render()
-  love.graphics.draw(gTextures['breakout'], gFrames['balls'][self.color], self.x, self.y)
+  love.graphics.draw(gTextures["breakout"], gFrames["balls"][self.color], self.x, self.y)
 end
