@@ -46,6 +46,12 @@ function StartState:init()
   self.options = options
 end
 
+function StartState:enter(params)
+  if params and params.difficulty then
+    self.index = params.difficulty - 1
+  end
+end
+
 function StartState:update(dt)
   if love.keyboard.waspressed("up") then
     self.index = (self.index - 1) % #self.options
@@ -60,7 +66,12 @@ function StartState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-  -- play state
+    gStateMachine:change(
+      "play",
+      {
+        difficulty = self.index + 1
+      }
+    )
   end
 end
 

@@ -21,9 +21,15 @@ function love.load()
     {
       ["start"] = function()
         return StartState()
+      end,
+      ["play"] = function()
+        return PlayState()
       end
     }
   )
+
+  gTexture = love.graphics.newImage("res/graphics/spritesheet.png")
+  gFrames = GenerateQuads(gTexture, TILE_WIDTH, TILE_HEIGHT)
 
   gStateMachine:change("start")
 
