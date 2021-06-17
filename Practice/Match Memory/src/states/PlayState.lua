@@ -1,8 +1,8 @@
 PlayState = Class({__includes = BaseState})
 
-local SYMBOLS_PER_DIFFICULTY = 6
+local SYMBOLS_PER_LEVEL = 6
 local CARDS_INITIAL = 2
-local CARDS_PER_DIFFICULTY = 2
+local CARDS_PER_LEVEL = 2
 
 local COLUMNS = 4
 local GRID_PADDING = 25
@@ -10,13 +10,13 @@ local GRID_WIDTH = VIRTUAL_WIDTH - GRID_PADDING * 2
 local GRID_HEIGHT = VIRTUAL_HEIGHT - GRID_PADDING * 2
 
 function PlayState:enter(params)
-  self.difficulty = params.difficulty or 1
-  local numberSymbols = self.difficulty * SYMBOLS_PER_DIFFICULTY
-  local numberCards = self.difficulty * CARDS_PER_DIFFICULTY + CARDS_INITIAL
+  self.level = params.level or 1
+  local numberSymbols = self.level * SYMBOLS_PER_LEVEL
+  local numberCards = self.level * CARDS_PER_LEVEL + CARDS_INITIAL
 
-  local COLUMN_SIZE = math.floor(GRID_WIDTH / COLUMNS)
+  local COLUMN_SIZE = GRID_WIDTH / COLUMNS
   local ROWS = math.floor(numberCards * 2 / COLUMNS)
-  local ROW_SIZE = math.floor(GRID_HEIGHT / ROWS)
+  local ROW_SIZE = GRID_HEIGHT / ROWS
 
   self.ROWS = ROWS
   self.COLUMNS = COLUMNS
@@ -46,8 +46,8 @@ function PlayState:enter(params)
       local column = (position - 1) % COLUMNS
       local row = math.floor((position - 1) / COLUMNS)
 
-      local x = math.floor(column * COLUMN_SIZE)
-      local y = math.floor(row * ROW_SIZE)
+      local x = column * COLUMN_SIZE + GRID_PADDING + self.COLUMN_SIZE / 2
+      local y = row * ROW_SIZE + GRID_PADDING + self.ROW_SIZE / 2
 
       local key = "c" .. column .. "r" .. row
       cards[key] = Card(x, y, symbol)
@@ -58,11 +58,10 @@ function PlayState:enter(params)
 
   self.column = 0
   self.row = 0
-
   self.cards["c" .. self.column .. "r" .. self.row]:focus()
 
-  self.revealed = nil
-  self.match = nil
+  self.firstRevealed = nil
+  self.secondRevealed = nil
 end
 
 function PlayState:getKey(column, row)
@@ -97,33 +96,38 @@ function PlayState:update(dt)
 
   if love.keyboard.waspressed("return") then
     local key = self:getKey(self.column, self.row)
-    if self.cards[key].isMatched then
+
+    if self.cards[key].isPaired then
+      if self.firstRevealed then
+        self.cards[self.firstRevealed]:hide()
+        self.firstRevealed = nil
+      end
       return
     end
 
-    if self.match then
-      if self.cards[self.match].symbol ~= self.cards[self.revealed].symbol then
-        self.cards[self.match]:hide()
-        self.cards[self.revealed]:hide()
+    if self.firstRevealed and self.secondRevealed then
+      if self.cards[self.firstRevealed].symbol == self.cards[self.secondRevealed].symbol then
+        self.cards[self.firstRevealed]:match()
+        self.cards[self.secondRevealed]:match()
       else
-        self.cards[self.match]:match()
-        self.cards[self.revealed]:match()
+        self.cards[self.firstRevealed]:hide()
+        self.cards[self.secondRevealed]:hide()
       end
-      self.match = nil
-      self.revealed = nil
+      self.firstRevealed = nil
+      self.secondRevealed = nil
     end
 
-    if self.revealed then
-      if self.revealed == key then
+    if self.firstRevealed then
+      if self.firstRevealed == key then
         self.cards[key]:hide()
-        self.revealed = nil
+        self.firstRevealed = nil
       else
-        self.cards[key]:reveal()
-        self.match = key
+        self.secondRevealed = key
+        self.cards[self.secondRevealed]:reveal()
       end
     else
-      self.cards[key]:reveal()
-      self.revealed = key
+      self.firstRevealed = key
+      self.cards[self.firstRevealed]:reveal()
     end
   end
 
@@ -131,14 +135,14 @@ function PlayState:update(dt)
     gStateMachine:change(
       "start",
       {
-        difficulty = self.difficulty
+        level = self.level
       }
     )
   end
 end
 
 function PlayState:render()
-  love.graphics.setColor(0.1, 0.1, 0.1)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
 
   -- love.graphics.line(
   --   GRID_PADDING,
@@ -153,7 +157,6 @@ function PlayState:render()
   --   GRID_PADDING
   -- )
 
-  love.graphics.translate(math.floor(GRID_PADDING + self.COLUMN_SIZE / 2), math.floor(GRID_PADDING + self.ROW_SIZE / 2))
   for k, card in pairs(self.cards) do
     card:render()
   end

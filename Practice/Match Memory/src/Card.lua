@@ -7,13 +7,13 @@ function Card:init(x, y, symbol)
   self.height = TILE_HEIGHT
   self.symbol = symbol
 
-  self.isRevealed = false
   self.isFocused = false
-  self.isMatched = false
+  self.isRevealed = false
+  self.isPaired = false
 end
 
 function Card:match()
-  self.isMatched = true
+  self.isPaired = true
 end
 
 function Card:focus()
@@ -33,7 +33,7 @@ function Card:hide()
 end
 
 function Card:render()
-  love.graphics.setColor(0.1, 0.1, 0.1)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
   love.graphics.setLineWidth(2)
   if self.isFocused then
     love.graphics.setLineWidth(4)
@@ -44,7 +44,7 @@ function Card:render()
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(gTexture, gFrames[self.symbol], self.x, self.y)
   elseif self.isFocused then
-    love.graphics.setColor(0.1, 0.1, 0.1)
+    love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
     love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
   end
 end

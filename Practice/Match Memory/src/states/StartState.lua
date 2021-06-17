@@ -1,6 +1,6 @@
 StartState = Class({__includes = BaseState})
 
-local DIFFICULTIES = {
+local LEVELS = {
   "Easy",
   "Medium",
   "Hard"
@@ -13,8 +13,8 @@ function StartState:init()
   local buttonHeight = fontHeight * 1.3
 
   local maxFontWidth = 0
-  for i, difficulty in ipairs(DIFFICULTIES) do
-    local width = gFonts["normal"]:getWidth(difficulty)
+  for i, level in ipairs(LEVELS) do
+    local width = gFonts["normal"]:getWidth(level)
     if width > maxFontWidth then
       maxFontWidth = width
     end
@@ -25,9 +25,9 @@ function StartState:init()
   local options = {}
   local startY = VIRTUAL_HEIGHT / 2 - gFonts["normal"]:getHeight() / 2
 
-  for i = 1, #DIFFICULTIES do
+  for i = 1, #LEVELS do
     local y = startY + (i - 1) * fontHeight * 2
-    local text = DIFFICULTIES[i]
+    local text = LEVELS[i]
 
     table.insert(
       options,
@@ -47,8 +47,8 @@ function StartState:init()
 end
 
 function StartState:enter(params)
-  if params and params.difficulty then
-    self.index = params.difficulty - 1
+  if params and params.level then
+    self.index = params.level - 1
   end
 end
 
@@ -69,14 +69,14 @@ function StartState:update(dt)
     gStateMachine:change(
       "play",
       {
-        difficulty = self.index + 1
+        level = self.index + 1
       }
     )
   end
 end
 
 function StartState:render()
-  love.graphics.setColor(0.1, 0.1, 0.1)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
 
   love.graphics.setFont(gFonts["large"])
   love.graphics.printf("Match Memory", 0, VIRTUAL_HEIGHT / 4 - gFonts["large"]:getHeight() / 2, VIRTUAL_WIDTH, "center")
@@ -85,13 +85,13 @@ function StartState:render()
   love.graphics.setFont(gFonts["normal"])
   for i, option in ipairs(self.options) do
     if option.index == self.index then
-      love.graphics.setColor(0.1, 0.1, 0.1)
+      love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
       love.graphics.rectangle("line", option.buttonX, option.buttonY, option.buttonWidth, option.buttonHeight)
       love.graphics.rectangle("fill", option.buttonX, option.buttonY, option.buttonWidth, option.buttonHeight)
-      love.graphics.setColor(0.98, 0.98, 0.98)
+      love.graphics.setColor(gColors.background.r, gColors.background.g, gColors.background.b)
       love.graphics.printf(option.text, 0, option.y, VIRTUAL_WIDTH, "center")
     else
-      love.graphics.setColor(0.1, 0.1, 0.1)
+      love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
       love.graphics.rectangle("line", option.buttonX, option.buttonY, option.buttonWidth, option.buttonHeight)
       love.graphics.printf(option.text, 0, option.y, VIRTUAL_WIDTH, "center")
     end

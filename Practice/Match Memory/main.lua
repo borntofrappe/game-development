@@ -59,7 +59,7 @@ end
 function love.draw()
   push:start()
 
-  love.graphics.setColor(0.98, 0.98, 0.98)
+  love.graphics.setColor(gColors.background.r, gColors.background.g, gColors.background.b)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
   gStateMachine:render()
 
