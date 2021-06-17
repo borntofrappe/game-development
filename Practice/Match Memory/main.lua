@@ -3,6 +3,8 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Match memory")
 
+  math.randomseed(os.time())
+
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(
     VIRTUAL_WIDTH,
@@ -24,6 +26,9 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState()
+      end,
+      ["victory"] = function()
+        return VictoryState()
       end
     }
   )

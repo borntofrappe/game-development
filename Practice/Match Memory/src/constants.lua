@@ -9,7 +9,8 @@ TILE_HEIGHT = 24
 
 gFonts = {
   ["large"] = love.graphics.newFont("res/fonts/font.ttf", 32),
-  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
+  ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16),
+  ["small"] = love.graphics.newFont("res/fonts/font.ttf", 8)
 }
 
 gColors = {

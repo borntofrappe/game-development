@@ -68,6 +68,19 @@ function PlayState:getKey(column, row)
   return "c" .. self.column .. "r" .. self.row
 end
 
+function PlayState:hasWon()
+  local hasWon = true
+
+  for k, card in pairs(self.cards) do
+    if not card.isPaired then
+      hasWon = false
+      break
+    end
+  end
+
+  return hasWon
+end
+
 function PlayState:focus(dc, dr)
   self.cards[self:getKey(self.column, self.row)]:blur()
 
@@ -94,6 +107,18 @@ function PlayState:update(dt)
     self:focus(1, 0)
   end
 
+  if love.keyboard.waspressed("w") then
+    gStateMachine:change(
+      "victory",
+      {
+        cards = self.cards,
+        level = self.level,
+        topY = GRID_PADDING,
+        bottomY = GRID_PADDING + GRID_HEIGHT
+      }
+    )
+  end
+
   if love.keyboard.waspressed("return") then
     local key = self:getKey(self.column, self.row)
 
@@ -106,13 +131,11 @@ function PlayState:update(dt)
     end
 
     if self.firstRevealed and self.secondRevealed then
-      if self.cards[self.firstRevealed].symbol == self.cards[self.secondRevealed].symbol then
-        self.cards[self.firstRevealed]:match()
-        self.cards[self.secondRevealed]:match()
-      else
+      if self.cards[self.firstRevealed].symbol ~= self.cards[self.secondRevealed].symbol then
         self.cards[self.firstRevealed]:hide()
         self.cards[self.secondRevealed]:hide()
       end
+
       self.firstRevealed = nil
       self.secondRevealed = nil
     end
@@ -124,6 +147,25 @@ function PlayState:update(dt)
       else
         self.secondRevealed = key
         self.cards[self.secondRevealed]:reveal()
+
+        if self.cards[self.firstRevealed].symbol == self.cards[self.secondRevealed].symbol then
+          self.cards[self.firstRevealed]:match()
+          self.cards[self.secondRevealed]:match()
+
+          if self:hasWon() then
+            self.cards[self.secondRevealed]:blur()
+
+            gStateMachine:change(
+              "victory",
+              {
+                cards = self.cards,
+                level = self.level,
+                topY = GRID_PADDING,
+                bottomY = GRID_PADDING + GRID_HEIGHT
+              }
+            )
+          end
+        end
       end
     else
       self.firstRevealed = key
@@ -142,21 +184,22 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
+  --[[
+    love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
 
-  -- love.graphics.line(
-  --   GRID_PADDING,
-  --   GRID_PADDING,
-  --   GRID_PADDING + GRID_WIDTH,
-  --   GRID_PADDING,
-  --   GRID_PADDING + GRID_WIDTH,
-  --   GRID_HEIGHT + GRID_PADDING,
-  --   GRID_PADDING,
-  --   GRID_HEIGHT + GRID_PADDING,
-  --   GRID_PADDING,
-  --   GRID_PADDING
-  -- )
-
+    love.graphics.line(
+      GRID_PADDING,
+      GRID_PADDING,
+      GRID_PADDING + GRID_WIDTH,
+      GRID_PADDING,
+      GRID_PADDING + GRID_WIDTH,
+      GRID_HEIGHT + GRID_PADDING,
+      GRID_PADDING,
+      GRID_HEIGHT + GRID_PADDING,
+      GRID_PADDING,
+      GRID_PADDING
+    )
+  --]]
   for k, card in pairs(self.cards) do
     card:render()
   end
