@@ -9,6 +9,11 @@ local GRID_PADDING = 25
 local GRID_WIDTH = VIRTUAL_WIDTH - GRID_PADDING * 2
 local GRID_HEIGHT = VIRTUAL_HEIGHT - GRID_PADDING * 2
 
+function PlayState:init()
+  self.firstRevealed = nil
+  self.secondRevealed = nil
+end
+
 function PlayState:enter(params)
   self.level = params.level or 1
   local numberSymbols = self.level * SYMBOLS_PER_LEVEL
@@ -25,8 +30,8 @@ function PlayState:enter(params)
 
   local cards = {}
 
-  local positions = {}
   local symbols = {}
+  local positions = {}
 
   for i = 1, numberCards do
     local symbol
@@ -59,9 +64,6 @@ function PlayState:enter(params)
   self.column = 0
   self.row = 0
   self.cards["c" .. self.column .. "r" .. self.row]:focus()
-
-  self.firstRevealed = nil
-  self.secondRevealed = nil
 end
 
 function PlayState:getKey(column, row)
@@ -107,25 +109,19 @@ function PlayState:update(dt)
     self:focus(1, 0)
   end
 
-  if love.keyboard.waspressed("w") then
-    gStateMachine:change(
-      "victory",
-      {
-        cards = self.cards,
-        level = self.level,
-        topY = GRID_PADDING,
-        bottomY = GRID_PADDING + GRID_HEIGHT
-      }
-    )
-  end
-
   if love.keyboard.waspressed("return") then
     local key = self:getKey(self.column, self.row)
 
     if self.cards[key].isPaired then
       if self.firstRevealed then
-        self.cards[self.firstRevealed]:hide()
+        if not self.cards[self.firstRevealed].isPaired then
+          self.cards[self.firstRevealed]:hide()
+        end
+
         self.firstRevealed = nil
+      end
+      if self.secondRevealed then
+        self.secondRevealed = nil
       end
       return
     end
