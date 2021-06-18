@@ -41,11 +41,11 @@ local colorBricks = {
 function Brick:init(x, y, tier, color, showPowerup)
   self.x = x
   self.y = y
-  self.width = 32
-  self.height = 16
-
   self.width = BRICK_WIDTH
   self.height = BRICK_HEIGHT
+
+  self.tier = tier
+  self.color = color
 
   self.inPlay = true
 
@@ -111,7 +111,7 @@ function Brick:render()
   if self.inPlay then
     love.graphics.draw(
       gTextures["breakout"],
-      gFrames["bricks"][self.tier + BRICK_COLORS * (self.color - 1)],
+      gFrames["bricks"][self.tier + (BRICK_COLORS - 1) * (self.color - 1)],
       self.x,
       self.y
     )

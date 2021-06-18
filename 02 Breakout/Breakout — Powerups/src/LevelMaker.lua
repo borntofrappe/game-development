@@ -4,9 +4,11 @@ local ROWS_MIN = 2
 local ROWS_MAX = 4
 
 local COLUMNS_MIN = 4
-local COLUMNS_MAX = 7
+local COLUMNS_MAX = 9
 
-local SKIP_ODDS = 3 -- 1 in 3
+local SKIP_ODDS = 5 -- 1 in 5
+local ALTENRATE_ODDS = 5 -- 1 in 5
+
 local LOCK_ODDS = 15 -- 1 in 15
 local POWERUP_ODDS = 5 -- 1 in 5
 
@@ -17,21 +19,52 @@ function LevelMaker.createMap(level)
   local cols = math.random(COLUMNS_MIN, COLUMNS_MAX)
 
   for row = 1, rows do
-    for col = 1, cols do
-      local skipFlag = math.random(SKIP_ODDS) == 1
+    local skipFlag = math.random(SKIP_ODDS) == 1
+    local skipOddsOrEven = math.random(2) == 1 and 1 or 0
+    local alternateFlag = math.random(ALTENRATE_ODDS) == 1
 
-      if not skipFlag then
-        lockFlag = math.random(LOCK_ODDS) == 1
+    local maxColor = math.min(BRICK_COLORS, math.ceil(level / 2)) -- 2 as a magic number
+    local colors = {math.random(maxColor), math.random(maxColor)}
+    local colorIndex = 1
+
+    local maxTier = math.min(BRICK_TIERS, math.floor(level / 3)) -- 3 as a magic number
+
+    for col = 1, cols do
+      if skipFlag then
+        if col % 2 == skipOddsOrEven then
+          local lockFlag = math.random(LOCK_ODDS) == 1
+          if lockFlag then
+            local brick =
+              LockedBrick((col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2, row * BRICK_HEIGHT)
+            table.insert(bricks, brick)
+          else
+            local tier = math.random(1, maxTier)
+            local powerupFlag = math.random(POWERUP_ODDS) == 1
+
+            local brick =
+              Brick(
+              (col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2,
+              row * BRICK_HEIGHT,
+              tier,
+              colors[colorIndex],
+              powerupFlag
+            )
+            table.insert(bricks, brick)
+
+            if alternateFlag then
+              colorIndex = colorIndex == 1 and 2 or 1
+            end
+          end
+        end
+      else
+        local lockFlag = math.random(LOCK_ODDS) == 1
+
         if lockFlag then
           local brick =
             LockedBrick((col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2, row * BRICK_HEIGHT)
           table.insert(bricks, brick)
         else
-          local maxTier = math.min(BRICK_TIERS, math.ceil(level / 2)) -- magic numbers
-          local maxColor = math.min(BRICK_COLORS, math.ceil(level / 4)) -- magic numbers
-          local tier = math.random(maxTier)
-          local color = math.random(maxColor)
-
+          local tier = math.random(1, maxTier)
           local powerupFlag = math.random(POWERUP_ODDS) == 1
 
           local brick =
@@ -39,10 +72,14 @@ function LevelMaker.createMap(level)
             (col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2,
             row * BRICK_HEIGHT,
             tier,
-            color,
+            colors[colorIndex],
             powerupFlag
           )
           table.insert(bricks, brick)
+
+          if alternateFlag then
+            colorIndex = colorIndex == 1 and 2 or 1
+          end
         end
       end
     end

@@ -21,7 +21,7 @@ function LevelMaker.createMap(level)
     local alternateFlag = math.random(ALTENRATE_ODDS) == 1
 
     local maxColor = math.min(BRICK_COLORS, math.ceil(level / 2)) -- 2 as a magic number
-    local colors = {math.random(1, maxColor), math.random(1, maxColor)}
+    local colors = {math.random(maxColor), math.random(maxColor)}
     local colorIndex = 1
 
     local maxTier = math.min(BRICK_TIERS, math.floor(level / 3)) -- 3 as a magic number
@@ -29,7 +29,7 @@ function LevelMaker.createMap(level)
     for col = 1, cols do
       if skipFlag then
         if col % 2 == skipOddsOrEven then
-          local tier = math.random(1, maxTier)
+          local tier = math.random(maxTier)
           local brick =
             Brick(
             (col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2,
@@ -44,7 +44,7 @@ function LevelMaker.createMap(level)
           end
         end
       else
-        local tier = math.random(1, maxTier)
+        local tier = math.random(maxTier)
         local brick =
           Brick(
           (col - 1) * BRICK_WIDTH + (VIRTUAL_WIDTH - cols * BRICK_WIDTH) / 2,

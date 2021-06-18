@@ -111,7 +111,7 @@ function Brick:render()
   if self.inPlay then
     love.graphics.draw(
       gTextures["breakout"],
-      gFrames["bricks"][self.tier + BRICK_COLORS * (self.color - 1)],
+      gFrames["bricks"][self.tier + (BRICK_COLORS - 1) * (self.color - 1)],
       self.x,
       self.y
     )

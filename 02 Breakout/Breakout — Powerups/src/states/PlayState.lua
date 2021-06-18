@@ -1,7 +1,7 @@
 PlayState = Class({__includes = BaseState})
 
-local POINTS_TIER = 50
-local POINTS_COLOR = 200
+local POINTS_TIER = 200
+local POINTS_COLOR = 50
 local DELTA_CENTER_MULTIPLER = 3
 local BRICK_X_PADDING = 5
 
@@ -117,7 +117,7 @@ function PlayState:update(dt)
     for key, ball in pairs(self.balls) do
       if testAABB(ball, brick) and brick.inPlay then
         if brick.tier and brick.color then
-          self.score = self.score + POINTS_TIER * brick.tier + POINTS_COLOR * (brick.color - 1)
+          self.score = self.score + POINTS_COLOR * brick.color + POINTS_TIER * (brick.tier - 1)
         elseif not brick.isLocked then
           self.score = self.score + POINTS_LOCK
         end
