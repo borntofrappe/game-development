@@ -3,7 +3,7 @@ Info = {}
 function Info:new()
   local x = CELL_SIZE * PADDING_COLUMNS + GRID_WIDTH
   local y = 0
-  local width = CELL_SIZE * LEVEL_COLUMNS + CELL_SIZE * PADDING_COLUMNS
+  local width = CELL_SIZE * INFO_COLUMNS + CELL_SIZE * PADDING_COLUMNS
   local height = GRID_HEIGHT
 
   local info = {

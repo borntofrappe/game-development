@@ -9,8 +9,8 @@ function Grid:new()
   local border = {}
   for i = 1, BORDER_COLUMNS do
     for j = 1, math.floor(height / CELL_SIZE) do
-      table.insert(border, Brick:new(x + (i - 1) * CELL_SIZE, y + (j - 1) * CELL_SIZE, 8))
-      table.insert(border, Brick:new(width + (i - 1) * CELL_SIZE, y + (j - 1) * CELL_SIZE, 8))
+      table.insert(border, Brick:new(x + (i - 1) * CELL_SIZE, y + (j - 1) * CELL_SIZE, 7))
+      table.insert(border, Brick:new(width + (i - 1) * CELL_SIZE, y + (j - 1) * CELL_SIZE, 7))
     end
   end
 
@@ -18,16 +18,7 @@ function Grid:new()
   for row = 1, GRID_ROWS do
     bricks[row] = {}
     for column = 1, GRID_COLUMNS do
-      if math.random(5) == 1 then
-        bricks[row][column] =
-          Brick:new(
-          (PADDING_COLUMNS + BORDER_COLUMNS) * CELL_SIZE + (column - 1) * CELL_SIZE,
-          (row - 1) * CELL_SIZE,
-          math.random(7)
-        )
-      else
-        bricks[row][column] = nil
-      end
+      bricks[row][column] = nil
     end
   end
 
