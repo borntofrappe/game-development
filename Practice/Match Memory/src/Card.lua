@@ -1,6 +1,8 @@
 Card = Class {}
 
-function Card:init(x, y, symbol)
+function Card:init(column, row, x, y, symbol)
+  self.column = column
+  self.row = row
   self.x = math.floor(x - TILE_WIDTH / 2)
   self.y = math.floor(y - TILE_HEIGHT / 2)
   self.width = TILE_WIDTH

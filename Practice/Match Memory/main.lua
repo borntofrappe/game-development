@@ -40,6 +40,7 @@ function love.load()
 
   love.graphics.setFont(gFonts["normal"])
 
+  love.mouse.buttonpressed = {}
   love.keyboard.keypressed = {}
 end
 
@@ -51,6 +52,14 @@ function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
+function love.mousepressed(x, y, button)
+  love.mouse.buttonpressed[button] = true
+end
+
+function love.mouse.waspressed(button)
+  return love.mouse.buttonpressed[button]
+end
+
 function love.resize(width, height)
   push:resize(width, height)
 end
@@ -58,6 +67,7 @@ end
 function love.update(dt)
   gStateMachine:update(dt)
 
+  love.mouse.buttonpressed = {}
   love.keyboard.keypressed = {}
 end
 

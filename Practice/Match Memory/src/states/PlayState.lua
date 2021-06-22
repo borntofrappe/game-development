@@ -55,7 +55,7 @@ function PlayState:enter(params)
       local y = row * ROW_SIZE + GRID_PADDING + self.ROW_SIZE / 2
 
       local key = "c" .. column .. "r" .. row
-      cards[key] = Card(x, y, symbol)
+      cards[key] = Card(column, row, x, y, symbol)
     end
   end
 
@@ -92,6 +92,66 @@ function PlayState:focus(dc, dr)
   self.cards[self:getKey(self.column, self.row)]:focus()
 end
 
+function PlayState:handleSelection()
+  local key = self:getKey(self.column, self.row)
+
+  if self.cards[key].isPaired then
+    if self.firstRevealed then
+      if not self.cards[self.firstRevealed].isPaired then
+        self.cards[self.firstRevealed]:hide()
+      end
+
+      self.firstRevealed = nil
+    end
+    if self.secondRevealed then
+      self.secondRevealed = nil
+    end
+    return
+  end
+
+  if self.firstRevealed and self.secondRevealed then
+    if self.cards[self.firstRevealed].symbol ~= self.cards[self.secondRevealed].symbol then
+      self.cards[self.firstRevealed]:hide()
+      self.cards[self.secondRevealed]:hide()
+    end
+
+    self.firstRevealed = nil
+    self.secondRevealed = nil
+  end
+
+  if self.firstRevealed then
+    if self.firstRevealed == key then
+      self.cards[key]:hide()
+      self.firstRevealed = nil
+    else
+      self.secondRevealed = key
+      self.cards[self.secondRevealed]:reveal()
+
+      if self.cards[self.firstRevealed].symbol == self.cards[self.secondRevealed].symbol then
+        self.cards[self.firstRevealed]:match()
+        self.cards[self.secondRevealed]:match()
+
+        if self:hasWon() then
+          self.cards[self.secondRevealed]:blur()
+
+          gStateMachine:change(
+            "victory",
+            {
+              cards = self.cards,
+              level = self.level,
+              topY = GRID_PADDING,
+              bottomY = GRID_PADDING + GRID_HEIGHT
+            }
+          )
+        end
+      end
+    end
+  else
+    self.firstRevealed = key
+    self.cards[self.firstRevealed]:reveal()
+  end
+end
+
 function PlayState:update(dt)
   if love.keyboard.waspressed("up") then
     self:focus(0, -1)
@@ -110,66 +170,45 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    local key = self:getKey(self.column, self.row)
-
-    if self.cards[key].isPaired then
-      if self.firstRevealed then
-        if not self.cards[self.firstRevealed].isPaired then
-          self.cards[self.firstRevealed]:hide()
-        end
-
-        self.firstRevealed = nil
-      end
-      if self.secondRevealed then
-        self.secondRevealed = nil
-      end
-      return
-    end
-
-    if self.firstRevealed and self.secondRevealed then
-      if self.cards[self.firstRevealed].symbol ~= self.cards[self.secondRevealed].symbol then
-        self.cards[self.firstRevealed]:hide()
-        self.cards[self.secondRevealed]:hide()
-      end
-
-      self.firstRevealed = nil
-      self.secondRevealed = nil
-    end
-
-    if self.firstRevealed then
-      if self.firstRevealed == key then
-        self.cards[key]:hide()
-        self.firstRevealed = nil
-      else
-        self.secondRevealed = key
-        self.cards[self.secondRevealed]:reveal()
-
-        if self.cards[self.firstRevealed].symbol == self.cards[self.secondRevealed].symbol then
-          self.cards[self.firstRevealed]:match()
-          self.cards[self.secondRevealed]:match()
-
-          if self:hasWon() then
-            self.cards[self.secondRevealed]:blur()
-
-            gStateMachine:change(
-              "victory",
-              {
-                cards = self.cards,
-                level = self.level,
-                topY = GRID_PADDING,
-                bottomY = GRID_PADDING + GRID_HEIGHT
-              }
-            )
-          end
-        end
-      end
-    else
-      self.firstRevealed = key
-      self.cards[self.firstRevealed]:reveal()
-    end
+    self:handleSelection()
   end
 
   if love.keyboard.waspressed("escape") then
+    gStateMachine:change(
+      "start",
+      {
+        level = self.level
+      }
+    )
+  end
+
+  local x, y = push:toGame(love.mouse.getPosition())
+  if x > 0 and x < VIRTUAL_WIDTH and y > 0 and y < VIRTUAL_HEIGHT then
+    local cardOverlap = nil
+
+    for k, card in pairs(self.cards) do
+      if x > card.x and x < card.x + card.width and y > card.y and y < card.y + card.height then
+        cardOverlap = card
+        break
+      end
+    end
+
+    if cardOverlap then
+      for k, card in pairs(self.cards) do
+        card:blur()
+      end
+
+      cardOverlap:focus()
+      self.column = cardOverlap.column
+      self.row = cardOverlap.row
+
+      if love.mouse.waspressed(1) then
+        self:handleSelection()
+      end
+    end
+  end
+
+  if love.mouse.waspressed(2) then
     gStateMachine:change(
       "start",
       {

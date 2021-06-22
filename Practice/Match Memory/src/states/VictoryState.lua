@@ -49,6 +49,15 @@ function VictoryState:update(dt)
       }
     )
   end
+
+  if love.mouse.waspressed(1) then
+    gStateMachine:change(
+      "start",
+      {
+        level = self.level
+      }
+    )
+  end
 end
 
 function VictoryState:render()

@@ -73,6 +73,45 @@ function StartState:update(dt)
       }
     )
   end
+
+  local x, y = push:toGame(love.mouse.getPosition())
+  if x > 0 and x < VIRTUAL_WIDTH and y > 0 and y < VIRTUAL_HEIGHT then
+    local index = -1
+
+    for i, option in ipairs(self.options) do
+      if
+        x > option.buttonX and x < option.buttonX + option.buttonWidth and y > option.buttonY and
+          y < option.buttonY + option.buttonHeight
+       then
+        index = i - 1
+        break
+      end
+    end
+
+    if index >= 0 then
+      self.index = index
+    end
+
+    if love.mouse.waspressed(1) then
+      local i = self.index + 1
+      if
+        x > self.options[i].buttonX and x < self.options[i].buttonX + self.options[i].buttonWidth and
+          y > self.options[i].buttonY and
+          y < self.options[i].buttonY + self.options[i].buttonHeight
+       then
+        gStateMachine:change(
+          "play",
+          {
+            level = self.index + 1
+          }
+        )
+      end
+    end
+  end
+
+  if love.mouse.waspressed(2) then
+    love.event.quit()
+  end
 end
 
 function StartState:render()

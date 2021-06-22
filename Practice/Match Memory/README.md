@@ -143,6 +143,36 @@ until not positions[position]
 positions[position] = true
 ```
 
+## Mouse controls
+
+The game is updated to consider mouse input, and the following logic:
+
+- press the left button to move forward, between states and playing the game
+
+- press the right button to move backwards and eventually quit the game altogether
+
+Considering the way the game is created, the play state needs to know about the column and row of the selected card. `column` and `row` are passed to each instance of the `Card` class so that, when the mouse hovers on one of the cards, it is possible to retrieve the matching coordinates. Previously, and with keyboard input, the values was computed on the basis of the arrow key being pressed. With a mouse cursor, however, the selection can vary across multiple columns and rows.
+
+When playing and pressing the left key on one of the cards, the functionality mirrors that of a press on the enter, or return key. In light of this, the logic is extracted to a function `PlayState:handleSelection`, which is then called as necessary.
+
+```lua
+if love.keyboard.waspressed("return") then
+  self:handleSelection()
+end
+```
+
+For the mouse press, note, the execution of the function depends on one of the card being hovered on.
+
+```lua
+if cardOverlap then
+  -- ... handle focus
+
+  if love.mouse.waspressed(1) then
+    self:handleSelection()
+  end
+end
+```
+
 ## Suggestions
 
 Pokemon types have a hierarchy, with some overpowering others. In light of this, the game could be updated to consider not matching the cards in pairs, but relative to this hierarchy. Picking fire, for instance, would require you to look for grass, or again ice.
