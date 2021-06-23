@@ -2,7 +2,7 @@ require "src/Dependencies"
 
 function love.load()
   love.window.setTitle("Tetris")
-  -- math.randomseed(os.time()) -- TODO uncomment this line
+  math.randomseed(os.time())
 
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(
@@ -44,10 +44,9 @@ function love.keypressed(key)
     love.event.quit()
   end
 
-  -- TODO implement rotate feature
-  -- if key == 'space' or key == 'up' then
-  --   tetromino:rotate()
-  -- end
+  if key == "space" or key == "up" then
+    tetromino:rotate(grid)
+  end
 
   if key == "right" or key == "down" or key == "left" then
     tetromino:move(key, grid)

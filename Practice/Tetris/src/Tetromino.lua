@@ -1,6 +1,32 @@
 Tetromino = {}
 
-local TETROMINOS = {
+local CONFIGS = {
+  {
+    {
+      {-1, 0},
+      {0, 0},
+      {1, 0},
+      {0, 1}
+    },
+    {
+      {-1, 0},
+      {0, -1},
+      {0, 0},
+      {0, 1}
+    },
+    {
+      {-1, 0},
+      {0, 0},
+      {1, 0},
+      {0, -1}
+    },
+    {
+      {1, 0},
+      {0, -1},
+      {0, 0},
+      {0, 1}
+    }
+  },
   {
     {
       {-1, 0},
@@ -69,10 +95,16 @@ local TETROMINOS = {
   },
   {
     {
+      {-1, 0},
       {0, 0},
-      {1, 0},
       {0, 1},
       {1, 1}
+    },
+    {
+      {0, -1},
+      {0, 0},
+      {-1, 0},
+      {-1, 1}
     }
   },
   {
@@ -91,53 +123,26 @@ local TETROMINOS = {
   },
   {
     {
-      {-1, 0},
       {0, 0},
       {1, 0},
-      {0, 1}
-    },
-    {
-      {-1, 0},
-      {0, -1},
-      {0, 0},
-      {0, 1}
-    },
-    {
-      {-1, 0},
-      {0, 0},
-      {1, 0},
-      {0, -1}
-    },
-    {
-      {1, 0},
-      {0, -1},
-      {0, 0},
-      {0, 1}
-    }
-  },
-  {
-    {
-      {-1, 0},
-      {0, 0},
       {0, 1},
       {1, 1}
-    },
-    {
-      {0, -1},
-      {0, 0},
-      {-1, 0},
-      {-1, 1}
     }
   }
 }
 
-local FRAMES = 5
+local FRAMES = {
+  {1},
+  {2},
+  {3, 4},
+  {5, 6},
+  {7}
+}
 
 function Tetromino:new(grid)
-  local config = TETROMINOS[math.random(#TETROMINOS)]
+  local frame = math.random(#FRAMES)
+  local config = CONFIGS[FRAMES[frame][math.random(#FRAMES[frame])]]
   local index = 1
-
-  local frame = math.random(FRAMES)
 
   local columnStart = math.floor(grid.columns / 2)
   local rowStart = 1
@@ -163,6 +168,39 @@ function Tetromino:new(grid)
   setmetatable(this, self)
 
   return this
+end
+
+function Tetromino:rotate(grid)
+  if #self.config == 1 then
+    return false
+  end
+
+  local canRotate = true
+
+  local index = self.index == #self.config and 1 or self.index + 1
+  local startConfig = self.config[self.index]
+  local endConfig = self.config[index]
+
+  local bricks = {}
+
+  for k, coords in pairs(self.config[index]) do
+    local column = self.column + coords[1]
+    local row = self.row + coords[2]
+
+    -- check if the column and row are available before creating the brick
+    if column < 1 or column > grid.columns or row < 1 or row > grid.rows or grid.bricks[column][row] then
+      canRotate = false
+      break
+    end
+
+    local brick = Brick:new(column, row, self.frame)
+    table.insert(bricks, brick)
+  end
+
+  if canRotate then
+    self.index = index
+    self.bricks = bricks
+  end
 end
 
 function Tetromino:move(direction, grid)
@@ -247,13 +285,14 @@ function Tetromino:collides(grid)
 end
 
 function Tetromino:update()
+  self.row = self.row + 1
   for k, brick in pairs(tetromino.bricks) do
-    brick.row = math.min(ROWS, brick.row + 1)
-    self.row = math.min(ROWS, self.row + 1)
+    brick.row = brick.row + 1
   end
 end
 
 function Tetromino:render()
+  love.graphics.setColor(1, 1, 1)
   for k, brick in pairs(self.bricks) do
     brick:render()
   end
