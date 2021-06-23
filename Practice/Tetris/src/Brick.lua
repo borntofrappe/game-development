@@ -1,9 +1,9 @@
 Brick = {}
 
-function Brick:new(x, y, frame)
+function Brick:new(column, row, frame)
   local this = {
-    ["x"] = x,
-    ["y"] = y,
+    ["column"] = column,
+    ["row"] = row,
     ["frame"] = frame
   }
 
@@ -14,5 +14,5 @@ function Brick:new(x, y, frame)
 end
 
 function Brick:render()
-  love.graphics.draw(gTexture, gFrames[self.frame], self.x, self.y)
+  love.graphics.draw(gTexture, gFrames[self.frame], self.column * CELL_SIZE, self.row * CELL_SIZE)
 end

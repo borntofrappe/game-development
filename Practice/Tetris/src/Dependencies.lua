@@ -8,3 +8,5 @@ require "src/Brick"
 
 require "src/Infobox"
 require "src/Info"
+
+require "src/Tetromino"

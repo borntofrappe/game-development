@@ -1,16 +1,22 @@
 Grid = {}
 
 function Grid:new()
-  local x = CELL_SIZE * PADDING_COLUMNS
-  local y = 0
-  local width = GRID_WIDTH
-  local height = GRID_HEIGHT
+  local columnStart = PADDING_COLUMNS
+  local rowStart = 0
+
+  local columns = GRID_COLUMNS + BORDER_COLUMNS * 2
+  local rows = GRID_ROWS
+
+  local x = columnStart * CELL_SIZE
+  local y = rowStart * CELL_SIZE
+  local width = columns * CELL_SIZE
+  local height = rows * CELL_SIZE
 
   local border = {}
-  for i = 1, BORDER_COLUMNS do
-    for j = 1, math.floor(height / CELL_SIZE) do
-      table.insert(border, Brick:new(x + (i - 1) * CELL_SIZE, y + (j - 1) * CELL_SIZE, 7))
-      table.insert(border, Brick:new(width + (i - 1) * CELL_SIZE, y + (j - 1) * CELL_SIZE, 7))
+  for column = 1, BORDER_COLUMNS do
+    for row = 1, rows do
+      table.insert(border, Brick:new(columnStart + (column - 1), rowStart + (row - 1), 7))
+      table.insert(border, Brick:new(columnStart + columns - 1 + (column - 1), rowStart + (row - 1), 7))
     end
   end
 
@@ -42,13 +48,14 @@ function Grid:render()
   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 
   love.graphics.setColor(1, 1, 1)
+
+  for k, brick in pairs(self.border) do
+    brick:render()
+  end
+
   for k, row in pairs(self.bricks) do
     for l, brick in pairs(row) do
       brick:render()
     end
-  end
-
-  for k, brick in pairs(self.border) do
-    brick:render()
   end
 end

@@ -77,3 +77,7 @@ The grid class renders two types of visual in the first half of the screen, and 
 - `border` includes the bricks for the columns surrounding the playing area
 
 - `bricks` includes the bricks for the tetrominos. The table is intially populated with `nil` values, but as the pieces fall and ultimately stop at the bottom of the grid, the corresponding cells are updated with a copy of the pieces of the tetrominos
+
+## Refactor
+
+The grid and brick classes are refactored to have the bricks laid according to column and row, instead of x and y.

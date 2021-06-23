@@ -1,10 +1,14 @@
 Info = {}
 
 function Info:new()
-  local x = CELL_SIZE * PADDING_COLUMNS + GRID_WIDTH
-  local y = 0
-  local width = CELL_SIZE * INFO_COLUMNS + CELL_SIZE * PADDING_COLUMNS
-  local height = GRID_HEIGHT
+  local columnStart = PADDING_COLUMNS + BORDER_COLUMNS * 2 + GRID_COLUMNS
+  local rowStart = 0
+
+  local x = CELL_SIZE * columnStart
+  local y = CELL_SIZE * rowStart
+
+  local width = CELL_SIZE * (INFO_COLUMNS + PADDING_COLUMNS)
+  local height = CELL_SIZE * GRID_ROWS
 
   local info = {
     {["label"] = "Score", ["value"] = 0},

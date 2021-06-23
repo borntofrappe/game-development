@@ -26,13 +26,16 @@ function love.load()
   }
 
   gTexture = love.graphics.newImage("res/graphics/spritesheet.png")
+  gFrames = GenerateQuads(gTexture, CELL_SIZE, CELL_SIZE)
 
   love.graphics.setFont(gFont)
 
-  gFrames = GenerateQuads(gTexture, CELL_SIZE, CELL_SIZE)
-
   grid = Grid:new()
+  tetromino = Tetromino:new()
   info = Info:new()
+
+  interval = 1
+  time = 0
 end
 
 function love.keypressed(key)
@@ -46,6 +49,23 @@ function love.resize(width, height)
 end
 
 function love.update(dt)
+  time = time + dt
+  if time > interval then
+    time = time % interval
+    tetromino:update()
+
+    local collision = false
+    for k, brick in pairs(tetromino.bricks) do
+      if brick.row >= GRID_ROWS then
+        collision = true
+        break
+      end
+    end
+
+    if collision then
+      tetromino = Tetromino:new()
+    end
+  end
 end
 
 function love.draw()
@@ -55,6 +75,7 @@ function love.draw()
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   grid:render()
+  tetromino:render()
   info:render()
 
   push:finish()
