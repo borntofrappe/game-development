@@ -1,5 +1,12 @@
 require "src/Dependencies"
 
+local SCORE_PER_LINES = {
+  [1] = 40,
+  [2] = 100,
+  [3] = 300,
+  [4] = 1200
+}
+
 function love.load()
   love.window.setTitle("Tetris")
   math.randomseed(os.time())
@@ -33,9 +40,9 @@ function love.load()
 
   grid = Grid:new(COLUMNS, ROWS)
   tetromino = Tetromino:new(grid)
-  -- info = Info:new() -- TODO implement info feature
+  info = Info:new()
 
-  interval = 1
+  interval = 0.5
   time = 0
 end
 
@@ -63,6 +70,16 @@ function love.update(dt)
     time = time % interval
     if tetromino:collides(grid) then
       grid:fill(tetromino)
+      local linesCleared = grid:clearLines()
+      local lines = #linesCleared
+      if lines > 0 then
+        grid:update(linesCleared)
+        local level = info.infoboxes["level"].value
+        info.infoboxes["lines"].value = info.infoboxes["lines"].value + lines
+        info.infoboxes["level"].value = math.ceil((info.infoboxes["lines"].value + 1) / 10)
+        info.infoboxes["score"].value =
+          info.infoboxes["score"].value + SCORE_PER_LINES[math.min(#SCORE_PER_LINES, lines)] * level
+      end
       tetromino = Tetromino:new(grid)
     else
       tetromino:update()
@@ -76,11 +93,14 @@ function love.draw()
   love.graphics.setColor(gColors[1].r, gColors[1].g, gColors[1].b)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
-  -- info:render() -- TODO implement info feature
+  info:render()
 
   love.graphics.translate((LEFT_PADDING_COLUMNS + BORDER_COLUMNS) * CELL_SIZE, 0)
   grid:render()
   tetromino:render()
+
+  love.graphics.translate((GRID_COLUMNS + BORDER_COLUMNS) * CELL_SIZE, 0)
+  info:render()
 
   push:finish()
 end

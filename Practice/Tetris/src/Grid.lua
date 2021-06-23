@@ -50,6 +50,45 @@ function Grid:fill(tetromino)
   end
 end
 
+function Grid:clearLines()
+  local linesCleared = {}
+
+  for row = self.rows, 1, -1 do
+    local lineCleared = true
+
+    for column = 1, self.columns do
+      if not self.bricks[column][row] then
+        lineCleared = false
+        break
+      end
+    end
+
+    if lineCleared then
+      table.insert(linesCleared, row)
+    end
+  end
+
+  return linesCleared
+end
+
+function Grid:update(linesCleared)
+  for i = #linesCleared, 1, -1 do
+    local lineCleared = linesCleared[i]
+    for column = 1, self.columns do
+      self.bricks[column][lineCleared] = nil
+    end
+
+    for row = lineCleared - 1, 1, -1 do
+      for column = 1, self.columns do
+        if self.bricks[column][row] then
+          self.bricks[column][row + 1] = Brick:new(column, row + 1, self.bricks[column][row].frame)
+          self.bricks[column][row] = nil
+        end
+      end
+    end
+  end
+end
+
 function Grid:render()
   love.graphics.setColor(gColors[4].r, gColors[4].g, gColors[4].b)
   love.graphics.rectangle("fill", 0, 0, self.width, self.height)
