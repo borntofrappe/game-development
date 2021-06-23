@@ -14,5 +14,5 @@ function Brick:new(column, row, frame)
 end
 
 function Brick:render()
-  love.graphics.draw(gTexture, gFrames[self.frame], self.column * CELL_SIZE, self.row * CELL_SIZE)
+  love.graphics.draw(gTexture, gFrames[self.frame], (self.column - 1) * CELL_SIZE, (self.row - 1) * CELL_SIZE)
 end

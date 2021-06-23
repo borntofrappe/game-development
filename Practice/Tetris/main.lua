@@ -2,6 +2,7 @@ require "src/Dependencies"
 
 function love.load()
   love.window.setTitle("Tetris")
+  -- math.randomseed(os.time()) -- TODO uncomment this line
 
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(
@@ -30,9 +31,9 @@ function love.load()
 
   love.graphics.setFont(gFont)
 
-  grid = Grid:new()
-  tetromino = Tetromino:new()
-  info = Info:new()
+  grid = Grid:new(COLUMNS, ROWS)
+  tetromino = Tetromino:new(grid)
+  -- info = Info:new() -- TODO implement info feature
 
   interval = 1
   time = 0
@@ -41,6 +42,15 @@ end
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
+  end
+
+  -- TODO implement rotate feature
+  -- if key == 'space' or key == 'up' then
+  --   tetromino:rotate()
+  -- end
+
+  if key == "right" or key == "down" or key == "left" then
+    tetromino:move(key, grid)
   end
 end
 
@@ -52,18 +62,11 @@ function love.update(dt)
   time = time + dt
   if time > interval then
     time = time % interval
-    tetromino:update()
-
-    local collision = false
-    for k, brick in pairs(tetromino.bricks) do
-      if brick.row >= GRID_ROWS then
-        collision = true
-        break
-      end
-    end
-
-    if collision then
-      tetromino = Tetromino:new()
+    if tetromino:collides(grid) then
+      grid:fill(tetromino)
+      tetromino = Tetromino:new(grid)
+    else
+      tetromino:update()
     end
   end
 end
@@ -74,9 +77,11 @@ function love.draw()
   love.graphics.setColor(gColors[1].r, gColors[1].g, gColors[1].b)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
+  -- info:render() -- TODO implement info feature
+
+  love.graphics.translate((LEFT_PADDING_COLUMNS + BORDER_COLUMNS) * CELL_SIZE, 0)
   grid:render()
   tetromino:render()
-  info:render()
 
   push:finish()
 end
