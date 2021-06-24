@@ -1,57 +1,53 @@
 Gamedata = {}
 
-local ROWS_DATA = 3
-local ROWS_TETRIMINO = 6
-local COLUMNS = GAME_DATA_COLUMNS - 2
-local COLUMN_START = 1
-local ROW_START = 0.5
-local ROW_SEPARATION = 0.5
-
 function Gamedata:new()
   local level = 1
   local score = 0
   local lines = 0
 
-  local rowStart = ROW_START
+  local columnStart = 0
+  local rowStart = ROWS_WHITESPACE
+  local columns = COLUMNS_GAMEDATA
+  local rowsData = math.floor(ROWS_DATA / 3)
+  local rowsGap = (ROWS_DATA - rowsData * 3) / 3
 
   local boxes = {}
   for i = 1, 3 do
-    local box = Box:new(COLUMN_START, rowStart, COLUMNS, ROWS_DATA)
-    rowStart = rowStart + ROWS_DATA + ROW_SEPARATION
+    local box = Box:new(columnStart, rowStart * CELL_SIZE, columns * CELL_SIZE, rowsData * CELL_SIZE)
 
+    rowStart = rowStart + rowsData + rowsGap
     table.insert(boxes, box)
   end
 
-  rowStart = rowStart + ROW_SEPARATION
-
-  local box = Box:new(COLUMN_START, rowStart, COLUMNS, ROWS_TETRIMINO)
+  local box =
+    Box:new(0, (ROWS_WHITESPACE * 2 + ROWS_DATA) * CELL_SIZE, columns * CELL_SIZE, ROWS_NEXT_TETROMINO * CELL_SIZE)
   table.insert(boxes, box)
 
-  local tetrominoOffset = {
-    ["column"] = COLUMN_START + math.floor(COLUMNS / 2),
-    ["row"] = rowStart + math.floor(ROWS_TETRIMINO / 2)
+  local tetrominoCoords = {
+    ["column"] = COLUMNS_GAMEDATA / 2,
+    ["row"] = ROWS_WHITESPACE * 2 + ROWS_DATA + ROWS_NEXT_TETROMINO / 2
   }
 
   local tetromino =
     Tetromino:new(
     {
-      ["columnStart"] = tetrominoOffset.collides,
-      ["rowStart"] = tetrominoOffset.row,
+      ["column"] = tetrominoCoords.column,
+      ["row"] = tetrominoCoords.row,
       ["isCentered"] = true
     }
   )
 
   local this = {
+    ["boxes"] = boxes,
     ["level"] = level,
     ["score"] = score,
     ["lines"] = lines,
-    ["tetromino"] = tetromino,
-    ["tetrominoOffset"] = tetrominoOffset,
-    ["boxes"] = boxes,
-    ["padding"] = {
+    ["textPadding"] = {
       ["x"] = 5,
       ["y"] = 4
-    }
+    },
+    ["tetromino"] = tetromino,
+    ["tetrominoCoords"] = tetrominoCoords
   }
 
   self.__index = self
@@ -64,8 +60,8 @@ function Gamedata:setNewTetromino()
   self.tetromino =
     Tetromino:new(
     {
-      ["columnStart"] = self.tetrominoOffset.collides,
-      ["rowStart"] = self.tetrominoOffset.row,
+      ["column"] = self.tetrominoCoords.column,
+      ["row"] = self.tetrominoCoords.row,
       ["isCentered"] = true
     }
   )
@@ -75,6 +71,14 @@ function Gamedata:reset()
   self.level = 1
   self.score = 0
   self.lines = 0
+  self.tetromino =
+    Tetromino:new(
+    {
+      ["column"] = self.tetrominoCoords.column,
+      ["row"] = self.tetrominoCoords.row,
+      ["isCentered"] = true
+    }
+  )
 end
 
 function Gamedata:render()
@@ -83,30 +87,30 @@ function Gamedata:render()
   end
 
   love.graphics.setColor(gColors[1].r, gColors[1].g, gColors[1].b)
-  love.graphics.print("SCORE", self.boxes[1].x + self.padding.x, self.boxes[1].y + self.padding.y)
 
+  love.graphics.print("SCORE", self.boxes[1].x + self.textPadding.x, self.boxes[1].y + self.textPadding.y)
   love.graphics.printf(
     self.score,
-    self.boxes[1].x - self.padding.x,
-    self.boxes[1].y + self.boxes[1].height - self.padding.y - gFont:getHeight(),
+    self.boxes[1].x - self.textPadding.x,
+    self.boxes[1].y + self.boxes[1].height - self.textPadding.y - gFont:getHeight(),
     self.boxes[1].width,
     "right"
   )
 
-  love.graphics.print("LEVEL", self.boxes[2].x + self.padding.x, self.boxes[2].y + self.padding.y)
+  love.graphics.print("LEVEL", self.boxes[2].x + self.textPadding.x, self.boxes[2].y + self.textPadding.y)
   love.graphics.printf(
     self.level,
-    self.boxes[2].x - self.padding.x,
-    self.boxes[2].y + self.boxes[2].height - self.padding.y - gFont:getHeight(),
+    self.boxes[2].x - self.textPadding.x,
+    self.boxes[2].y + self.boxes[2].height - self.textPadding.y - gFont:getHeight(),
     self.boxes[2].width,
     "right"
   )
 
-  love.graphics.print("LINES", self.boxes[3].x + self.padding.x, self.boxes[3].y + self.padding.y)
+  love.graphics.print("LINES", self.boxes[3].x + self.textPadding.x, self.boxes[3].y + self.textPadding.y)
   love.graphics.printf(
     self.lines,
-    self.boxes[3].x - self.padding.x,
-    self.boxes[3].y + self.boxes[3].height - self.padding.y - gFont:getHeight(),
+    self.boxes[3].x - self.textPadding.x,
+    self.boxes[3].y + self.boxes[3].height - self.textPadding.y - gFont:getHeight(),
     self.boxes[3].width,
     "right"
   )

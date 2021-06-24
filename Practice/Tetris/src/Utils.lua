@@ -3,10 +3,10 @@ function GenerateQuads(atlas, tileWidth, tileHeight)
   local columns = math.floor(atlas:getWidth() / tileWidth)
   local rows = math.floor(atlas:getHeight() / tileHeight)
 
-  for r = 1, rows do
-    for c = 1, columns do
-      local x = (c - 1) * tileWidth
-      local y = (r - 1) * tileHeight
+  for row = 1, rows do
+    for column = 1, columns do
+      local x = (column - 1) * tileWidth
+      local y = (row - 1) * tileHeight
       quads[#quads + 1] = love.graphics.newQuad(x, y, tileWidth, tileHeight, atlas:getDimensions())
     end
   end

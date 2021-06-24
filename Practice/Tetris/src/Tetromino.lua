@@ -139,38 +139,38 @@ local FRAMES = {
   {7}
 }
 
-local CENTERS = {
-  {-0.5, 0},
-  {-1, 0.5},
-  {-0.5, 0},
-  {-0.5, 0},
-  {-0.5, 0},
-  {-0.5, 0},
-  {-1, 0}
+local OFFSET_CENTER = {
+  {0.5, 0},
+  {0, 0.5},
+  {0.5, 0},
+  {0.5, 0},
+  {0.5, 0},
+  {0.5, 0},
+  {0, 0}
 }
 
 function Tetromino:new(def)
   local def = def or {}
 
-  local isCentered = def.isCentered or false
-
   local frame = def.frame or math.random(#FRAMES)
   local type = def.type or FRAMES[frame][math.random(#FRAMES[frame])]
+
   local config = CONFIGS[type]
   local configIndex = 1
 
-  local columnStart = def.columnStart or math.floor(GRID_COLUMNS / 2)
-  local rowStart = def.rowStart or 1
+  local columnStart = def.column or math.floor(COLUMNS_GRID / 2)
+  local rowStart = def.row or 1
 
   local bricks = {}
   for k, coords in pairs(config[configIndex]) do
     local column = columnStart + coords[1]
     local row = rowStart + coords[2]
 
-    if isCentered then
-      column = column + CENTERS[type][1]
-      row = row + CENTERS[type][2]
+    if def.isCentered then
+      column = column + OFFSET_CENTER[type][1]
+      row = row + OFFSET_CENTER[type][2]
     end
+
     local brick = Brick:new(column, row, frame)
     table.insert(bricks, brick)
   end
@@ -182,8 +182,8 @@ function Tetromino:new(def)
     ["configIndex"] = configIndex,
     ["column"] = columnStart,
     ["row"] = rowStart,
-    ["isHidden"] = false,
-    ["bricks"] = bricks
+    ["bricks"] = bricks,
+    ["isHidden"] = false
   }
 
   self.__index = self

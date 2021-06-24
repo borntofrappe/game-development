@@ -1,11 +1,11 @@
 Box = {}
 
-function Box:new(column, row, columns, rows)
+function Box:new(x, y, width, height)
   local this = {
-    ["x"] = column * CELL_SIZE,
-    ["y"] = row * CELL_SIZE,
-    ["width"] = columns * CELL_SIZE,
-    ["height"] = rows * CELL_SIZE,
+    ["x"] = x,
+    ["y"] = y,
+    ["width"] = width,
+    ["height"] = height,
     ["rx"] = 4,
     ["lineWidth"] = 2
   }

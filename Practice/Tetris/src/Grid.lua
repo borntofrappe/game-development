@@ -4,14 +4,11 @@ local FRAME_BORDER = 7
 local FRAME_GAMEOVER = 6
 
 function Grid:new()
-  local columns = GRID_COLUMNS
-  local rows = GRID_ROWS
-
-  local width = columns * CELL_SIZE
-  local height = rows * CELL_SIZE
+  local columns = COLUMNS_GRID
+  local rows = ROWS_GRID
 
   local border = {}
-  for column = 1, BORDER_COLUMNS do
+  for column = 1, COLUMNS_BORDER do
     for row = 1, rows do
       table.insert(border, Brick:new(column - 1, row, FRAME_BORDER))
       table.insert(border, Brick:new(columns + column, row, FRAME_BORDER))
@@ -27,8 +24,6 @@ function Grid:new()
   end
 
   local this = {
-    ["width"] = width,
-    ["height"] = height,
     ["columns"] = columns,
     ["rows"] = rows,
     ["border"] = border,
@@ -107,7 +102,7 @@ end
 
 function Grid:render()
   love.graphics.setColor(gColors[4].r, gColors[4].g, gColors[4].b)
-  love.graphics.rectangle("fill", 0, 0, self.width, self.height)
+  love.graphics.rectangle("fill", 0, 0, self.columns * CELL_SIZE, self.rows * CELL_SIZE)
 
   love.graphics.setColor(1, 1, 1)
   for k, brick in pairs(self.border) do
