@@ -109,8 +109,8 @@ function Grid:render()
     brick:render()
   end
 
-  for k, row in pairs(self.bricks) do
-    for l, brick in pairs(row) do
+  for k, column in pairs(self.bricks) do
+    for l, brick in pairs(column) do
       brick:render()
     end
   end

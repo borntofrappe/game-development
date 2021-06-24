@@ -23,6 +23,7 @@ local INTERVAL_DECREMENT = 0.1
 local grid = Grid:new()
 local tetromino = Tetromino:new()
 local gamedata = Gamedata:new()
+
 local interval = INTERVAL_START
 local time = 0
 local state = "playing"
@@ -112,7 +113,7 @@ function love.update(dt)
             gamedata.lines = gamedata.lines + lines
             gamedata.score = gamedata.score + level * SCORE_PER_LINES[math.min(lines, #SCORE_PER_LINES)]
             gamedata.level = math.floor(gamedata.lines / 10) + 1
-            if level == gamedata.level then
+            if level ~= gamedata.level then
               interval = math.max(INTERVAL_MIN, interval - INTERVAL_DECREMENT)
             end
           end
