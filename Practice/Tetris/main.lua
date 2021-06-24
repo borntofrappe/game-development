@@ -9,9 +9,9 @@ local SCORE_PER_LINES = {
 }
 
 local grid = Grid:new()
-local tetromino = Tetromino:new(grid)
--- local gamedata = Gamedata:new()
-local interval = 0.25
+local tetromino = Tetromino:new()
+local gamedata = Gamedata:new()
+local interval = 0.8
 local time = 0
 local state = "playing"
 
@@ -68,9 +68,9 @@ function love.keypressed(key)
     if state == "gameover" then
       time = 0
       grid:reset()
-      tetromino = Tetromino:new(grid)
+      tetromino = Tetromino:new()
 
-      -- gamedata:reset()
+      gamedata:reset()
       state = "playing"
     end
   end
@@ -88,24 +88,24 @@ function love.update(dt)
       time = time % interval
 
       if tetromino:collides(grid) then
-        -- local frame = gamedata.frame
-        -- local config = gamedata.config
-        -- gamedata:updateNextTetromino()
         grid:fill(tetromino)
         local clearedLines = grid:getClearedLines()
         local lines = #clearedLines
         if lines > 0 then
           grid:updateClearedLines(clearedLines)
 
-        -- local level = gamedata.level
-        -- gamedata.lines = gamedata.lines + lines
-        -- gamedata.score = gamedata.score + level * SCORE_PER_LINES[math.min(lines, #SCORE_PER_LINES)]
-        -- gamedata.level = math.floor(gamedata.lines / 10) + 1
-
-        -- gamedata:updateData()
+          local level = gamedata.level
+          gamedata.lines = gamedata.lines + lines
+          gamedata.score = gamedata.score + level * SCORE_PER_LINES[math.min(lines, #SCORE_PER_LINES)]
+          gamedata.level = math.floor(gamedata.lines / 10) + 1
         end
 
-        tetromino = Tetromino:new(grid)
+        local frame = gamedata.tetromino.frame
+        local type = gamedata.tetromino.type
+        tetromino = Tetromino:new({["frame"] = frame, ["type"] = type})
+
+        gamedata:setNewTetromino()
+
         if tetromino:overlaps(grid) then
           grid:fillGameoverLines()
           tetromino:hide()
@@ -131,7 +131,7 @@ function love.draw()
   tetromino:render()
 
   love.graphics.translate((GRID_COLUMNS + BORDER_COLUMNS + WHITESPACE_COLUMNS) * CELL_SIZE, 0)
-  -- gamedata:render()
+  gamedata:render()
 
   push:finish()
 end
