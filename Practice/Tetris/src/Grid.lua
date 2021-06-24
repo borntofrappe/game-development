@@ -1,6 +1,7 @@
 Grid = {}
 
 local FRAME_BORDER = 7
+local FRAME_GAMEOVER = 6
 
 function Grid:new()
   local columns = GRID_COLUMNS
@@ -18,7 +19,7 @@ function Grid:new()
   end
 
   local bricks = {}
-  for column = 1, GRID_COLUMNS do
+  for column = 1, columns do
     bricks[column] = {}
     for row = 1, rows do
       bricks[column][row] = nil
@@ -45,35 +46,34 @@ function Grid:fill(tetromino)
     local column = brick.column
     local row = brick.row
     local frame = brick.frame
-    local columnOffset = brick.columnOffset
-    self.bricks[column][row] = Brick:new(column, row, frame, columnOffset)
+    self.bricks[column][row] = Brick:new(column, row, frame)
   end
 end
 
-function Grid:clearLines()
-  local linesCleared = {}
+function Grid:getClearedLines()
+  local clearedLines = {}
 
   for row = self.rows, 1, -1 do
-    local lineCleared = true
+    local isLineCleared = true
 
     for column = 1, self.columns do
       if not self.bricks[column][row] then
-        lineCleared = false
+        isLineCleared = false
         break
       end
     end
 
-    if lineCleared then
-      table.insert(linesCleared, row)
+    if isLineCleared then
+      table.insert(clearedLines, row)
     end
   end
 
-  return linesCleared
+  return clearedLines
 end
 
-function Grid:update(linesCleared)
-  for i = #linesCleared, 1, -1 do
-    local lineCleared = linesCleared[i]
+function Grid:updateClearedLines(clearedLines)
+  for i = #clearedLines, 1, -1 do
+    local lineCleared = clearedLines[i]
     for column = 1, self.columns do
       self.bricks[column][lineCleared] = nil
     end
@@ -85,6 +85,22 @@ function Grid:update(linesCleared)
           self.bricks[column][row] = nil
         end
       end
+    end
+  end
+end
+
+function Grid:fillGameoverLines()
+  for column = 1, self.columns do
+    for row = 1, self.rows do
+      self.bricks[column][row] = Brick:new(column, row, FRAME_GAMEOVER)
+    end
+  end
+end
+
+function Grid:reset()
+  for column = 1, self.columns do
+    for row = 1, self.rows do
+      self.bricks[column][row] = nil
     end
   end
 end

@@ -139,16 +139,16 @@ local FRAMES = {
   {7}
 }
 
-function Tetromino:new(grid)
-  local frame = math.random(#FRAMES)
-  local config = CONFIGS[FRAMES[frame][math.random(#FRAMES[frame])]]
-  local index = 1
+function Tetromino:new(grid, frame, config)
+  local frame = frame or math.random(#FRAMES)
+  local config = config or CONFIGS[FRAMES[frame][math.random(#FRAMES[frame])]]
+  local configIndex = 1
 
   local columnStart = math.floor(grid.columns / 2)
   local rowStart = 1
 
   local bricks = {}
-  for k, coords in pairs(config[index]) do
+  for k, coords in pairs(config[configIndex]) do
     local column = columnStart + coords[1]
     local row = rowStart + coords[2]
     local brick = Brick:new(column, row, frame)
@@ -157,10 +157,11 @@ function Tetromino:new(grid)
 
   local this = {
     ["config"] = config,
-    ["index"] = index,
+    ["configIndex"] = configIndex,
+    ["frame"] = frame,
     ["column"] = columnStart,
     ["row"] = rowStart,
-    ["frame"] = frame,
+    ["isHidden"] = false,
     ["bricks"] = bricks
   }
 
@@ -176,18 +177,13 @@ function Tetromino:rotate(grid)
   end
 
   local canRotate = true
-
-  local index = self.index == #self.config and 1 or self.index + 1
-  local startConfig = self.config[self.index]
-  local endConfig = self.config[index]
-
+  local configIndex = self.configIndex == #self.config and 1 or self.configIndex + 1
   local bricks = {}
 
-  for k, coords in pairs(self.config[index]) do
+  for k, coords in pairs(self.config[configIndex]) do
     local column = self.column + coords[1]
     local row = self.row + coords[2]
 
-    -- check if the column and row are available before creating the brick
     if column < 1 or column > grid.columns or row < 1 or row > grid.rows or grid.bricks[column][row] then
       canRotate = false
       break
@@ -198,7 +194,7 @@ function Tetromino:rotate(grid)
   end
 
   if canRotate then
-    self.index = index
+    self.configIndex = configIndex
     self.bricks = bricks
   end
 end
@@ -284,16 +280,32 @@ function Tetromino:collides(grid)
   return false
 end
 
+function Tetromino:overlaps(grid)
+  for k, brick in pairs(self.bricks) do
+    if grid.bricks[brick.column][brick.row] then
+      return true
+    end
+  end
+
+  return false
+end
+
 function Tetromino:update()
   self.row = self.row + 1
-  for k, brick in pairs(tetromino.bricks) do
+  for k, brick in pairs(self.bricks) do
     brick.row = brick.row + 1
   end
 end
 
+function Tetromino:hide()
+  self.isHidden = true
+end
+
 function Tetromino:render()
-  love.graphics.setColor(1, 1, 1)
-  for k, brick in pairs(self.bricks) do
-    brick:render()
+  if not self.isHidden then
+    love.graphics.setColor(1, 1, 1)
+    for k, brick in pairs(self.bricks) do
+      brick:render()
+    end
   end
 end

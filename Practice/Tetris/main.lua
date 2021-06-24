@@ -1,11 +1,19 @@
 require "src/Dependencies"
 
+-- level * points per lines up to 4
 local SCORE_PER_LINES = {
   [1] = 40,
   [2] = 100,
   [3] = 300,
   [4] = 1200
 }
+
+local grid = Grid:new()
+local tetromino = Tetromino:new(grid)
+-- local gamedata = Gamedata:new()
+local interval = 0.25
+local time = 0
+local state = "playing"
 
 function love.load()
   love.window.setTitle("Tetris")
@@ -37,13 +45,6 @@ function love.load()
   gFrames = GenerateQuads(gTexture, CELL_SIZE, CELL_SIZE)
 
   love.graphics.setFont(gFont)
-
-  grid = Grid:new(COLUMNS, ROWS)
-  tetromino = Tetromino:new(grid)
-  info = Info:new()
-
-  interval = 0.5
-  time = 0
 end
 
 function love.keypressed(key)
@@ -52,11 +53,26 @@ function love.keypressed(key)
   end
 
   if key == "space" or key == "up" then
-    tetromino:rotate(grid)
+    if state == "playing" then
+      tetromino:rotate(grid)
+    end
   end
 
   if key == "right" or key == "down" or key == "left" then
-    tetromino:move(key, grid)
+    if state == "playing" then
+      tetromino:move(key, grid)
+    end
+  end
+
+  if key == "return" then
+    if state == "gameover" then
+      time = 0
+      grid:reset()
+      tetromino = Tetromino:new(grid)
+
+      -- gamedata:reset()
+      state = "playing"
+    end
   end
 end
 
@@ -65,24 +81,40 @@ function love.resize(width, height)
 end
 
 function love.update(dt)
-  time = time + dt
-  if time > interval then
-    time = time % interval
-    if tetromino:collides(grid) then
-      grid:fill(tetromino)
-      local linesCleared = grid:clearLines()
-      local lines = #linesCleared
-      if lines > 0 then
-        grid:update(linesCleared)
-        local level = info.infoboxes["level"].value
-        info.infoboxes["lines"].value = info.infoboxes["lines"].value + lines
-        info.infoboxes["level"].value = math.ceil((info.infoboxes["lines"].value + 1) / 10)
-        info.infoboxes["score"].value =
-          info.infoboxes["score"].value + SCORE_PER_LINES[math.min(#SCORE_PER_LINES, lines)] * level
+  if state == "playing" then
+    time = time + dt
+
+    if time > interval then
+      time = time % interval
+
+      if tetromino:collides(grid) then
+        -- local frame = gamedata.frame
+        -- local config = gamedata.config
+        -- gamedata:updateNextTetromino()
+        grid:fill(tetromino)
+        local clearedLines = grid:getClearedLines()
+        local lines = #clearedLines
+        if lines > 0 then
+          grid:updateClearedLines(clearedLines)
+
+        -- local level = gamedata.level
+        -- gamedata.lines = gamedata.lines + lines
+        -- gamedata.score = gamedata.score + level * SCORE_PER_LINES[math.min(lines, #SCORE_PER_LINES)]
+        -- gamedata.level = math.floor(gamedata.lines / 10) + 1
+
+        -- gamedata:updateData()
+        end
+
+        tetromino = Tetromino:new(grid)
+        if tetromino:overlaps(grid) then
+          grid:fillGameoverLines()
+          tetromino:hide()
+          state = "gameover"
+        else
+        end
+      else
+        tetromino:update()
       end
-      tetromino = Tetromino:new(grid)
-    else
-      tetromino:update()
     end
   end
 end
@@ -93,14 +125,13 @@ function love.draw()
   love.graphics.setColor(gColors[1].r, gColors[1].g, gColors[1].b)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
-  info:render()
+  love.graphics.translate((WHITESPACE_COLUMNS + BORDER_COLUMNS) * CELL_SIZE, 0)
 
-  love.graphics.translate((LEFT_PADDING_COLUMNS + BORDER_COLUMNS) * CELL_SIZE, 0)
   grid:render()
   tetromino:render()
 
-  love.graphics.translate((GRID_COLUMNS + BORDER_COLUMNS) * CELL_SIZE, 0)
-  info:render()
+  love.graphics.translate((GRID_COLUMNS + BORDER_COLUMNS + WHITESPACE_COLUMNS) * CELL_SIZE, 0)
+  -- gamedata:render()
 
   push:finish()
 end
