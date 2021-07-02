@@ -18,11 +18,6 @@ function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
-
-  -- debugging
-  if key == "r" then
-    grid = Grid:new()
-  end
 end
 
 function love.mousepressed(x, y, button)

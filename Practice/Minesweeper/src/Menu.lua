@@ -33,7 +33,7 @@ function Menu:render()
   love.graphics.setColor(COLORS["text"].r, COLORS["text"].g, COLORS["text"].b)
 
   if self.isFlagSelected then
-    love.graphics.setColor(0.2, 0.2, 0.2, 0.35)
+    love.graphics.setColor(0, 0, 0, 0.25)
     love.graphics.rectangle(
       "fill",
       WINDOW_WIDTH / 2 - TEXTURES["flag"]:getWidth() - FONTS["normal"]:getWidth(MINES) - SPACE_BETWEEN - WHITESPACE -

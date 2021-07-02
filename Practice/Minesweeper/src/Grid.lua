@@ -60,20 +60,6 @@ function Grid:new()
   return this
 end
 
-function Grid:revealAll()
-  for column = 1, COLUMNS do
-    for row = 1, ROWS do
-      self.cells[column][row].isRevealed = true
-    end
-  end
-end
-
-function Grid:toggleFlag(column, row)
-  if not self.cells[column][row].isRevealed then
-    self.cells[column][row].isFlagged = not self.cells[column][row].isFlagged
-  end
-end
-
 function Grid:reveal(column, row)
   if not self.cells[column][row].isRevealed and not self.cells[column][row].isFlagged then
     self.cells[column][row].isRevealed = true
@@ -94,6 +80,20 @@ function Grid:reveal(column, row)
         end
       end
     end
+  end
+end
+
+function Grid:revealAll()
+  for column = 1, COLUMNS do
+    for row = 1, ROWS do
+      self.cells[column][row].isRevealed = true
+    end
+  end
+end
+
+function Grid:toggleFlag(column, row)
+  if not self.cells[column][row].isRevealed then
+    self.cells[column][row].isFlagged = not self.cells[column][row].isFlagged
   end
 end
 
