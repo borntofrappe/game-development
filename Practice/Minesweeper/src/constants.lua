@@ -1,3 +1,4 @@
+MINES = 10
 COLUMNS = 7
 ROWS = 11
 

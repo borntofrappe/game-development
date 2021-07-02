@@ -1,6 +1,19 @@
 Grid = {}
 
 function Grid:new()
+  local mines = MINES
+  local minesCoords = {}
+
+  repeat
+    local column = math.random(COLUMNS)
+    local row = math.random(ROWS)
+
+    if not minesCoords["c" .. column .. "r" .. row] then
+      minesCoords["c" .. column .. "r" .. row] = true
+      mines = mines - 1
+    end
+  until mines == 0
+
   local cells = {}
   for column = 1, COLUMNS do
     cells[column] = {}
@@ -10,9 +23,30 @@ function Grid:new()
         {
           ["column"] = column,
           ["row"] = row,
-          ["isDark"] = (column + row) % 2 == 0
+          ["isDark"] = (column + row) % 2 == 0,
+          ["hasMine"] = minesCoords["c" .. column .. "r" .. row]
         }
       )
+    end
+  end
+
+  for column = 1, COLUMNS do
+    for row = 1, ROWS do
+      if not cells[column][row].hasMine then
+        local c1 = math.max(1, column - 1)
+        local c2 = math.min(COLUMNS, column + 1)
+        local r1 = math.max(1, row - 1)
+        local r2 = math.min(ROWS, row + 1)
+        local neighboringMines = 0
+        for c = c1, c2 do
+          for r = r1, r2 do
+            if (c ~= column or r ~= row) and cells[c][r].hasMine then
+              neighboringMines = neighboringMines + 1
+            end
+          end
+        end
+        cells[column][row].neighboringMines = neighboringMines
+      end
     end
   end
 
@@ -33,9 +67,9 @@ function Grid:reveal(column, row)
 end
 
 function Grid:render()
-  for k, column in pairs(self.cells) do
-    for l, cell in pairs(column) do
-      cell:render()
+  for column = 1, COLUMNS do
+    for row = 1, ROWS do
+      self.cells[column][row]:render()
     end
   end
 end

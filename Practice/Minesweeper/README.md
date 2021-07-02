@@ -4,36 +4,22 @@
 
 ## Notes
 
-A grid of columns and rows.
+- cell in its various states: dark, revealed, mine, neighboring mines
 
-A cell with a few bits of information
+- grid populating a 2d grid
 
-- has a mine
+- window sized according to the number of columns and rows
 
-- x, y, size
+- 1 based indexing
 
-- is revealed
+- on click reveal the cell corresponding to the x,y coordinates
 
-- number of neighbors
+- populate grid with a fixed number of mines. `mines` and `minesCoords` with a `repeat ... until` loop in the initialization of the grid
 
-- The data structure is a A 2D array describing the columns first and the cells later
+- add hints by looping through the grid and count the number of neighboring mines. Only for non-mine cells. `math.min` and `math.max` help to constrain the cells to the existing columns and rows. Tilde character `~` to check for inequality `~=`
 
-[
-[,,,]
-[,,,]
-[,,,]
-]
-
-- position on the basis of the index of the column and row (lua 1 base indexing)
-
-- mechanism to reveal, on click considering the x and y coordinate of the mouse cursor
-
-- how many neighbors have a mine considering the neighbors -1,1; -1, 1 skipping 0 0. Consider only the cells in the grid
+---
 
 - a fixed number of mines; pick a cell, making sure not to pick the same cell twice (array of options, from which you remove the chosen option)
 
 - if a clicked cell has no neighbor, reveal all adjacent cells without a mine, recursively. Flood algorithm whereby you reveal the neighbor and call the function reveal. Make sure not to call the function with a revealed cell
-
-## Game
-
-Similarly to tetris, the size of the window is computed from the number of columns, rows and the sizr of the individual cell

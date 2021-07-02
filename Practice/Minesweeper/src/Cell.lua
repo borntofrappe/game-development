@@ -6,7 +6,8 @@ function Cell:new(def)
     {
       ["column"] = 1,
       ["row"] = 1,
-      ["isDark"] = true
+      ["isDark"] = true,
+      ["hasMine"] = false
     }
 
   local this = {
@@ -15,8 +16,8 @@ function Cell:new(def)
     ["x"] = (def.column - 1) * CELL_SIZE,
     ["y"] = (def.row - 1) * CELL_SIZE,
     ["size"] = CELL_SIZE,
-    ["isRevealed"] = false,
-    ["hasMine"] = false,
+    ["isRevealed"] = true,
+    ["hasMine"] = def.hasMine,
     ["neighboringMines"] = 0,
     ["version"] = def.isDark and "dark" or "light"
   }
@@ -45,9 +46,9 @@ function Cell:render()
       if self.neighboringMines > 0 then
         love.graphics.setFont(FONTS["bold"])
         love.graphics.setColor(
-          COLORS["number-" .. self.neighboringMines].r,
-          COLORS["number-" .. self.neighboringMines].g,
-          COLORS["number-" .. self.neighboringMines].b
+          COLORS["number-" .. math.min(3, self.neighboringMines)].r,
+          COLORS["number-" .. math.min(3, self.neighboringMines)].g,
+          COLORS["number-" .. math.min(3, self.neighboringMines)].b
         )
 
         love.graphics.printf(
