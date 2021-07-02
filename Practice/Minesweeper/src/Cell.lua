@@ -16,7 +16,7 @@ function Cell:new(def)
     ["x"] = (def.column - 1) * CELL_SIZE,
     ["y"] = (def.row - 1) * CELL_SIZE,
     ["size"] = CELL_SIZE,
-    ["isRevealed"] = true,
+    ["isRevealed"] = false,
     ["hasMine"] = def.hasMine,
     ["neighboringMines"] = 0,
     ["version"] = def.isDark and "dark" or "light"

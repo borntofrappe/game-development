@@ -1,5 +1,8 @@
 require "src/Dependencies"
 
+local grid = Grid:new()
+local state = "playing"
+
 function love.load()
   love.window.setTitle("Minesweeper")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -8,8 +11,6 @@ function love.load()
     COLORS["background-light"].g,
     COLORS["background-light"].b
   )
-
-  grid = Grid:new()
 end
 
 function love.keypressed(key)
@@ -25,11 +26,19 @@ end
 
 function love.mousepressed(x, y, button)
   if button == 1 then
-    if x > PADDING_X and x < WINDOW_WIDTH - PADDING_X and y > PADDING_Y and y < WINDOW_HEIGHT - PADDING_Y then
-      local column = math.floor((x - PADDING_X) / CELL_SIZE) + 1
-      local row = math.floor((y - PADDING_Y) / CELL_SIZE) + 1
+    if state == "playing" then
+      if x > PADDING_X and x < WINDOW_WIDTH - PADDING_X and y > PADDING_Y and y < WINDOW_HEIGHT - PADDING_Y then
+        local column = math.floor((x - PADDING_X) / CELL_SIZE) + 1
+        local row = math.floor((y - PADDING_Y) / CELL_SIZE) + 1
 
-      grid:reveal(column, row)
+        local hasMine = grid:reveal(column, row)
+        if hasMine then
+          state = "gameover"
+        end
+      end
+    elseif state == "gameover" then
+      grid = Grid:new()
+      state = "playing"
     end
   end
 end

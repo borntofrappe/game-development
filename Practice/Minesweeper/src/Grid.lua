@@ -60,9 +60,34 @@ function Grid:new()
   return this
 end
 
+function Grid:revealAll()
+  for column = 1, COLUMNS do
+    for row = 1, ROWS do
+      self.cells[column][row].isRevealed = true
+    end
+  end
+end
+
 function Grid:reveal(column, row)
   if not self.cells[column][row].isRevealed then
     self.cells[column][row].isRevealed = true
+    if self.cells[column][row].hasMine then
+      self:revealAll()
+
+      return true
+    elseif self.cells[column][row].neighboringMines == 0 then
+      local c1 = math.max(1, column - 1)
+      local c2 = math.min(COLUMNS, column + 1)
+      local r1 = math.max(1, row - 1)
+      local r2 = math.min(ROWS, row + 1)
+      for c = c1, c2 do
+        for r = r1, r2 do
+          if (c ~= column or r ~= row) then
+            self:reveal(c, r)
+          end
+        end
+      end
+    end
   end
 end
 

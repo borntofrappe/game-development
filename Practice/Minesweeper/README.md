@@ -18,8 +18,6 @@
 
 - add hints by looping through the grid and count the number of neighboring mines. Only for non-mine cells. `math.min` and `math.max` help to constrain the cells to the existing columns and rows. Tilde character `~` to check for inequality `~=`
 
----
+- gameplay: reveal on click, reveal all when clicking on a mine, reveal recursively when there are no surrounding mines
 
-- a fixed number of mines; pick a cell, making sure not to pick the same cell twice (array of options, from which you remove the chosen option)
-
-- if a clicked cell has no neighbor, reveal all adjacent cells without a mine, recursively. Flood algorithm whereby you reveal the neighbor and call the function reveal. Make sure not to call the function with a revealed cell
+- gameplay: a string variable to manage two states, playing and gameover; have the reveal function return `true` if there is a mine
