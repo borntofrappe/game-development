@@ -19,7 +19,8 @@ function Cell:new(def)
     ["isRevealed"] = false,
     ["hasMine"] = def.hasMine,
     ["neighboringMines"] = 0,
-    ["version"] = def.isDark and "dark" or "light"
+    ["version"] = def.isDark and "dark" or "light",
+    ["isFlagged"] = false
   }
 
   self.__index = self
@@ -34,7 +35,7 @@ function Cell:render()
       love.graphics.setColor(COLORS["mine"].r, COLORS["mine"].g, COLORS["mine"].b)
       love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
       love.graphics.setColor(0, 0, 0, 0.25)
-      love.graphics.circle("fill", self.x + self.size / 2, self.y + self.size / 2, self.size / 4)
+      love.graphics.circle("fill", self.x + self.size / 2, self.y + self.size / 2, self.size / 5)
     else
       love.graphics.setColor(
         COLORS["cell-revealed-" .. self.version].r,
@@ -68,6 +69,13 @@ function Cell:render()
     )
     love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 
-    love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+    if self.isFlagged then
+      love.graphics.setColor(1, 1, 1)
+      love.graphics.draw(
+        TEXTURES["flag"],
+        self.x + self.size / 2 - TEXTURES["flag"]:getWidth() / 2,
+        self.y + self.size / 2 - TEXTURES["flag"]:getHeight() / 2
+      )
+    end
   end
 end

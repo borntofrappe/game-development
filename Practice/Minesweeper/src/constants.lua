@@ -5,10 +5,12 @@ ROWS = 11
 PADDING_X = 28
 PADDING_Y = 24
 
+MENU_HEIGHT = 52
+
 CELL_SIZE = 50
 
 WINDOW_WIDTH = COLUMNS * CELL_SIZE + PADDING_X * 2
-WINDOW_HEIGHT = ROWS * CELL_SIZE + PADDING_Y * 2
+WINDOW_HEIGHT = ROWS * CELL_SIZE + PADDING_Y * 2 + MENU_HEIGHT
 
 COLORS = {
   ["background-light"] = {
@@ -60,10 +62,20 @@ COLORS = {
     ["r"] = 0.83,
     ["g"] = 0.18,
     ["b"] = 0.18
+  },
+  ["text"] = {
+    ["r"] = 1,
+    ["g"] = 1,
+    ["b"] = 1
   }
 }
 
 FONTS = {
   ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 18),
   ["bold"] = love.graphics.newFont("res/fonts/font-bold.ttf", math.floor(CELL_SIZE / 1.5))
+}
+
+TEXTURES = {
+  ["flag"] = love.graphics.newImage("res/graphics/flag.png"),
+  ["stopwatch"] = love.graphics.newImage("res/graphics/stopwatch.png")
 }

@@ -68,8 +68,14 @@ function Grid:revealAll()
   end
 end
 
-function Grid:reveal(column, row)
+function Grid:toggleFlag(column, row)
   if not self.cells[column][row].isRevealed then
+    self.cells[column][row].isFlagged = not self.cells[column][row].isFlagged
+  end
+end
+
+function Grid:reveal(column, row)
+  if not self.cells[column][row].isRevealed and not self.cells[column][row].isFlagged then
     self.cells[column][row].isRevealed = true
     if self.cells[column][row].hasMine then
       self:revealAll()
