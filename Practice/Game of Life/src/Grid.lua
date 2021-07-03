@@ -105,7 +105,7 @@ function Grid:update(dt)
 end
 
 function Grid:render()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
 
   love.graphics.push()
   love.graphics.translate(self.x, self.y)

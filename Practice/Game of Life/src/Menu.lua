@@ -11,7 +11,7 @@ function Menu:new(x, y, options)
     end
   end
 
-  local fontSize = math.floor((width / 2) / maxcharacters)
+  local fontSize = math.floor((width / 1.5) / maxcharacters)
   local buttonWidth = fontSize * maxcharacters
   local buttonX = x + (width - buttonWidth) / 2
 
@@ -23,7 +23,6 @@ function Menu:new(x, y, options)
   local buttonY = yGap
 
   local buttons = {}
-
   for i, option in ipairs(options) do
     local button = Button:new(buttonX, buttonY, buttonWidth, buttonHeight, option.text, option.callback)
     table.insert(buttons, button)

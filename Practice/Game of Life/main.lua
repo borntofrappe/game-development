@@ -1,16 +1,17 @@
 require "src/Dependencies"
 
 local COLUMNS = 21
-local ROWS = 19
+local ROWS = 21
 
 local grid
 local menu
 
 function love.load()
   love.window.setTitle("Game of Life")
-  love.graphics.setBackgroundColor(0.01, 0.07, 0.1)
+  love.graphics.setBackgroundColor(COLORS.background.r, COLORS.background.g, COLORS.background.b)
 
   math.randomseed(os.time())
+
   love.window.setMode(0, 0)
   WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
 
@@ -91,7 +92,8 @@ function love.update(dt)
 end
 
 function love.draw()
-  grid:render()
+  love.graphics.setLineWidth(2)
 
+  grid:render()
   menu:render()
 end

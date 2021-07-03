@@ -8,7 +8,7 @@ function Button:new(x, y, width, height, text, callback)
     ["height"] = height,
     ["text"] = text,
     ["callback"] = callback,
-    ["isHover"] = false
+    ["isMouseover"] = false
   }
 
   self.__index = self
@@ -18,22 +18,21 @@ function Button:new(x, y, width, height, text, callback)
 end
 
 function Button:mouseenter()
-  self.isHover = true
+  self.isMouseover = true
 end
 
 function Button:mouseleave()
-  self.isHover = false
+  self.isMouseover = false
 end
 
 function Button:render()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
 
-  love.graphics.setLineWidth(2)
   love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 
-  if self.isHover then
+  if self.isMouseover then
     love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-    love.graphics.setColor(0, 0, 0)
+    love.graphics.setColor(COLORS.background.r, COLORS.background.g, COLORS.background.b)
   else
   end
   love.graphics.printf(self.text, self.x, self.y + self.height / 4, self.width, "center")
