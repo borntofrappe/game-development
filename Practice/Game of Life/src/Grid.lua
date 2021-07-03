@@ -1,6 +1,7 @@
 Grid = {}
 
 local ALIVE_ODDS = 3 -- 1 in 3
+local INTERVAL = 0.15
 
 function Grid:new(columns, rows, cellSize)
   local cells = {}
@@ -12,13 +13,23 @@ function Grid:new(columns, rows, cellSize)
     end
   end
 
+  local width = columns * cellSize
+  local height = rows * cellSize
+
+  local x = WINDOW_WIDTH / 4 - width / 2
+  local y = (WINDOW_HEIGHT - height) / 2
+
   local this = {
     ["cells"] = cells,
     ["columns"] = columns,
     ["rows"] = rows,
     ["cellSize"] = cellSize,
-    ["width"] = columns * cellSize,
-    ["height"] = rows * cellSize
+    ["x"] = x,
+    ["y"] = y,
+    ["width"] = width,
+    ["height"] = height,
+    ["time"] = 0,
+    ["isAnimating"] = false
   }
 
   self.__index = self
@@ -76,11 +87,33 @@ function Grid:reset()
   self.cells = cells
 end
 
+function Grid:toggleAnimation()
+  self.isAnimating = not self.isAnimating
+  if self.isAnimating then
+    self:step()
+  else
+    self.time = 0
+  end
+end
+
+function Grid:update(dt)
+  self.time = self.time + dt
+  if self.time >= INTERVAL then
+    self.time = self.time % INTERVAL
+    self:step()
+  end
+end
+
 function Grid:render()
+  love.graphics.setColor(1, 1, 1)
+
+  love.graphics.push()
+  love.graphics.translate(self.x, self.y)
   love.graphics.rectangle("line", 0, 0, self.width, self.height)
   for column = 1, self.columns do
     for row = 1, self.rows do
       self.cells[column][row]:render()
     end
   end
+  love.graphics.pop()
 end
