@@ -2,15 +2,13 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
-Render a static grid of tiles.
-
 ## Quads
 
-The project considers the image provided in _match3.png_, and creates a table in which each tile is represented by a quad. There are 18 sets of colors, each with 6 varieties, and each with a 32x32 size.
+The project considers the image provided in `match3.png` and creates a table in which each tile is represented by a quad. There are 18 sets of colors, each with 6 varieties, and each with a 32x32 size.
 
 Instead of adding the quads in a single table, the script goes one step further to structure the table according to color and variety.
 
-```pseudo
+```code
 quads = {
   color = {
     { variety },
@@ -36,7 +34,7 @@ This is achieved by nesting two for loops, and modifying the `x` and `y` coordin
 
 - the colors are row by row
 
-- the colors are divided in two groups, and positioned side by side
+- the colors are divided in two groups and positioned side by side
 
 Refer to `GenerateQuadsTiles` for the actual implementation.
 
@@ -52,7 +50,7 @@ gFrames = {
 }
 ```
 
-To render an individual tile then, use `love.graphics.draw`.
+To render an individual tile, then, use `love.graphics.draw`.
 
 ```lua
 love.graphics.draw(gTextures["match3"],gFrames["tiles"][1][1],0,0)
@@ -68,7 +66,7 @@ function generateBoard(rows, columns)
 end
 ```
 
-With the extra arguments, the function builds the grid with a 2d table.
+With the extra arguments, the function builds the grid with a 2D table.
 
 ```lua
 for y = 1, rows do
@@ -96,13 +94,13 @@ table.insert(
 )
 ```
 
-With a nested for loop, it's possible to rapidly target one cell. For instance, to target the first row, fourth column, you' consider the cell `board[1][4]`.
+With the nested for loop, it's possible to rapidly target one cell. For instance, to target the first row, fourth column, you' consider the cell `board[1][4]`.
 
 ## drawBoard
 
 The function receives as argument the board to-be-rendered, and then loops through the table(s) to draw the specific tile.
 
-Once created, the grid is finally drawn in `love.draw`, once again using nested loops. Once again, the video uses hard-coded values for the rows and columns, but using `ipairs` you loop through the table in order, and taking stock of the structure of the input board.
+Once created, the grid is finally drawn in `love.draw`, once again using nested loops. Once again, the video uses hard-coded values for the rows and columns, but with the `ipairs` iterator it is possible to loop through the table in order.
 
 ```lua
 function drawBoard(board)
@@ -114,4 +112,4 @@ function drawBoard(board)
 end
 ```
 
-I use the index value to draw the tiles side by side.
+I use the index value to draw the tiles side by side. In `love.draw` then, I translate the grid to the center of the window.

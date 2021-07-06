@@ -44,6 +44,12 @@ The `Prep` folder includes several demos to discuss different topics:
 
 - `Swap`: swap two tiles
 
+  0. render a static grid of tiles
+
+  1. select, highlight, and finally swap tiles
+
+  2. tween the position of the tiles
+
 Past these folders, the game is developed in `Match Three *` folders.
 
 <!-- 0. -->

@@ -60,8 +60,8 @@ function love.keypressed(key)
         y = selectedTile.y
       }
     else
-      tile1 = board[selectedTile.y][selectedTile.x]
-      tile2 = board[highlightedTile.y][highlightedTile.x]
+      local tile1 = board[selectedTile.y][selectedTile.x]
+      local tile2 = board[highlightedTile.y][highlightedTile.x]
       if math.abs(tile1.x - tile2.x) + math.abs(tile1.y - tile2.y) == 1 then
         tempX, tempY = tile1.x, tile1.y
 

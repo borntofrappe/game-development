@@ -2,13 +2,11 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
-Tween the position of the tiles.
-
 ## Board
 
-To smoothly change the position of the tiles, it's necessary to have two dedicated fields describing the `x` and `y` coordinate.
+To smoothly change the position of the tiles, it is necessary to have two dedicated fields describing the `x` and `y` coordinate.
 
-The table is updated to include the values.
+The table for the individual tiles is updated to include the coordinates.
 
 ```lua
 {
@@ -19,7 +17,7 @@ The table is updated to include the values.
 }
 ```
 
-And the render function uses the `x` and `y` field instead of the indexes.
+The render function then uses the `x` and `y` field instead of the indexes.
 
 ```lua
 love.graphics.draw(
@@ -30,7 +28,7 @@ love.graphics.draw(
 )
 ```
 
-This means that when you swap the tiles however, you need to swap the values of the coordinates as well.
+This means that when you swap the tiles however, you need to swap the values of the coordinates as well. It is not enough to change the position of the tiles in `board`.
 
 ```lua
 -- swap in board
@@ -47,11 +45,9 @@ board[highlightedTile.y][highlightedTile.x].x = tempX
 board[highlightedTile.y][highlightedTile.x].y = tempY
 ```
 
-It's not enough to change the position of the tiles in `board`.
-
 ## Tween
 
-The previous snippet works to modify the board and the coordinates immediately. With the `timer` module however, the change in coordinates is nested in the callback function of `Timer.tween()`
+The previous snippet works to modify the board and the coordinates immediately. With the `timer` module, however, the change in coordinates is nested in the callback function of `Timer.tween()`
 
 ```lua
 -- swap in board
@@ -93,8 +89,8 @@ Only when the tiles are adjacent, the difference between the coordinates in abso
 Using `board[selectedTile.y][selectedTile.x]` and `board[hihglightedTile.y][hihglightedTile.x]` over and over makes the code harded to read. For the tween animation, I decided to repeat the practice introduced in the video and use two variables `tile1` and `tile2` instead.
 
 ```lua
-tile1 = board[selectedTile.y][selectedTile.x]
-tile2 = board[highlightedTile.y][highlightedTile.x]
+local tile1 = board[selectedTile.y][selectedTile.x]
+local tile2 = board[highlightedTile.y][highlightedTile.x]
 ```
 
 They hold the same information, but make the logic behind the swap easier to understand. It's important to note that to swap the tiles in the grid, it is still necessary to access the `board` table.

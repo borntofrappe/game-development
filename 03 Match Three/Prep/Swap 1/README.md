@@ -2,8 +2,6 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
-Select, highlight, swap tiles.
-
 ## Select
 
 The current selection is highlighted with the stroke of a rectangle.
@@ -48,7 +46,7 @@ if key == "enter" or key == "return" then
 end
 ```
 
-This variable starts out with a value of `nil`, so to render the desired visual only when a tile has been chosen.
+The variable starts out with a value of `nil`, so to render the desired visual only when a tile has been chosen.
 
 ```lua
 function love.load()
@@ -63,8 +61,6 @@ function love.draw()
   end
 end
 ```
-
-Remember to reset the opacity once you alter it with `setColor`.
 
 In this manner a tile is highlighted, but never returns to its default status. To this end, include a conditional in the function checking a key press.
 
@@ -99,7 +95,7 @@ end
 The swap is achieved by storing one of the two tiles in a temporary variable, and then override the board values.
 
 ```lua
-tempTile = board[selectedTile.y][selectedTile.x]
+local tempTile = board[selectedTile.y][selectedTile.x]
 
 board[selectedTile.y][selectedTile.x] = board[highlightedTile.y][highlightedTile.x]
 
