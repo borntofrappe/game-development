@@ -1,4 +1,8 @@
-The script sets up a timer with a library. For the library, refer to _timer.lua_ in the `knife` modules.
+# Timer 2
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
+The script sets up a timer with a library. For the library, refer to `timer.lua` in the `knife` folder.
 
 The idea is to create a global `Timer` object which manages the different intervals.
 
@@ -22,7 +26,7 @@ end)
 
 Once set up, `every` will run the function at the prescribed interval. `after` would otherwise run the function after the decided delay.
 
-## Interval(s)
+## Intervals
 
 To illustrate the library, here's how you set up a single interval.
 

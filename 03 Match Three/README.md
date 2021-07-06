@@ -1,40 +1,46 @@
+## 03 Match Tree
+
 The fourth video moves on to create a game in which you match tiles of the same shape and color.
 
 ## Topics
 
 - anonymous functions
 
-- tweening
+- tweening, interpolating a value over time
 
-- timers
+- timers, to have something happen at intervals, or after a certain amount of time
 
-- clearing matches
+- solving matches and repopulating the level
 
-- procedural grids
+- procedural grids, generating levels with some degree of randomness
 
-- sprite art and palettes
+- sprite art and palettes, using a restricted set of color
 
-## Project structure
+## Increments
 
-In _Match Three — Final_ find the version of the game as developed alongside the video.
+The `Prep` folder includes several demos to discuss different topics:
 
-In _Match Three — Assignment_ find the version including the assignments.
+- `Timer`: consider time events
 
-That being said, the game is developed in _Match Three \*_ folders. There are also additional demos to discuss dedicated topics:
+  0.  count the number of seconds through `dt` and dedicated variables
 
-1. _Timer_, how to consider time events
+  1.  keep track of multiple intervals with multiple variables
 
-2. _Tween_, how to interpolate between values over time
+  2.  set up multiple intervals with the `knife/timer` library
 
-3. _Chain_, how to have multiple operations in sequence
+- `Tween`, how to interpolate between values over time
 
-4. _Swap_, how to swapping two tiles
+- `Chain`, how to have multiple operations in sequence
 
-These are saved in the _Prep_ folder, and chronologically precede the games' folders.
+- `Swap`, how to swap two tiles
+
+Past these folders, the game is developed in `Match Three *` folders.
+
+<!-- 0. -->
 
 ## Resources
 
-- [Match 3](https://youtu.be/64TbMmCgRv0)
+- [Match Three](https://youtu.be/64TbMmCgRv0)
 
 - [push library](https://github.com/Ulydev/push)
 

@@ -1,3 +1,7 @@
+# Timer 1
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
 The goal is to here consider multiple timers, counting upwards at different intervals. This shows the flaws of using variables: for every time you need a new set of variables, `timer2` and `seconds2`, and you need to update the variables independently.
 
 ```lua

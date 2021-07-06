@@ -55,7 +55,7 @@ function love.draw()
     love.graphics.printf(
       "Timer:" .. seconds[i] .. " seconds (" .. interval .. "s)",
       0,
-      VIRTUAL_HEIGHT / 2 - 12 - 28 - 2 + (28 + 1) * (i - 1),
+      VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 + font:getHeight() * (i - #intervals / 2),
       VIRTUAL_WIDTH,
       "center"
     )

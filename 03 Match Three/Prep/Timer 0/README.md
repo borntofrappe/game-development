@@ -1,3 +1,7 @@
+# Timer 0
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
 The script counts the number of seconds through two variables:
 
 - `timer`, to consider the passage of time as detailed by the `dt` argument from `love.update(dt)`

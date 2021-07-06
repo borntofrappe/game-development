@@ -74,7 +74,7 @@ function love.draw()
   love.graphics.printf(
     "Timer:" .. seconds .. " seconds (1s)",
     0,
-    VIRTUAL_HEIGHT / 2 - 12 - 28 - 2,
+    VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 - font:getHeight() * 1.5,
     VIRTUAL_WIDTH,
     "center"
   )
@@ -82,17 +82,23 @@ function love.draw()
   love.graphics.printf(
     "Timer:" .. seconds2 .. " seconds (0.5s)",
     0,
-    VIRTUAL_HEIGHT / 2 - 12 - 1,
+    VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 - font:getHeight() * 0.5,
     VIRTUAL_WIDTH,
     "center"
   )
 
-  love.graphics.printf("Timer:" .. seconds3 .. " seconds (4s)", 0, VIRTUAL_HEIGHT / 2 + 12 + 1, VIRTUAL_WIDTH, "center")
+  love.graphics.printf(
+    "Timer:" .. seconds3 .. " seconds (4s)",
+    0,
+    VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 + font:getHeight() * 0.5,
+    VIRTUAL_WIDTH,
+    "center"
+  )
 
   love.graphics.printf(
     "Timer:" .. seconds4 .. " seconds (3s)",
     0,
-    VIRTUAL_HEIGHT / 2 + 12 + 28 + 2,
+    VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 + font:getHeight() * 1.5,
     VIRTUAL_WIDTH,
     "center"
   )
