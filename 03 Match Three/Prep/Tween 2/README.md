@@ -1,10 +1,14 @@
-The approach described in _Tween 0_ and _Tween 1_ works, but becomes brittle the more values you need to change over time.
+# Tween 2
 
-With this script, the goal is to change the position, but also the opacity of the images. It serves to illustrate the usefulness of the **knife** library and the `Timer` module.
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
+The approach described in `Tween 0` and `Tween 1` works, but becomes brittle the more values you need to change over time.
+
+With this script, the goal is to change the position, but also the opacity of the images. It serves to illustrate the usefulness of the `knife` library and the `timer` module.
 
 ## Opacity
 
-You change the opacity with the fourth argument of the `setColor` function.
+Change the opacity with the fourth argument of the `setColor` function.
 
 ```lua
 love.graphics.setColor(1, 1, 1, alpha)

@@ -28,7 +28,13 @@ The `Prep` folder includes several demos to discuss different topics:
 
   2.  set up multiple intervals with the `knife/timer` library
 
-- `Tween`, how to interpolate between values over time
+- `Tween`: interpolate between values over time
+
+  0. move a static image computing the distance over time
+
+  1. move multiple images at different rates and through different variables
+
+  2. move multiple images with the `knife/timer` library
 
 - `Chain`, how to have multiple operations in sequence
 

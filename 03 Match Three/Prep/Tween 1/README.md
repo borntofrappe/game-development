@@ -1,4 +1,8 @@
-The procedure described in _Tween 0_ is here repeated for multiple copies of the image. Each time, the asset is moved at a different pace, with maximum time of `10` seconds.
+# Tween 1
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
+The procedure described in `Tween 0` is repeated for multiple copies of the image. Each time, the asset is moved at a different pace, with maximum time of `10` seconds.
 
 ```lua
 TIMER_MAX = 10
