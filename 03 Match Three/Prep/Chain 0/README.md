@@ -1,4 +1,8 @@
-Move the sprite of the bird around the screen, through each corner starting from the top left.
+# Chain 0
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
+The demo moves an image around the screen, considering each corner starting from the top left.
 
 Without libraries, you are forced to use a set of conditionals. This approach is explained in the video starting from a table describing the four possible destination.
 
@@ -11,7 +15,7 @@ destinations = {
 }
 ```
 
-The idea is to then have two variables to keep track of where the bird is coming from, `baseX` and `baseY`, loop through the table in order and change the coordinates of the sprite one at a time.
+The idea is to have two variables to keep track of where the bird is coming from, `baseX` and `baseY`, and loop through the table in order and change the coordinates of the sprite one at a time.
 
 To mark if a destination has been reached already, the script adds a boolean to the every entry in the table.
 
@@ -33,4 +37,4 @@ for i, destination in ipairs(destinations) do
 end
 ```
 
-Using `ipairs` is most appropriate, since the alternative `pairs` does not loop through the table in order.
+Using `ipairs` is more helpful, since the alternative `pairs` doesn't necessarily loop through the table in order.

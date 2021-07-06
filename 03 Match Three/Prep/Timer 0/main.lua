@@ -13,7 +13,7 @@ OPTIONS = {
 push = require "res/lib/push"
 
 function love.load()
-  timer = 0
+  counter = 0
   seconds = 0
 
   love.window.setTitle("Timer")
@@ -35,9 +35,9 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-  timer = timer + dt
-  if timer > 1 then
-    timer = timer % 1
+  counter = counter + dt
+  if counter > 1 then
+    counter = counter % 1
     seconds = seconds + 1
   end
 end

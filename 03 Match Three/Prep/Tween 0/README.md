@@ -2,13 +2,13 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
-The goal is to have an image, found `bird.png`, which moves from side to side in two seconds. This is achieved by having a variable describing the duration.
+The goal is to move an image from the `res/graphics` folder from side to side and in the span of two seconds. This is achieved by having a variable describing the duration.
 
 ```lua
 MOVE_DURATION = 2
 ```
 
-The variable is used to consider how much to update the horizontal position.
+The variable is used alongside a counter variable keeping track of delta time. As the counter increases, the position of the image is updated considering the remaining width.
 
 ```lua
 function love.load()
@@ -23,6 +23,13 @@ function love.update(dt)
 end
 ```
 
-`VIRTUAL_WIDTH - BIRD_WIDTH` describes the space the image needs to cover.
+`VIRTUAL_WIDTH - BIRD_WIDTH` describes the space the image needs to cover. `math.min` is used out of convenience to make sure the asset never exceeds the right edge of the window.
 
-`math.min` is used out of convenience to make sure the asset never exceeds the right edge of the window.
+To highlight the feature, note how `love.keypressed` resets the timer and horizontal coordinate by pressing the letter `r`.
+
+```lua
+if key == "r" then
+  bird.x = 0
+  timer = 0
+end
+```

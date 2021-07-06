@@ -13,17 +13,21 @@ OPTIONS = {
 push = require "res/lib/push"
 
 function love.load()
-  timer = 0
+  counter = 0
   seconds = 0
+  interval = 1
 
-  timer2 = 0
+  counter2 = 0
   seconds2 = 0
+  interval2 = 0.5
 
-  timer3 = 0
+  counter3 = 0
   seconds3 = 0
+  interval3 = 4
 
-  timer4 = 0
+  counter4 = 0
   seconds4 = 0
+  interval4 = 3
 
   love.window.setTitle("Timer")
   font = love.graphics.newFont("res/fonts/font.ttf", 24)
@@ -44,27 +48,27 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-  timer = timer + dt
-  if timer > 1 then
-    timer = timer % 1
+  counter = counter + dt
+  if counter > interval then
+    counter = counter % interval
     seconds = seconds + 1
   end
 
-  timer2 = timer2 + dt
-  if timer2 > 0.5 then
-    timer2 = timer2 % 0.5
+  counter2 = counter2 + dt
+  if counter2 > interval2 then
+    counter2 = counter2 % interval2
     seconds2 = seconds2 + 1
   end
 
-  timer3 = timer3 + dt
-  if timer3 > 4 then
-    timer3 = timer3 % 4
+  counter3 = counter3 + dt
+  if counter3 > interval3 then
+    counter3 = counter3 % interval3
     seconds3 = seconds3 + 1
   end
 
-  timer4 = timer4 + dt
-  if timer4 > 3 then
-    timer4 = timer4 % 3
+  counter4 = counter4 + dt
+  if counter4 > interval4 then
+    counter4 = counter4 % interval4
     seconds4 = seconds4 + 1
   end
 end
@@ -72,7 +76,7 @@ end
 function love.draw()
   push:start()
   love.graphics.printf(
-    "Timer:" .. seconds .. " seconds (1s)",
+    "Timer:" .. seconds .. " seconds (" .. interval .. "s)",
     0,
     VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 - font:getHeight() * 1.5,
     VIRTUAL_WIDTH,
@@ -80,7 +84,7 @@ function love.draw()
   )
 
   love.graphics.printf(
-    "Timer:" .. seconds2 .. " seconds (0.5s)",
+    "Timer:" .. seconds2 .. " seconds (" .. interval2 .. "s)",
     0,
     VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 - font:getHeight() * 0.5,
     VIRTUAL_WIDTH,
@@ -88,7 +92,7 @@ function love.draw()
   )
 
   love.graphics.printf(
-    "Timer:" .. seconds3 .. " seconds (4s)",
+    "Timer:" .. seconds3 .. " seconds (" .. interval3 .. "s)",
     0,
     VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 + font:getHeight() * 0.5,
     VIRTUAL_WIDTH,
@@ -96,7 +100,7 @@ function love.draw()
   )
 
   love.graphics.printf(
-    "Timer:" .. seconds4 .. " seconds (3s)",
+    "Timer:" .. seconds4 .. " seconds (" .. interval4 .. "s)",
     0,
     VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 + font:getHeight() * 1.5,
     VIRTUAL_WIDTH,

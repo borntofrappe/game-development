@@ -1,5 +1,5 @@
 push = require "res/lib/push"
-Timer = require "res/lib/knife/timer"
+Timer = require "res/lib/timer"
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -13,7 +13,7 @@ OPTIONS = {
   resizable = true
 }
 
-BIRD_IMAGE = love.graphics.newImage("bird.png")
+BIRD_IMAGE = love.graphics.newImage("res/graphics/bird.png")
 BIRD_WIDTH = BIRD_IMAGE:getWidth()
 BIRD_HEIGHT = BIRD_IMAGE:getHeight()
 
@@ -32,14 +32,14 @@ function love.load()
         x = 0,
         y = math.random(0, VIRTUAL_HEIGHT - BIRD_HEIGHT),
         opacity = 0,
-        rate = math.random() * TIMER_MAX
+        duration = math.random() * TIMER_MAX
       }
     )
   end
 
   for k, bird in pairs(birds) do
     Timer.tween(
-      bird.rate,
+      bird.duration,
       {
         [bird] = {x = VIRTUAL_WIDTH - BIRD_WIDTH, opacity = 1}
       }
@@ -64,14 +64,17 @@ function love.keypressed(key)
   end
 
   if key == "r" then
+    Timer.clear()
+
     timer = 0
+
     for k, bird in pairs(birds) do
       bird.x = 0
       bird.y = math.random(0, VIRTUAL_HEIGHT - BIRD_HEIGHT)
       bird.opacity = 0
-      bird.rate = math.random() * TIMER_MAX
+      bird.duration = math.random() * TIMER_MAX
       Timer.tween(
-        bird.rate,
+        bird.duration,
         {
           [bird] = {x = VIRTUAL_WIDTH - BIRD_WIDTH, opacity = 1}
         }

@@ -12,11 +12,11 @@ OPTIONS = {
   resizable = true
 }
 
-BIRD_IMAGE = love.graphics.newImage("bird.png")
+BIRD_IMAGE = love.graphics.newImage("res/graphics/bird.png")
 BIRD_WIDTH = BIRD_IMAGE:getWidth()
 BIRD_HEIGHT = BIRD_IMAGE:getHeight()
 
-RATE = 2
+DURATION = 2
 
 function love.load()
   timer = 0
@@ -59,13 +59,13 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-  timer = math.min(RATE, timer + dt)
+  timer = math.min(DURATION, timer + dt)
   for i, destination in ipairs(destinations) do
     if not destination.reached then
-      bird.x = baseX + (destination.x - baseX) / RATE * timer
-      bird.y = baseY + (destination.y - baseY) / RATE * timer
+      bird.x = baseX + (destination.x - baseX) / DURATION * timer
+      bird.y = baseY + (destination.y - baseY) / DURATION * timer
 
-      if timer == RATE then
+      if timer == DURATION then
         destination.reached = true
         baseX = destination.x
         baseY = destination.y
@@ -79,7 +79,7 @@ end
 
 function love.draw()
   push:start()
-  love.graphics.printf(timer, 0, VIRTUAL_HEIGHT / 2 - 14, VIRTUAL_WIDTH, "center")
+  love.graphics.printf(timer, 0, VIRTUAL_HEIGHT / 2 - font:getHeight() / 2, VIRTUAL_WIDTH, "center")
 
   love.graphics.draw(BIRD_IMAGE, bird.x, bird.y)
 

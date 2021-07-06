@@ -1,3 +1,7 @@
+# Swap 2
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
 Tween the position of the tiles.
 
 ## Board

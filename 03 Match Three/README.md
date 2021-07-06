@@ -22,11 +22,11 @@ The `Prep` folder includes several demos to discuss different topics:
 
 - `Timer`: consider time events
 
-  0.  count the number of seconds through `dt` and dedicated variables
+  0.  count the number of seconds with delta time and dedicated variables
 
   1.  keep track of multiple intervals with multiple variables
 
-  2.  set up multiple intervals with the `knife/timer` library
+  2.  keep track of multiple intervals through the `knife/timer` library
 
 - `Tween`: interpolate between values over time
 
@@ -36,9 +36,13 @@ The `Prep` folder includes several demos to discuss different topics:
 
   2. move multiple images with the `knife/timer` library
 
-- `Chain`, how to have multiple operations in sequence
+- `Chain`: have operations happen in sequence
 
-- `Swap`, how to swap two tiles
+  0. move a static image around the corners of the window with a few controlling variables
+
+  1. move a static image around the corners of the window chaining functions with the `knife/timer` library
+
+- `Swap`: swap two tiles
 
 Past these folders, the game is developed in `Match Three *` folders.
 

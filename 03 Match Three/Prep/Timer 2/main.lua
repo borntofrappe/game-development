@@ -11,17 +11,17 @@ OPTIONS = {
 }
 
 push = require "res/lib/push"
-Timer = require("res/lib/knife/timer")
+Timer = require("res/lib/timer")
 
 function love.load()
   intervals = {1, 0.5, 4, 3, 2}
-  seconds = {0, 0, 0, 0, 0}
+  counters = {0, 0, 0, 0, 0}
 
   for i, interval in ipairs(intervals) do
     Timer.every(
       interval,
       function()
-        seconds[i] = seconds[i] + 1
+        counters[i] = counters[i] + 1
       end
     )
   end
@@ -53,7 +53,7 @@ function love.draw()
 
   for i, interval in ipairs(intervals) do
     love.graphics.printf(
-      "Timer:" .. seconds[i] .. " seconds (" .. interval .. "s)",
+      "Timer:" .. counters[i] .. " counters (" .. interval .. "s)",
       0,
       VIRTUAL_HEIGHT / 2 - font:getHeight() / 2 + font:getHeight() * (i - #intervals / 2),
       VIRTUAL_WIDTH,

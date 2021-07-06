@@ -1,3 +1,7 @@
+# Swap 1
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
 Select, highlight, swap tiles.
 
 ## Select
@@ -119,4 +123,3 @@ board[selectedTile.y][selectedTile.x], board[highlightedTile.y][highlightedTile.
   board[highlightedTile.y][highlightedTile.x],
   board[selectedTile.y][selectedTile.x]
 ```
-

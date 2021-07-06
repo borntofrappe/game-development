@@ -14,7 +14,7 @@ OPTIONS = {
 
 MOVE_DURATION = 2
 
-BIRD_IMAGE = love.graphics.newImage("bird.png")
+BIRD_IMAGE = love.graphics.newImage("res/graphics/bird.png")
 BIRD_WIDTH = BIRD_IMAGE:getWidth()
 BIRD_HEIGHT = BIRD_IMAGE:getHeight()
 

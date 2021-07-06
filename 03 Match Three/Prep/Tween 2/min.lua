@@ -12,7 +12,7 @@ OPTIONS = {
   resizable = true
 }
 
-BIRD_IMAGE = love.graphics.newImage("bird.png")
+BIRD_IMAGE = love.graphics.newImage("res/graphics/bird.png")
 BIRD_WIDTH = BIRD_IMAGE:getWidth()
 BIRD_HEIGHT = BIRD_IMAGE:getHeight()
 
@@ -31,7 +31,7 @@ function love.load()
         x = 0,
         y = math.random(0, VIRTUAL_HEIGHT - BIRD_HEIGHT),
         opacity = 0,
-        rate = math.random() * TIMER_MAX
+        duration = math.random() * TIMER_MAX
       }
     )
   end
@@ -59,8 +59,8 @@ function love.keypressed(key)
       bird.x = 0
       bird.y = math.random(0, VIRTUAL_HEIGHT - BIRD_HEIGHT)
       bird.opacity = 0
-      -- bird.rate = math.random(TIMER_MAX)
-      bird.rate = math.random() * TIMER_MAX
+      -- bird.duration = math.random(TIMER_MAX)
+      bird.duration = math.random() * TIMER_MAX
     end
   end
 end
@@ -69,8 +69,8 @@ function love.update(dt)
   if timer < TIMER_MAX then
     timer = timer + dt
     for k, bird in pairs(birds) do
-      bird.x = math.min(VIRTUAL_WIDTH - BIRD_WIDTH, bird.x + (VIRTUAL_WIDTH - BIRD_WIDTH) / bird.rate * dt)
-      bird.opacity = math.min(1, bird.opacity + 1 / bird.rate * dt)
+      bird.x = math.min(VIRTUAL_WIDTH - BIRD_WIDTH, bird.x + (VIRTUAL_WIDTH - BIRD_WIDTH) / bird.duration * dt)
+      bird.opacity = math.min(1, bird.opacity + 1 / bird.duration * dt)
     end
   end
 end

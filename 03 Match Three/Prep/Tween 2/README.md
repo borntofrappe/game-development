@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 The approach described in `Tween 0` and `Tween 1` works, but becomes brittle the more values you need to change over time.
 
-With this script, the goal is to change the position, but also the opacity of the images. It serves to illustrate the usefulness of the `knife` library and the `timer` module.
+With this script, the goal is to change the position, but also the opacity of the images. `min.lua` shows how to achieve this with a series of variables, while `main.lua` incorporates the `knife/timer` library.
 
 ## Opacity
 
@@ -15,7 +15,9 @@ love.graphics.setColor(1, 1, 1, alpha)
 love.graphics.draw(BIRD_IMAGE, bird.x, bird.y)
 ```
 
-Without the module mentioned above, you'd modify the opacity with an additional variable.
+## min
+
+Without the library, you'd modify the opacity with an additional variable.
 
 ```lua
 function love.load()
@@ -30,39 +32,30 @@ function love.update(dt)
     timer = timer + dt
     for k, bird in pairs(birds) do
       -- update bird.x
-      bird.opacity = math.min(1, bird.opacity + 1 / bird.rate * dt)
+      bird.opacity = math.min(1, bird.opacity + 1 / bird.duration * dt)
     end
-  end
-end
-
-function love.draw()
-  for k, bird in pairs(birds) do
-    love.graphics.setColor(1, 1, 1, bird.opacity)
-    love.graphics.draw(BIRD_IMAGE, bird.x, bird.y)
   end
 end
 ```
 
-See the code in `min.lua` for reference.
+## main
 
-## Timer
-
-The relevant function is here `Timer.tween`. It accepts as argument a rate, and a table defining the tween's own rules.
+The `knife/timer` library provides a tween function in `Timer.tween`. The function accepts as argument a duration and a table defining the tween's own rules.
 
 For instance and to modify the horizontal coordinate.
 
 ```lua
-Timer.tween(bird.rate, {
+Timer.tween(bird.duration, {
   [bird] = { x = VIRTUAL_WIDTH - BIRD_WIDTH }
 })
 ```
 
-This has the effect of modifying the `x` attribute of the `bird` entity.
+This has the effect of modifying the `x` attribute of the `bird` entity up to `VIRTUAL_WIDTH - BIRD_WIDTH`.
 
-To modify the opacity as well, all you need is another variable-value pair in the table describing which values to change.
+To modify the opacity as well, all you need is another key-value pair in the table describing which values to change.
 
 ```lua
-Timer.tween(bird.rate, {
+Timer.tween(bird.duration, {
   [bird] = { x = VIRTUAL_WIDTH - BIRD_WIDTH, opacity = 1 }
 })
 ```
@@ -72,5 +65,15 @@ In both instances, the `update` function needs to update the `Timer` object only
 ```lua
 function love.update(dt)
   Timer.update(dt)
+end
+```
+
+Note that, when replaying the animation by pressing the letter `r` and before initializing a new set of tweens, the timer object is first cleared through the `Timer.clear()` function.
+
+```lua
+if key == "r" then
+  Timer.clear()
+
+  -- initialize tweens
 end
 ```

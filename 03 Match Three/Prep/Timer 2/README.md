@@ -2,7 +2,7 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
-The script sets up a timer with a library. For the library, refer to `timer.lua` in the `knife` folder.
+The script sets up a timer with the `knife/timer` library.
 
 The idea is to create a global `Timer` object which manages the different intervals.
 
@@ -24,7 +24,7 @@ Timer.after(delay, function()
 end)
 ```
 
-Once set up, `every` will run the function at the prescribed interval. `after` would otherwise run the function after the decided delay.
+Once set up, `every` will run the function at the prescribed interval. `after` would otherwise run the function after the arbitrary delay.
 
 ## Intervals
 
@@ -32,11 +32,11 @@ To illustrate the library, here's how you set up a single interval.
 
 ```lua
 function love.load()
-  seconds = 0
+  counter = 0
   Timer.every(
     1,
     function()
-      seconds = seconds + 1
+      counter = counter + 1
     end
   )
 end
@@ -47,29 +47,33 @@ end
 
 function love.render()
   printf(
-    seconds,
+    counter,
     --...
   )
 end
 ```
 
-Ultimately, the update scales this approach to consider multiple intervals, with a table storing the intervals and one the number of seconds.
+The demo shows how the approach scales better than the one described in `Timer 1`. A table keeps track of the time and interval values.
 
 ```lua
 intervals = {1, 0.5, 4, 3}
-seconds = {0, 0, 0, 0}
+counter = {0, 0, 0, 0}
+```
 
+An interval is set up for each interval through the `Timer` instance.
+
+```lua
 for i, interval in ipairs(intervals) do
   Timer.every(
     interval,
     function()
-      seconds[i] = seconds[i] + 1
+      counter[i] = counter[i] + 1
     end
   )
 end
 ```
 
-In the `update(dt)` function, `Timer.update(dt)` is enough to update every single instance.
+In the `update(dt)` function, `Timer.update(dt)` is then enough to update every single instance.
 
 ```lua
 function love.update(dt)
@@ -77,7 +81,7 @@ function love.update(dt)
 end
 ```
 
-Adding an interval, then, is a matter of including one more value in the `intervals` and `seconds` table.
+Adding an interval is a matter of including one more value in the `intervals` and `counter` table.
 
 ## ipairs
 
