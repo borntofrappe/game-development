@@ -2,6 +2,8 @@
 
 The fourth video moves on to create a game in which you match tiles of the same shape and color.
 
+![A few frames from the assignment for "Match Three"](https://github.com/borntofrappe/game-development/blob/master/Showcase/match-three.gif)
+
 ## Topics
 
 - anonymous functions
