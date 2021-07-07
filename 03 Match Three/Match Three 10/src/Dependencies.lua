@@ -1,6 +1,6 @@
 push = require "res/lib/push"
 Class = require "res/lib/class"
-Timer = require "res/lib/knife/timer"
+Timer = require "res/lib/timer"
 
 require "src/Utils"
 require "src/constants"

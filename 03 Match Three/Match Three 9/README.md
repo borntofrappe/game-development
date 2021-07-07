@@ -1,4 +1,6 @@
-Introduce the gameover state.
+# Match Three 9
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
 ## Gameover
 
@@ -33,7 +35,7 @@ Timer.every(
 
 ### Clear
 
-When you exit the play state, be it because the player moves to the title screen by pressing escape, or because the timer runs out, it's essential to clear the timer object.
+When you exit the play state, be it because the player moves to the title screen by pressing escape, or because the timer runs out, it is essential to clear the timer object.
 
 ```lua
 function PlayState:update(dt)
@@ -57,7 +59,7 @@ function PlayState:update(dt)
 end
 ```
 
-Without this extra step, even if you set a new timer, the old one persist.
+Without this extra step, even if you set a new timer, the old one would persist.
 
 ### Score
 

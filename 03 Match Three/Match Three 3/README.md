@@ -1,12 +1,16 @@
-Update the board to move the tiles in the empty spaces.
+# Match Three 3
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
+_Please note:_ the update removes matches and updates the existing grid without adding new tiles. This means the game raises an error in the moment you try to select and swap a `nil` value.
 
 ## updateBoard
 
-The goal is to chain a function after `removeMatches`, to have the remaining tiles fall in the spaces created by the matches, removed from view with the previous update.
+The goal is to chain a function after `removeMatches` so to have the remaining tiles fall in the spaces created by the matches, removed from view with the previous update.
 
 Loop through the columns, and for each column loop through the rows in reverse order. By keeping a reference to the position of the first empty space, the idea is to then swap the first available tile in said position.
 
-The logic is slightly complicated by the fact that a tile might not exist at all, but stepping through the code one line at a time, it should be clear how the code functions.
+The logic is slightly complicated by the fact that a tile might not exist at all, but stepping through the code one line at a time, it should be clear how the code works:
 
 - start by looping through the columns, to consider one column at a time
 
@@ -33,11 +37,11 @@ The logic is slightly complicated by the fact that a tile might not exist at all
   end
   ```
 
-  The `while` loop is necessary to have the `y` coordinate change as the board is updated. Once you move the tile to the empty space, you need to move down the column from the swapped position.
+  The `while` loop is necessary to have the `y` coordinate change as the board is updated. Once you move a tile into an empty space, you need to reconsider the rows one level above the newly placed tile.
 
 Within the `while` loop, the logic changes depending on the value of `yNil`:
 
-- if `yNil` returns true, this is a coordinate. Consider the current tile, and if such a tile exist, move it to the place described by `yNil`
+- if `yNil` is truthy, this is a coordinate. Consider the current tile, and if such a tile exist, move it to the place described by `yNil`
 
   ```lua
   if yNil then
@@ -62,7 +66,7 @@ Within the `while` loop, the logic changes depending on the value of `yNil`:
   yNil = nil
   ```
 
-- if `yNil` returns false — which in lua happens with `nil` or `false` values — there is not a coordinate yet. Consider the current tile, and if the tile is `nil`, update `yNil` with the empty tile's coordinate
+- if `yNil` is falsy — which in lua happens with `nil` or `false` values — there is not a coordinate yet. Consider the current tile, and if the tile is `nil`, update `yNil` with the empty tile's coordinate
 
   ```lua
   if yNil then

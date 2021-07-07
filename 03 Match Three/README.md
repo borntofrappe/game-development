@@ -50,7 +50,29 @@ The `Prep` folder includes several demos to discuss different topics:
 
   2. tween the position of the tiles
 
-Past these folders, the game is developed in `Match Three *` folders.
+Past these folders, the game is developed in `Match Three *` folders:
+
+0. set up the game and the board in the play state
+
+1. detect a match of three or more shapes.
+
+2. remove matches
+
+3. update the board to move the tiles in the empty spaces
+
+4. fill the board
+
+5. refactor the way the board is updated, checking for matches until no match is found
+
+6. add a title screen
+
+7. animate the title in the title screen
+
+8. animate the transition between the title screen and the play state
+
+9. introduce the gameover state
+
+10. complete the gameplay with goals, levels and an increasing timer
 
 <!-- 0. -->
 

@@ -1,4 +1,6 @@
-Animate the transition between the title screen and the play state.
+# Match Three 8
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
 ## Tween
 
@@ -90,7 +92,7 @@ For the play state, the animation is the same: include a table with a color valu
 
 ## Board
 
-Given the transition to the play state, I've decided to modify the `Board` class to avoid using the argument `isPlaying`. Here I update the board, and include the selected tile, directly rom the play state, and only when the fade-in animation is complete.
+Given the transition to the play state, I've decided to modify the `Board` class to avoid using the argument `isPlaying`. Here I update the board directly from the play state, and only when the fade-in animation is complete.
 
 ```lua
 Timer.tween():finish(

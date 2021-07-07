@@ -5,7 +5,7 @@ function PlayState:init()
   self.isUpdating = false
 
   self.level = 1
-  self.score = 0
+  self.score = 4500
   self.goal = 5000
   self.timer = 60
 

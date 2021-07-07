@@ -1,4 +1,8 @@
-Complete the gameplay with goals, levels and an increasing timer.
+# Match Three 10
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
+_Please note:_ the score in the play state is modified to rapidly surpass the goal.
 
 ## Gameplay
 

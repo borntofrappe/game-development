@@ -1,8 +1,12 @@
-Remove matches.
+# Match Three 2
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
+
+_Please note:_ the update removes the matches, but doesn't update the grid. This means the game raises an error in the moment you try to select and swap a `nil` value.
 
 ## removeMatches
 
-When `self.matches` refers to the tiles creating a match, visually removing the tiles is a matter of setting the variables to `nil`.
+Following the `updateMatches` function, `self.matches` stores a reference to the tiles creating a match. From this starting point, removing the tiles visually is a matter of setting the variables to `nil`.
 
 ```lua
 for k, match in pairs(self.matches) do
@@ -22,7 +26,7 @@ This is enough, but the existing codebase requires two changes.
 
 ### pairs vs ipairs
 
-`ipairs` works swimmingly with sequences — tables without holes, `nil` values. In the moment values are set to `nil`, its behavior is rather unpredictable and leads to entire rows behind removed from view.
+`ipairs` works swimmingly with sequences — tables without `nil` values. In the moment values are set to `nil`,however, the iterator becomes less reliable and leads to entire rows being removed from view.
 
 Since the position of the tiles is described by two of its fields, `x` and `y`, it's safe to to `pairs` instead.
 

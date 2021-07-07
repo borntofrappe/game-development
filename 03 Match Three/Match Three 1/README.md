@@ -1,10 +1,12 @@
-Detect a match of three or more shapes.
+# Match Three 1
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
 ## updateMatches
 
 The idea is to loop through the board, consider the color of adjacent tiles and detect a match if a counter variable describes a value greater than the pre-established `3`.
 
-The logic is implemented in the current update and in the `Board:updateMatches()` function:
+The logic is implemented in the `Board` class and specifically through the `Board:updateMatches()` function:
 
 - initialize a table in which to store the matches, plural
 
@@ -47,7 +49,7 @@ The logic is implemented in the current update and in the `Board:updateMatches()
     end
     ```
 
-  - if the two don't match, reset the controlling values
+  - if the two don't match, reset the controlling variables
 
     ```lua
     else
@@ -56,7 +58,7 @@ The logic is implemented in the current update and in the `Board:updateMatches()
     end
     ```
 
-    Before restting the values, however, check if the number of matches exceeds the desired three. In this case, add to `matches` a table describing the adjacent tiles.
+    Before restting the variables to the original values, however, check if the number of matches exceeds the desired three. In this case, add to `matches` a table describing the adjacent tiles.
 
     ```lua
     if colorMatches >= 3 then
@@ -76,7 +78,7 @@ The logic is implemented in the current update and in the `Board:updateMatches()
     end
     ```
 
-- the loop works to consider a match, but not if the match ends on the very last column.
+- the loop works to consider a match, but not if the match ends on the very last column
 
   In this situation `colorMatches` describe a value greater than or equal to three, but there is no chance to register the tiles.
 
@@ -88,8 +90,8 @@ The logic is implemented in the current update and in the `Board:updateMatches()
   end
   ```
 
-This is a rather lenghtly process, but repeated for the columns, it allows to have `matches` describe a series of tables with the available matches.
+This is a rather lenghtly process, but it is repeated for the columns, and allows to have `matches` describe a series of tables with the available matches.
 
 ## render
 
-This is ultimately not included in the game, but to test the functionality of the `updateMatches` function, `Board:render` includes a nested for loop to print out the coordinates of the matches.
+In the current update the matches are dected, but not cleared. To check that the script works, `Board:render` loops through the `self.matches` table to visualize the coordinates of the approprirate tiles.

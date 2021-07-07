@@ -1,4 +1,6 @@
-Animate the title in the title screen.
+# Match Three 7
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
 ## Letters
 
@@ -59,13 +61,13 @@ Timer.every(
 )
 ```
 
-In this manner, `self.color` is forced to have a value in the `[1, 6]` range. With the timer, the color is updated at every iteration.
+In this manner, `self.color` is forced to have a value in the `[1, 6]` range. With the timer, then, the color is updated at every iteration.
 
 The color is however and still applied to the letters without distinction. To fix this, add to `self.color` the current index of the loop, making sure to have the value fall in the prescribed range.
 
 ```lua
 for i = 1, #self.title do
-  color = (self.color + i) % #self.colors + 1
+  local color = math.abs(self.color - i) % #self.colors + 1
 end
 ```
 

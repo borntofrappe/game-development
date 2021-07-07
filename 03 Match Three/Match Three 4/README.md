@@ -1,8 +1,10 @@
-Fill the board.
+# Match Three 4
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
 ## Re-tiling
 
-Once the tiles are moved downwards, to fill the empty spaces created by removing the matches, it's necessary to re-populate the `self.tiles` table.
+Once the matches are removed and the existing tiles are updated, it is necessary to include new tiles in place of the old ones.
 
 Once again, loop column by column and row by row. In the code I proceed in reverse row order, but as the tiles are included in the same instant, there's fundamentally no difference.
 
@@ -32,7 +34,7 @@ This is achieved by modifying the `y` coordinate, so that the tiles are effectiv
 self.tiles[y][x].y = -1
 ```
 
-With a tween then, the tiles are repositioned to their rightful place.
+With a tween then, the tiles fall into their rightful place.
 
 ```lua
 Timer.tween(
@@ -43,4 +45,4 @@ Timer.tween(
 )
 ```
 
-And this covers the animation. I've decided to include `Timer.after` function to delay the operation, but the essence is covered by `Timer.tween`.
+And this covers the animation. I've decided to include `Timer.after` function to delay the operation, but the core of the update is in the `Timer.tween` function.

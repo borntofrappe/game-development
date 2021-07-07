@@ -1,8 +1,10 @@
-Set up the game and the board in the play state.
+# Match Three 0
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Match Three — Final`.
 
 ## main
 
-Following the example of _Breakout_, the entry point for the game sets up global variables and the state machine. In this update, I am only interested in showing the playable board in the play state, so the state machine includes a single instance.
+Following the example of _Breakout_, the entry point for the game sets up global variables and the state machine. In this update, I am only interested in showing the playable board in the play state, so the state machine includes a single instance of the play state.
 
 ```lua
 gStateMachine =
@@ -23,7 +25,7 @@ The script also adds a table to the `love.keyboard` module, to keep track of the
 
 Instead of creating the board and tiles through global functions, I create two classes to manage the structure of the board, and the graphic of the tile.
 
-`Board` creates the grid of tiles, and manages the selection/highlight/swap. I considered moving the logic into the play state, but decided to use `Board:update()` instead.
+`Board` creates the grid of tiles, and manages the selection, highlight, and swap. I considered moving the logic into the play state, but decided to use `Board:update()` instead.
 
 ```lua
 function Board:update(dt)
@@ -48,4 +50,4 @@ function Tile:render()
 end
 ```
 
-`color` and `variety` are initialized at random and in the `:init()` function, while `x` and `y`, as mentioned, are received from the board class.
+`color` and `variety` are initialized at random and in the `:init()` function, while `x` and `y` are received from the board class.

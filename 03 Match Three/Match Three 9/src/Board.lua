@@ -20,6 +20,8 @@ function Board:init(centerX, centerY)
 end
 
 function Board:render()
+  love.graphics.push()
+
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.translate(self.centerX - COLUMNS * TILE_WIDTH / 2, self.centerY - ROWS * TILE_HEIGHT / 2)
 
@@ -54,5 +56,6 @@ function Board:render()
       4
     )
   end
-  love.graphics.translate((self.centerX - COLUMNS * TILE_WIDTH / 2) * -1, (self.centerY - ROWS * TILE_HEIGHT / 2) * -1)
+
+  love.graphics.pop()
 end
