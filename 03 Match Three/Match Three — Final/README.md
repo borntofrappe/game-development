@@ -1,19 +1,19 @@
-Add audio and finalize game.
+# Breakout — Final
 
-## Audio
+With respect to the final increment the final version adds audio through the `gSounds` table.
 
-The audio is included in a global table `gSounds`, specifying the path of the audio files. I've decided to focus on:
+I've decided to focus on:
 
-- music3
+- `music.mp3` as a looping soundtrack
 
-- clock, every time the countdown is decremented
+- `clock.wav` every time the countdown is decremented
 
-- error, when you try to select a tile outside of the board
+- `error.wav` when you try to select a tile outside of the board
 
-- game-over, when entering the matching state
+- `game-over.wav`, when entering the matching state
 
-- match, when matching three or more tiles of the same color
+- `match.wav`, when matching three or more tiles of the same color
 
-- next-level, every time the score surpasses the goal
+- `next-level.wav`, every time the score surpasses the goal
 
-- select, to select the options in the introductory menu and the when selecting the tiles
+- `select.wav`, to select the options in the introductory menu and the when selecting the tiles

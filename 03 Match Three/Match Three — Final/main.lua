@@ -21,8 +21,6 @@ function love.load()
     ["game-over"] = love.audio.newSource("res/sounds/game-over.wav", "static"),
     ["match"] = love.audio.newSource("res/sounds/match.wav", "static"),
     ["music"] = love.audio.newSource("res/sounds/music.mp3", "static"),
-    ["music2"] = love.audio.newSource("res/sounds/music2.mp3", "static"),
-    ["music3"] = love.audio.newSource("res/sounds/music3.mp3", "static"),
     ["next-level"] = love.audio.newSource("res/sounds/next-level.wav", "static"),
     ["select"] = love.audio.newSource("res/sounds/select.wav", "static")
   }
@@ -50,8 +48,8 @@ function love.load()
 
   backgroundOffset = 0
 
-  gSounds["music3"]:setLooping(true)
-  gSounds["music3"]:play()
+  gSounds["music"]:setLooping(true)
+  gSounds["music"]:play()
 
   love.keyboard.keypressed = {}
 
