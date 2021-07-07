@@ -82,7 +82,7 @@ function PlayState:update(dt)
   if not self.isTweening then
     if not self.isUpdating then
       if love.mouse.isDown(1) then
-        x, y = push:toGame(love.mouse.getPosition())
+        local x, y = push:toGame(love.mouse.getPosition())
         if x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height then
           tileX = math.floor((x - self.x) / TILE_WIDTH) + 1
           tileY = math.floor((y - self.y) / TILE_HEIGHT) + 1
@@ -282,7 +282,6 @@ end
 function PlayState:updateMatches()
   local matches = {}
   for y = 1, ROWS do
-    ::row::
     local color = nil
     local colorMatches = 1
     for x = 1, COLUMNS do
@@ -307,12 +306,8 @@ function PlayState:updateMatches()
               table.insert(match, self.board.tiles[y][x3])
             end
             table.insert(matches, match)
-            if y == ROWS then
-              break
-            else
-              y = y + 1
-              goto row
-            end
+
+            break
           else
             table.insert(matches, match)
           end
@@ -333,6 +328,7 @@ function PlayState:updateMatches()
         local tile = self.board.tiles[y][x]
         if tile.isShiny then
           hasShiny = true
+
           break
         end
 

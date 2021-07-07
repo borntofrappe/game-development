@@ -1,16 +1,18 @@
-Consider the [assignment for Match 3](https://cs50.harvard.edu/games/2019/spring/assignments/3/).
+# Match Three — Assignment
 
-- [x] Implement time addition on matches, such that scoring a match extends the timer by 1 second per tile in a match
+Consider the [assignment for Match 3](https://cs50.harvard.edu/games/2019/spring/assignments/3/):
 
-- [x] Ensure Level 1 starts just with simple flat blocks (the first of each color in the sprite sheet), with later levels generating the blocks with patterns on them (like the triangle, cross, etc.)
+- [x] implement time addition on matches, such that clearing a match extends the timer by 1 second per tile
 
-  - [x] These should be worth more points, at your discretion
+- [x] ensure Level 1 starts just with simple flat blocks (the first of each color in the sprite sheet), with later levels generating the blocks with different patterns
 
-- [x] Create random shiny versions of blocks that will destroy an entire row on match, granting points for each block in the row
+  - [x] Non-flat tiles should be worth more points
 
-- [x] Only allow swapping when it results in a match
+- [x] create a random, shiny, versions of blocks that will destroy an entire row when cleared in a match, granting points for each tile in the row
 
-- [x] (Optional) Implement matching using the mouse
+- [x] only allow swapping when it results in a match
+
+- [x] (optional) implement matching using the mouse
 
 ## Time addition
 
@@ -51,7 +53,7 @@ The variety considers instead a random value, dependant on the current level
 self.variety = math.random(math.min(self.level, #gFrames["tiles"][1]))
 ```
 
-`math.min` is to ensure a valid integer, even when the level surpasses the number of available varieties. At most, `math.random` will consider the length of the table, hence all possible varietis.
+`math.min` ensures a valid integer, even when the level surpasses the number of available varieties. At most, `math.random` will consider the length of the table, hence all possible varieties.
 
 In terms of points, the variety is already accounted for:
 
@@ -125,13 +127,13 @@ The idea is to:
   end
   ```
 
-  If the tile is not shiny, the program continues adding the tiles to the `match` table.
+  If the tile is not shiny, the program continues normally adding the tiles to the `match` table.
 
 - outside of the loop, consider the boolean `hasShiny`. This is where the logic clearing the entire row is actually implemented.
 
 Conditional to a tile being shiny:
 
-- add to the table `match` every tile in the current row
+- add every tile in the current row to the table `match`
 
   ```lua
   if hasShiny then
@@ -145,30 +147,13 @@ Conditional to a tile being shiny:
 
   By adding `match` to `matches` you end up considering every tile in the row.
 
-- move to the next row. To achieve this, use a `goto` statement, moving the code at the beginning of the wrapping for loop
+- move to the next row. To achieve this, it is enough to use a `break` statement, exiting the loop describing the columns
 
   ```lua
-  y = y + 1
-  goto row
-  ```
+  if hasShiny then
+    -- add all tiles in the row
 
-  The label is specified between two `::` colon characters, at the very beginning of the loop iterating through the rows.
-
-  ```lua
-  for y = 1, ROWS do
-    ::row::
-    -- consider tiles
-  end
-  ```
-
-  This works, but there's a chance that the match is identified in the last row. In this situation, continuing to the next row would result in an error, and it's safer to just exit the loop altogether.
-
-  ```lua
-  if y == ROWS then
     break
-  else
-    y = y + 1
-    goto row
   end
   ```
 
@@ -193,7 +178,7 @@ for y2 = y - 1, y - colorMatches, -1 do
 end
 ```
 
-This is enough to have `match`, and then `matches`, contemplate the vertical match, as well as the tiles in the row of the shiny variant.
+This is enough to have `match` and then `matches` contemplate the vertical match, as well as the tiles in the row of the shiny variant.
 
 ## Valid swap
 
@@ -230,7 +215,7 @@ The tricky part is always ensuring that a match is available, one swap away.
 
 ## hasMatch
 
-The idea is to loop through the table, swap each tile with its neighbors, and check if that swap creates a match. As soon as one is detected, return `true`. At the end of the loop, return `false`. It is a lengthy process, but by skipping duplicates, it should be possible to find whether or not there are possible matches.
+The idea is to loop through the table, swap each tile with its neighbors, and check if that swap creates a match. As soon as one is detected, return `true`. At the end of the loop, return `false`. It is a lengthy process, but by skipping duplicates, it should be possible to find whether or not there are possible matches more efficiently.
 
 Start by looping through the board, excluding the last column and row.
 
@@ -268,7 +253,7 @@ if self:updateMatches() then
 end
 ```
 
-Regardless of the outcome, be sure to swap the tiles back, by repeating the first line. If there is a match, exit the function by returning `true`. This means there is a match and the game can continue its normal function.
+Regardless of the outcome, be sure to swap the tiles back by repeating the first line. If there is a match, exit the function by returning `true`. This means there is a match and the game can continue its normal function.
 
 ```lua
 -- swap
@@ -291,9 +276,17 @@ else
 end
 ```
 
+In the initialization of the play state, the function is called in a while loop, to ensure that board is initialized with at least a match.
+
+```lua
+while not self:hasMatch() do
+  self.board = Board(self.level, self.x, self.y)
+end
+```
+
 ### Testing
 
-To test the feature, I decided to:
+To test the feature, I decided to alter the code as follows:
 
 - reduce the size of the board, to five columns and rows
 
@@ -310,7 +303,7 @@ To test the feature, I decided to:
   end
   ```
 
-- in the while loop, change the appearance of the very first tile to use the last color and variety
+- in the while loop, create a new board change the appearance of the very first tile to use the last color and variety
 
   ```lua
   while not self:hasMatch() do
@@ -320,11 +313,11 @@ To test the feature, I decided to:
   end
   ```
 
-In this manner, by launching the game enough times it's possible to see the while loop in action. The tile in the top left corner will be grey and with a star.
+By launching the game enough times it's possible to see the while loop in action; in this instance the tile in the top left corner will be grey and with a star.
 
 ## Mouse
 
-The assignment asks to implement a swap using mouse controls, but I decided update the title screen and gameover state to have the game completely playable with a cursor instead of a keyboard.
+The assignment asks to implement a swap using mouse controls, but I decided update the title screen and gameover state to have the game playable with a cursor instead of a keyboard.
 
 The logic depends on the following information:
 
@@ -353,11 +346,13 @@ function love.mousereleased()
 end
 
 function love.update(dt)
+  gStateMachine:update(dt)
+
   love.mouse.isReleased = false
 end
 ```
 
-The `love.mouse` object is modified to provide the additional, necesasry boolean.
+The `love.mouse` object is modified to provide the additional boolean.
 
 ### Play
 
@@ -380,13 +375,19 @@ From this starting point:
 
 - if a tile is not highlighted, use the same tile for the highlighted variant
 
-Once a tile is highlighted, it is then when the mouse is released that the code tries to swap the two tiles. The code repeats here much of the logic following a key press on the enter key, trying to swap the selected and highlighted tiles.
+Once a tile is highlighted, it is then when the mouse is released that the code tries to swap the two tiles. The code repeats here much of the logic following a press on the enter key, trying to swap the selected and highlighted tiles.
 
-Just be sure to reset highlighted tile, and regardless of whether the swap occurs. This ensures that, as the mouse is pressed again, the game considers the selected/highlighted variants anew.
+Just be sure to reset highlighted tile, regardless of whether the swap occurs. This ensures that, as the mouse is pressed again, the game considers the selected or highlighted variants anew.
 
 ### Title screen
 
 Similarly to the play state, the `update` function considers the coordinates of the cursor in the scope of `isDown()`.
+
+```lua
+if love.mouse.isDown(1) then
+  local x, y = push:toGame(love.mouse.getPosition())
+end
+```
 
 Based on this information, however, the logic is different:
 
@@ -407,7 +408,3 @@ end
 ```
 
 The change is not triggered by a mouse press, since this would interfere with the mouse press on the title screen.
-
-```lua
-
-```

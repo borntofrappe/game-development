@@ -99,7 +99,7 @@ function TitleScreenState:render()
     if i == #self.title then
       offsetX = offsetX + 6
     end
-    color = (self.color + i) % #self.colors + 1
+    local color = math.abs(self.color - i) % #self.colors + 1
 
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.printf(letter, offsetX + 2, VIRTUAL_HEIGHT / 6 + 32 - 18, VIRTUAL_WIDTH, "center")

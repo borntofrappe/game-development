@@ -1,4 +1,4 @@
-# Breakout — Final
+# Match Three — Final
 
 With respect to the final increment the final version adds audio through the `gSounds` table.
 

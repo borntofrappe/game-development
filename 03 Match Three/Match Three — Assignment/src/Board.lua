@@ -22,6 +22,8 @@ function Board:init(level, offsetX, offsetY)
 end
 
 function Board:render()
+  love.graphics.push()
+
   love.graphics.translate(self.offsetX, self.offsetY)
 
   love.graphics.setColor(1, 1, 1, 1)
@@ -56,5 +58,6 @@ function Board:render()
       4
     )
   end
-  love.graphics.translate(-self.offsetX, -self.offsetY)
+
+  love.graphics.pop()
 end
