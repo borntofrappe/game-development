@@ -6,6 +6,7 @@ local HEIGHT = TEXTURE:getHeight()
 
 local GRAVITY = 2
 local THRUST = 0.1
+local MERCY = 2
 
 function Spaceship:new()
   local this = {
@@ -21,6 +22,18 @@ function Spaceship:new()
   setmetatable(this, self)
 
   return this
+end
+
+function Spaceship:collides(debris)
+  if self.x > debris.x + debris.width or self.x + self.width < debris.x then
+    return false
+  end
+
+  if self.y > debris.y + debris.height or self.y + self.height < debris.y then
+    return false
+  end
+
+  return true
 end
 
 function Spaceship:update(dt)
