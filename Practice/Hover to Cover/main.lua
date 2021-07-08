@@ -4,7 +4,11 @@ local spaceship = Spaceship:new()
 local debris = {Debris:new()}
 
 local INTERVAL = 2
+local DELAY = 2
 local timer = 0
+local collision = Collision:new()
+
+local state = "playing"
 
 function love.load()
   love.window.setTitle("Hover to Cover")
@@ -37,24 +41,38 @@ end
 function love.update(dt)
   timer = timer + dt
 
-  if timer >= INTERVAL then
-    timer = timer % INTERVAL
-    table.insert(debris, Debris:new())
+  if state == "playing" then
+    spaceship:update(dt)
+
+    if love.keyboard.isDown("up") then
+      spaceship:thrust()
+    end
+
+    if timer >= INTERVAL then
+      timer = timer % INTERVAL
+      table.insert(debris, Debris:new())
+    end
+  else
+    collision:update(dt)
+
+    if timer >= DELAY then
+      timer = timer % DELAY
+      spaceship = Spaceship:new()
+      state = "playing"
+    end
   end
 
   for k, deb in pairs(debris) do
     deb:update(dt)
 
-    -- if spaceship and spaceship:collides(deb) then
-    --   -- gameover
-    --   break
-    -- end
-  end
-
-  spaceship:update(dt)
-
-  if love.keyboard.isDown("up") then
-    spaceship:thrust()
+    if state == "playing" then
+      local x, y, gapX, gapY = spaceship:collides(deb)
+      if x then
+        state = "gameover"
+        collision:emit(x, y, gapX, gapY)
+        timer = 0
+      end
+    end
   end
 end
 
@@ -65,7 +83,11 @@ function love.draw()
     deb:render()
   end
 
-  spaceship:render()
+  if state == "playing" then
+    spaceship:render()
+  else
+    collision:render()
+  end
 
   push:finish()
 end

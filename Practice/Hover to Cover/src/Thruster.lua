@@ -1,7 +1,7 @@
 Thruster = {}
 
 local TEXTURE = love.graphics.newImage("res/graphics/particle.png")
-local PARTICLES = 20
+local PARTICLES = 50
 
 function Thruster:new()
   local particleSystem = love.graphics.newParticleSystem(TEXTURE, PARTICLES)
