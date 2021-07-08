@@ -1,0 +1,48 @@
+Spaceship = {}
+
+local TEXTURE = love.graphics.newImage("res/graphics/spaceship.png")
+local WIDTH = TEXTURE:getWidth()
+local HEIGHT = TEXTURE:getHeight()
+
+local GRAVITY = 2
+local THRUST = 0.1
+
+function Spaceship:new()
+  local this = {
+    ["image"] = TEXTURE,
+    ["x"] = VIRTUAL_WIDTH / 2 - WIDTH / 2,
+    ["y"] = VIRTUAL_HEIGHT / 2 - HEIGHT / 2,
+    ["width"] = WIDTH,
+    ["height"] = HEIGHT,
+    ["dy"] = 0
+  }
+
+  self.__index = self
+  setmetatable(this, self)
+
+  return this
+end
+
+function Spaceship:update(dt)
+  self.y = self.y + self.dy
+  self.dy = self.dy + GRAVITY * dt
+
+  if self.y < math.floor(-self.height / 2) then
+    self.y = math.floor(-self.height / 2)
+    self.dy = 0
+  end
+
+  if self.y > math.floor(VIRTUAL_HEIGHT - self.height / 2) then
+    self.y = math.floor(VIRTUAL_HEIGHT - self.height / 2)
+    self.dy = 0
+  end
+end
+
+function Spaceship:thrust()
+  self.dy = self.dy - THRUST
+end
+
+function Spaceship:render()
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.draw(self.image, math.floor(self.x), math.floor(self.y))
+end
