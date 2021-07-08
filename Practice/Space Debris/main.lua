@@ -3,10 +3,15 @@ require "src/Dependencies"
 local spaceship = Spaceship:new()
 local debris = {Debris:new()}
 
-local INTERVAL = 2
-local DELAY = 2
+local INTERVAL = 1.5
+local DELAY = 3
 local timer = 0
 local collision = Collision:new()
+
+local sounds = {
+  ["collision"] = love.audio.newSource("res/sounds/collision.wav", "static"),
+  ["thrust"] = love.audio.newSource("res/sounds/thrust.wav", "static")
+}
 
 local state = "playing"
 
@@ -46,11 +51,13 @@ function love.update(dt)
 
     if love.keyboard.isDown("up") then
       spaceship:thrust()
+      sounds["thrust"]:stop()
+      sounds["thrust"]:play()
     end
 
     if timer >= INTERVAL then
       timer = timer % INTERVAL
-      table.insert(debris, Debris:new())
+      table.insert(debris, Debris:new(debris[#debris]))
     end
   else
     collision:update(dt)
@@ -68,10 +75,17 @@ function love.update(dt)
     if state == "playing" then
       local x, y, gapX, gapY = spaceship:collides(deb)
       if x then
+        sounds["thrust"]:stop()
+        sounds["collision"]:play()
+
         state = "gameover"
         collision:emit(x, y, gapX, gapY)
         timer = 0
       end
+    end
+
+    if deb.x < -deb.width or deb.x > VIRTUAL_WIDTH then
+      table.remove(debris, k)
     end
   end
 end
