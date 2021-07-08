@@ -15,7 +15,8 @@ function Spaceship:new()
     ["y"] = VIRTUAL_HEIGHT / 2 - HEIGHT / 2,
     ["width"] = WIDTH,
     ["height"] = HEIGHT,
-    ["dy"] = 0
+    ["dy"] = 0,
+    ["thruster"] = Thruster:new()
   }
 
   self.__index = self
@@ -49,13 +50,18 @@ function Spaceship:update(dt)
     self.y = math.floor(VIRTUAL_HEIGHT - self.height / 2)
     self.dy = 0
   end
+
+  self.thruster:update(dt)
 end
 
 function Spaceship:thrust()
   self.dy = self.dy - THRUST
+  self.thruster:emit(self.x + self.width / 2, self.y + self.height)
 end
 
 function Spaceship:render()
+  self.thruster:render()
+
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(self.image, math.floor(self.x), math.floor(self.y))
 end
