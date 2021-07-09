@@ -27,6 +27,9 @@ function love.load()
     {
       ["play"] = function()
         return PlayState:new()
+      end,
+      ["gameover"] = function()
+        return GameoverState:new()
       end
     }
   )

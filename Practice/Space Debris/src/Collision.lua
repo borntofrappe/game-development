@@ -3,11 +3,15 @@ Collision = {}
 local TEXTURE = love.graphics.newImage("res/graphics/particle.png")
 local PARTICLES = 300
 
-function Collision:new()
+function Collision:new(x, y, xMin, yMin, xMax, yMax)
   local particleSystem = love.graphics.newParticleSystem(TEXTURE, PARTICLES)
   particleSystem:setParticleLifetime(0.5, 1.5)
   particleSystem:setLinearDamping(4, 8)
   particleSystem:setEmissionArea("normal", 4, 4)
+
+  particleSystem:setPosition(x, y)
+  particleSystem:setLinearAcceleration(xMin, yMin, xMax, yMax)
+  particleSystem:emit(PARTICLES)
 
   local this = {
     ["particleSystem"] = particleSystem
@@ -17,13 +21,6 @@ function Collision:new()
   setmetatable(this, self)
 
   return this
-end
-
-function Collision:emit(x, y, xMin, yMin, xMax, yMax)
-  self.particleSystem:setPosition(x, y)
-  self.particleSystem:setLinearAcceleration(xMin, yMin, xMax, yMax)
-
-  self.particleSystem:emit(PARTICLES)
 end
 
 function Collision:update(dt)

@@ -2,11 +2,11 @@ PlayState = BaseState:new()
 
 local INTERVAL = 1.5
 
-function PlayState:enter()
+function PlayState:enter(params)
   self.timer = 0
 
   self.spaceship = Spaceship:new()
-  self.debris = {Debris:new()}
+  self.debris = params and params.debris or {Debris:new()}
 end
 
 function PlayState:update(dt)
@@ -32,6 +32,20 @@ function PlayState:update(dt)
 
   for k, deb in pairs(self.debris) do
     deb:update(dt)
+
+    local x, y, dx, dy = self.spaceship:collides(deb)
+    if x then
+      gStateMachine:change(
+        "gameover",
+        {
+          ["x"] = x,
+          ["y"] = y,
+          ["dx"] = dx,
+          ["dy"] = dy,
+          ["debris"] = self.debris
+        }
+      )
+    end
 
     if deb.x < -deb.width or deb.x > VIRTUAL_WIDTH then
       table.remove(self.debris, k)
