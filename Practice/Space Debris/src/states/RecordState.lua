@@ -17,6 +17,10 @@ function RecordState:update(dt)
 
     gSounds["enter"]:play()
   end
+
+  if love.keyboard.waspressed("escape") then
+    gStateMachine:change("start")
+  end
 end
 
 function RecordState:render()

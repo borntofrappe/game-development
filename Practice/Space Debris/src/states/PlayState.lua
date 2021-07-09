@@ -1,9 +1,12 @@
 PlayState = BaseState:new()
 
-local INTERVAL = 1.5
+local INTERVAL_CHANGE = 0.1
+local INTERVAL_MAX = 1.5
+local INTERVAL_MIN = 1
 
 function PlayState:enter()
   self.timer = 0
+  self.interval = INTERVAL_MAX
   self.seconds = 0
 
   self.spaceship = Spaceship:new()
@@ -18,8 +21,11 @@ function PlayState:update(dt)
   self.timer = self.timer + dt
   self.seconds = self.seconds + dt
 
-  if self.timer >= INTERVAL then
-    self.timer = self.timer % INTERVAL
+  if self.timer >= self.interval then
+    self.timer = self.timer % self.interval
+    if self.interval > INTERVAL_MIN and math.random(2) == 1 then
+      self.interval = math.max(INTERVAL_MIN, self.interval - INTERVAL_CHANGE)
+    end
 
     table.insert(self.debris, Debris:new(self.debris[#self.debris]))
   end
