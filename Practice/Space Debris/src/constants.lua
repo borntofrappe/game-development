@@ -1,5 +1,8 @@
 TITLE = "Space Debris"
 
+FOLDER = "Space Debris"
+FILE = "highscore.lst"
+
 WINDOW_WIDTH = 540
 WINDOW_HEIGHT = 360
 

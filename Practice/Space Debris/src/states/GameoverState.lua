@@ -5,15 +5,36 @@ local DELAY = 5
 function GameoverState:enter(params)
   self.timer = 0
 
-  self.debris = params.debris
   self.seconds = string.format("%.2f", params.seconds)
-  self.hasHighScore = true
+
+  self.hasHighScore = false
+
+  love.filesystem.setIdentity(FOLDER)
+  if love.filesystem.getInfo(FILE) then
+    local highScore = 0
+    for line in love.filesystem.lines(FILE) do
+      highScore = line
+      break
+    end
+
+    if tonumber(self.seconds) > tonumber(highScore) then
+      self.hasHighScore = true
+    end
+  else
+    self.hasHighScore = true
+  end
+
+  if self.hasHighScore then
+    love.filesystem.write(FILE, self.seconds)
+  end
 
   local x = params.x
   local y = params.y
   local dx = params.dx
   local dy = params.dy
   self.collision = Collision:new(x, y, dx, dy, dx * 3, dy * 3)
+
+  self.debris = params.debris
 end
 
 function GameoverState:update(dt)
@@ -24,6 +45,8 @@ function GameoverState:update(dt)
 
   if love.keyboard.waspressed("return") then
     gStateMachine:change("start")
+
+    gSounds["enter"]:play()
   end
 
   for k, deb in pairs(self.debris) do

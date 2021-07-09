@@ -19,6 +19,8 @@ function love.load()
 
   gSounds = {
     ["collision"] = love.audio.newSource("res/sounds/collision.wav", "static"),
+    ["enter"] = love.audio.newSource("res/sounds/enter.wav", "static"),
+    ["select"] = love.audio.newSource("res/sounds/select.wav", "static"),
     ["thrust"] = love.audio.newSource("res/sounds/thrust.wav", "static")
   }
 

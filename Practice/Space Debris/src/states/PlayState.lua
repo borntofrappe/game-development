@@ -2,12 +2,12 @@ PlayState = BaseState:new()
 
 local INTERVAL = 1.5
 
-function PlayState:enter(params)
+function PlayState:enter()
   self.timer = 0
   self.seconds = 0
 
   self.spaceship = Spaceship:new()
-  self.debris = params and params.debris or {Debris:new()}
+  self.debris = {Debris:new()}
 end
 
 function PlayState:update(dt)
@@ -38,6 +38,8 @@ function PlayState:update(dt)
 
     local x, y, dx, dy = self.spaceship:collides(deb)
     if x then
+      gSounds["collision"]:play()
+
       gStateMachine:change(
         "gameover",
         {

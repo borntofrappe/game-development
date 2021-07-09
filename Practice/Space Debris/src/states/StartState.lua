@@ -47,14 +47,26 @@ function StartState:update(dt)
 
   if love.keyboard.waspressed("up") then
     self.option = self.option == 1 and #self.options or self.option - 1
+
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
   end
 
   if love.keyboard.waspressed("down") then
     self.option = self.option == #self.options and 1 or self.option + 1
+
+    gSounds["select"]:stop()
+    gSounds["select"]:play()
   end
 
   if love.keyboard.waspressed("return") then
-    gStateMachine:change("play")
+    gSounds["enter"]:play()
+
+    if self.option == 1 then
+      gStateMachine:change("play")
+    elseif self.option == 2 then
+      gStateMachine:change("record")
+    end
   end
 end
 
