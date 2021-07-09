@@ -15,7 +15,7 @@ function Spaceship:new()
     ["y"] = VIRTUAL_HEIGHT / 2 - HEIGHT / 2,
     ["width"] = WIDTH,
     ["height"] = HEIGHT,
-    ["dy"] = 0,
+    ["dy"] = -THRUST,
     ["thruster"] = Thruster:new()
   }
 
