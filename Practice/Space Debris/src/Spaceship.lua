@@ -6,7 +6,7 @@ local HEIGHT = TEXTURE:getHeight()
 
 local GRAVITY = 2
 local THRUST = 0.1
-local MERCY = 4
+local MERCY = 5
 
 function Spaceship:new()
   local this = {
@@ -34,21 +34,16 @@ function Spaceship:collides(debris)
     return false
   end
 
-  local collisionLeft = self.x + self.width / 2 > debris.x + debris.width
-  local collisionTop = self.y + self.height / 2 > debris.y + debris.height
+  local bottomHalf = self.y + self.height / 2 < debris.y
+  local rightHalf = self.x + self.width / 2 < debris.x
 
-  local x = self.x + debris.x - self.x
-  local y = self.y + debris.y - self.y
+  local dx = rightHalf and -50 or 50
+  local dy = bottomHalf and -50 or 50
 
-  if collisionLeft then
-    x = x + self.width
+  if rightHalf and debris.dx < 0 or not rightHalf and debris.dx > 0 then
+    dx = dx * 1.5
   end
-
-  if collisionTop then
-    y = y + self.height
-  end
-
-  return x, y, self.x - debris.x, self.y - debris.y
+  return self.x + self.width / 2, self.y + self.height / 2, dx, dy
 end
 
 function Spaceship:update(dt)

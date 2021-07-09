@@ -2,21 +2,20 @@ require "src/Dependencies"
 
 local spaceship = Spaceship:new()
 local debris = {Debris:new()}
+local collision = Collision:new()
 
+local state = "playing"
+local timer = 0
 local INTERVAL = 1.5
 local DELAY = 3
-local timer = 0
-local collision = Collision:new()
 
 local sounds = {
   ["collision"] = love.audio.newSource("res/sounds/collision.wav", "static"),
   ["thrust"] = love.audio.newSource("res/sounds/thrust.wav", "static")
 }
 
-local state = "playing"
-
 function love.load()
-  love.window.setTitle("Hover to Cover")
+  love.window.setTitle("Space Debris")
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(
     VIRTUAL_WIDTH,
@@ -51,6 +50,7 @@ function love.update(dt)
 
     if love.keyboard.isDown("up") then
       spaceship:thrust()
+
       sounds["thrust"]:stop()
       sounds["thrust"]:play()
     end
@@ -59,7 +59,7 @@ function love.update(dt)
       timer = timer % INTERVAL
       table.insert(debris, Debris:new(debris[#debris]))
     end
-  else
+  elseif state == "gameover" then
     collision:update(dt)
 
     if timer >= DELAY then
@@ -73,14 +73,15 @@ function love.update(dt)
     deb:update(dt)
 
     if state == "playing" then
-      local x, y, gapX, gapY = spaceship:collides(deb)
+      local x, y, dx, dy = spaceship:collides(deb)
       if x then
+        state = "gameover"
+        collision:emit(x, y, dx, dy, dx * 3, dy * 3)
+
+        timer = 0
+
         sounds["thrust"]:stop()
         sounds["collision"]:play()
-
-        state = "gameover"
-        collision:emit(x, y, gapX, gapY)
-        timer = 0
       end
     end
 
@@ -99,7 +100,7 @@ function love.draw()
 
   if state == "playing" then
     spaceship:render()
-  else
+  elseif state == "gameover" then
     collision:render()
   end
 

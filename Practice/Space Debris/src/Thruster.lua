@@ -7,7 +7,7 @@ function Thruster:new()
   local particleSystem = love.graphics.newParticleSystem(TEXTURE, PARTICLES)
   particleSystem:setParticleLifetime(0.3, 0.9)
   particleSystem:setLinearAcceleration(-200, 100, 200, 360)
-  particleSystem:setLinearDamping(2, 4)
+  particleSystem:setLinearDamping(2, 5)
 
   local this = {
     ["particleSystem"] = particleSystem

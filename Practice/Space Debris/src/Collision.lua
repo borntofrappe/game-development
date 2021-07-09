@@ -19,14 +19,8 @@ function Collision:new()
   return this
 end
 
-function Collision:emit(x, y, gapX, gapY)
+function Collision:emit(x, y, xMin, yMin, xMax, yMax)
   self.particleSystem:setPosition(x, y)
-  local xMin = gapX * 3
-  local xMax = xMin * 5
-
-  local yMin = gapY * 3
-  local yMax = gapY * 5
-
   self.particleSystem:setLinearAcceleration(xMin, yMin, xMax, yMax)
 
   self.particleSystem:emit(PARTICLES)
