@@ -1,0 +1,1 @@
+RecordState = BaseState:new()

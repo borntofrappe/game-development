@@ -1,7 +1,7 @@
 require "src/Dependencies"
 
 function love.load()
-  love.window.setTitle("Space Debris")
+  love.window.setTitle(TITLE)
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(
     VIRTUAL_WIDTH,
@@ -25,6 +25,12 @@ function love.load()
   gStateMachine =
     StateMachine:new(
     {
+      ["start"] = function()
+        return StartState:new()
+      end,
+      ["record"] = function()
+        return RecordState:new()
+      end,
       ["play"] = function()
         return PlayState:new()
       end,
@@ -34,7 +40,14 @@ function love.load()
     }
   )
 
-  gStateMachine:change("play")
+  gFonts = {
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 16),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
+  }
+
+  love.graphics.setFont(gFonts.normal)
+
+  gStateMachine:change("start")
 
   love.keyboard.keypressed = {}
 end

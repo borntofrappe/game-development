@@ -1,3 +1,5 @@
+TITLE = "Space Debris"
+
 WINDOW_WIDTH = 540
 WINDOW_HEIGHT = 360
 

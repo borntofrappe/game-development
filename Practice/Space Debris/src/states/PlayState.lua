@@ -4,6 +4,7 @@ local INTERVAL = 1.5
 
 function PlayState:enter(params)
   self.timer = 0
+  self.seconds = 0
 
   self.spaceship = Spaceship:new()
   self.debris = params and params.debris or {Debris:new()}
@@ -11,10 +12,12 @@ end
 
 function PlayState:update(dt)
   if love.keyboard.waspressed("escape") then
-    love.event.quit()
+    gStateMachine:change("start")
   end
 
   self.timer = self.timer + dt
+  self.seconds = self.seconds + dt
+
   if self.timer >= INTERVAL then
     self.timer = self.timer % INTERVAL
 
@@ -38,6 +41,7 @@ function PlayState:update(dt)
       gStateMachine:change(
         "gameover",
         {
+          ["seconds"] = self.seconds,
           ["x"] = x,
           ["y"] = y,
           ["dx"] = dx,
