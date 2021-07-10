@@ -111,3 +111,155 @@ end
 By returning the removed item it is possible to obtain the interval following the `Timer:remove()` function call, not to mention terminate the function as well.
 
 The feature is introduced in the context of intervals, but it is actually useful for delays and tweens as well. With this in mind, the `:after` and later `:tween` functions are updated to have a similar label.
+
+## Tween
+
+a tween operation is set up as follows:
+
+```lua
+Timer:tween(1, {
+  [circle] = {
+    ["r"] = 20
+   }
+})
+```
+
+The idea is to provide delta time, describing how long the tween operation should take, as well as a table describing which tables and which tables' properties need to update.
+
+The structure ultimately allows for multiple operations to take place at the same time. For instance, updating the position and radius of two circles.
+
+```lua
+Timer:tween(1, {
+  [circle1] = {
+    ["cx"] = 0,
+    ["cy"] = WINDOW_HEIGHT
+    ["r"] = 20
+  },
+  [circle2] = {
+    ["cx"] = WINDOW_WIDTH,
+    ["cy"] = 0
+    ["r"] = 20
+  }
+})
+```
+
+This means the `Timer.tween` function needs to consider multiple layers, looping through the table to consider the tables first and the key-value pairs afterwards. In `Timer.lua`, I landed on the following structure.
+
+### tween
+
+`tween` describes a table with a series of fields pertinent to the entire tween. Here you find the timer, the input delta time, but also the (optional) `label`.
+
+```lua
+local tween = {
+  ["timer"] = 0,
+  ["dt"] = dt,
+  ["label"] = label
+}
+```
+
+Most importantly, you also find `def`, a table collecting the pertinent information.
+
+```lua
+local tween = {
+  -- other fields
+  ["def"] = {}
+}
+```
+
+### definition
+
+`definition` is designed to be a table collecting a reference for the values which need to be updated. For every pair of the input definition
+
+```lua
+for ref, keyValuePairs in pairs(def) do
+  local definition = {}
+end
+```
+
+It stores a reference to the input table (consider `circle` or `circle1` from the snippets above), as well as another table, `keyValuePairs`.
+
+```lua
+local definition = {
+  ["ref"] = ref,
+  ["keyValuePairs"] = {}
+}
+```
+
+By accessing the `ref` field, the timer is ultimately able to modify the original value.
+
+### keyValuePair
+
+`keyValuePair` stores the individual fields which need to be modified. For every set of key-value pairs.
+
+```lua
+for key, value in pairs(keyValuePairs) do
+  local keyValuePair = {}
+end
+```
+
+Itself, it describes the field, the desired value, as well as the change which needs to be applied in the update function.
+
+```lua
+local keyValuePair = {
+  ["key"] = key,
+  ["value"] = value,
+  ["change"] = ???
+}
+```
+
+The change is computed as the final value, minus the original measure. All divided by the input delta time.
+
+```lua
+["change"] = (value - ref[key]) / dt
+```
+
+### update
+
+In the logic of the `update` function, the timer library needs to:
+
+- loop through the available tweens, and in so doing update the connected timers
+
+  ```lua
+  for i, tween in ipairs(self.tweens) do
+    twee.timer = tween.timer + dt
+  end
+  ```
+
+- loop through the tweens' definitions
+
+  ```lua
+  for j, definition in ipairs(tween.def) do
+  end
+  ```
+
+- loop through the tweens' definitions' key value pairs
+
+  ```lua
+  for k, keyValuePair in ipairs(definition.keyValuePairs) do
+  end
+  ```
+
+- access the original value and modify the value with `change`
+
+  ```lua
+  definition.ref[keyValuePair.key] = definition.ref[keyValuePair.key] + keyValuePair.change * dt
+  ```
+
+Finally, and outside of the nested structure, the library checks if the timer reaches the prescribed delta time, and if so removes the tween from the parent table `self.tweens`.
+
+```lua
+if tween.timer >= tween.dt then
+  table.remove(self.tweens, i)
+end
+```
+
+_Please note_: before removing the tween I've decided to loop one last time through the input arguments, in order to have the variables match the final value exactly. This works to avoid minor inconsistencies created by `dt`
+
+```lua
+for j, definition in ipairs(tween.def) do
+  for k, keyValuePair in ipairs(definition.keyValuePairs) do
+    definition.ref[keyValuePair.key] = keyValuePair.value
+  end
+end
+-- remove tween
+```
