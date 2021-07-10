@@ -6,12 +6,16 @@ Each sub-folder implements one of the three time-related features with a small d
 
 - `Delay/main.lua` registers user input in the form of the coordinate of the mouse cursor. Only after a brief delay it uses the coordinates to include a point in the window
 
+- `Interval/main.lua` adds a particle every so often. By pressing the letter `t` or the left button of the mouse cursor, the demo shows how to remove the interval with a label
+
 ## Delay
 
 `Timer:after` receives two arguments: the number of seconds for the delay and a callback function,
 
 ```lua
-Timer:after(seconds, callback)
+Timer:every(1, function()
+  -- do something after a second
+end)
 ```
 
 `Timer` keeps track of the delay in a table initialized as the class is first created.
@@ -63,3 +67,47 @@ if delay.timer >= delay.dt then
   table.remove(self.delays, i)
 end
 ```
+
+## Interval
+
+An interval works similarly to a delay, but the idea is to execute the logic of the callback function repeatedly.
+
+```lua
+Timer:every(1, function()
+  -- do something every second
+end)
+```
+
+With this in mind, as the `timer` field exceeds the prescribed threshold the function does not remove the item from the table, but resets the counter variable instead.
+
+```lua
+if interval.timer >= interval.dt then
+  interval.callback()
+  interval.timer = interval.timer % interval.dt
+end
+```
+
+### label
+
+When setting up an interval, it is useful to have a label describing the interval.
+
+```lua
+function Timer:every(dt, callback, label)
+end
+```
+
+Such a referene allows to remove the logic if need be.
+
+```lua
+function Timer:remove(label)
+  for k, interval in pairs(self.intervals) do
+    if interval.label == label then
+      return table.remove(self.intervals, i)
+    end
+  end
+end
+```
+
+By returning the removed item it is possible to obtain the interval following the `Timer:remove()` function call, not to mention terminate the function as well.
+
+The feature is introduced in the context of intervals, but it is actually useful for delays and tweens as well. With this in mind, the `:after` and later `:tween` functions are updated to have a similar label.
