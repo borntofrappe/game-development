@@ -13,7 +13,13 @@ local particles = {}
 function love.load()
   love.window.setTitle("Object Oriented Programming")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0, 0, 0)
+  love.graphics.setBackgroundColor(0.94, 0.94, 0.94)
+end
+
+function love.keypressed(key)
+  if key == "escape" then
+    love.event.quit()
+  end
 end
 
 function love.update(dt)

@@ -1,7 +1,7 @@
 CircleParticle = Particle:new()
 
-local RADIUS_MIN = 4
-local RADIUS_MAX = 7
+local RADIUS_MIN = 5
+local RADIUS_MAX = 8
 
 function CircleParticle:new(x, y)
   local this = {
@@ -16,5 +16,6 @@ function CircleParticle:new(x, y)
 end
 
 function CircleParticle:render()
+  love.graphics.setColor(0.96, 0.6, 0.34)
   love.graphics.circle("fill", self.x, self.y, self.r)
 end
