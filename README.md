@@ -8,4 +8,6 @@ With this folder I set out to explore in the alluring world of game development,
 
 - in the `Practice` folder I create additional demos to solidify the lessons learned
 
-- in the `Showcase` folder I include `.gif` files to highlight the projects with a few frames.
+- in the `Showcase` folder I include `.gif` files to highlight the projects with a few frames
+
+- in the `Utils` folder I try to explan some of the constructs used throughout the different projects
