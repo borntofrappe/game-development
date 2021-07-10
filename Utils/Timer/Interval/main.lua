@@ -1,11 +1,9 @@
 Timer = require "Timer"
+require "Particle"
 
-local WINDOW_WIDTH = 460
-local WINDOW_HEIGHT = 380
-
-local RADIUS_MIN = 5
-local RADIUS_MAX = 10
-local GRAVITY = 5
+WINDOW_WIDTH = 460
+WINDOW_HEIGHT = 380
+GRAVITY = 5
 
 local INTERVAL = 0.1
 local particles = {}
@@ -17,15 +15,7 @@ function addInterval()
   Timer:every(
     INTERVAL,
     function()
-      table.insert(
-        particles,
-        {
-          ["x"] = love.math.random(WINDOW_WIDTH),
-          ["y"] = -RADIUS_MAX,
-          ["r"] = love.math.random(RADIUS_MIN, RADIUS_MAX),
-          ["dy"] = 0
-        }
-      )
+      table.insert(particles, Particle:new())
     end,
     label
   )
@@ -41,7 +31,7 @@ function toggleInterval()
 end
 
 function love.load()
-  love.window.setTitle("Timer Interval")
+  love.window.setTitle("Interval")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.94, 0.94, 0.94)
 
@@ -66,10 +56,9 @@ end
 
 function love.update(dt)
   for k, particle in pairs(particles) do
-    particle.y = particle.y + particle.dy
-    particle.dy = particle.dy + GRAVITY * dt
+    particle:update(dt)
 
-    if particle.y > WINDOW_HEIGHT + RADIUS_MAX then
+    if particle.y > WINDOW_HEIGHT + particle.r then
       table.remove(particles, k)
     end
   end
@@ -80,11 +69,11 @@ end
 function love.draw()
   love.graphics.setColor(0.3, 0.3, 0.3)
   for k, particle in pairs(particles) do
-    love.graphics.circle("fill", particle.x, particle.y, particle.r)
+    particle:render()
   end
 
   --[[ debugging
-    love.graphics.setColor(0, 1, 0)
-    love.graphics.print(#Timer.intervals, 8, 8)
+  love.graphics.setColor(0, 1, 0)
+  love.graphics.print(#Timer.intervals, 8, 8)
   --]]
 end

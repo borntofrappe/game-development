@@ -1,12 +1,14 @@
 # Timer
 
-The course introduces the timer module from the [knife](https://github.com/airstruck/knife) library to manage intervals, delays, tween animations. The goal of this folder is to try and replace the library with my own code.
+[CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) introduces a library to manage time-related events. The goal of this folder is to try and replace the library with my own code.
 
 Each sub-folder implements one of the three time-related features with a small demo:
 
-- `Delay/main.lua` registers user input in the form of the coordinate of the mouse cursor. Only after a brief delay it uses the coordinates to include a point in the window
+- `Delay/main.lua` registers user input in the form of the coordinate of the mouse cursor. Only after a brief delay it uses these coordinates to include a point in the window
 
-- `Interval/main.lua` adds a particle every so often. By pressing the letter `t` or the left button of the mouse cursor, the demo shows how to remove the interval with a label
+- `Interval/main.lua` adds a particle at an interval. By pressing the letter `t` or the left button of the mouse cursor, the demo shows how to remove the interval with a label
+
+- `Tween/main.lua` expands the demo created for delays by progressively reducing the radius of the points
 
 ## Delay
 
@@ -78,7 +80,7 @@ Timer:every(1, function()
 end)
 ```
 
-With this in mind, as the `timer` field exceeds the prescribed threshold the function does not remove the item from the table, but resets the counter variable instead.
+As the counter variable exceeds the prescribed threshold the function does not remove the item from the table, but resets the counter variable instead.
 
 ```lua
 if interval.timer >= interval.dt then
@@ -89,7 +91,7 @@ end
 
 ### label
 
-When setting up an interval, it is useful to have a label describing the interval.
+When setting up an interval, it is useful to associate a label to the table.
 
 ```lua
 function Timer:every(dt, callback, label)
@@ -114,12 +116,12 @@ The feature is introduced in the context of intervals, but it is actually useful
 
 ## Tween
 
-a tween operation is set up as follows:
+A tween operation is set up as follows:
 
 ```lua
 Timer:tween(1, {
   [circle] = {
-    ["r"] = 20
+    ["r"] = 20 -- animate the radius to 20 in 1 second
    }
 })
 ```
@@ -143,7 +145,9 @@ Timer:tween(1, {
 })
 ```
 
-This means the `Timer.tween` function needs to consider multiple layers, looping through the table to consider the tables first and the key-value pairs afterwards. In `Timer.lua`, I landed on the following structure.
+This means the `Timer.tween` function needs to consider multiple layers, looping through the table to consider the tables first and the key-value pairs afterwards.
+
+In `Timer.lua`, I developed the feature as follows.
 
 ### tween
 
@@ -168,7 +172,7 @@ local tween = {
 
 ### definition
 
-`definition` is designed to be a table collecting a reference for the values which need to be updated. For every pair of the input definition
+`definition` is designed to be a table collecting a reference for the values which need to be updated. For every pair of the input definition:
 
 ```lua
 for ref, keyValuePairs in pairs(def) do
@@ -176,7 +180,7 @@ for ref, keyValuePairs in pairs(def) do
 end
 ```
 
-It stores a reference to the input table (consider `circle` or `circle1` from the snippets above), as well as another table, `keyValuePairs`.
+The idea is to stores a reference to the input table (consider `circle` or `circle1` from the snippets above), as well as another table, `keyValuePairs`.
 
 ```lua
 local definition = {
@@ -189,7 +193,7 @@ By accessing the `ref` field, the timer is ultimately able to modify the origina
 
 ### keyValuePair
 
-`keyValuePair` stores the individual fields which need to be modified. For every set of key-value pairs.
+`keyValuePair` stores the individual fields which need to be modified. For every set of key-value pairs initialize a table.
 
 ```lua
 for key, value in pairs(keyValuePairs) do
@@ -197,7 +201,7 @@ for key, value in pairs(keyValuePairs) do
 end
 ```
 
-Itself, it describes the field, the desired value, as well as the change which needs to be applied in the update function.
+In the table describe the field, the desired value, as well as the change which needs to be applied in the update function.
 
 ```lua
 local keyValuePair = {
@@ -207,7 +211,7 @@ local keyValuePair = {
 }
 ```
 
-The change is computed as the final value, minus the original measure. All divided by the input delta time.
+The change is computed as the final value, minus the original measure divided by the input delta time.
 
 ```lua
 ["change"] = (value - ref[key]) / dt
@@ -217,7 +221,7 @@ The change is computed as the final value, minus the original measure. All divid
 
 In the logic of the `update` function, the timer library needs to:
 
-- loop through the available tweens, and in so doing update the connected timers
+- loop through the exis tweens to update the connected timers
 
   ```lua
   for i, tween in ipairs(self.tweens) do
@@ -253,7 +257,7 @@ if tween.timer >= tween.dt then
 end
 ```
 
-_Please note_: before removing the tween I've decided to loop one last time through the input arguments, in order to have the variables match the final value exactly. This works to avoid minor inconsistencies created by `dt`
+_Please note_: before removing the tween I've decided to loop one last time through the input arguments, in order to have the variables match the final value exactly. This works to avoid the inconsistencies created by `dt`.
 
 ```lua
 for j, definition in ipairs(tween.def) do
