@@ -1,7 +1,7 @@
 require "src/Dependencies"
 
 function love.load()
-  love.window.setTitle("Surround")
+  love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(COLORS.background.r, COLORS.background.g, COLORS.background.b)
 

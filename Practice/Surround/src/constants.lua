@@ -1,5 +1,9 @@
-WINDOW_WIDTH = 640
+TITLE = "Surround"
+
+WINDOW_WIDTH = 660
 WINDOW_HEIGHT = 420
+
+CELL_SIZE = 20
 
 COLORS = {
   ["player-1"] = {
@@ -23,8 +27,8 @@ COLORS = {
     ["b"] = 0.25
   },
   ["background"] = {
-    ["r"] = 0.94,
-    ["g"] = 0.94,
-    ["b"] = 0.94
+    ["r"] = 0.95,
+    ["g"] = 0.95,
+    ["b"] = 0.95
   }
 }
