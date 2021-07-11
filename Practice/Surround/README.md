@@ -71,3 +71,75 @@ love.graphics.setColor(1, 1, 1, 1)
 ```
 
 Without this instruction it seems that the demo shows more washed out, transparent, colors.
+
+### Dynamic
+
+The demo shows how it is possible to show the same entity from the perspective of two different players, each focused on half of the existing window.
+
+In the code, the idea is to immediately initializes a cell, somewhere in the window.
+
+```lua
+function Cell:new()
+  local this = {
+    ["x"] = love.math.random(WINDOW_WIDTH),
+    ["y"] = love.math.random(WINDOW_HEIGHT),
+  }
+  -- oop
+end
+```
+
+When creating the two canvases, then, the idea is to have each canvas half as wide as the window, and translate the second object to the right portion.
+
+```lua
+for i, canvas in ipairs(canvases) do
+  -- canvas, x
+  love.graphics.draw(canvas, (i - 1) * CANVAS_WIDTH)
+end
+```
+
+The `getCanvases` function is defined to produce the necessary objects. It receives as argument the cell to-be-rendered and a table describing the translations.
+
+```lua
+function getCanvases(cell, translations)
+end
+```
+
+These translations are meant to make sure that the rectangle appears in one of the two frames.
+
+```lua
+local translations = {
+  {["x"] = 0, ["y"] = 0},
+  {["x"] = -CANVAS_WIDTH, ["y"] = 0}
+}
+```
+
+For each translation, `getCanvases` proceeds to create and set a canvas.
+
+```lua
+local canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+love.graphics.setCanvas(canvas)
+
+-- draw here
+
+love.graphics.setCanvas()
+```
+
+Before drawing the cell, then, the function translates the perspective considering the input offset values. Notice the `push` and `pop` function, to make sure that the translation does not persist past the canvas.
+
+```lua
+love.graphics.push()
+
+love.graphics.translate(translation.x, translation.y)
+cell:render()
+
+love.graphics.pop()
+```
+
+This setup works, but is ultimately static, and doesn't demonstrate how the two halves are effectively rendering each their own version of the world. To highlight this feat, the `translation` table is updated through the arrow or `wasd` keys, each affecting a separate half. Every time the table is updated, finally, the canvases reconsider the changing environment.
+
+```lua
+cell = Cell:new()
+canvases = getCanvases(cell, translations)
+```
+
+The same holds true every time you update the cell. It is here necessary to create a new version of the canvas.

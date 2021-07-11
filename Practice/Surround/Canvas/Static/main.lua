@@ -50,7 +50,6 @@ function love.load()
 
   canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
   love.graphics.setCanvas(canvas)
-  -- love.graphics.clear()
   for k, cell in pairs(cells) do
     cell:render()
   end
