@@ -2,7 +2,7 @@ GameoverState = BaseState:new()
 
 local OPACITY_CELL = 0.12
 
-local TITLE_MARGIN_BOTTOM = 16
+local TITLE_MARGIN_BOTTOM = 14
 
 function GameoverState:enter(params)
   love.graphics.setBackgroundColor(COLORS["play-area"].r, COLORS["play-area"].g, COLORS["play-area"].b)

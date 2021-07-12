@@ -1,7 +1,5 @@
 StartState = BaseState:new()
 
-local TRAIL_OPACITY = 0.25
-
 local TITLE_PADDING_TOP = 12
 local TITLE_PADDING_BOTTOM = 6
 local TITLE_MARGIN_BOTTOM = 16

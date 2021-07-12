@@ -3,6 +3,12 @@ PlayState = BaseState:new()
 local CANVAS_WIDTH = math.floor(WINDOW_WIDTH / 2)
 local CANVAS_HEIGHT = WINDOW_HEIGHT
 
+local UPDATE_INTERVAL = {
+  ["delay"] = 2,
+  ["duration"] = 0.25,
+  ["label"] = "update"
+}
+
 function PlayState:new()
   love.graphics.setBackgroundColor(COLORS.background.r, COLORS.background.g, COLORS.background.b)
 
@@ -48,7 +54,10 @@ function PlayState:getCanvases(players)
 
     love.graphics.setColor(COLORS["play-area"].r, COLORS["play-area"].g, COLORS["play-area"].b)
     love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
-    player:render()
+
+    for j, p in ipairs(players) do
+      p:render()
+    end
 
     love.graphics.pop()
 
@@ -59,16 +68,93 @@ function PlayState:getCanvases(players)
   return canvases
 end
 
+function PlayState:enter()
+  Timer:after(
+    UPDATE_INTERVAL.delay,
+    function()
+      Timer:every(
+        UPDATE_INTERVAL.duration,
+        function()
+          local winner = {}
+          for i, player in ipairs(self.players) do
+            if
+              player:outOfBounds() or player:overlaps() or
+                player:collides(i == 1 and self.players[2] or self.players[1])
+             then
+              table.insert(winner, i == 1 and 2 or 1)
+            end
+          end
+
+          self.canvases = self:getCanvases(self.players)
+
+          if #winner == 2 then
+            Timer:remove(UPDATE_INTERVAL.label)
+            Timer:after(
+              1,
+              function()
+                gStateMachine:change("gameover")
+              end
+            )
+          end
+
+          if #winner == 1 then
+            Timer:remove(UPDATE_INTERVAL.label)
+            Timer:after(
+              1,
+              function()
+                gStateMachine:change(
+                  "gameover",
+                  {
+                    ["winner"] = "player-" .. winner[1]
+                  }
+                )
+              end
+            )
+          end
+
+          for i, player in ipairs(self.players) do
+            player:update()
+          end
+        end,
+        UPDATE_INTERVAL.label
+      )
+    end
+  )
+end
+
 function PlayState:update(dt)
   if love.keyboard.waspressed("escape") then
+    Timer:remove(UPDATE_INTERVAL.label)
     gStateMachine:change("start")
   end
 
-  if love.keyboard.waspressed("right") then
-    self.players[2].offset.column = self.players[2].offset.column + 1
-    self.players[2].cell.column = self.players[2].cell.column + 1
-    self.canvases = self:getCanvases(self.players)
+  if love.keyboard.waspressed("up") then
+    self.players[2]:turn("up")
   end
+  if love.keyboard.waspressed("right") then
+    self.players[2]:turn("right")
+  end
+  if love.keyboard.waspressed("down") then
+    self.players[2]:turn("down")
+  end
+  if love.keyboard.waspressed("left") then
+    self.players[2]:turn("left")
+  end
+
+  if love.keyboard.waspressed("w") then
+    self.players[1]:turn("up")
+  end
+  if love.keyboard.waspressed("d") then
+    self.players[1]:turn("right")
+  end
+  if love.keyboard.waspressed("s") then
+    self.players[1]:turn("down")
+  end
+  if love.keyboard.waspressed("a") then
+    self.players[1]:turn("left")
+  end
+
+  Timer:update(dt)
 end
 
 function PlayState:render()
