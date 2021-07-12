@@ -1,8 +1,12 @@
 StartState = BaseState:new()
 
-local TRAIL_OPACITY = 0.3
+local TRAIL_OPACITY = 0.25
 
-local TITLE_PADDING_TOP = 14
+local OFFSET_SHADOW_X = -2
+local OFFSET_SHADOW_Y = 3
+local OPACITY_SHADOW = 0.4
+
+local TITLE_PADDING_TOP = 12
 local TITLE_PADDING_BOTTOM = 6
 local TITLE_MARGIN_BOTTOM = 16
 
@@ -62,8 +66,10 @@ function StartState:update(dt)
 end
 
 function StartState:render()
-  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
   love.graphics.setFont(gFonts["large"])
+  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b, OPACITY_SHADOW)
+  love.graphics.printf(self.title, OFFSET_SHADOW_X, self.y + OFFSET_SHADOW_Y, WINDOW_WIDTH, "center")
+  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
   love.graphics.printf(self.title, 0, self.y, WINDOW_WIDTH, "center")
 
   love.graphics.setColor(COLORS["player-1"].r, COLORS["player-1"].g, COLORS["player-1"].b)
