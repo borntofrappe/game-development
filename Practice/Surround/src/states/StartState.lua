@@ -7,6 +7,8 @@ local TITLE_PADDING_BOTTOM = 6
 local TITLE_MARGIN_BOTTOM = 16
 
 function StartState:new()
+  love.graphics.setBackgroundColor(COLORS["play-area"].r, COLORS["play-area"].g, COLORS["play-area"].b)
+
   local title = TITLE:upper()
   local width = gFonts["large"]:getWidth(title)
   local height = gFonts["large"]:getHeight()

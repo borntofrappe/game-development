@@ -1,6 +1,6 @@
 TITLE = "Surround"
 
-WINDOW_WIDTH = 660
+WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 420
 
 CELL_SIZE = 20
@@ -37,13 +37,13 @@ COLORS = {
     ["b"] = 0.3
   },
   ["play-area"] = {
-    ["r"] = 0.25,
-    ["g"] = 0.25,
-    ["b"] = 0.25
-  },
-  ["background"] = {
     ["r"] = 0.97,
     ["g"] = 0.97,
     ["b"] = 0.97
+  },
+  ["background"] = {
+    ["r"] = 0.25,
+    ["g"] = 0.25,
+    ["b"] = 0.25
   }
 }

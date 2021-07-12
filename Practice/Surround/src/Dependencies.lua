@@ -3,6 +3,7 @@ Timer = require "res/lib/Timer"
 require "src/constants"
 
 require "src/Cell"
+require "src/Player"
 
 require "src/StateMachine"
 require "src/states/BaseState"

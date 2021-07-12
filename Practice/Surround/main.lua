@@ -3,7 +3,7 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(COLORS.background.r, COLORS.background.g, COLORS.background.b)
+  love.graphics.setBackgroundColor(COLORS["play-area"].r, COLORS["play-area"].g, COLORS["play-area"].b)
 
   gStateMachine =
     StateMachine:new(
@@ -25,7 +25,7 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
-  gStateMachine:change("start")
+  gStateMachine:change("play")
   love.keyboard.keypressed = {}
 end
 
