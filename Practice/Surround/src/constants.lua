@@ -5,6 +5,21 @@ WINDOW_HEIGHT = 420
 
 CELL_SIZE = 20
 
+COLUMNS = math.floor(WINDOW_WIDTH / CELL_SIZE)
+ROWS = math.floor(WINDOW_HEIGHT / CELL_SIZE)
+
+TITLE_SHADOW = {
+  ["x"] = -2,
+  ["y"] = 3,
+  ["opacity"] = 0.4
+}
+
+INSTRUCTION_INTERVAL = {
+  ["delay"] = 2,
+  ["duration"] = 0.5,
+  ["label"] = "instruction"
+}
+
 COLORS = {
   ["player-1"] = {
     ["r"] = 0.16,

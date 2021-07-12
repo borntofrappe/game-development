@@ -2,16 +2,9 @@ StartState = BaseState:new()
 
 local TRAIL_OPACITY = 0.25
 
-local OFFSET_SHADOW_X = -2
-local OFFSET_SHADOW_Y = 3
-local OPACITY_SHADOW = 0.4
-
 local TITLE_PADDING_TOP = 12
 local TITLE_PADDING_BOTTOM = 6
 local TITLE_MARGIN_BOTTOM = 16
-
-local INTERVAL_DELAY = 2
-local INTERVAL_DURATION = 0.5
 
 function StartState:new()
   local title = TITLE:upper()
@@ -23,11 +16,7 @@ function StartState:new()
     ["x"] = WINDOW_WIDTH / 2 - width / 2,
     ["y"] = WINDOW_HEIGHT / 2 - height,
     ["width"] = width,
-    ["height"] = height,
-    ["toggleOpacity"] = {
-      ["state"] = true,
-      ["label"] = "toggle"
-    }
+    ["height"] = height
   }
 
   self.__index = self
@@ -37,15 +26,22 @@ function StartState:new()
 end
 
 function StartState:enter()
+  self.interval = {
+    ["state"] = true,
+    ["delay"] = INSTRUCTION_INTERVAL.delay,
+    ["duration"] = INSTRUCTION_INTERVAL.duration,
+    ["label"] = INSTRUCTION_INTERVAL.label
+  }
+
   Timer:after(
-    INTERVAL_DELAY,
+    self.interval.delay,
     function()
       Timer:every(
-        INTERVAL_DURATION,
+        self.interval.duration,
         function()
-          self.toggleOpacity.state = not self.toggleOpacity.state
+          self.interval.state = not self.interval.state
         end,
-        self.toggleOpacity.label
+        self.interval.label
       )
     end
   )
@@ -53,12 +49,12 @@ end
 
 function StartState:update(dt)
   if love.keyboard.waspressed("escape") then
-    Timer:remove(self.toggleOpacity.label)
+    Timer:remove(self.interval.label)
     love.event.quit()
   end
 
   if love.keyboard.waspressed("return") then
-    Timer:remove(self.toggleOpacity.label)
+    Timer:remove(self.interval.label)
     gStateMachine:change("play")
   end
 
@@ -67,8 +63,8 @@ end
 
 function StartState:render()
   love.graphics.setFont(gFonts["large"])
-  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b, OPACITY_SHADOW)
-  love.graphics.printf(self.title, OFFSET_SHADOW_X, self.y + OFFSET_SHADOW_Y, WINDOW_WIDTH, "center")
+  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b, TITLE_SHADOW.opacity)
+  love.graphics.printf(self.title, TITLE_SHADOW.x, self.y + TITLE_SHADOW.y, WINDOW_WIDTH, "center")
   love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
   love.graphics.printf(self.title, 0, self.y, WINDOW_WIDTH, "center")
 
@@ -90,7 +86,7 @@ function StartState:render()
   love.graphics.setColor(COLORS["player-2"].r, COLORS["player-2"].g, COLORS["player-2"].b, TRAIL_OPACITY)
   love.graphics.rectangle("fill", self.x, self.y + self.height + TITLE_PADDING_BOTTOM, self.width, CELL_SIZE)
 
-  if self.toggleOpacity.state then
+  if self.interval.state then
     love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
     love.graphics.setFont(gFonts["normal"])
     love.graphics.printf(

@@ -25,7 +25,7 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
-  gStateMachine:change("gameover")
+  gStateMachine:change("start")
   love.keyboard.keypressed = {}
 end
 

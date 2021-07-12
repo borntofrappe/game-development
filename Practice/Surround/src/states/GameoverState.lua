@@ -1,16 +1,6 @@
 GameoverState = BaseState:new()
 
-local COLUMNS = math.floor(WINDOW_WIDTH / CELL_SIZE)
-local ROWS = math.floor(WINDOW_HEIGHT / CELL_SIZE)
-
-local OFFSET_SHADOW_X = -2
-local OFFSET_SHADOW_Y = 3
-local OPACITY_SHADOW = 0.4
-
 local OPACITY_CELL = 0.12
-
-local INTERVAL_DELAY = 2
-local INTERVAL_DURATION = 0.5
 
 local TITLE_MARGIN_BOTTOM = 16
 
@@ -43,20 +33,22 @@ function GameoverState:enter(params)
   love.graphics.setCanvas()
   self.canvas = canvas
 
-  self.toggleOpacity = {
+  self.interval = {
     ["state"] = false,
-    ["label"] = "toggle"
+    ["delay"] = INSTRUCTION_INTERVAL.delay,
+    ["duration"] = INSTRUCTION_INTERVAL.duration,
+    ["label"] = INSTRUCTION_INTERVAL.label
   }
 
   Timer:after(
-    INTERVAL_DELAY,
+    self.interval.delay,
     function()
       Timer:every(
-        INTERVAL_DURATION,
+        self.interval.duration,
         function()
-          self.toggleOpacity.state = not self.toggleOpacity.state
+          self.interval.state = not self.interval.state
         end,
-        self.toggleOpacity.label
+        self.interval.label
       )
     end
   )
@@ -64,12 +56,12 @@ end
 
 function GameoverState:update(dt)
   if love.keyboard.waspressed("escape") then
-    Timer:remove(self.toggleOpacity.label)
+    Timer:remove(self.interval.label)
     gStateMachine:change("start")
   end
 
   if love.keyboard.waspressed("return") then
-    Timer:remove(self.toggleOpacity.label)
+    Timer:remove(self.interval.label)
     gStateMachine:change("play")
   end
 
@@ -81,11 +73,11 @@ function GameoverState:render()
   love.graphics.draw(self.canvas)
 
   love.graphics.setFont(gFonts["large"])
-  love.graphics.setColor(self.color.r, self.color.g, self.color.b, OPACITY_SHADOW)
+  love.graphics.setColor(self.color.r, self.color.g, self.color.b, TITLE_SHADOW.opacity)
   love.graphics.printf(
     self.title,
-    OFFSET_SHADOW_X,
-    WINDOW_HEIGHT / 2 - gFonts["large"]:getHeight() + OFFSET_SHADOW_Y,
+    TITLE_SHADOW.x,
+    WINDOW_HEIGHT / 2 - gFonts["large"]:getHeight() + TITLE_SHADOW.y,
     WINDOW_WIDTH,
     "center"
   )
@@ -93,7 +85,8 @@ function GameoverState:render()
   love.graphics.setColor(self.color.r, self.color.g, self.color.b)
   love.graphics.printf(self.title, 0, WINDOW_HEIGHT / 2 - gFonts["large"]:getHeight(), WINDOW_WIDTH, "center")
 
-  if self.toggleOpacity.state then
+  if self.interval.state then
+    love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
     love.graphics.setFont(gFonts["normal"])
     love.graphics.printf("Press enter to replay", 0, WINDOW_HEIGHT / 2 + TITLE_MARGIN_BOTTOM, WINDOW_WIDTH, "center")
   end

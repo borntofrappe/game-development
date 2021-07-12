@@ -6,7 +6,23 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    gStateMachine:change("gameover")
+    if love.keyboard.isDown("left") then
+      gStateMachine:change(
+        "gameover",
+        {
+          ["winner"] = "player-1"
+        }
+      )
+    elseif love.keyboard.isDown("right") then
+      gStateMachine:change(
+        "gameover",
+        {
+          ["winner"] = "player-2"
+        }
+      )
+    else
+      gStateMachine:change("gameover")
+    end
   end
 end
 
