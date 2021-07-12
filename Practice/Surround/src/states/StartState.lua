@@ -26,6 +26,8 @@ function StartState:new()
 end
 
 function StartState:enter()
+  gSounds["play"]:play()
+
   self.interval = {
     ["state"] = true,
     ["delay"] = INSTRUCTION_INTERVAL.delay,
@@ -40,6 +42,10 @@ function StartState:enter()
         self.interval.duration,
         function()
           self.interval.state = not self.interval.state
+
+          if self.interval.state then
+            gSounds["play"]:play()
+          end
         end,
         self.interval.label
       )

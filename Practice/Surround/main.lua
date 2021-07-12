@@ -25,7 +25,12 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
-  gStateMachine:change("play")
+  gSounds = {
+    ["gameover"] = love.audio.newSource("res/sounds/gameover.wav", "static"),
+    ["play"] = love.audio.newSource("res/sounds/play.wav", "static")
+  }
+
+  gStateMachine:change("start")
   love.keyboard.keypressed = {}
 end
 

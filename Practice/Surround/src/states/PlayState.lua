@@ -5,9 +5,11 @@ local CANVAS_HEIGHT = WINDOW_HEIGHT
 
 local UPDATE_INTERVAL = {
   ["delay"] = 2,
-  ["duration"] = 0.25,
+  ["duration"] = 0.2,
   ["label"] = "update"
 }
+
+local GAMEOVER_DELAY = 1
 
 function PlayState:new()
   love.graphics.setBackgroundColor(COLORS.background.r, COLORS.background.g, COLORS.background.b)
@@ -31,7 +33,8 @@ function PlayState:new()
 
   local this = {
     ["players"] = players,
-    ["canvases"] = canvases
+    ["canvases"] = canvases,
+    ["showInstructions"] = true
   }
 
   self.__index = self
@@ -68,17 +71,20 @@ function PlayState:getCanvases(players)
   return canvases
 end
 
-function PlayState:enter()
+function PlayState:enter(params)
   Timer:after(
     UPDATE_INTERVAL.delay,
     function()
+      gSounds["play"]:play()
+
+      self.showInstructions = false
       Timer:every(
         UPDATE_INTERVAL.duration,
         function()
           local winner = {}
           for i, player in ipairs(self.players) do
             if
-              player:outOfBounds() or player:overlaps() or
+              player:isOutOfBounds() or player:overlaps() or
                 player:collides(i == 1 and self.players[2] or self.players[1])
              then
               table.insert(winner, i == 1 and 2 or 1)
@@ -88,9 +94,11 @@ function PlayState:enter()
           self.canvases = self:getCanvases(self.players)
 
           if #winner == 2 then
+            gSounds["gameover"]:play()
+
             Timer:remove(UPDATE_INTERVAL.label)
             Timer:after(
-              1,
+              GAMEOVER_DELAY,
               function()
                 gStateMachine:change("gameover")
               end
@@ -98,9 +106,11 @@ function PlayState:enter()
           end
 
           if #winner == 1 then
+            gSounds["gameover"]:play()
+
             Timer:remove(UPDATE_INTERVAL.label)
             Timer:after(
-              1,
+              GAMEOVER_DELAY,
               function()
                 gStateMachine:change(
                   "gameover",
@@ -125,7 +135,7 @@ end
 function PlayState:update(dt)
   if love.keyboard.waspressed("escape") then
     Timer:remove(UPDATE_INTERVAL.label)
-    gStateMachine:change("start")
+    love.event.quit()
   end
 
   if love.keyboard.waspressed("up") then
@@ -166,7 +176,13 @@ function PlayState:render()
   love.graphics.setColor(COLORS.background.r, COLORS.background.g, COLORS.background.b)
   love.graphics.setLineWidth(2)
   love.graphics.line(CANVAS_WIDTH, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-end
 
-function PlayState:updateCanvases()
+  if self.showInstructions then
+    love.graphics.setFont(gFonts["normal"])
+    love.graphics.setColor(COLORS["player-1"].r, COLORS["player-1"].g, COLORS["player-1"].b)
+    love.graphics.printf("\t\tw\t\t\n\na\ts\td", 0, 8, CANVAS_WIDTH, "center")
+
+    love.graphics.setColor(COLORS["player-2"].r, COLORS["player-2"].g, COLORS["player-2"].b)
+    love.graphics.printf("\t\t↑\t\t\n\n←\t↓\t→", CANVAS_WIDTH, 8, CANVAS_WIDTH, "center")
+  end
 end

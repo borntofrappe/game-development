@@ -49,6 +49,10 @@ function GameoverState:enter(params)
         self.interval.duration,
         function()
           self.interval.state = not self.interval.state
+
+          if self.interval.state then
+            gSounds["play"]:play()
+          end
         end,
         self.interval.label
       )

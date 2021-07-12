@@ -1,11 +1,10 @@
 Cell = {}
 
-function Cell:new(column, row, size, color)
+function Cell:new(column, row, size)
   local this = {
     ["column"] = column,
     ["row"] = row,
-    ["size"] = size,
-    ["color"] = color
+    ["size"] = size
   }
 
   self.__index = self

@@ -43,7 +43,7 @@ function Player:turn(direction)
   end
 end
 
-function Player:outOfBounds()
+function Player:isOutOfBounds()
   return self.cell.column < 1 or self.cell.column > COLUMNS or self.cell.row < 1 or self.cell.row > ROWS
 end
 
