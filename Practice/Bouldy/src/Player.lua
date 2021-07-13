@@ -5,7 +5,8 @@ function Player:new(maze)
   local row = math.random(maze.rows)
 
   local size = CELL_SIZE
-  local padding = math.floor(size * 0.25)
+  local paddingPercentage = 0.25
+  local padding = math.floor(size * paddingPercentage)
   local innerSize = size - padding * 2
 
   local this = {
@@ -13,6 +14,7 @@ function Player:new(maze)
     ["row"] = row,
     ["size"] = size,
     ["padding"] = padding,
+    ["paddingPercentage"] = paddingPercentage,
     ["innerSize"] = innerSize,
     ["fill"] = {
       ["r"] = 1,

@@ -23,9 +23,9 @@ function Timer:after(dt, callback, label)
   table.insert(self.delays, delay)
 end
 
-function Timer:every(dt, callback, label)
+function Timer:every(dt, callback, isImmediate, label)
   local interval = {
-    ["timer"] = 0,
+    ["timer"] = isImmediate and dt or 0,
     ["dt"] = dt,
     ["callback"] = callback,
     ["label"] = label
@@ -34,11 +34,12 @@ function Timer:every(dt, callback, label)
   table.insert(self.intervals, interval)
 end
 
-function Timer:tween(dt, def, label)
+function Timer:tween(dt, def, callback, label)
   local tween = {
     ["timer"] = 0,
     ["dt"] = dt,
     ["def"] = {},
+    ["callback"] = callback,
     ["label"] = label
   }
 
@@ -93,6 +94,11 @@ function Timer:update(dt)
           definition.ref[keyValuePair.key] = keyValuePair.value
         end
       end
+
+      if tween.callback then
+        tween.callback()
+      end
+
       table.remove(self.tweens, k)
     end
   end

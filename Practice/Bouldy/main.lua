@@ -4,13 +4,21 @@ local progressBars
 local maze
 local player
 local direction
+local isMoving
 
 local UPDATE_INTERVAL = {
   ["label"] = "update",
   ["duration"] = 0.5
 }
 local UPDATE_TWEEN = {
-  ["duration"] = UPDATE_INTERVAL.duration / 2
+  ["duration"] = 0.3
+}
+
+local KEYS_DIRECTION = {
+  ["c0r-1"] = "up",
+  ["c1r0"] = "right",
+  ["c0r1"] = "down",
+  ["c-1r0"] = "left"
 }
 
 function love.load()
@@ -71,22 +79,6 @@ function love.load()
       0
     )
   }
-
-  Timer:every(
-    UPDATE_INTERVAL.duration,
-    function()
-      Timer:tween(
-        UPDATE_TWEEN.duration,
-        {
-          [player] = {
-            ["column"] = player.column + direction.column,
-            ["row"] = player.row + direction.row
-          }
-        }
-      )
-    end,
-    UPDATE_INTERVAL.label
-  )
 end
 
 function love.keypressed(key)
@@ -94,18 +86,87 @@ function love.keypressed(key)
     love.event.quit()
   end
 
-  if key == "up" then
-    direction.column = 0
-    direction.row = -1
-  elseif key == "right" then
-    direction.column = 1
-    direction.row = 0
-  elseif key == "down" then
-    direction.column = 0
-    direction.row = 1
-  elseif key == "left" then
-    direction.column = -1
-    direction.row = 0
+  if key == "up" or key == "right" or key == "down" or key == "left" then
+    if not isMoving then
+      isMoving = true
+      Timer:every(
+        UPDATE_INTERVAL.duration,
+        function()
+          local canMove = true
+
+          local keyDirection = "c" .. direction.column .. "r" .. direction.row
+
+          if KEYS_DIRECTION[keyDirection] and maze.grid[player.column][player.row].gates[KEYS_DIRECTION[keyDirection]] then
+            canMove = false
+          end
+
+          local column = player.column + direction.column
+          local row = player.row + direction.row
+
+          if column < 1 or column > maze.columns or row < 1 or row > maze.rows then
+            canMove = false
+          end
+
+          if canMove then
+            Timer:tween(
+              UPDATE_TWEEN.duration,
+              {
+                [player] = {
+                  ["column"] = column,
+                  ["row"] = row
+                }
+              }
+            )
+          else
+            Timer:remove(UPDATE_INTERVAL.label)
+            local column = player.column
+            local row = player.row
+
+            Timer:tween(
+              UPDATE_TWEEN.duration / 2,
+              {
+                [player] = {
+                  ["column"] = player.column + direction.column * player.paddingPercentage,
+                  ["row"] = player.row + direction.row * player.paddingPercentage
+                }
+              },
+              function()
+                Timer:tween(
+                  UPDATE_TWEEN.duration / 2,
+                  {
+                    [player] = {
+                      ["column"] = column,
+                      ["row"] = row
+                    }
+                  },
+                  function()
+                    direction.column = 0
+                    direction.row = 0
+                    isMoving = false
+                  end
+                )
+              end
+            )
+          end
+        end,
+        true,
+        UPDATE_INTERVAL.label
+      )
+    end
+
+    if key == "up" then
+      direction.column = 0
+      direction.row = -1
+    elseif key == "right" then
+      direction.column = 1
+      direction.row = 0
+    elseif key == "down" then
+      direction.column = 0
+      direction.row = 1
+    elseif key == "left" then
+      direction.column = -1
+      direction.row = 0
+    end
   end
 
   if key == "r" then
