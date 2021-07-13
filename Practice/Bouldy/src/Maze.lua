@@ -75,7 +75,9 @@ end
 
 function Maze:new()
   local this = {
-    ["grid"] = self:newGrid()
+    ["grid"] = self:newGrid(),
+    ["columns"] = COLUMNS,
+    ["rows"] = ROWS
   }
 
   self.__index = self
