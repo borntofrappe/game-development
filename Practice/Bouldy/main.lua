@@ -6,6 +6,8 @@ local player
 local direction
 local isMoving
 
+local coins
+
 local UPDATE_INTERVAL = {
   ["label"] = "update",
   ["duration"] = 0.5
@@ -37,6 +39,7 @@ function love.load()
 
   maze = Maze:new()
   player = Player:new(maze)
+  coins = Coins:new(maze)
 
   direction = {
     ["column"] = 0,
@@ -115,7 +118,25 @@ function love.keypressed(key)
                   ["column"] = column,
                   ["row"] = row
                 }
-              }
+              },
+              function()
+                local hasCoin = false
+                for k, coin in pairs(coins.coins) do
+                  if player.column == coin.column and player.row == coin.row then
+                    table.remove(coins.coins, k)
+                    hasCoin = true
+                    break
+                  end
+                end
+                if hasCoin then
+                  Timer:tween(
+                    UPDATE_TWEEN.duration,
+                    {
+                      [progressBars["coins"]] = {["progress"] = 1 - #coins.coins / COINS}
+                    }
+                  )
+                end
+              end
             )
           else
             Timer:remove(UPDATE_INTERVAL.label)
@@ -172,6 +193,8 @@ function love.keypressed(key)
   if key == "r" then
     maze = Maze:new()
     player = Player:new(maze)
+    coins = Coins:new(maze)
+    progressBars["coins"].progress = 0
 
     direction = {
       ["column"] = 0,
@@ -196,5 +219,6 @@ function love.draw()
 
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
   maze:render()
+  coins:render()
   player:render()
 end
