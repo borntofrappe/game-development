@@ -1,7 +1,11 @@
 require "src/Dependencies"
 
+local progressBars
+local maze
+
 function love.load()
   love.window.setTitle(TITLE)
+  math.randomseed(os.time())
 
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
@@ -12,6 +16,8 @@ function love.load()
 
   local PROGRESS_BAR_HEIGHT = WINDOW_MARGIN_TOP - WINDOW_PADDING
   local PROGRESS_BAR_WIDTH = (WINDOW_WIDTH - WINDOW_PADDING * 2 - gFonts.normal:getWidth("\t" .. TITLE .. "\t")) / 2
+
+  maze = Maze:new()
 
   progressBars = {
     ["coins"] = ProgressBar:new(
@@ -56,24 +62,8 @@ function love.keypressed(key)
     love.event.quit()
   end
 
-  if key == "left" then
-    Timer:tween(
-      0.2,
-      {
-        [progressBars["coins"]] = {["progress"] = 0},
-        [progressBars["speed"]] = {["progress"] = 0}
-      }
-    )
-  end
-
-  if key == "right" then
-    Timer:tween(
-      0.2,
-      {
-        [progressBars["coins"]] = {["progress"] = 1},
-        [progressBars["speed"]] = {["progress"] = 1}
-      }
-    )
+  if key == "r" then
+    maze = Maze:new()
   end
 end
 
@@ -92,6 +82,5 @@ function love.draw()
   end
 
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.rectangle("line", 0, 0, MAZE_SIZE, MAZE_SIZE)
+  maze:render()
 end
