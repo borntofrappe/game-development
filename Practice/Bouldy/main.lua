@@ -17,7 +17,7 @@ local UPDATE_TWEEN = {
 }
 
 local REPLAY_DELAY = {
-  ["duration"] = 1
+  ["duration"] = 3
 }
 
 local KEYS_DIRECTION = {
@@ -45,6 +45,15 @@ function love.load()
 
   gFonts = {
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
+  }
+
+  gSounds = {
+    ["bounce"] = love.audio.newSource("res/sounds/bounce.wav", "static"),
+    ["collect"] = love.audio.newSource("res/sounds/collect.wav", "static"),
+    ["destroy"] = love.audio.newSource("res/sounds/destroy.wav", "static"),
+    ["move"] = love.audio.newSource("res/sounds/move.wav", "static"),
+    ["power-up"] = love.audio.newSource("res/sounds/power-up.wav", "static"),
+    ["win"] = love.audio.newSource("res/sounds/win.wav", "static")
   }
 
   local PROGRESS_BAR_HEIGHT = WINDOW_MARGIN_TOP - WINDOW_PADDING
@@ -108,6 +117,8 @@ function love.keypressed(key)
       Timer:every(
         UPDATE_INTERVAL.duration,
         function()
+          gSounds["move"]:play()
+
           local canMove = true
           local canDestroy = false
 
@@ -133,6 +144,8 @@ function love.keypressed(key)
           if canMove then
             local speedProgress = math.min(1, progressBars["speed"].progress + SPEED_INCREMENT)
             if canDestroy then
+              gSounds["destroy"]:play()
+
               speedProgress = math.max(0, speedProgress - SPEED_INCREMENT * math.random(1 / SPEED_INCREMENT))
 
               local cell = maze.grid[player.column][player.row]
@@ -173,6 +186,9 @@ function love.keypressed(key)
               },
               function()
                 if progressBars["speed"].progress == 1 then
+                  if player.fill ~= progressBars["speed"].fill then
+                    gSounds["power-up"]:play()
+                  end
                   player:setFill(progressBars["speed"].fill)
                 else
                   player:setFill({["r"] = 1, ["g"] = 1, ["b"] = 1})
@@ -193,6 +209,8 @@ function love.keypressed(key)
                 end
 
                 if hasCoin then
+                  gSounds["collect"]:play()
+
                   Timer:tween(
                     UPDATE_TWEEN.duration,
                     {
@@ -200,11 +218,17 @@ function love.keypressed(key)
                     },
                     function()
                       if hasAllCoins then
+                        gSounds["win"]:play()
+
                         player:setFill({["r"] = 0.92, ["g"] = 0.82, ["b"] = 0.07})
 
                         Timer:after(
                           REPLAY_DELAY.duration,
                           function()
+                            gSounds["destroy"]:play()
+
+                            player:setFill({["r"] = 1, ["g"] = 1, ["b"] = 1})
+
                             for k, column in pairs(maze.grid) do
                               for j, cell in pairs(column) do
                                 for h, gate in pairs(cell.gates) do
@@ -224,7 +248,6 @@ function love.keypressed(key)
                                 [progressBars["speed"]] = {["progress"] = 0}
                               },
                               function()
-                                player:setFill({["r"] = 1, ["g"] = 1, ["b"] = 1})
                                 state = "waiting"
                                 direction = {
                                   ["column"] = 0,
