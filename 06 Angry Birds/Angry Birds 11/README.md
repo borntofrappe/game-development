@@ -1,4 +1,4 @@
-Move the player by dragging the cursor.
+# Angry Birds 11
 
 _Note_: in the course, the lecturer introduced a `AlienLaunchMarker` class, responsible for the drag and release feature. Here I replicated the feature directly in the `PlayState`, and leveraging two boolean values.
 

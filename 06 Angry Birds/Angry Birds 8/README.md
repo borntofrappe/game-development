@@ -1,4 +1,4 @@
-Refactor the code to have the logic pertinent to the aliens in its own class.
+# Angry Birds 8
 
 ## StartState update
 

@@ -1,4 +1,4 @@
-Initialize a world and a body.
+# Angry Birds 0
 
 _Be warned_: this is a theory-heavy update, introducing several concepts before the actual code.
 

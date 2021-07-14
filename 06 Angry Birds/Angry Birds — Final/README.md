@@ -1,4 +1,4 @@
-Finalize "Angry Birds" demo.
+# Angry Birds — Assignment
 
 ## Update list
 

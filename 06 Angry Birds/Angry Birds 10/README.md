@@ -1,4 +1,4 @@
-React to a collision between game entities.
+# Angry Birds 10
 
 _Small note_: the update can be considered a spiritual successor to `Flappy Bird 4`, when experimenting with the physics module of love2D, user data and callbacks.
 

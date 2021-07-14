@@ -1,4 +1,4 @@
-Recreate the start state, with a bold title and a world based on the ball pit demo.
+# Angry Birds 7
 
 ## StartState
 

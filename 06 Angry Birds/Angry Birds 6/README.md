@@ -1,4 +1,4 @@
-In the play state, initialize a world with static edges and two dynamic shapes.
+# Angry Birds 6
 
 ## Aliens
 

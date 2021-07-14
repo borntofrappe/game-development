@@ -1,20 +1,48 @@
-Seventh episode in the continuing saga is a physics-based game inspired by Angry Birds.
+## 06 Angry Birds
+
+The seventh videos in the course introduces the game Angry Birds where the player throws an entity toward a target.
 
 ## Topics
 
-- physics and box2d
+- physics with the Box2D library
 
 - mouse input
 
-## Project structure
+## Increments
 
-The game is developed through several folders. In addition to those dedicated to the game as proposed in the video, you find additional demos to practice with the physics module and the box2d library (`Physics`, `Physics Collision` and `Ball Pit`).
+The `Prep` folder includes several demos to introduce the physics library:
 
-After the incremental folders (labeled `Angry Birds n`), you finally find two versions describing the complete game:
+- `Physics`: something
 
-- `Angry Birds — Final` details the game as presented in the course
+- `Physics Collision Callback`: something
 
-- `Angry Birds — Assignment` adds the features requested by the assignment
+- `Ball Pit`: something
+
+Past these folders, the game is developed in `Angry Birds *` folders:
+
+0. initialize a world and a body
+
+1. imulate a dynamic body and solid ground
+
+2. add a series of kinematic bodies
+
+3. consider mouse input
+
+4. detect collisions in the world
+
+5. set up the game
+
+6. in the play state, initialize a world with static edges and two dynamic shapes
+
+7. recreate the start state with a bold title and a world based on the ball pit demo
+
+8.r efactor the code to have the logic pertinent to the aliens in its own class
+
+9. include obstacles in the play state
+
+10. react to a collision between game entities
+
+11. move the player by dragging the cursor
 
 ## Resources
 
@@ -22,6 +50,6 @@ After the incremental folders (labeled `Angry Birds n`), you finally find two ve
 
 - [Love2D Physics](https://love2d.org/wiki/love.physics)
 
-- [box2d](https://box2d.org/)
+- [Box2D](https://box2d.org/)
 
 - [Project assignment](https://docs.cs50.net/ocw/games/assignments/6/assignment6.html)

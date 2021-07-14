@@ -1,4 +1,4 @@
-Set up game.
+# Angry Birds 5
 
 _Please note_: the progress achieved in previous updates is not carried over, as the goal of this specific demo is to set up the game with a state machine, dependencies and graphics.
 
