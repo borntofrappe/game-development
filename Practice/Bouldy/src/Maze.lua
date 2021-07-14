@@ -3,6 +3,13 @@ Maze = {}
 local COLUMNS = MAZE_DIMENSION
 local ROWS = MAZE_DIMENSION
 
+local ACCELERATION_DIRECTION = {
+  ["up"] = {-150, -50, 150, -250},
+  ["right"] = {50, -150, 250, 150},
+  ["down"] = {-150, 50, 150, 250},
+  ["left"] = {-50, -150, -250, 150}
+}
+
 function Maze:newGrid()
   local grid = {}
 
@@ -73,11 +80,14 @@ function Maze:newGrid()
   return grid
 end
 
+local debris = Debris:new()
+
 function Maze:new()
   local this = {
     ["grid"] = self:newGrid(),
     ["columns"] = COLUMNS,
-    ["rows"] = ROWS
+    ["rows"] = ROWS,
+    ["debris"] = debris
   }
 
   self.__index = self
@@ -86,10 +96,19 @@ function Maze:new()
   return this
 end
 
+function Maze:animateDestruction(x, y, direction)
+  local acceleration = direction and ACCELERATION_DIRECTION[direction] or {-80, -80, 80, 80}
+  self.debris:emit(x, y, acceleration)
+end
+
+function Maze:update(dt)
+  self.debris:update(dt)
+end
+
 function Maze:render()
   love.graphics.setColor(1, 1, 1)
 
-  -- love.graphics.rectangle("line", 0, 0, MAZE_SIZE, MAZE_SIZE)
+  self.debris:render()
 
   for k, column in pairs(self.grid) do
     for j, cell in pairs(column) do

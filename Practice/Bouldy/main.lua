@@ -3,10 +3,10 @@ require "src/Dependencies"
 local progressBars
 local maze
 local player
-local direction
-local isMoving
-
 local coins
+
+local direction
+local state = "waiting"
 
 local UPDATE_INTERVAL = {
   ["label"] = "update",
@@ -14,6 +14,10 @@ local UPDATE_INTERVAL = {
 }
 local UPDATE_TWEEN = {
   ["duration"] = 0.3
+}
+
+local REPLAY_DELAY = {
+  ["duration"] = 1
 }
 
 local KEYS_DIRECTION = {
@@ -99,8 +103,8 @@ function love.keypressed(key)
   end
 
   if key == "up" or key == "right" or key == "down" or key == "left" then
-    if not isMoving then
-      isMoving = true
+    if state == "waiting" then
+      state = "playing"
       Timer:every(
         UPDATE_INTERVAL.duration,
         function()
@@ -124,6 +128,8 @@ function love.keypressed(key)
             canMove = false
           end
 
+          player:animateMovement(KEYS_DIRECTION[keyDirection])
+
           if canMove then
             local speedProgress = math.min(1, progressBars["speed"].progress + SPEED_INCREMENT)
             if canDestroy then
@@ -138,6 +144,12 @@ function love.keypressed(key)
 
               cell.gates[GATES_DIRECTION[direction][1]] = nil
               neighboringCell.gates[GATES_DIRECTION[direction][2]] = nil
+
+              maze:animateDestruction(
+                cell.x0 + (gateCell.x0 + gateCell.x1) / 2,
+                cell.y0 + (gateCell.y0 + gateCell.y1) / 2,
+                direction
+              )
 
               Timer:after(
                 UPDATE_TWEEN.duration,
@@ -174,12 +186,58 @@ function love.keypressed(key)
                     break
                   end
                 end
+
+                local hasAllCoins = #coins.coins == 0
+                if hasAllCoins then
+                  Timer:remove(UPDATE_INTERVAL.label)
+                end
+
                 if hasCoin then
                   Timer:tween(
                     UPDATE_TWEEN.duration,
                     {
                       [progressBars["coins"]] = {["progress"] = 1 - #coins.coins / COINS}
-                    }
+                    },
+                    function()
+                      if hasAllCoins then
+                        player:setFill({["r"] = 0.92, ["g"] = 0.82, ["b"] = 0.07})
+
+                        Timer:after(
+                          REPLAY_DELAY.duration,
+                          function()
+                            for k, column in pairs(maze.grid) do
+                              for j, cell in pairs(column) do
+                                for h, gate in pairs(cell.gates) do
+                                  maze:animateDestruction(
+                                    cell.x0 + (gate.x0 + gate.x1) / 2,
+                                    cell.y0 + (gate.y0 + gate.y1) / 2
+                                  )
+                                  cell.gates[h] = nil
+                                end
+                              end
+                            end
+
+                            Timer:tween(
+                              UPDATE_TWEEN.duration,
+                              {
+                                [progressBars["coins"]] = {["progress"] = 0},
+                                [progressBars["speed"]] = {["progress"] = 0}
+                              },
+                              function()
+                                player:setFill({["r"] = 1, ["g"] = 1, ["b"] = 1})
+                                state = "waiting"
+                                direction = {
+                                  ["column"] = 0,
+                                  ["row"] = 0
+                                }
+                                maze = Maze:new()
+                                coins = Coins:new(maze)
+                              end
+                            )
+                          end
+                        )
+                      end
+                    end
                   )
                 end
               end
@@ -215,7 +273,7 @@ function love.keypressed(key)
                   function()
                     direction.column = 0
                     direction.row = 0
-                    isMoving = false
+                    state = "waiting"
                   end
                 )
               end
@@ -241,25 +299,12 @@ function love.keypressed(key)
       direction.row = 0
     end
   end
-
-  if key == "r" then
-    maze = Maze:new()
-    player = Player:new(maze)
-    coins = Coins:new(maze)
-    progressBars["coins"].progress = 0
-    progressBars["speed"].progress = 0
-
-    isMoving = false
-    Timer:remove(UPDATE_INTERVAL.label)
-
-    direction = {
-      ["column"] = 0,
-      ["row"] = 0
-    }
-  end
 end
 
 function love.update(dt)
+  maze:update(dt)
+  player:update(dt)
+
   Timer:update(dt)
 end
 
