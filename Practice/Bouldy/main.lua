@@ -67,7 +67,7 @@ function love.load()
 
   maze = Maze:new()
   player = Player:new(maze)
-  coins = Coins:new(maze)
+  coins = Coins:new(maze, player)
 
   local PROGRESS_BAR_HEIGHT = WINDOW_MARGIN_TOP - WINDOW_PADDING
   local PROGRESS_BAR_WIDTH = (WINDOW_WIDTH - WINDOW_PADDING * 2 - gFonts.normal:getWidth("\t" .. TITLE .. "\t")) / 2
@@ -233,7 +233,7 @@ function love.keypressed(key)
                                 state = "waiting"
                                 player:stop()
                                 maze = Maze:new()
-                                coins = Coins:new(maze)
+                                coins = Coins:new(maze, player)
                               end
                             )
                           end

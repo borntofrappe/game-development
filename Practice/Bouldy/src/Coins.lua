@@ -1,6 +1,6 @@
 Coins = {}
 
-function Coins:new(maze)
+function Coins:new(maze, player)
   local keys = {}
   local coins = {}
 
@@ -12,7 +12,7 @@ function Coins:new(maze)
     local row = math.random(rows)
 
     local key = "c" .. column .. "r" .. row
-    if not keys[key] then
+    if not keys[key] and (column ~= player.column or row ~= player.row) then
       keys[key] = true
       table.insert(coins, Coin:new(column, row))
     end
