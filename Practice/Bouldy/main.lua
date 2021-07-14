@@ -1,5 +1,13 @@
 require "src/Dependencies"
 
+local PROGRESS_BAR_LINE_WIDTH = 2
+local MAZE_LINE_WIDTH = 3
+local MAZE_SIZE = CELL_SIZE * MAZE_DIMENSION
+local WINDOW_PADDING = 10
+local WINDOW_MARGIN_TOP = 28
+local WINDOW_WIDTH = MAZE_SIZE + WINDOW_PADDING * 2
+local WINDOW_HEIGHT = MAZE_SIZE + WINDOW_MARGIN_TOP + WINDOW_PADDING * 2
+
 local progressBars
 local maze
 local player
@@ -12,6 +20,7 @@ local UPDATE_INTERVAL = {
   ["label"] = "update",
   ["duration"] = 0.5
 }
+
 local UPDATE_TWEEN = {
   ["duration"] = 0.3
 }
@@ -41,7 +50,7 @@ function love.load()
   math.randomseed(os.time())
 
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
+  love.graphics.setBackgroundColor(COLORS.background.r, COLORS.background.g, COLORS.background.b)
 
   gFonts = {
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
@@ -56,17 +65,12 @@ function love.load()
     ["win"] = love.audio.newSource("res/sounds/win.wav", "static")
   }
 
-  local PROGRESS_BAR_HEIGHT = WINDOW_MARGIN_TOP - WINDOW_PADDING
-  local PROGRESS_BAR_WIDTH = (WINDOW_WIDTH - WINDOW_PADDING * 2 - gFonts.normal:getWidth("\t" .. TITLE .. "\t")) / 2
-
   maze = Maze:new()
   player = Player:new(maze)
   coins = Coins:new(maze)
 
-  direction = {
-    ["column"] = 0,
-    ["row"] = 0
-  }
+  local PROGRESS_BAR_HEIGHT = WINDOW_MARGIN_TOP - WINDOW_PADDING
+  local PROGRESS_BAR_WIDTH = (WINDOW_WIDTH - WINDOW_PADDING * 2 - gFonts.normal:getWidth("\t" .. TITLE .. "\t")) / 2
 
   progressBars = {
     ["coins"] = ProgressBar:new(
@@ -74,16 +78,8 @@ function love.load()
       WINDOW_PADDING,
       PROGRESS_BAR_WIDTH,
       PROGRESS_BAR_HEIGHT,
-      {
-        ["r"] = 1,
-        ["g"] = 1,
-        ["b"] = 1
-      },
-      {
-        ["r"] = 0.92,
-        ["g"] = 0.82,
-        ["b"] = 0.07
-      },
+      COLORS.maze,
+      COLORS.coin,
       0
     ),
     ["speed"] = ProgressBar:new(
@@ -91,16 +87,8 @@ function love.load()
       WINDOW_PADDING,
       PROGRESS_BAR_WIDTH,
       PROGRESS_BAR_HEIGHT,
-      {
-        ["r"] = 1,
-        ["g"] = 1,
-        ["b"] = 1
-      },
-      {
-        ["r"] = 0.19,
-        ["g"] = 0.82,
-        ["b"] = 0.67
-      },
+      COLORS.maze,
+      COLORS.speed,
       0
     )
   }
@@ -122,18 +110,19 @@ function love.keypressed(key)
           local canMove = true
           local canDestroy = false
 
-          local keyDirection = "c" .. direction.column .. "r" .. direction.row
+          local keyDirection = "c" .. player.direction.column .. "r" .. player.direction.row
 
           if KEYS_DIRECTION[keyDirection] and maze.grid[player.column][player.row].gates[KEYS_DIRECTION[keyDirection]] then
             if progressBars["speed"].progress == 1 then
               canDestroy = true
             else
               canMove = false
+              gSounds["bounce"]:play()
             end
           end
 
-          local column = player.column + direction.column
-          local row = player.row + direction.row
+          local column = player.column + player.direction.column
+          local row = player.row + player.direction.row
 
           if column < 1 or column > maze.columns or row < 1 or row > maze.rows then
             canMove = false
@@ -158,11 +147,7 @@ function love.keypressed(key)
               cell.gates[GATES_DIRECTION[direction][1]] = nil
               neighboringCell.gates[GATES_DIRECTION[direction][2]] = nil
 
-              maze:animateDestruction(
-                cell.x0 + (gateCell.x0 + gateCell.x1) / 2,
-                cell.y0 + (gateCell.y0 + gateCell.y1) / 2,
-                direction
-              )
+              maze:animateDestruction((gateCell.x1 + gateCell.x2) / 2, (gateCell.y1 + gateCell.y2) / 2, direction)
 
               Timer:after(
                 UPDATE_TWEEN.duration,
@@ -191,7 +176,7 @@ function love.keypressed(key)
                   end
                   player:setFill(progressBars["speed"].fill)
                 else
-                  player:setFill({["r"] = 1, ["g"] = 1, ["b"] = 1})
+                  player:setFill(COLORS.player)
                 end
 
                 local hasCoin = false
@@ -220,22 +205,19 @@ function love.keypressed(key)
                       if hasAllCoins then
                         gSounds["win"]:play()
 
-                        player:setFill({["r"] = 0.92, ["g"] = 0.82, ["b"] = 0.07})
+                        player:setFill(COLORS.coin)
 
                         Timer:after(
                           REPLAY_DELAY.duration,
                           function()
                             gSounds["destroy"]:play()
 
-                            player:setFill({["r"] = 1, ["g"] = 1, ["b"] = 1})
+                            player:setFill(COLORS.player)
 
                             for k, column in pairs(maze.grid) do
                               for j, cell in pairs(column) do
                                 for h, gate in pairs(cell.gates) do
-                                  maze:animateDestruction(
-                                    cell.x0 + (gate.x0 + gate.x1) / 2,
-                                    cell.y0 + (gate.y0 + gate.y1) / 2
-                                  )
+                                  maze:animateDestruction((gate.x1 + gate.x2) / 2, (gate.y1 + gate.y2) / 2)
                                   cell.gates[h] = nil
                                 end
                               end
@@ -249,10 +231,7 @@ function love.keypressed(key)
                               },
                               function()
                                 state = "waiting"
-                                direction = {
-                                  ["column"] = 0,
-                                  ["row"] = 0
-                                }
+                                player:stop()
                                 maze = Maze:new()
                                 coins = Coins:new(maze)
                               end
@@ -274,11 +253,11 @@ function love.keypressed(key)
               UPDATE_TWEEN.duration / 2,
               {
                 [player] = {
-                  ["column"] = player.column + direction.column * player.paddingPercentage,
-                  ["row"] = player.row + direction.row * player.paddingPercentage
+                  ["column"] = player.column + player.direction.column * player.paddingPercentage,
+                  ["row"] = player.row + player.direction.row * player.paddingPercentage
                 },
                 [progressBars["speed"]] = {
-                  ["progress"] = math.min(1, progressBars["speed"].progress + SPEED_INCREMENT * 0.5)
+                  ["progress"] = math.min(1, progressBars["speed"].progress + SPEED_INCREMENT / 2)
                 }
               },
               function()
@@ -294,9 +273,8 @@ function love.keypressed(key)
                     }
                   },
                   function()
-                    direction.column = 0
-                    direction.row = 0
                     state = "waiting"
+                    player:stop()
                   end
                 )
               end
@@ -309,17 +287,17 @@ function love.keypressed(key)
     end
 
     if key == "up" then
-      direction.column = 0
-      direction.row = -1
+      player.direction.column = 0
+      player.direction.row = -1
     elseif key == "right" then
-      direction.column = 1
-      direction.row = 0
+      player.direction.column = 1
+      player.direction.row = 0
     elseif key == "down" then
-      direction.column = 0
-      direction.row = 1
+      player.direction.column = 0
+      player.direction.row = 1
     elseif key == "left" then
-      direction.column = -1
-      direction.row = 0
+      player.direction.column = -1
+      player.direction.row = 0
     end
   end
 end
@@ -332,16 +310,16 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(COLORS.text.r, COLORS.text.g, COLORS.text.b)
   love.graphics.setFont(gFonts.normal)
-  love.graphics.printf(TITLE, 0, WINDOW_MARGIN_TOP - gFonts.normal:getHeight() + 1, WINDOW_WIDTH, "center")
+  love.graphics.printf(TITLE, 0, WINDOW_MARGIN_TOP - gFonts.normal:getHeight(), WINDOW_WIDTH, "center")
 
-  love.graphics.setLineWidth(2)
+  love.graphics.setLineWidth(PROGRESS_BAR_LINE_WIDTH)
   for k, progressBar in pairs(progressBars) do
     progressBar:render()
   end
 
-  love.graphics.setLineWidth(3)
+  love.graphics.setLineWidth(MAZE_LINE_WIDTH)
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
   maze:render()
   coins:render()

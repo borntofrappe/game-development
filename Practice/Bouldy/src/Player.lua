@@ -26,17 +26,17 @@ function Player:new(maze)
   local dust = Dust:new()
 
   local this = {
+    ["direction"] = {
+      ["column"] = 0,
+      ["row"] = 0
+    },
     ["column"] = column,
     ["row"] = row,
     ["size"] = size,
     ["padding"] = padding,
     ["paddingPercentage"] = paddingPercentage,
     ["innerSize"] = innerSize,
-    ["fill"] = {
-      ["r"] = 1,
-      ["g"] = 1,
-      ["b"] = 1
-    },
+    ["fill"] = COLORS.player,
     ["dust"] = dust
   }
 
@@ -44,6 +44,11 @@ function Player:new(maze)
   setmetatable(this, self)
 
   return this
+end
+
+function Player:stop()
+  self.direction.column = 0
+  self.direction.row = 0
 end
 
 function Player:animateMovement(direction)

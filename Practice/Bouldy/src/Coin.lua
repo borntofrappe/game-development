@@ -1,18 +1,21 @@
 Coin = {}
 
+local PADDING_PERCENTAGE = 0.3
+
 function Coin:new(column, row)
-  local size = CELL_SIZE
-  local paddingPercentage = 0.3
-  local padding = math.floor(size * paddingPercentage)
-  local innerSize = size - padding * 2
+  local padding = math.floor(CELL_SIZE * PADDING_PERCENTAGE)
+
+  local x = (column - 1) * CELL_SIZE + padding
+  local y = (row - 1) * CELL_SIZE + padding
+  local size = CELL_SIZE - padding * 2
 
   local this = {
     ["column"] = column,
     ["row"] = row,
-    ["size"] = size,
-    ["padding"] = padding,
-    ["paddingPercentage"] = paddingPercentage,
-    ["innerSize"] = innerSize
+    ["paddingPercentage"] = PADDING_PERCENTAGE,
+    ["x"] = x,
+    ["y"] = y,
+    ["size"] = size
   }
 
   self.__index = self
@@ -22,11 +25,5 @@ function Coin:new(column, row)
 end
 
 function Coin:render()
-  love.graphics.rectangle(
-    "fill",
-    (self.column - 1) * self.size + self.padding,
-    (self.row - 1) * self.size + self.padding,
-    self.innerSize,
-    self.innerSize
-  )
+  love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 end

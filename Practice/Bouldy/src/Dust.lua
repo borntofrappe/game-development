@@ -7,7 +7,7 @@ function Dust:new()
   local particleSystem = love.graphics.newParticleSystem(TEXTURE, PARTICLES)
   particleSystem:setParticleLifetime(0.2, 0.5)
   particleSystem:setLinearDamping(2, 5)
-  particleSystem:setColors(1, 1, 1, 1, 1, 1, 1, 0.3, 1, 1, 1, 0)
+  particleSystem:setColors(1, 1, 1, 1, 1, 1, 1, 0)
 
   local this = {
     ["particleSystem"] = particleSystem

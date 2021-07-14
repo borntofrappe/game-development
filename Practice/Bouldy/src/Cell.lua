@@ -3,44 +3,42 @@ Cell = {}
 function Cell:new(column, row, neighbors)
   local size = CELL_SIZE
 
-  local x0 = (column - 1) * size
-  local y0 = (row - 1) * size
+  local x1 = (column - 1) * size
+  local y1 = (row - 1) * size
 
   local gates = {
     ["up"] = {
-      ["x0"] = 0,
-      ["y0"] = 0,
-      ["x1"] = size,
-      ["y1"] = 0
+      ["x1"] = x1,
+      ["y1"] = y1,
+      ["x2"] = x1 + size,
+      ["y2"] = y1
     },
     ["right"] = {
-      ["x0"] = size,
-      ["y0"] = 0,
-      ["x1"] = size,
-      ["y1"] = size
+      ["x1"] = x1 + size,
+      ["y1"] = y1,
+      ["x2"] = x1 + size,
+      ["y2"] = y1 + size
     },
     ["down"] = {
-      ["x0"] = 0,
-      ["y0"] = size,
-      ["x1"] = size,
-      ["y1"] = size
+      ["x1"] = x1,
+      ["y1"] = y1 + size,
+      ["x2"] = x1 + size,
+      ["y2"] = y1 + size
     },
     ["left"] = {
-      ["x0"] = 0,
-      ["y0"] = 0,
-      ["x1"] = 0,
-      ["y1"] = size
+      ["x1"] = x1,
+      ["y1"] = y1,
+      ["x2"] = x1,
+      ["y2"] = y1 + size
     }
   }
 
   local this = {
     ["column"] = column,
     ["row"] = row,
-    ["x0"] = x0,
-    ["y0"] = y0,
     ["gates"] = gates,
     ["neighbors"] = neighbors,
-    ["visited"] = false -- unnecessary
+    ["visited"] = false
   }
 
   self.__index = self
@@ -51,6 +49,6 @@ end
 
 function Cell:render()
   for k, gate in pairs(self.gates) do
-    love.graphics.line(self.x0 + gate.x0, self.y0 + gate.y0, self.x0 + gate.x1, self.y0 + gate.y1)
+    love.graphics.line(gate.x1, gate.y1, gate.x2, gate.y2)
   end
 end

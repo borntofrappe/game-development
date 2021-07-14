@@ -29,7 +29,7 @@ function Coins:new(maze)
 end
 
 function Coins:render()
-  love.graphics.setColor(0.92, 0.82, 0.07)
+  love.graphics.setColor(COLORS.coin.r, COLORS.coin.g, COLORS.coin.b)
 
   for i, coin in ipairs(self.coins) do
     coin:render()

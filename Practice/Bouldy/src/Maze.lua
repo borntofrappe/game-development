@@ -107,9 +107,9 @@ end
 
 function Maze:render()
   love.graphics.setColor(1, 1, 1)
-
   self.debris:render()
 
+  love.graphics.setColor(COLORS.maze.r, COLORS.maze.g, COLORS.maze.b)
   for k, column in pairs(self.grid) do
     for j, cell in pairs(column) do
       cell:render()
