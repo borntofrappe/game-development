@@ -23,6 +23,15 @@ local KEYS_DIRECTION = {
   ["c-1r0"] = "left"
 }
 
+local GATES_DIRECTION = {
+  ["up"] = {"up", "down"},
+  ["right"] = {"right", "left"},
+  ["down"] = {"down", "up"},
+  ["left"] = {"left", "right"}
+}
+
+local SPEED_INCREMENT = 0.2
+
 function love.load()
   love.window.setTitle(TITLE)
   math.randomseed(os.time())
@@ -96,11 +105,16 @@ function love.keypressed(key)
         UPDATE_INTERVAL.duration,
         function()
           local canMove = true
+          local canDestroy = false
 
           local keyDirection = "c" .. direction.column .. "r" .. direction.row
 
           if KEYS_DIRECTION[keyDirection] and maze.grid[player.column][player.row].gates[KEYS_DIRECTION[keyDirection]] then
-            canMove = false
+            if progressBars["speed"].progress == 1 then
+              canDestroy = true
+            else
+              canMove = false
+            end
           end
 
           local column = player.column + direction.column
@@ -111,15 +125,47 @@ function love.keypressed(key)
           end
 
           if canMove then
+            local speedProgress = math.min(1, progressBars["speed"].progress + SPEED_INCREMENT)
+            if canDestroy then
+              speedProgress = math.max(0, speedProgress - SPEED_INCREMENT * math.random(1 / SPEED_INCREMENT))
+
+              local cell = maze.grid[player.column][player.row]
+              local neighboringCell = maze.grid[column][row]
+
+              local direction = KEYS_DIRECTION[keyDirection]
+              local gateCell = cell.gates[GATES_DIRECTION[direction][1]]
+              local gateNeighboringCell = neighboringCell.gates[GATES_DIRECTION[direction][2]]
+
+              cell.gates[GATES_DIRECTION[direction][1]] = nil
+              neighboringCell.gates[GATES_DIRECTION[direction][2]] = nil
+
+              Timer:after(
+                UPDATE_TWEEN.duration,
+                function()
+                  cell.gates[GATES_DIRECTION[direction][1]] = gateCell
+                  neighboringCell.gates[GATES_DIRECTION[direction][2]] = gateNeighboringCell
+                end
+              )
+            end
+
             Timer:tween(
               UPDATE_TWEEN.duration,
               {
                 [player] = {
                   ["column"] = column,
                   ["row"] = row
+                },
+                [progressBars["speed"]] = {
+                  ["progress"] = speedProgress
                 }
               },
               function()
+                if progressBars["speed"].progress == 1 then
+                  player:setFill(progressBars["speed"].fill)
+                else
+                  player:setFill({["r"] = 1, ["g"] = 1, ["b"] = 1})
+                end
+
                 local hasCoin = false
                 for k, coin in pairs(coins.coins) do
                   if player.column == coin.column and player.row == coin.row then
@@ -149,6 +195,9 @@ function love.keypressed(key)
                 [player] = {
                   ["column"] = player.column + direction.column * player.paddingPercentage,
                   ["row"] = player.row + direction.row * player.paddingPercentage
+                },
+                [progressBars["speed"]] = {
+                  ["progress"] = math.min(1, progressBars["speed"].progress + SPEED_INCREMENT * 0.5)
                 }
               },
               function()
@@ -158,6 +207,9 @@ function love.keypressed(key)
                     [player] = {
                       ["column"] = column,
                       ["row"] = row
+                    },
+                    [progressBars["speed"]] = {
+                      ["progress"] = 0
                     }
                   },
                   function()
@@ -195,6 +247,10 @@ function love.keypressed(key)
     player = Player:new(maze)
     coins = Coins:new(maze)
     progressBars["coins"].progress = 0
+    progressBars["speed"].progress = 0
+
+    isMoving = false
+    Timer:remove(UPDATE_INTERVAL.label)
 
     direction = {
       ["column"] = 0,
@@ -217,6 +273,7 @@ function love.draw()
     progressBar:render()
   end
 
+  love.graphics.setLineWidth(3)
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING + WINDOW_MARGIN_TOP)
   maze:render()
   coins:render()
