@@ -1,54 +1,64 @@
 PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
-  self.world = love.physics.newWorld(0, 300)
+  local world = love.physics.newWorld(0, 300)
 
-  -- self.collisionUserData = {}
+  local edges = {}
+  for k, edge in pairs(EDGES) do
+    local body = love.physics.newBody(world, edge.x1, edge.y1, "static")
+    local shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
+    local fixture = love.physics.newFixture(body, shape)
+    fixture:setUserData("Edge")
 
-  self.player =
-    Alien(
-    {
-      world = self.world,
-      x = PLAYER.x,
-      y = PLAYER.y,
-      type = "circle"
-    }
-  )
-  self.player.fixture:setRestitution(0.8)
-
-  self.target =
-    Alien(
-    {
-      world = self.world,
-      x = TARGET.x,
-      y = TARGET.y
-    }
-  )
-
-  self.obstacles = {}
-  for i = 1, #OBSTACLES do
-    self.obstacles[i] =
-      Obstacle(
+    table.insert(
+      edges,
       {
-        world = self.world,
-        x = OBSTACLES[i].x,
-        y = OBSTACLES[i].y,
-        direction = OBSTACLES[i].direction,
-        type = 1
+        ["body"] = body,
+        ["shape"] = shape,
+        ["fixture"] = fixture
       }
     )
   end
 
-  self.edges = {}
-  for k, edge in pairs(EDGES) do
-    self.edges[k] = {}
-    self.edges[k].body = love.physics.newBody(self.world, edge.x1, edge.y1, "static")
-    self.edges[k].shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
-    self.edges[k].fixture = love.physics.newFixture(self.edges[k].body, self.edges[k].shape)
-    self.edges[k].fixture:setUserData("Edge")
+  local player =
+    Alien(
+    {
+      ["world"] = world,
+      ["x"] = PLAYER.x,
+      ["y"] = PLAYER.y,
+      ["type"] = "circle"
+    }
+  )
+
+  player.fixture:setRestitution(0.8)
+
+  local target =
+    Alien(
+    {
+      ["world"] = world,
+      ["x"] = TARGET.x,
+      ["y"] = TARGET.y
+    }
+  )
+
+  local obstacles = {}
+  for i = 1, #OBSTACLES do
+    table.insert(
+      obstacles,
+      Obstacle(
+        {
+          ["world"] = world,
+          ["x"] = OBSTACLES[i].x,
+          ["y"] = OBSTACLES[i].y,
+          ["direction"] = OBSTACLES[i].direction,
+          ["type"] = 1
+        }
+      )
+    )
   end
 
   self.destroyedObjects = {}
+  -- self.collisionUserData = {}
 
   function beginContact(f1, f2, contact)
     -- self.collisionUserData = {f1:getUserData(), f2:getUserData()}
@@ -89,7 +99,13 @@ function PlayState:init()
     end
   end
 
-  self.world:setCallbacks(beginContact)
+  world:setCallbacks(beginContact)
+
+  self.world = world
+  -- self.edges = edges
+  self.player = player
+  self.target = target
+  self.obstacles = obstacles
 end
 
 function PlayState:update(dt)

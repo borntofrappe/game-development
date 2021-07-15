@@ -1,20 +1,27 @@
 Obstacle = Class {}
 
 function Obstacle:init(def)
-  self.world = def.world
+  local world = def.world
 
   self.x = def.x
   self.y = def.y
+
   self.direction = def.direction
   self.type = def.type or (sel.direction == "horizontal" and math.random(#H_OBSTACLES) or math.random(#V_OBSTACLES))
+
   self.width = self.direction == "horizontal" and H_OBSTACLES[self.type].width or V_OBSTACLES[self.type].width
   self.height = self.direction == "horizontal" and H_OBSTACLES[self.type].height or V_OBSTACLES[self.type].height
+
   self.variant = 1
 
-  self.body = love.physics.newBody(self.world, self.x, self.y, "dynamic")
-  self.shape = love.physics.newRectangleShape(self.width, self.height)
-  self.fixture = love.physics.newFixture(self.body, self.shape)
-  self.fixture:setUserData("Obstacle")
+  local body = love.physics.newBody(world, self.x, self.y, "dynamic")
+  local shape = love.physics.newRectangleShape(self.width, self.height)
+  local fixture = love.physics.newFixture(body, shape)
+  fixture:setUserData("Obstacle")
+
+  self.body = body
+  self.shape = shape
+  self.fixture = fixture
 end
 
 function Obstacle:render()

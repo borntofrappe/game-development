@@ -1,68 +1,86 @@
 PlayState = Class({__includes = BaseState})
 
 function PlayState:init()
-  self.world = love.physics.newWorld(0, 300)
+  local world = love.physics.newWorld(0, 300)
 
-  self.player =
-    Alien(
-    {
-      world = self.world,
-      x = VIRTUAL_WIDTH / 4,
-      y = VIRTUAL_HEIGHT / 2,
-      type = "circle"
-    }
-  )
-  self.player.fixture:setRestitution(0.8)
-
-  self.target =
-    Alien(
-    {
-      world = self.world,
-      x = VIRTUAL_WIDTH * 3 / 4,
-      y = VIRTUAL_HEIGHT - ALIEN_HEIGHT / 2
-    }
-  )
-
-  self.obstacles = {}
-  self.obstacles[1] =
-    Obstacle(
-    {
-      world = self.world,
-      x = VIRTUAL_WIDTH * 3 / 4 - 55,
-      y = VIRTUAL_HEIGHT - 55,
-      direction = "vertical",
-      type = 1
-    }
-  )
-
-  self.obstacles[2] =
-    Obstacle(
-    {
-      world = self.world,
-      x = VIRTUAL_WIDTH * 3 / 4 + 55,
-      y = VIRTUAL_HEIGHT - 55,
-      direction = "vertical",
-      type = 1
-    }
-  )
-  self.obstacles[3] =
-    Obstacle(
-    {
-      world = self.world,
-      x = VIRTUAL_WIDTH * 3 / 4,
-      y = VIRTUAL_HEIGHT - 110 - 17.5,
-      direction = "horizontal",
-      type = 1
-    }
-  )
-
-  self.edges = {}
+  local edges = {}
   for k, edge in pairs(EDGES) do
-    self.edges[k] = {}
-    self.edges[k].body = love.physics.newBody(self.world, edge.x1, edge.y1, "static")
-    self.edges[k].shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
-    self.edges[k].fixture = love.physics.newFixture(self.edges[k].body, self.edges[k].shape)
+    local body = love.physics.newBody(world, edge.x1, edge.y1, "static")
+    local shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
+    local fixture = love.physics.newFixture(body, shape)
+
+    table.insert(
+      edges,
+      {
+        ["body"] = body,
+        ["shape"] = shape,
+        ["fixture"] = fixture
+      }
+    )
   end
+
+  local player =
+    Alien(
+    {
+      ["world"] = world,
+      ["x"] = VIRTUAL_WIDTH / 4,
+      ["y"] = VIRTUAL_HEIGHT / 2,
+      ["type"] = "circle"
+    }
+  )
+
+  player.fixture:setRestitution(0.8)
+
+  local target =
+    Alien(
+    {
+      ["world"] = world,
+      ["x"] = VIRTUAL_WIDTH * 3 / 4,
+      ["y"] = VIRTUAL_HEIGHT - ALIEN_HEIGHT / 2
+    }
+  )
+
+  target.fixture:setRestitution(0.5)
+
+  local obstacles = {}
+  obstacles[1] =
+    Obstacle(
+    {
+      ["world"] = world,
+      ["x"] = VIRTUAL_WIDTH * 3 / 4 - 55,
+      ["y"] = VIRTUAL_HEIGHT - 55,
+      ["direction"] = "vertical",
+      ["type"] = 1
+    }
+  )
+
+  obstacles[2] =
+    Obstacle(
+    {
+      ["world"] = world,
+      ["x"] = VIRTUAL_WIDTH * 3 / 4 + 55,
+      ["y"] = VIRTUAL_HEIGHT - 55,
+      ["direction"] = "vertical",
+      ["type"] = 1
+    }
+  )
+
+  obstacles[3] =
+    Obstacle(
+    {
+      ["world"] = world,
+      ["x"] = VIRTUAL_WIDTH * 3 / 4,
+      ["y"] = VIRTUAL_HEIGHT - 110 - 17.5,
+      ["direction"] = "horizontal",
+      ["type"] = 1
+    }
+  )
+
+  self.world = world
+  -- self.edges = edges
+  self.player = player
+  self.target = target
+  self.obstacles = obstacles
 end
 
 function PlayState:update(dt)

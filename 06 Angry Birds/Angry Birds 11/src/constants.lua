@@ -10,12 +10,8 @@ OPTIONS = {
   resizable = true
 }
 
-GRAVITY_X = 0
-GRAVITY_Y = 400
 ALIEN_WIDTH = 36
 ALIEN_HEIGHT = 36
-VELOCITY_DESTROY = 150
-VELOCITY_RESET = 5
 
 EDGES = {
   ["top"] = {

@@ -1,8 +1,6 @@
 # Angry Birds 10
 
-_Small note_: the update can be considered a spiritual successor to `Flappy Bird 4`, when experimenting with the physics module of love2D, user data and callbacks.
-
-## Obstacles update
+## Levels
 
 The update reconsiders the way the player, target and obstacles are initialized. In `constants.lua`, `TARGET` and `PLAYER` are used to describe the position of the two aliens.
 
@@ -32,43 +30,31 @@ OBSTACLES = {
 
 With this technique, it is reasonable to assume a situation in which a `Levels` class describes several game structures, and the play state picks from the proposed levels, either at random or following an established order. The idea is to ultimately have data drive the building of the levels.
 
-## userData
+## User data
 
 Game objects are given a label to differentiate the fixtures. A common label for the obstacles.
 
 ```lua
-function Obstacle:init(def)
-  -- previous attributes
-
-  self.fixture:setUserData("Obstacle")
-end
+fixture:setUserData("Obstacle")
 ```
 
 A different label for the aliens, depending on the type.
 
 ```lua
-function Alien:init(def)
-  -- previous attributes
-
-  self.fixture:setUserData(self.type == "square" and "Target" or "Player")
-end
+fixture:setUserData(self.type == "square" and "Target" or "Player")
 ```
 
-The edges are also attributed a fixture, although the label is strictly superfluous.
+The edges are also attributed a fixture, although the label is technically superfluous.
 
 ```lua
-self.edges = {}
-for k, edge in pairs(EDGES) do
-  -- previous attributes
-  self.edges[k].fixture:setUserData("Edge")
-end
+fixture:setUserData("Edge")
 ```
 
 In the moment you later check for a label, you'd obtain a value of `nil` when user data is not specified.
 
 ## Collision callback
 
-As mentioned in a previous update, callbacks are initialized in the world through `world:setCallbacks`. Here, you specify a series of functions which are executed at different stages of a collision, `beginContact`, `endContact`, `preSolve` and `postSolve`.
+As mentioned in a previous update, callbacks are initialized in the world through `world:setCallbacks`. Here you specify a series of functions which are executed at different stages of a collision, `beginContact`, `endContact`, `preSolve` and `postSolve`.
 
 For the specific game, we are interested only in the beginning of a collision.
 
@@ -87,7 +73,7 @@ function beginContact(f1, f2, contact)
 end
 ```
 
-The code checks the labels by having a table describe a specific label with a boolean.
+The code checks the labels by having a table describe a specific user data with a boolean.
 
 ```lua
 local userData = {}
@@ -125,7 +111,7 @@ The way objects are actually removed is however layered in two steps:
    end
    ```
 
-The layered structure is necessary since removing the objects in the body of the `beginContact` function would prompt an error. This is because the body is still being considered by `love.physics` and the remaining callbacks.
+The layered structure is necessary since removing the objects in the body of the `beginContact` function would prompt an error. This is because the body is still being considered by the physics library.
 
 ## Destroy
 
@@ -145,7 +131,7 @@ for k, body in pairs(self.destroyedObjects) do
 end
 ```
 
-With `isDestroyed` then, you remove the obstacles from the `self.obstacles` table as well.
+With `isDestroyed`, then, you remove the obstacles from the `self.obstacles` table as well.
 
 ```lua
 for i = #self.obstacles, 1, -1 do
@@ -155,9 +141,9 @@ for i = #self.obstacles, 1, -1 do
 end
 ```
 
-This ensures that the bodies are removed, and the shapes are no longer drawn.
+This ensures that the bodies are removed and the shapes are no longer drawn.
 
-The same logic follows the target, with a small peculiarity. The body is already removed when looping through the `self.obstacles` table. The target is however initialized with a single variable, `self.target`, and this variable is set to `nil` if the matching body is destroyed.
+The logic is repeated the target, but with a considerable difference. The body is removed just like the obstacles, but the the variable describing the target is set to `nil`.
 
 ```lua
 if self.target.body:isDestroyed() then
@@ -165,7 +151,7 @@ if self.target.body:isDestroyed() then
 end
 ```
 
-This however prompts an error as the script uses `self.target` in the `update` and `render` function. It is therefore necessary to condition the use of `self.target` to the variable storing a non-nil value.
+This prompts an error as the script uses `self.target` in the `update` and `render` function, and it is therefore necessary to condition the use of `self.target` to the variable storing a non-nil value.
 
 Updating the target.
 
@@ -199,6 +185,6 @@ self.destroyedObjects = {}
 
 ## Visual debugging
 
-In the play state, you find a few lines of code commented out. These are used to have two variables store the label behing the objects colliding in `beginContact`, and have the `render` function print the text in the top left corner.
+In the play state you find a few lines of code commented out. These are used to have two variables store the label behing the objects colliding in `beginContact`, and have the `render` function print the text in the top left corner.
 
 These instructions are useful to double-check the label of the bodies.

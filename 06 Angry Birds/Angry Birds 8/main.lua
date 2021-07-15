@@ -3,6 +3,24 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle("Angry Birds")
   math.randomseed(os.time())
+  love.graphics.setDefaultFilter("nearest", "nearest")
+  push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
+
+  gTextures = {
+    ["aliens"] = love.graphics.newImage("res/graphics/aliens.png"),
+    ["background"] = love.graphics.newImage("res/graphics/background.png"),
+    ["obstacles"] = love.graphics.newImage("res/graphics/obstacles.png")
+  }
+
+  gFrames = {
+    ["aliens"] = GenerateQuadsAliens(gTextures["aliens"]),
+    ["background"] = GenerateQuadsBackground(gTextures["background"])
+  }
+
+  gFonts = {
+    ["big"] = love.graphics.newFont("res/fonts/font.ttf", 56),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+  }
 
   gStateMachine =
     StateMachine(
@@ -23,8 +41,6 @@ function love.load()
   love.mouse.buttonReleased = {}
 
   backgroundVariety = math.random(#gFrames["background"])
-  love.graphics.setDefaultFilter("nearest", "nearest")
-  push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 end
 
 function love.resize(width, height)

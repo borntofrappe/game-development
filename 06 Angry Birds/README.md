@@ -22,7 +22,7 @@ Past these folders, the game is developed in `Angry Birds *` folders:
 
 0. initialize a world and a body
 
-1. imulate a dynamic body and solid ground
+1. simulate a dynamic body and solid ground
 
 2. add a series of kinematic bodies
 
@@ -36,7 +36,7 @@ Past these folders, the game is developed in `Angry Birds *` folders:
 
 7. recreate the start state with a bold title and a world based on the ball pit demo
 
-8.r efactor the code to have the logic pertinent to the aliens in its own class
+8. refactor the code to have the logic pertinent to the aliens in its own class
 
 9. include obstacles in the play state
 

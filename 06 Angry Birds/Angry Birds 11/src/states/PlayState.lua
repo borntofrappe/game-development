@@ -1,51 +1,76 @@
 PlayState = Class({__includes = BaseState})
 
+local GRAVITY = {
+  ["x"] = 0,
+  ["y"] = 400
+}
+
+local VELOCITY = {
+  ["destroy"] = 170,
+  ["reset"] = 5,
+  ["playerMultiplier"] = 5
+}
+
 function PlayState:init()
-  self.world = love.physics.newWorld(GRAVITY_X, GRAVITY_Y)
   self.isDragging = false
   self.isUpdating = false
 
-  self.player =
-    Alien(
-    {
-      world = self.world,
-      x = PLAYER.x,
-      y = PLAYER.y,
-      type = "circle"
-    }
-  )
-  self.player.fixture:setRestitution(0.8)
+  local world = love.physics.newWorld(GRAVITY.x, GRAVITY.y)
 
-  self.target =
-    Alien(
-    {
-      world = self.world,
-      x = TARGET.x,
-      y = TARGET.y
-    }
-  )
+  local edges = {}
+  for k, edge in pairs(EDGES) do
+    local body = love.physics.newBody(world, edge.x1, edge.y1, "static")
+    local shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
+    local fixture = love.physics.newFixture(body, shape)
+    fixture:setUserData("Edge")
 
-  self.obstacles = {}
-  for i = 1, #OBSTACLES do
-    self.obstacles[i] =
-      Obstacle(
+    table.insert(
+      edges,
       {
-        world = self.world,
-        x = OBSTACLES[i].x,
-        y = OBSTACLES[i].y,
-        direction = OBSTACLES[i].direction,
-        type = 1
+        ["body"] = body,
+        ["shape"] = shape,
+        ["fixture"] = fixture
       }
     )
   end
 
-  self.edges = {}
-  for k, edge in pairs(EDGES) do
-    self.edges[k] = {}
-    self.edges[k].body = love.physics.newBody(self.world, edge.x1, edge.y1, "static")
-    self.edges[k].shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
-    self.edges[k].fixture = love.physics.newFixture(self.edges[k].body, self.edges[k].shape)
-    self.edges[k].fixture:setUserData("Edge")
+  local player =
+    Alien(
+    {
+      ["world"] = world,
+      ["x"] = PLAYER.x,
+      ["y"] = PLAYER.y,
+      ["type"] = "circle"
+    }
+  )
+
+  player.fixture:setRestitution(0.8)
+  player.body:setLinearDamping(0.25)
+  player.body:setAngularDamping(0.8)
+
+  local target =
+    Alien(
+    {
+      ["world"] = world,
+      ["x"] = TARGET.x,
+      ["y"] = TARGET.y
+    }
+  )
+
+  local obstacles = {}
+  for i = 1, #OBSTACLES do
+    table.insert(
+      obstacles,
+      Obstacle(
+        {
+          ["world"] = world,
+          ["x"] = OBSTACLES[i].x,
+          ["y"] = OBSTACLES[i].y,
+          ["direction"] = OBSTACLES[i].direction,
+          ["type"] = 1
+        }
+      )
+    )
   end
 
   self.destroyedObjects = {}
@@ -59,13 +84,13 @@ function PlayState:init()
       if f1:getUserData() == "Player" then
         local vX, vY = f1:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_DESTROY then
+        if vSum > VELOCITY.destroy then
           table.insert(self.destroyedObjects, f2:getBody())
         end
       else
         local vX, vY = f2:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_DESTROY then
+        if vSum > VELOCITY.destroy then
           table.insert(self.destroyedObjects, f1:getBody())
         end
       end
@@ -74,20 +99,26 @@ function PlayState:init()
       if f1:getUserData() == "Obstacle" then
         local vX, vY = f1:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_DESTROY then
+        if vSum > VELOCITY.destroy then
           table.insert(self.destroyedObjects, f2:getBody())
         end
       else
         local vX, vY = f2:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_DESTROY then
+        if vSum > VELOCITY.destroy then
           table.insert(self.destroyedObjects, f1:getBody())
         end
       end
     end
   end
 
-  self.world:setCallbacks(beginContact)
+  world:setCallbacks(beginContact)
+
+  self.world = world
+  -- self.edges = edges
+  self.player = player
+  self.target = target
+  self.obstacles = obstacles
 end
 
 function PlayState:update(dt)
@@ -97,11 +128,10 @@ function PlayState:update(dt)
 
   if love.mouse.wasPressed(1) then
     local x, y = push:toGame(love.mouse.getPosition())
-    if
-      not self.isUpdating and not self.isDragging and math.abs(x - self.player.x) < ALIEN_WIDTH and
-        math.abs(y - self.player.y) < ALIEN_WIDTH
-     then
-      self.isDragging = true
+    if ((x - self.player.x) ^ 2 + (y - self.player.y) ^ 2) ^ 0.5 < ALIEN_WIDTH then
+      if not self.isUpdating and not self.isDragging then
+        self.isDragging = true
+      end
     end
   end
 
@@ -114,12 +144,13 @@ function PlayState:update(dt)
     if not self.isUpdating and self.isDragging then
       local x, y = push:toGame(love.mouse.getPosition())
 
-      if math.abs(x - self.player.x) < ALIEN_WIDTH and math.abs(y - self.player.y) < ALIEN_WIDTH then
+      if ((x - self.player.x) ^ 2 + (y - self.player.y) ^ 2) ^ 0.5 < ALIEN_WIDTH then
+        self.isDragging = false
         self.player.body:setPosition(self.player.x, self.player.y)
       else
         local dx = self.player.x - x
         local dy = self.player.y - y
-        self.player.body:setLinearVelocity(dx * 5, dy * 5)
+        self.player.body:setLinearVelocity(dx * VELOCITY.playerMultiplier, dy * VELOCITY.playerMultiplier)
 
         self.isDragging = false
         self.isUpdating = true
@@ -135,6 +166,7 @@ function PlayState:update(dt)
           body:destroy()
         end
       end
+
       self.destroyedObjects = {}
 
       for i = #self.obstacles, 1, -1 do
@@ -150,7 +182,7 @@ function PlayState:update(dt)
 
     local vX, vY = self.player.body:getLinearVelocity()
     local vSum = math.abs(vX) + math.abs(vY)
-    if vSum < VELOCITY_RESET then
+    if vSum < VELOCITY.reset then
       self.player.body:setPosition(self.player.x, self.player.y)
       self.isUpdating = false
     end

@@ -1,10 +1,11 @@
 Alien = Class {}
 
 function Alien:init(def)
-  self.world = def.world
+  local world = def.world
 
   self.x = def.x
   self.y = def.y
+
   self.width = ALIEN_WIDTH
   self.height = ALIEN_HEIGHT
 
@@ -12,11 +13,15 @@ function Alien:init(def)
   self.color = def.color or math.random(#gFrames["aliens"])
   self.variety = self.type == "square" and (math.random(2) == 1 and 1 or 3) or 2
 
-  self.body = love.physics.newBody(self.world, self.x, self.y, "dynamic")
-  self.shape =
-    self.type == "square" and love.physics.newRectangleShape(self.width, self.height) or
+  local body = love.physics.newBody(world, self.x, self.y, "dynamic")
+  local shape =
+    type == "square" and love.physics.newRectangleShape(self.width, self.height) or
     love.physics.newCircleShape((self.width) / 2)
-  self.fixture = love.physics.newFixture(self.body, self.shape)
+  local fixture = love.physics.newFixture(body, shape)
+
+  self.body = body
+  self.shape = shape
+  self.fixture = fixture
 end
 
 function Alien:render()

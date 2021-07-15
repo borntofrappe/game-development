@@ -12,20 +12,17 @@ The idea is to include a simulation in which a world with low gravity is populat
 
 - initialize a body, shape and fixture in the makeshift grid
 
-The only complexity is that the columns/rows are based on a fraction of the available width/height.
+The only complexity is that the columns and rows are based on a fraction of the available width and height.
 
 ```lua
-for i = 1, math.floor(VIRTUAL_WIDTH / 1.5 / ALIEN_WIDTH) do
-    for j = 1, math.floor(VIRTUAL_HEIGHT / 2 / ALIEN_HEIGHT) do
-      -- initialize alien
-  end
-end
+local COLUMNS = math.floor(VIRTUAL_WIDTH / 1.5 / ALIEN_WIDTH)
+local ROWS = math.floor(VIRTUAL_HEIGHT / 2 / ALIEN_HEIGHT)
 ```
 
-In order to have the aliens centered in the width/height provided by `VIRTUAL_WIDTH` and `VIRTUAL_HEIGHT` respectively, the `x` and `y` coordinate of the body are therefore slightly unorthodox.
+In order to have the aliens centered in the width and height provided by `VIRTUAL_WIDTH` and `VIRTUAL_HEIGHT` respectively, the `x` and `y` coordinate of the body are therefore slightly unorthodox.
 
 ```lua
-body = love.physics.newBody(
+local body = love.physics.newBody(
   self.world,
   VIRTUAL_WIDTH / 6 + (i - 1) * ALIEN_WIDTH + ALIEN_WIDTH / 2,
   VIRTUAL_HEIGHT / 4 + (j - 1) * ALIEN_HEIGHT + ALIEN_HEIGHT / 2,
@@ -50,19 +47,19 @@ The idea is to modify the gravity of the world, the linear velocity and restitut
 The world is attributed a low, vertical gravity.
 
 ```lua
-self.world = love.physics.newWorld(0, 10)
+local world = love.physics.newWorld(0, 10)
 ```
 
 The bodies are then modified to move horizontally and vertically, through the `setLinearVelocity` function.
 
 ```lua
-self.aliens[alienCounter].body:setLinearVelocity(math.random(-180, 180), math.random(-180, 180))
+body:setLinearVelocity(math.random(-180, 180), math.random(-180, 180))
 ```
 
 The restitution is also modified to have a collision result in the bodies produce a small bounce.
 
 ```lua
-self.aliens[alienCounter].fixture:setRestitution(0.6)
+fixture:setRestitution(0.6)
 ```
 
 This works to immediately have the aliens scatter in the window. To add more variety to the start state, however, I also decided to have the bodies move at a regular interval.
@@ -100,4 +97,4 @@ love.graphics.draw(
 )
 ```
 
-Both `love.draw` and `body:getAngle` work with radians.
+Note that both `love.draw` and `body:getAngle` work with radians.

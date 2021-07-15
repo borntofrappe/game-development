@@ -1,14 +1,14 @@
 # Angry Birds 5
 
-_Please note_: the progress achieved in previous updates is not carried over, as the goal of this specific demo is to set up the game with a state machine, dependencies and graphics.
+_Please note_: the progress achieved in previous updates is not carried over, as the goal of this specific demo is to start developing the final game with a state machine, dependencies and graphics.
 
 ## StateMachine
 
 The game has only two states: start and play. For the specific update, I decided to add a label to distinguish between the two and to move from one to the other following a specific key/button press:
 
-- press enter or the right button of a mouse to move to the play state
+- press enter or the right button of the mouse pointer to move to the play state
 
-- press escape or the left button to move to the start state
+- press escape or the left button of the cursor to move back to the start state
 
 ## Quads
 

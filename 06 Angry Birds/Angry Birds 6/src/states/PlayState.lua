@@ -1,35 +1,77 @@
 PlayState = Class({__includes = BaseState})
 
+local PLAYER_RADIUS = ALIEN_WIDTH / 2
+
+local EDGES = {
+  ["top"] = {
+    x1 = 0,
+    y1 = 0,
+    x2 = VIRTUAL_WIDTH,
+    y2 = 0
+  },
+  ["right"] = {
+    x1 = VIRTUAL_WIDTH,
+    y1 = 0,
+    x2 = VIRTUAL_WIDTH,
+    y2 = VIRTUAL_HEIGHT
+  },
+  ["bottom"] = {
+    x1 = 0,
+    y1 = VIRTUAL_HEIGHT,
+    x2 = VIRTUAL_WIDTH,
+    y2 = VIRTUAL_HEIGHT
+  },
+  ["left"] = {
+    x1 = 0,
+    y1 = 0,
+    x2 = 0,
+    y2 = VIRTUAL_HEIGHT
+  }
+}
+
 function PlayState:init()
-  self.player = {
+  local world = love.physics.newWorld(0, 300)
+
+  local edges = {}
+  for k, edge in pairs(EDGES) do
+    local body = love.physics.newBody(world, edge.x1, edge.y1, "static")
+    local shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
+    local fixture = love.physics.newFixture(body, shape)
+
+    table.insert(
+      edges,
+      {
+        ["body"] = body,
+        ["shape"] = shape,
+        ["fixture"] = fixture
+      }
+    )
+  end
+
+  local player = {
     color = math.random(#gFrames["aliens"]),
     variety = 2
   }
 
-  self.target = {
+  local target = {
     color = math.random(#gFrames["aliens"]),
     variety = math.random(2) == 1 and 1 or 3
   }
 
-  self.world = love.physics.newWorld(0, 300)
+  player.body = love.physics.newBody(world, VIRTUAL_WIDTH / 4, VIRTUAL_HEIGHT / 2, "dynamic")
+  player.shape = love.physics.newCircleShape(PLAYER_RADIUS)
+  player.fixture = love.physics.newFixture(player.body, player.shape)
+  player.fixture:setRestitution(0.8)
 
-  self.edges = {}
-  for k, edge in pairs(EDGES) do
-    self.edges[k] = {}
-    self.edges[k].body = love.physics.newBody(self.world, edge.x1, edge.y1, "static")
-    self.edges[k].shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
-    self.edges[k].fixture = love.physics.newFixture(self.edges[k].body, self.edges[k].shape)
-  end
+  target.body = love.physics.newBody(world, VIRTUAL_WIDTH * 3 / 4, VIRTUAL_HEIGHT / 2, "dynamic")
+  target.shape = love.physics.newRectangleShape(ALIEN_WIDTH, ALIEN_HEIGHT)
+  target.fixture = love.physics.newFixture(target.body, target.shape)
+  target.fixture:setRestitution(0.5)
 
-  self.player.body = love.physics.newBody(self.world, VIRTUAL_WIDTH / 4, VIRTUAL_HEIGHT / 2, "dynamic")
-  self.player.shape = love.physics.newCircleShape(PLAYER_RADIUS)
-  self.player.fixture = love.physics.newFixture(self.player.body, self.player.shape)
-  self.player.fixture:setRestitution(0.8)
-
-  self.target.body = love.physics.newBody(self.world, VIRTUAL_WIDTH * 3 / 4, VIRTUAL_HEIGHT / 2, "dynamic")
-  self.target.shape = love.physics.newRectangleShape(ALIEN_WIDTH, ALIEN_HEIGHT)
-  self.target.fixture = love.physics.newFixture(self.target.body, self.target.shape)
-  self.target.fixture:setRestitution(0.5)
+  self.world = world
+  self.edges = edges
+  self.player = player
+  self.target = target
 end
 
 function PlayState:update(dt)

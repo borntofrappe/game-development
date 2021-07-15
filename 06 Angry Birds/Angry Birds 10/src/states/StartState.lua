@@ -1,43 +1,59 @@
 StartState = Class({__includes = BaseState})
 
+local COLUMNS = math.floor(VIRTUAL_WIDTH / 1.5 / ALIEN_WIDTH)
+local ROWS = math.floor(VIRTUAL_HEIGHT / 2 / ALIEN_HEIGHT)
+
 function StartState:init()
   self.interval = 5
   self.timer = 0
-  self.world = love.physics.newWorld(0, 25)
 
-  self.aliens = {}
-  local alienCounter = 1
-  for i = 1, math.floor(VIRTUAL_WIDTH / 1.5 / ALIEN_WIDTH) do
-    for j = 1, math.floor(VIRTUAL_HEIGHT / 2 / ALIEN_HEIGHT) do
+  local world = love.physics.newWorld(0, 20)
+
+  local edges = {}
+  for k, edge in pairs(EDGES) do
+    local body = love.physics.newBody(world, edge.x1, edge.y1, "static")
+    local shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
+    local fixture = love.physics.newFixture(body, shape)
+
+    table.insert(
+      edges,
+      {
+        ["body"] = body,
+        ["shape"] = shape,
+        ["fixture"] = fixture
+      }
+    )
+  end
+
+  local aliens = {}
+  for column = 1, COLUMNS do
+    for row = 1, ROWS do
       local alien =
         Alien(
         {
-          world = self.world,
-          x = VIRTUAL_WIDTH / 6 + (i - 1) * ALIEN_WIDTH + ALIEN_WIDTH / 2,
-          y = VIRTUAL_HEIGHT / 4 + (j - 1) * ALIEN_HEIGHT + ALIEN_HEIGHT / 2
+          ["world"] = world,
+          ["x"] = VIRTUAL_WIDTH / 6 + (column - 1) * ALIEN_WIDTH + ALIEN_WIDTH / 2,
+          ["y"] = VIRTUAL_HEIGHT / 4 + (row - 1) * ALIEN_HEIGHT + ALIEN_HEIGHT / 2
         }
       )
-      alien.body:setLinearVelocity(0, math.random(-100, 100))
+
+      alien.body:setLinearVelocity(math.random(-100, 100), math.random(-100, 100))
       alien.fixture:setRestitution(0.6)
 
-      self.aliens[alienCounter] = alien
-      alienCounter = alienCounter + 1
+      table.insert(aliens, alien)
     end
   end
 
-  self.edges = {}
-  for k, edge in pairs(EDGES) do
-    self.edges[k] = {}
-    self.edges[k].body = love.physics.newBody(self.world, edge.x1, edge.y1, "static")
-    self.edges[k].shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
-    self.edges[k].fixture = love.physics.newFixture(self.edges[k].body, self.edges[k].shape)
-  end
+  self.world = world
+  -- self.edges = edges
+  self.aliens = aliens
 end
 
 function StartState:update(dt)
   self.timer = self.timer + dt
   if self.timer > self.interval then
     self.timer = self.timer % self.interval
+
     for k, alien in pairs(self.aliens) do
       alien.body:setLinearVelocity(math.random(-100, 100), math.random(0, 100) * -1)
     end

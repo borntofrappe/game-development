@@ -1,8 +1,8 @@
-# Angry Birds 10
+# Angry Birds 9
 
 ## Target
 
-While the instance of the alien class used to represent the player is not modified, the one dedicated to the target makes sure that the target is position at ground level. The idea is to ultimately surround this element with the obstacles introduced from `wood.png`.
+While the instance of the alien class used to represent the player is not modified, the one dedicated to the target makes sure that the alien is position at ground level. The idea is to ultimately surround this element with the obstacles introduced from `wood.png`.
 
 ## Utils
 
@@ -72,10 +72,10 @@ The class for obstacles is eerily similar to that for aliens. The only differenc
    }
    ```
 
-By default, the idea is to use the first variant, so that the play state initializes obstacles with a direction and type only. With this values, it uses the width or height stored in the two constants, `H_OBSTACLES` and `V_OBSTACLES`, in the process of building a rectangular shape.
+By default, the idea is to use the first variant so that the play state initializes obstacles with a direction and type only. With this values, it uses the width or height stored in the two constants, `H_OBSTACLES` and `V_OBSTACLES`, in the process of building a rectangular shape.
 
 ```lua
-self.shape = love.physics.newRectangleShape(self.width, self.height)
+local shape = love.physics.newRectangleShape(self.width, self.height)
 ```
 
 ## PlayState
@@ -84,7 +84,6 @@ The idea is to enclose the target in a series of obstacles. Two vertical obstacl
 
 ```text
  ___
-|   |
 |   |
 | t |
 ```
