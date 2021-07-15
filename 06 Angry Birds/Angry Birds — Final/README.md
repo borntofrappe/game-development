@@ -1,25 +1,15 @@
-# Angry Birds — Assignment
+# Angry Birds — Final
 
-## Update list
-
-- display a victorious message as the target is destroyed. Move back to the start state after an arbitrary countdown
+From `Angry Birds 11` the game is updated as follows:
 
 - add audio files
 
 - add a level with a different structure
 
-- modify graphhics
-
-  - resize the aliens to occupy a square of 36x36
-
-  - include additional background
-
-  - include ground matching the background variety
+- consider more options for the background
 
 - render a row of tiles at the bottom of the screen
 
-- set angular damping to avoid having the alien roll indefinitely
+- display a message as the target is destroyed. Move back to the start state following mouse input or after an arbitrary countdown
 
-- show launch area with a semi-transparent black circle, and only if the game is not in the process of updating
-
-- limit launch area to avoid launching the alien past the obstacles
+- (personal preference) reduce the size of the window
