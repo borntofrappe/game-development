@@ -12,11 +12,11 @@ The seventh videos in the course introduces the game Angry Birds where the playe
 
 The `Prep` folder includes several demos to introduce the physics library:
 
-- `Physics`: something
+- `Physics`: introduce the `love.physics` module which wrap around the Box2D library
 
-- `Physics Collision Callback`: something
+- `Physics Collision Callback`: consider how Love2D manages events following a collision
 
-- `Ball Pit`: something
+- `Ball Pit`: simulate the physics resulting from an object falling in a set of small entities
 
 Past these folders, the game is developed in `Angry Birds *` folders:
 

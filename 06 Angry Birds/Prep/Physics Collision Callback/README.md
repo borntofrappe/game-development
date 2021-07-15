@@ -1,20 +1,18 @@
-# [Tutorial:PhysicsCollisionCallbacks](https://love2d.org/wiki/Tutorial:PhysicsCollisionCallbacks)
+# Physics Collision Callbacks
 
-Building on top of the progress achieved in the `Tutorial — Physics` folder, the demo follows the tutorial to react to a collision between two objects. The relevant function is [`World:setCallbacks`](https://love2d.org/wiki/World:setCallbacks).
+Following the [tutorial on Love2D](https://love2d.org/wiki/Tutorial:PhysicsCollisionCallbacks), the demo shows how to react to a collision between two objects.
 
-## Tutorial update
+## User data
 
-From the mentioned starting point, the objects are modified to have a distinct label on each body. This using the `setUserData`](https://love2d.org/wiki/Fixture:setUserData) function on the fixture.
+The objects are assigned a distinct label through the [`setUserData`](https://love2d.org/wiki/Fixture:setUserData) function.
 
 ```lua
 objects.ball.fixture:setUserData("ball")
 ```
 
-One of the two blocks is also removed, to have the demo focus on the collision between ball and the one block.
-
 ## Callback
 
-`:setCallbacks` accepts up to four arguments, specifying callback functions which are executed considering the lifecycle of a collision:
+[`World.:setCallbacks`](<(https://love2d.org/wiki/World:setCallbacks)>) accepts up to four arguments, specifying callback functions which are executed considering the lifecycle of a collision:
 
 ```lua
 world:setCallbacks(beginContact, endContact, preSolve, postSolve)
@@ -33,9 +31,9 @@ The functions are able to work with a set of arguments:
 
 - two objects describing the fixtures involved in the collision
 
-- an object describing the contact
+- an object describing the contact point
 
-Focusing on the objects, it is here that the label used through `setUserData` comes in handy. It is indeed possible to examine the object to trigger a certain behavior if the collision involves a desired set of fixtures, like the ball and the block.
+Focusing on the objects, it is possible to retrieve the label used through `setUserData`. In this manner, it is possible to examine the objects causing the collision, and tailor the simulation accordingly.
 
 ```lua
 function beginContact(f1, f2)
@@ -55,7 +53,7 @@ In addition to the objects involved in the collision, the functions provide more
 function beginContact(f1, f2, contact) end
 ```
 
-This is used for instance to acquire the coordinates of the actual collision.
+The object is helpful for instance to acquire the coordinates of the actual collision.
 
 ```lua
 function beginContact(f1, f2, contact)
@@ -63,7 +61,7 @@ function beginContact(f1, f2, contact)
 end
 ```
 
-_Be warned_: there exist `getPosition`, but this is for an older version of love2d. `getPositions` plural provides the points of where the fixture collide, and there can be multiple points.
+_Be warned_: there exist `getPosition`, but this is for an older version of love2d. `getPositions` plural provides the points of where the fixture collide, since it is possible for the bodies to collide in multiple portions.
 
 ```lua
 function beginContact(f1, f2, contact)
