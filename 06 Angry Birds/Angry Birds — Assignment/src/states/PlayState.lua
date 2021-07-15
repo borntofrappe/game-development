@@ -1,59 +1,86 @@
 PlayState = Class({__includes = BaseState})
 
-function PlayState:init()
-  self.world = love.physics.newWorld(GRAVITY_X, GRAVITY_Y)
-  self.isDragging = false
-  self.isUpdating = false
-  self.hasWon = false
-  self.timer = 0
+local GRAVITY = {
+  ["x"] = 0,
+  ["y"] = 400
+}
 
+local VELOCITY = {
+  ["destroy"] = 170,
+  ["reset"] = 5,
+  ["playerMultiplier"] = 5
+}
+
+local COUNTDOWN_TIMER = 5
+
+function PlayState:init()
   self.hasCollided = false
   self.copies = {}
 
+  self.hasWon = false
+  self.timer = 0
+
+  self.isDragging = false
+  self.isUpdating = false
+
+  local world = love.physics.newWorld(GRAVITY.x, GRAVITY.y)
+
   self.level = LEVELS[math.random(#LEVELS)]
 
-  self.player =
-    Alien(
-    {
-      world = self.world,
-      x = self.level.player.x,
-      y = self.level.player.y,
-      type = "circle"
-    }
-  )
-  self.player.fixture:setRestitution(0.8)
-  self.player.body:setAngularDamping(1)
+  local edges = {}
+  for k, edge in pairs(EDGES) do
+    local body = love.physics.newBody(world, edge.x1, edge.y1, "static")
+    local shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
+    local fixture = love.physics.newFixture(body, shape)
+    fixture:setUserData("Edge")
 
-  self.target =
-    Alien(
-    {
-      world = self.world,
-      x = self.level.target.x,
-      y = self.level.target.y
-    }
-  )
-
-  self.obstacles = {}
-  for i = 1, #self.level.obstacles do
-    self.obstacles[i] =
-      Obstacle(
+    table.insert(
+      edges,
       {
-        world = self.world,
-        x = self.level.obstacles[i].x,
-        y = self.level.obstacles[i].y,
-        direction = self.level.obstacles[i].direction,
-        type = self.level.obstacles[i].type
+        ["body"] = body,
+        ["shape"] = shape,
+        ["fixture"] = fixture
       }
     )
   end
 
-  self.edges = {}
-  for k, edge in pairs(EDGES) do
-    self.edges[k] = {}
-    self.edges[k].body = love.physics.newBody(self.world, edge.x1, edge.y1, "static")
-    self.edges[k].shape = love.physics.newEdgeShape(0, 0, edge.x2 - edge.x1, edge.y2 - edge.y1)
-    self.edges[k].fixture = love.physics.newFixture(self.edges[k].body, self.edges[k].shape)
-    self.edges[k].fixture:setUserData("Edge")
+  local player =
+    Alien(
+    {
+      ["world"] = world,
+      ["x"] = self.level.player.x,
+      ["y"] = self.level.player.y,
+      ["type"] = "circle"
+    }
+  )
+
+  player.fixture:setRestitution(0.8)
+  player.body:setLinearDamping(0.25)
+  player.body:setAngularDamping(0.8)
+
+  local target =
+    Alien(
+    {
+      ["world"] = world,
+      ["x"] = self.level.target.x,
+      ["y"] = self.level.target.y
+    }
+  )
+
+  local obstacles = {}
+  for i = 1, #self.level.obstacles do
+    table.insert(
+      obstacles,
+      Obstacle(
+        {
+          ["world"] = world,
+          ["x"] = self.level.obstacles[i].x,
+          ["y"] = self.level.obstacles[i].y,
+          ["direction"] = self.level.obstacles[i].direction,
+          ["type"] = self.level.obstacles[i].type
+        }
+      )
+    )
   end
 
   self.destroyedObjects = {}
@@ -69,7 +96,7 @@ function PlayState:init()
       if f1:getUserData() == "Player" then
         local vX, vY = f1:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_DESTROY then
+        if vSum > VELOCITY.destroy then
           table.insert(self.destroyedObjects, f2:getBody())
         else
           gSounds["bounce"]:stop()
@@ -78,7 +105,7 @@ function PlayState:init()
       else
         local vX, vY = f2:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_DESTROY then
+        if vSum > VELOCITY.destroy then
           table.insert(self.destroyedObjects, f1:getBody())
         else
           gSounds["bounce"]:stop()
@@ -90,7 +117,7 @@ function PlayState:init()
       if f1:getUserData() == "Obstacle" then
         local vX, vY = f1:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_DESTROY then
+        if vSum > VELOCITY.destroy then
           table.insert(self.destroyedObjects, f2:getBody())
         else
           gSounds["bounce"]:stop()
@@ -99,7 +126,7 @@ function PlayState:init()
       else
         local vX, vY = f2:getBody():getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_DESTROY then
+        if vSum > VELOCITY.destroy then
           table.insert(self.destroyedObjects, f1:getBody())
         else
           gSounds["bounce"]:stop()
@@ -114,7 +141,13 @@ function PlayState:init()
     end
   end
 
-  self.world:setCallbacks(beginContact)
+  world:setCallbacks(beginContact)
+
+  self.world = world
+  -- self.edges = edges
+  self.player = player
+  self.target = target
+  self.obstacles = obstacles
 end
 
 function PlayState:update(dt)
@@ -124,38 +157,33 @@ function PlayState:update(dt)
 
   if love.mouse.wasPressed(1) then
     local x, y = push:toGame(love.mouse.getPosition())
-    if
-      not self.isUpdating and not self.isDragging and math.abs(x - self.player.x) < ALIEN_WIDTH and
-        math.abs(y - self.player.y) < ALIEN_WIDTH
-     then
-      self.isDragging = true
+    if ((x - self.player.x) ^ 2 + (y - self.player.y) ^ 2) ^ 0.5 < ALIEN_WIDTH then
+      if not self.isUpdating and not self.isDragging then
+        self.isDragging = true
+      end
     end
   end
 
   if not self.isUpdating and self.isDragging then
     local x, y = push:toGame(love.mouse.getPosition())
-    if math.abs(x - self.player.x) < VIRTUAL_WIDTH / 4 - ALIEN_WIDTH / 2 then
-      self.player.body:setX(x)
-    end
-    if y + ALIEN_WIDTH / 2 < VIRTUAL_HEIGHT - TILE_SIZE / 2 then
-      self.player.body:setY(y)
-    end
+    self.player.body:setPosition(x, y)
   end
 
   if love.mouse.wasReleased(1) then
     if not self.isUpdating and self.isDragging then
       local x, y = push:toGame(love.mouse.getPosition())
 
-      if (math.abs(x - self.player.x) < ALIEN_WIDTH and math.abs(y - self.player.y) < ALIEN_WIDTH) then
+      if ((x - self.player.x) ^ 2 + (y - self.player.y) ^ 2) ^ 0.5 < ALIEN_WIDTH then
+        self.isDragging = false
         self.player.body:setPosition(self.player.x, self.player.y)
       else
         local dx = self.player.x - x
         local dy = self.player.y - y
-        self.player.body:setLinearVelocity(dx * 5, dy * 5)
+        self.player.body:setLinearVelocity(dx * VELOCITY.playerMultiplier, dy * VELOCITY.playerMultiplier)
 
+        self.isDragging = false
         self.isUpdating = true
       end
-      self.isDragging = false
     end
   end
 
@@ -170,16 +198,19 @@ function PlayState:update(dt)
         local copy =
           Alien(
           {
-            world = self.world,
-            x = vX > 0 and x - ALIEN_WIDTH / 2 or x + ALIEN_WIDTH / 2,
-            y = i == 1 and y - ALIEN_HEIGHT / 2 or y + ALIEN_HEIGHT / 2,
-            type = "circle",
-            color = color
+            ["world"] = self.world,
+            ["x"] = vX > 0 and x - ALIEN_WIDTH / 2 or x + ALIEN_WIDTH / 2,
+            ["y"] = i == 1 and y - ALIEN_HEIGHT / 2 or y + ALIEN_HEIGHT / 2,
+            ["type"] = "circle",
+            ["color"] = color
           }
         )
         copy.fixture:setRestitution(0.8)
-        copy.body:setAngularDamping(1)
+        copy.body:setLinearDamping(0.25)
+        copy.body:setAngularDamping(0.8)
+
         copy.body:setLinearVelocity(vX, vY)
+
         table.insert(self.copies, copy)
       end
     end
@@ -213,12 +244,12 @@ function PlayState:update(dt)
 
     local vX, vY = self.player.body:getLinearVelocity()
     local vSum = math.abs(vX) + math.abs(vY)
-    if vSum < VELOCITY_RESET then
+    if vSum < VELOCITY.reset then
       local isCopyMoving = false
       for k, copy in pairs(self.copies) do
         local vX, vY = copy.body:getLinearVelocity()
         local vSum = math.abs(vX) + math.abs(vY)
-        if vSum > VELOCITY_RESET then
+        if vSum > VELOCITY.reset then
           isCopyMoving = true
           break
         end
@@ -252,7 +283,6 @@ function PlayState:render()
   end
 
   love.graphics.setColor(1, 1, 1, 1)
-
   for k, obstacle in pairs(self.obstacles) do
     obstacle:render()
   end
@@ -267,8 +297,11 @@ function PlayState:render()
   end
 
   if self.hasWon then
-    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.setColor(0, 0, 0, 0.6)
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 190, VIRTUAL_HEIGHT / 2 - 64, 380, 128, 10)
+
     love.graphics.setFont(gFonts["big"])
-    love.graphics.printf(string.upper("Victory"), 0, VIRTUAL_HEIGHT / 2 - 48, VIRTUAL_WIDTH, "center")
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.printf("Victory!", 0, VIRTUAL_HEIGHT / 2 - 28, VIRTUAL_WIDTH, "center")
   end
 end

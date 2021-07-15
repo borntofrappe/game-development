@@ -247,12 +247,10 @@ function PlayState:render()
 
   if self.hasWon then
     love.graphics.setColor(0, 0, 0, 0.6)
-    love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 190, VIRTUAL_HEIGHT / 2 - 64, 380, 120, 10)
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 190, VIRTUAL_HEIGHT / 2 - 64, 380, 128, 10)
 
     love.graphics.setFont(gFonts["big"])
     love.graphics.setColor(1, 1, 1)
-    love.graphics.printf("Victory!", 0, VIRTUAL_HEIGHT / 2 - 48, VIRTUAL_WIDTH, "center")
-    love.graphics.setFont(gFonts["normal"])
-    love.graphics.printf("Click to continue", 0, VIRTUAL_HEIGHT / 2 + 16, VIRTUAL_WIDTH, "center")
+    love.graphics.printf("Victory!", 0, VIRTUAL_HEIGHT / 2 - 28, VIRTUAL_WIDTH, "center")
   end
 end

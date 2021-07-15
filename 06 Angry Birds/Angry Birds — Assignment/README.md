@@ -1,10 +1,14 @@
 # Angry Birds — Assignment
 
-## [Assignment](https://docs.cs50.net/ocw/games/assignments/6/assignment6.html)
+Consider the [assignment for Angry Birds](https://docs.cs50.net/ocw/games/assignments/6/assignment6.html):
 
-> Implement it such that when the player presses the space bar after they’ve launched an `Alien` (and it hasn’t hit anything yet), split the `Alien` into three `Alien`s that all behave just like the base `Alien`
+- [x] implement it such that when the player presses the space bar after they’ve launched an alien (and it hasn’t hit anything yet), the alien splits into three copies that all behave just like the base object
+
+## Space aliens
 
 As suggested in the assignment, it is not necessary to modify the instance of the alien class already describing the player. It is sufficient to have two more instances in the position of the current one.
+
+I've decided to include these instances in a separate table.
 
 ```lua
 function PlayState:init()
@@ -21,7 +25,7 @@ function PlayState:init()
 end
 ```
 
-Initialized to `false`, `self.hasCollided` is set to `true` following a collision between the player and a target or obstacle.
+Initialized to `false`, `self.hasCollided` is set to `true` following a collision between the player and the target or obstacle.
 
 ```lua
 if (userData["Player"] and userData["Obstacle"]) or (userData["Player"] and userData["Target"]) then
@@ -32,7 +36,7 @@ end
 It is set back to `false` as the game is reset and the player can launch the circle once more.
 
 ```lua
-if vSum < VELOCITY_RESET then
+if vSum < VELOCITY.reset then
   self.hasCollided = false
 end
 ```
@@ -55,7 +59,7 @@ if not self.hasCollided and #self.copies == 0 and love.keyboard.wasPressed("spac
 end
 ```
 
-Pending the `if` statement, copies are then initialized using the `Alien` class, and the coordinates/speed of the player instance.
+Pending the `if` statement, copies are then initialized using the `Alien` class and the coordinates and speed of the player instance.
 
 ```lua
 local x, y = self.player.body:getPosition()
@@ -64,18 +68,16 @@ local vX, vY = self.player.body:getLinearVelocity()
 local copy =
   Alien(
   {
-    world = self.world,
-    x = x,
-    y = y,
-    type = "circle"
+    ["world"] = self.world,
+    ["x"] = x,
+    ["y"] = y,
+    ["type"] = "circle"
   }
 )
-copy.fixture:setRestitution(0.8)
-copy.body:setAngularDamping(1)
 copy.body:setLinearVelocity(vX, vY)
 ```
 
-To avoid an overlap however, I decided to slightly modify the horizontal and vertical coordinates. The idea is to have the copies on the side, and slightly behind the original instance.
+To avoid an overlap however, I decided to slightly modify the horizontal and vertical coordinates. The idea is to have the copies above and below the player, and slightly behind the original instance.
 
 ```lua
 x = vX > 0 and x - ALIEN_WIDTH / 2 or x + ALIEN_WIDTH / 2,
@@ -96,7 +98,7 @@ end
 The idea is to reset the game not only when the circle describing the player stops moving, but also when its copies reach a similar still position.
 
 ```lua
-if vSum < VELOCITY_RESET then
+if vSum < VELOCITY.reset then
   -- check the velocity of the copies
 end
 ```

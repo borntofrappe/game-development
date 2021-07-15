@@ -10,6 +10,6 @@ From `Angry Birds 11` the game is updated as follows:
 
 - render a row of tiles at the bottom of the screen
 
-- display a message as the target is destroyed. Move back to the start state following mouse input or after an arbitrary countdown
+- display a message as the target is destroyed. Move back to the start state after an arbitrary countdown
 
 - (personal preference) reduce the size of the window
