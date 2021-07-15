@@ -2,9 +2,9 @@
 
 _Be warned_: this is a theory-heavy update, introducing several concepts before the actual code.
 
-## Theory
+## Physics
 
-Love2D offers several methods in the `love.physics` module. This is however a namespace, a wrapper for the box2D library. You are essentially using box2D within the context of love2D.
+Love2D offers several methods in the `love.physics` module. This is however a namespace, a wrapper for the Box2D library. You are essentially using Box2D within the context of Love2D.
 
 ### World
 
@@ -14,17 +14,17 @@ The relevant function is `love.physics.newWorld(gravityX, gravityY, sleep)`.
 
 `gravity` allows to set the horizontal and vertical push to which the bodies are subject.
 
-`sleep` is an optional boolean which allows for sleeping, non-moving, bodies. When you have a body you don't want tracked, setting the body as sleeping allows you avoid having the world calculate its position and movement. This is ultimately a gain in performance.
+`sleep` is an optional boolean which allows for sleeping, non-moving, bodies. This is ultimately a gain in performance as Box2D optimizes the world by focusing on moving objects.
 
 ### Bodies
 
-Bodies are but abstract containers for the elements in the game. A body describes a position and a velocity, and it is only through shape and fixtures that these are mapped to actual visual elements.
+Bodies are but abstract containers for the elements in the game. A body describes a position and a velocity, and it is only through a shape and a fixture that a body is visualized in the window.
 
 The relevant function is here `love.physics.newBody(world, x, y, type)`.
 
 - `world` so that the world and its update function contemplate the body in the simulation
 
-- `x` and `y` to describe the position.
+- `x` and `y` to describe the position
 
   It is important to note that the position describes the center of the body, and where the body will ultimately start out.
 
@@ -40,7 +40,7 @@ The relevant function is here `love.physics.newBody(world, x, y, type)`.
 
 ### Fixtures
 
-Fixtures are once again abstract object, which however contains instructions to fix a shape to a body. They can optionally set a density, friction, restitution, and ultimately describe how the visuals behave in the world.
+Fixtures attach shapes to a body. They can optionally set a density, friction, restitution, and ultimately describe how the objects behave in the world.
 
 The relevant function is `love.physics.newFixture(body, shape)`.
 
@@ -62,7 +62,7 @@ There are several functions, each with its own set of arguments
 
 ## Practice
 
-The idea is to render a static rectangle right in the middle of the window. This rectangle however, is included as a body, in a world, and with a shape and fixture.
+The idea is to render a static rectangle right in the middle of the window. The rectangle is however included in a Box2D world, as a body with a shape and fixture.
 
 It is worth mentioning that while the body is created as a rectangle, the render logic uses `love.graphics.polygon`, with the coordinates retrieved from the body and the associated shape.
 

@@ -1,23 +1,21 @@
 # Angry Birds 4
 
-## Update
-
 The demo includes the kinematic objects introduced with `Angry Birds 2`. I removed them in the update `Angry Birds 3` to have that folder focus on mouse input, but here they are useful to differentiate a collision between different objects.
 
-## userData
+## User data
 
-`userData` is a label for fixtures. The relevant functions are here `setUserData()` and `getUserData()`, to respectively set retrieve the label.
+The idea is to include and benefit from a label on the different objects. The relevant functions are here `setUserData()` and `getUserData()`, to respectively set retrieve the label.
 
 ```lua
-boxFixture:setUserData("Box")
-boxFixture:getUserData() -- Box
+box.fixture:setUserData("Box")
+box.fixture:getUserData() -- Box
 ```
 
-This label is essential in the moment a collision is detected between two objects.
+The label is essential in the moment a collision is detected between two objects.
 
 ## Callback
 
-Callback functions are set to the world to consider up to four events.
+Callback functions are set on the world object to consider up to four events.
 
 ```lua
 world:setCallbacks(beginContact, endContact, preSolve, postSolve)
@@ -45,24 +43,8 @@ function postSolve(f1, f2, contact, normalInput, tangentInput)
 end
 ```
 
-This is important: the name of the functions, the name of the parameters are all arbitrary. Here I use a similar syntax as the one provided in the love2D docs.
+This is important: the name of the functions, the name of the parameters are all arbitrary. Here I use a similar syntax as the one provided in the love2D wiki.
 
 ## Practice
 
-In the demo, I decided to focus on describing the objects subject of a collision, and their associated label. Using the first callback function, the labels are stored in a global variable.
-
-```lua
-function love.load()
-  collisionBodies = {}
-end
-
-function beginContact(f1, f2, contact)
-  collisionBodies = {f1:getUserData(), f2:getUserData()}
-end
-```
-
-The function is then set in `love.update` through the mentioned `setCallbacks` method-
-
-```lua
-world:setCallbacks(beginContact)
-```
+In the demo, I decided to focus on describing the objects subject of a collision and specifically their label. Using the first callback function, the labels are stored in a variable and displayed in `love.draw`.

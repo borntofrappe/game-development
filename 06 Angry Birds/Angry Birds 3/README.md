@@ -8,11 +8,11 @@ The relevant functions are here:
 
 - `love.mousereleased(x, y, button)`
 
-They both provide the coordinates of where the mouse interaction occurs, as well as the button being pressed on the mouse (left, right).
+The two provide the coordinates of where the mouse interaction occurs, as well as the button being pressed on the mouse — left, right, or center.
 
-To consider mouse inputs in other modules other than the three `love` functions, the same technique used for previous games and keyboard input is used. The idea is to create two functions, `wasPressed` and `wasReleased`, and attach them on the `love.mouse` module.
+To consider mouse inputs in other modules other than the three `love` functions, the script implements a technique similar to that introduced in previous games for keyboard input. The idea is to create two functions — `wasPressed` and `wasReleased` — and attach them on the `love.mouse` module.
 
-In detail, the functions consider whether or not the cursor was pressed/released, on the basis of the value stored in a table.
+In detail, the functions consider whether or not the cursor was pressed or released on the basis of the value stored in a table.
 
 ```lua
 function love.load()
@@ -48,11 +48,11 @@ function love.update(dt)
 end
 ```
 
-## Update
+## Practice
 
-In the demo, the functions are used to have the box move vertically and in opposite directions:
+In the demo, the functions are used to have the box move vertically:
 
-- have the box rise as the mouse gets pressed
+- when pressing the mouse the gravity and the linear velocity are modified to have the box move upwards
 
   ```lua
   if love.mouse.wasPressed(1) then
@@ -61,7 +61,7 @@ In the demo, the functions are used to have the box move vertically and in oppos
   end
   ```
 
-- restore the gravity and have the box plummet back to the ground as the mouse gets released
+- when releasing the mouse the gravity is restored to have the box plummet back to the ground
 
   ```lua
   if love.mouse.wasReleased(1) then
