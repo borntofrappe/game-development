@@ -2,6 +2,8 @@
 
 The seventh videos in the course introduces the game Angry Birds where the player throws an entity toward a target.
 
+![A few frames from the assignment for "Angry Birds"](https://github.com/borntofrappe/game-development/blob/master/Showcase/angry-birds.gif)
+
 ## Topics
 
 - physics with the Box2D library
