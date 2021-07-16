@@ -11,11 +11,15 @@ local VELOCITY = {
   ["playerMultiplier"] = 5
 }
 
+local TRAJECTORY_POINT_RADIUS = 4
+
 local COUNTDOWN_TIMER = 5
 
 function PlayState:init()
   self.hasCollided = false
   self.copies = {}
+
+  self.trajectory = {}
 
   self.hasWon = false
   self.timer = 0
@@ -54,9 +58,7 @@ function PlayState:init()
     }
   )
 
-  player.fixture:setRestitution(0.8)
-  player.body:setLinearDamping(0.25)
-  player.body:setAngularDamping(0.8)
+  player.fixture:setRestitution(0.5)
 
   local target =
     Alien(
@@ -89,6 +91,11 @@ function PlayState:init()
     local userData = {}
     userData[f1:getUserData()] = true
     userData[f2:getUserData()] = true
+
+    if (userData["Player"] and userData["Edge"]) then
+      player.body:setLinearDamping(0.25)
+      player.body:setAngularDamping(0.8)
+    end
 
     if (userData["Player"] and userData["Obstacle"]) or (userData["Player"] and userData["Target"]) then
       self.hasCollided = true
@@ -167,10 +174,31 @@ function PlayState:update(dt)
   if not self.isUpdating and self.isDragging then
     local x, y = push:toGame(love.mouse.getPosition())
     self.player.body:setPosition(x, y)
+
+    local impulseX = (self.player.x - x) * VELOCITY.playerMultiplier
+    local impulseY = (self.player.y - y) * VELOCITY.playerMultiplier
+
+    local trajectory = {}
+
+    for i = 1, 90, 10 do
+      local point = {
+        ["x"] = x + i / 60 * impulseX,
+        ["y"] = y + i / 60 * impulseY + 0.5 * (i * i + i) * GRAVITY.y / 3600
+      }
+
+      if point.x > VIRTUAL_WIDTH or point.y > VIRTUAL_HEIGHT then
+        break
+      end
+      table.insert(trajectory, point)
+    end
+
+    self.trajectory = trajectory
   end
 
   if love.mouse.wasReleased(1) then
     if not self.isUpdating and self.isDragging then
+      self.trajectory = {}
+
       local x, y = push:toGame(love.mouse.getPosition())
 
       if ((x - self.player.x) ^ 2 + (y - self.player.y) ^ 2) ^ 0.5 < ALIEN_WIDTH then
@@ -257,6 +285,9 @@ function PlayState:update(dt)
 
       if not isCopyMoving then
         self.player.body:setPosition(self.player.x, self.player.y)
+        self.player.body:setLinearDamping(0)
+        self.player.body:setAngularDamping(0)
+
         self.isUpdating = false
         self.hasCollided = false
         for k, copy in pairs(self.copies) do
@@ -271,15 +302,15 @@ function PlayState:update(dt)
     self.timer = self.timer + dt
     if self.timer > COUNTDOWN_TIMER then
       gStateMachine:change("start")
-      backgroundVariety = math.random(#gFrames["background"])
+      gBackgroundVariety = math.random(#gFrames["background"])
     end
   end
 end
 
 function PlayState:render()
-  if not self.isUpdating then
-    love.graphics.setColor(0, 0, 0, 0.25)
-    love.graphics.circle("fill", self.player.x, self.player.y, ALIEN_WIDTH)
+  love.graphics.setColor(0, 0, 0, 0.25)
+  for k, point in pairs(self.trajectory) do
+    love.graphics.circle("fill", point.x, point.y, TRAJECTORY_POINT_RADIUS)
   end
 
   love.graphics.setColor(1, 1, 1, 1)

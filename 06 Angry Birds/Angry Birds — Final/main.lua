@@ -1,7 +1,5 @@
 require "src/Dependencies"
 
-local backgroundVariety
-
 function love.load()
   love.window.setTitle("Angry Birds")
   math.randomseed(os.time())
@@ -59,7 +57,7 @@ function love.load()
   love.mouse.buttonPressed = {}
   love.mouse.buttonReleased = {}
 
-  backgroundVariety = math.random(#gFrames["background"])
+  gBackgroundVariety = math.random(#gFrames["background"])
 end
 
 function love.resize(width, height)
@@ -102,11 +100,11 @@ function love.draw()
   push:start()
 
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(gTextures["background"], gFrames["background"][backgroundVariety], 0, 0)
+  love.graphics.draw(gTextures["background"], gFrames["background"][gBackgroundVariety], 0, 0)
   for i = 1, math.floor(VIRTUAL_WIDTH / TILE_SIZE) + 1 do
     love.graphics.draw(
       gTextures["ground"],
-      gFrames["ground"][backgroundVariety],
+      gFrames["ground"][gBackgroundVariety],
       (i - 1) * TILE_SIZE,
       VIRTUAL_HEIGHT - TILE_SIZE / 2
     )

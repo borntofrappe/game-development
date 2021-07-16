@@ -26,21 +26,21 @@ Past these folders, the game is developed in `Angry Birds *` folders:
 
 1. simulate a dynamic body and solid ground
 
-2. add a series of kinematic bodies
+2. simulate a dynamic body and a series of kinematic bodies
 
 3. consider mouse input
 
-4. detect collisions in the world
+4. react to a collision between world objects
 
-5. set up the game
+5. set up the game with a state machine
 
-6. in the play state, initialize a world with static edges and two dynamic shapes
+6. initialize a world with static edges and two dynamic bodies
 
-7. recreate the start state with a bold title and a world based on the ball pit demo
+7. introduce the gane with a bold title and a simulation similar to that introduced in `Prep/Ball Pit`
 
 8. refactor the code to have the logic pertinent to the aliens in its own class
 
-9. include obstacles in the play state
+9. include obstacles
 
 10. react to a collision between game entities
 
