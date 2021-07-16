@@ -46,6 +46,8 @@ Past these folders, the game is developed in `Angry Birds *` folders:
 
 11. move the player by dragging the cursor
 
+12. project the trajectory of the launch
+
 ## Resources
 
 - [Angry Birds](https://youtu.be/9iYjOkRDzBs)
