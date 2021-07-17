@@ -1,7 +1,9 @@
 StartState = BaseState:new()
 
-local TIMER_DELAY = 0.5
 local TITLE_OFFSET = -8
+
+local DELAY_DURATION = 0.5
+local TWEEN_DURATION = 1.5
 local INTERVAL_DURATION = 0.8
 local COUNTDOWN_DURATION_MULTIPLIER = 9.5 -- odd number to have the state appear as the instructions are not shown
 
@@ -11,7 +13,7 @@ function StartState:enter(params)
     ["y"] = WINDOW_HEIGHT,
     ["y1"] = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() + TITLE_OFFSET,
     ["tween"] = {
-      ["duration"] = 1.5
+      ["duration"] = TWEEN_DURATION
     }
   }
 
@@ -19,7 +21,7 @@ function StartState:enter(params)
 
   self.record = {
     ["text"] = string.upper("Hi-Score\t" .. highScore),
-    ["y"] = 8,
+    ["y"] = WINDOW_PADDING,
     ["show"] = false
   }
 
@@ -39,7 +41,7 @@ function StartState:enter(params)
   }
 
   Timer:after(
-    TIMER_DELAY,
+    DELAY_DURATION,
     function()
       Timer:tween(
         self.title.tween.duration,
@@ -48,7 +50,7 @@ function StartState:enter(params)
         },
         function()
           Timer:after(
-            TIMER_DELAY,
+            DELAY_DURATION,
             function()
               self.record.show = true
 

@@ -23,3 +23,11 @@ function GenerateQuadBonusInvader(atlas)
 
   return love.graphics.newQuad(0, Y_INITIAL, WIDTH, HEIGHT, atlas:getDimensions())
 end
+
+function GenerateQuadPlayer(atlas)
+  local WIDTH = PLAYER_WIDTH
+  local HEIGHT = PLAYER_HEIGHT
+  local Y_INITIAL = INVADERS * INVADER_HEIGHT + INVADER_BONUS_HEIGHT
+
+  return love.graphics.newQuad(0, Y_INITIAL, WIDTH, HEIGHT, atlas:getDimensions())
+end

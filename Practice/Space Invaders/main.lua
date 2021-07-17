@@ -37,11 +37,12 @@ function love.load()
   }
 
   gFrames = {
-    ["invaders"] = GenerateQuadsInvaders(gTextures.spritesheet),
-    ["bonus-invader"] = GenerateQuadBonusInvader(gTextures.spritesheet)
+    ["invaders"] = GenerateQuadsInvaders(gTextures["spritesheet"]),
+    ["bonus-invader"] = GenerateQuadBonusInvader(gTextures["spritesheet"]),
+    ["player"] = GenerateQuadPlayer(gTextures["spritesheet"])
   }
 
-  gStateMachine:change("start")
+  gStateMachine:change("play")
 
   love.keyboard.keypressed = {}
 end
