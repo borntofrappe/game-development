@@ -6,12 +6,12 @@ function GenerateQuadsInvaders(atlas)
   local WIDTH = INVADER_WIDTH
   local HEIGHT = INVADER_HEIGHT
 
-  for i = 1, INVADERS do
-    quads[i] = {}
-    local y = (i - 1) * HEIGHT
-    for j = 1, VARIETIES do
-      local x = (j - 1) * WIDTH
-      quads[i][j] = love.graphics.newQuad(X_INITIAL + x, Y_INITIAL + y, WIDTH, HEIGHT, atlas:getDimensions())
+  for type = 1, INVADER_TYPES do
+    quads[type] = {}
+    local y = (type - 1) * HEIGHT
+    for frame = 1, INVADER_FRAMES do
+      local x = (frame - 1) * WIDTH
+      quads[type][frame] = love.graphics.newQuad(X_INITIAL + x, Y_INITIAL + y, WIDTH, HEIGHT, atlas:getDimensions())
     end
   end
 

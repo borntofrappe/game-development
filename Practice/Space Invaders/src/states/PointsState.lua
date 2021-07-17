@@ -9,20 +9,21 @@ function PointsState:enter()
     ["y"] = WINDOW_HEIGHT / 4
   }
 
-  local maxWidth = INVADER_WIDTH + gFonts.normal:getWidth(string.upper(POINTS_MULTIPLIER * INVADERS .. " points\t"))
+  local maxWidth =
+    INVADER_WIDTH + gFonts.normal:getWidth(string.upper(POINTS_MULTIPLIER * INVADER_TYPES .. " points\t"))
   local x = WINDOW_WIDTH / 2 - maxWidth / 2
   local y = WINDOW_HEIGHT / 2
 
   local entries = {}
 
-  for i = 1, INVADERS do
+  for type = 1, INVADER_TYPES do
     table.insert(
       entries,
       {
-        ["type"] = i,
-        ["text"] = string.upper(POINTS_MULTIPLIER * i .. " points"),
+        ["type"] = type,
+        ["text"] = string.upper(POINTS_MULTIPLIER * type .. " points"),
         ["x"] = x,
-        ["y"] = y + gFonts.normal:getHeight() * 1.5 * (INVADERS - i + 1)
+        ["y"] = y + gFonts.normal:getHeight() * 1.5 * (INVADER_TYPES - type + 1)
       }
     )
   end
