@@ -25,9 +25,21 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState:new()
+      end,
+      ["points"] = function()
+        return PointsState:new()
       end
     }
   )
+
+  gTextures = {
+    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
+  }
+
+  gFrames = {
+    ["invaders"] = GenerateQuadsInvaders(gTextures.spritesheet),
+    ["bonus-invader"] = GenerateQuadBonusInvader(gTextures.spritesheet)
+  }
 
   gStateMachine:change("start")
 

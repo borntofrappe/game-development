@@ -2,6 +2,8 @@ StartState = BaseState:new()
 
 local TIMER_DELAY = 0.5
 local TITLE_OFFSET = -8
+local INTERVAL_DURATION = 0.8
+local COUNTDOWN_DURATION_MULTIPLIER = 9.5 -- odd number to have the state appear as the instructions are not shown
 
 function StartState:enter(params)
   self.title = {
@@ -16,7 +18,7 @@ function StartState:enter(params)
   local highScore = params and params.highScore or 1000
 
   self.record = {
-    ["text"] = string.upper("Hi-Score " .. highScore),
+    ["text"] = string.upper("Hi-Score\t" .. highScore),
     ["y"] = 8,
     ["show"] = false
   }
@@ -27,8 +29,13 @@ function StartState:enter(params)
     ["show"] = false,
     ["interval"] = {
       ["label"] = "instructions",
-      ["duration"] = 0.75
+      ["duration"] = INTERVAL_DURATION
     }
+  }
+
+  self.pointsCountdown = {
+    ["duration"] = self.instructions.interval.duration * COUNTDOWN_DURATION_MULTIPLIER,
+    ["label"] = "pointsCountdown"
   }
 
   Timer:after(
@@ -44,6 +51,7 @@ function StartState:enter(params)
             TIMER_DELAY,
             function()
               self.record.show = true
+
               Timer:every(
                 self.instructions.interval.duration,
                 function()
@@ -51,6 +59,14 @@ function StartState:enter(params)
                 end,
                 true,
                 self.instructions.interval.label
+              )
+
+              Timer:after(
+                self.pointsCountdown.duration,
+                function()
+                  gStateMachine:change("points")
+                end,
+                self.pointsCountdown.label
               )
             end
           )
@@ -71,6 +87,7 @@ function StartState:update(dt)
   if love.keyboard.waspressed("return") then
     if self.record.show then
       Timer:remove(self.instructions.interval.label)
+      Timer:remove(self.pointsCountdown.label)
       gStateMachine:change("play")
     end
   end
