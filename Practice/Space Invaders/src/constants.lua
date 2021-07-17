@@ -1,0 +1,4 @@
+TITLE = "Space Invaders"
+
+WINDOW_WIDTH = 708
+WINDOW_HEIGHT = 484
