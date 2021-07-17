@@ -3,6 +3,7 @@ Timer = require "res/lib/Timer"
 require "src/constants"
 require "src/Utils"
 
+require "src/Projectile"
 require "src/Player"
 
 require "src/StateMachine"

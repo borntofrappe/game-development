@@ -39,7 +39,8 @@ function love.load()
   gFrames = {
     ["invaders"] = GenerateQuadsInvaders(gTextures["spritesheet"]),
     ["bonus-invader"] = GenerateQuadBonusInvader(gTextures["spritesheet"]),
-    ["player"] = GenerateQuadPlayer(gTextures["spritesheet"])
+    ["player"] = GenerateQuadPlayer(gTextures["spritesheet"]),
+    ["projectile"] = GenerateQuadProjectile(gTextures["spritesheet"])
   }
 
   gStateMachine:change("play")
