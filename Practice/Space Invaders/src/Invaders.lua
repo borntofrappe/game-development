@@ -19,7 +19,6 @@ function Invaders:new(delayMultiplier)
       for column = 1, INVADERS_GRID.columns do
         local x = WINDOW_PADDING + (column - 1) * (INVADER_WIDTH + INVADER_WIDTH / 2)
         local y = WINDOW_PADDING + (rows - row) * (INVADER_HEIGHT + INVADER_HEIGHT / 2)
-        y = y + WINDOW_HEIGHT / 2 -- just to test the gameover
         table.insert(invaders, Invader:new(x, y, type))
       end
     end
@@ -28,6 +27,7 @@ function Invaders:new(delayMultiplier)
 
   local this = {
     ["invaders"] = invaders,
+    ["projectiles"] = {},
     ["direction"] = 1,
     ["delayMultiplier"] = delayMultiplier
   }
@@ -42,13 +42,34 @@ function Invaders:update(player)
   local changeDirection = false
   local collideWithPlayer = false
 
+  local firingInvaders = {
+    ["y"] = 0,
+    ["x"] = {}
+  }
+
   for k, invader in pairs(self.invaders) do
+    if invader.y > firingInvaders.y then
+      firingInvaders.y = invader.y
+      firingInvaders.x = {invader.x}
+    else
+      table.insert(firingInvaders.x, invader.x)
+    end
+
     local x = invader.x + invader.width * self.direction
 
     if x > WINDOW_WIDTH - WINDOW_PADDING - invader.width or x < WINDOW_PADDING then
       changeDirection = true
       break
     end
+  end
+
+  if math.random(4) == 1 then
+    local firingX = firingInvaders["x"][math.random(#firingInvaders["x"])]
+
+    table.insert(
+      self.projectiles,
+      Projectile:new(firingX + INVADER_WIDTH / 2, firingInvaders.y + INVADER_HEIGHT / 2, "down")
+    )
   end
 
   if changeDirection then
@@ -83,6 +104,10 @@ end
 
 function Invaders:render()
   love.graphics.setColor(1, 1, 1)
+  for k, projectile in pairs(self.projectiles) do
+    projectile:render()
+  end
+
   for k, invader in pairs(self.invaders) do
     invader:render()
   end

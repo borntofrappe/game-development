@@ -1,6 +1,6 @@
 Projectile = {}
 
-local PROJECTILE_SPEED = 400
+local PROJECTILE_SPEED = 300
 
 function Projectile:new(x, y, direction)
   local this = {

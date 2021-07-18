@@ -33,21 +33,7 @@ function PlayState:setupInterval()
       local changeDirection, collideWithPlayer = self.invaders:update(self.player)
 
       if collideWithPlayer then
-        Timer:remove(self.interval.label)
-        Timer:after(
-          self.gameoverCountdown.duration,
-          function()
-            gStateMachine:change("gameover")
-          end
-        )
-
-        local collision =
-          CollisionPlayer:new(
-          self.player.x + self.player.width / 2 - COLLISION_PLAYER_WIDTH / 2,
-          self.player.y + self.player.height - COLLISION_PLAYER_HEIGHT
-        )
-        table.insert(self.collisions.collisions, collision)
-        self.player.inPlay = false
+        self:gameover()
       elseif changeDirection then
         Timer:remove(self.interval.label)
         self.interval.duration = math.max(self.interval.min, self.interval.duration - self.interval.change)
@@ -104,8 +90,42 @@ function PlayState:update(dt)
         table.remove(self.player.projectiles, k)
       end
     end
+
+    for k, projectile in pairs(self.invaders.projectiles) do
+      projectile:update(dt)
+
+      local hasCollided = false
+      if
+        projectile.x > self.player.x and projectile.x < self.player.x + self.player.width and
+          projectile.y > self.player.y and
+          projectile.y < self.player.y + self.player.height
+       then
+        table.remove(self.invaders.projectiles, k)
+        self:gameover()
+        break
+      end
+    end
+
     self.player:update(dt)
   end
+end
+
+function PlayState:gameover()
+  Timer:remove(self.interval.label)
+  Timer:after(
+    self.gameoverCountdown.duration,
+    function()
+      gStateMachine:change("gameover")
+    end
+  )
+
+  local collision =
+    CollisionPlayer:new(
+    self.player.x + self.player.width / 2 - COLLISION_PLAYER_WIDTH / 2,
+    self.player.y + self.player.height - COLLISION_PLAYER_HEIGHT
+  )
+  table.insert(self.collisions.collisions, collision)
+  self.player.inPlay = false
 end
 
 function PlayState:render()
