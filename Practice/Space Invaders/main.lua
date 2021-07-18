@@ -17,21 +17,6 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
   }
 
-  gStateMachine =
-    StateMachine:new(
-    {
-      ["start"] = function()
-        return StartState:new()
-      end,
-      ["play"] = function()
-        return PlayState:new()
-      end,
-      ["points"] = function()
-        return PointsState:new()
-      end
-    }
-  )
-
   gTextures = {
     ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
   }
@@ -43,6 +28,24 @@ function love.load()
     ["projectile"] = GenerateQuadProjectile(gTextures["spritesheet"]),
     ["collision-invader"] = GenerateQuadCollisionInvader(gTextures["spritesheet"])
   }
+
+  gStateMachine =
+    StateMachine:new(
+    {
+      ["start"] = function()
+        return StartState:new()
+      end,
+      ["points"] = function()
+        return PointsState:new()
+      end,
+      ["play"] = function()
+        return PlayState:new()
+      end,
+      ["pause"] = function()
+        return PauseState:new()
+      end
+    }
+  )
 
   gStateMachine:change("play")
 

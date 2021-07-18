@@ -1,20 +1,23 @@
 PlayState = BaseState:new()
 
-function PlayState:enter()
-  self.interval = {
-    ["min"] = 0.4,
-    ["max"] = 0.9,
-    ["change"] = 0.1,
-    ["label"] = "update"
-  }
+function PlayState:enter(params)
+  self.interval =
+    params and params.interval or
+    {
+      ["min"] = 0.4,
+      ["max"] = 0.9,
+      ["change"] = 0.1,
+      ["duration"] = 0.9,
+      ["label"] = "update"
+    }
 
-  self.interval.duration = self.interval.max
+  self.collisions = params and params.collisions or Collisions:new()
+  self.invaders = params and params.invaders or Invaders:new(self.interval.duration / (INVADER_TYPES + 1))
+  self.player = params and params.player or Player:new()
 
-  self.player = Player:new()
-  self.invaders = Invaders:new(self.interval.duration / (INVADER_TYPES + 1))
-  self.collisions = Collisions:new()
-
-  self:setupInterval()
+  if not params then
+    self:setupInterval()
+  end
 end
 
 function PlayState:setupInterval()
@@ -35,12 +38,25 @@ function PlayState:setupInterval()
 end
 
 function PlayState:update(dt)
+  Timer:update(dt)
+
   if love.keyboard.waspressed("escape") then
     Timer:remove(self.interval.label)
     gStateMachine:change("start")
   end
 
-  Timer:update(dt)
+  if love.keyboard.waspressed("return") then
+    -- Timer:remove(self.interval.label)
+    gStateMachine:change(
+      "pause",
+      {
+        ["collisions"] = self.collisions,
+        ["invaders"] = self.invaders,
+        ["player"] = self.player,
+        ["interval"] = self.interval
+      }
+    )
+  end
 
   for k, projectile in pairs(self.player.projectiles) do
     local hasCollided = false
