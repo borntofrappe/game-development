@@ -11,7 +11,8 @@ function Player:new()
     ["height"] = PLAYER_HEIGHT,
     ["dx"] = 0,
     ["speed"] = PLAYER_SPEED,
-    ["projectiles"] = {}
+    ["projectiles"] = {},
+    ["inPlay"] = true
   }
 
   self.__index = self
@@ -53,5 +54,7 @@ function Player:render()
     projectile:render()
   end
 
-  love.graphics.draw(gTextures["spritesheet"], gFrames["player"], self.x, self.y)
+  if self.inPlay then
+    love.graphics.draw(gTextures["spritesheet"], gFrames["player"], self.x, self.y)
+  end
 end

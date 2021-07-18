@@ -1,6 +1,6 @@
 PlayState = BaseState:new()
 
-local COUNTDOWN_DURATION = 4
+local COUNTDOWN_DURATION = 5
 
 function PlayState:enter(params)
   self.interval =
@@ -40,6 +40,14 @@ function PlayState:setupInterval()
             gStateMachine:change("gameover")
           end
         )
+
+        local collision =
+          CollisionPlayer:new(
+          self.player.x + self.player.width / 2 - COLLISION_PLAYER_WIDTH / 2,
+          self.player.y + self.player.height - COLLISION_PLAYER_HEIGHT
+        )
+        table.insert(self.collisions.collisions, collision)
+        self.player.inPlay = false
       elseif changeDirection then
         Timer:remove(self.interval.label)
         self.interval.duration = math.max(self.interval.min, self.interval.duration - self.interval.change)
@@ -73,29 +81,31 @@ function PlayState:update(dt)
     )
   end
 
-  for k, projectile in pairs(self.player.projectiles) do
-    local hasCollided = false
-    for j, invader in pairs(self.invaders.invaders) do
-      if
-        projectile.x > invader.x and projectile.x < invader.x + invader.width and projectile.y > invader.y and
-          projectile.y < invader.y + invader.height
-       then
-        hasCollided = true
+  self.collisions:update(dt)
 
-        local collision = CollisionInvader:new(invader.x + invader.width / 2, invader.y + invader.height / 2)
-        table.insert(self.collisions.collisions, collision)
+  if self.player.inPlay then
+    for k, projectile in pairs(self.player.projectiles) do
+      local hasCollided = false
+      for j, invader in pairs(self.invaders.invaders) do
+        if
+          projectile.x > invader.x and projectile.x < invader.x + invader.width and projectile.y > invader.y and
+            projectile.y < invader.y + invader.height
+         then
+          hasCollided = true
 
-        table.remove(self.invaders.invaders, j)
-        break
+          local collision = CollisionInvader:new(invader.x + invader.width / 2, invader.y + invader.height / 2)
+          table.insert(self.collisions.collisions, collision)
+
+          table.remove(self.invaders.invaders, j)
+          break
+        end
+      end
+      if hasCollided then
+        table.remove(self.player.projectiles, k)
       end
     end
-    if hasCollided then
-      table.remove(self.player.projectiles, k)
-    end
+    self.player:update(dt)
   end
-
-  self.collisions:update(dt)
-  self.player:update(dt)
 end
 
 function PlayState:render()

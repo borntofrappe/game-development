@@ -18,12 +18,16 @@ function CollisionInvader:new(x, y)
 end
 
 function CollisionInvader:update(dt)
-  self.time = self.time + dt
-  if self.time >= self.delay then
-    self.inPlay = false
+  if self.inPlay then
+    self.time = self.time + dt
+    if self.time >= self.delay then
+      self.inPlay = false
+    end
   end
 end
 
 function CollisionInvader:render()
-  love.graphics.draw(gTextures["spritesheet"], gFrames["collision-invader"], self.x, self.y)
+  if self.inPlay then
+    love.graphics.draw(gTextures["spritesheet"], gFrames["collision-invader"], self.x, self.y)
+  end
 end

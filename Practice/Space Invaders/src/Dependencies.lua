@@ -4,6 +4,7 @@ require "src/constants"
 require "src/Utils"
 
 require "src/CollisionInvader"
+require "src/CollisionPlayer"
 require "src/Collisions"
 
 require "src/Invader"

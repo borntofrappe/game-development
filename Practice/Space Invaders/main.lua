@@ -26,7 +26,8 @@ function love.load()
     ["bonus-invader"] = GenerateQuadBonusInvader(gTextures["spritesheet"]),
     ["player"] = GenerateQuadPlayer(gTextures["spritesheet"]),
     ["projectile"] = GenerateQuadProjectile(gTextures["spritesheet"]),
-    ["collision-invader"] = GenerateQuadCollisionInvader(gTextures["spritesheet"])
+    ["collision-invader"] = GenerateQuadCollisionInvader(gTextures["spritesheet"]),
+    ["collision-player"] = GenerateQuadsCollisionPlayer(gTextures["spritesheet"])
   }
 
   gStateMachine =

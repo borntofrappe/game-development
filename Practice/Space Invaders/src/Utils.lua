@@ -53,3 +53,19 @@ function GenerateQuadCollisionInvader(atlas)
 
   return love.graphics.newQuad(X_INITIAL, Y_INITIAL, WIDTH, HEIGHT, atlas:getDimensions())
 end
+
+function GenerateQuadsCollisionPlayer(atlas)
+  local quads = {}
+
+  local X_INITIAL = 42
+  local Y_INITIAL = 66
+  local WIDTH = COLLISION_PLAYER_WIDTH
+  local HEIGHT = COLLISION_PLAYER_HEIGHT
+
+  for frame = 1, COLLISION_PLAYER_FRAMES do
+    quads[frame] =
+      love.graphics.newQuad(X_INITIAL, Y_INITIAL + (frame - 1) * HEIGHT, WIDTH, HEIGHT, atlas:getDimensions())
+  end
+
+  return quads
+end
