@@ -44,3 +44,12 @@ function GenerateQuadProjectile(atlas)
 
   return love.graphics.newQuad(X_INITIAL, Y_INITIAL, WIDTH, HEIGHT, atlas:getDimensions())
 end
+
+function GenerateQuadCollisionInvader(atlas)
+  local X_INITIAL = 48
+  local Y_INITIAL = 0
+  local WIDTH = COLLISION_INVADER_WIDTH
+  local HEIGHT = COLLISION_INVADER_HEIGHT
+
+  return love.graphics.newQuad(X_INITIAL, Y_INITIAL, WIDTH, HEIGHT, atlas:getDimensions())
+end

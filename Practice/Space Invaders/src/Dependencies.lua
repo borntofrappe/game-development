@@ -3,8 +3,12 @@ Timer = require "res/lib/Timer"
 require "src/constants"
 require "src/Utils"
 
+require "src/CollisionInvader"
+require "src/Collisions"
+
 require "src/Invader"
 require "src/Invaders"
+
 require "src/Projectile"
 require "src/Player"
 

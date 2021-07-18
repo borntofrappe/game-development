@@ -40,7 +40,8 @@ function love.load()
     ["invaders"] = GenerateQuadsInvaders(gTextures["spritesheet"]),
     ["bonus-invader"] = GenerateQuadBonusInvader(gTextures["spritesheet"]),
     ["player"] = GenerateQuadPlayer(gTextures["spritesheet"]),
-    ["projectile"] = GenerateQuadProjectile(gTextures["spritesheet"])
+    ["projectile"] = GenerateQuadProjectile(gTextures["spritesheet"]),
+    ["collision-invader"] = GenerateQuadCollisionInvader(gTextures["spritesheet"])
   }
 
   gStateMachine:change("play")
@@ -63,5 +64,10 @@ function love.update(dt)
 end
 
 function love.draw()
+  --[[
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.line(WINDOW_PADDING, 0, WINDOW_PADDING, WINDOW_HEIGHT)
+    love.graphics.line(WINDOW_WIDTH - WINDOW_PADDING, 0, WINDOW_WIDTH - WINDOW_PADDING, WINDOW_HEIGHT)
+  --]]
   gStateMachine:render()
 end
