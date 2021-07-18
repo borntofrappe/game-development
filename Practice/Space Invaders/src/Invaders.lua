@@ -19,6 +19,7 @@ function Invaders:new(delayMultiplier)
       for column = 1, INVADERS_GRID.columns do
         local x = WINDOW_PADDING + (column - 1) * (INVADER_WIDTH + INVADER_WIDTH / 2)
         local y = WINDOW_PADDING + (rows - row) * (INVADER_HEIGHT + INVADER_HEIGHT / 2)
+        y = y + WINDOW_HEIGHT / 2 -- just to test the gameover
         table.insert(invaders, Invader:new(x, y, type))
       end
     end
@@ -37,26 +38,37 @@ function Invaders:new(delayMultiplier)
   return this
 end
 
-function Invaders:update()
-  local changesDirection = false
+function Invaders:update(player)
+  local changeDirection = false
+  local collideWithPlayer = false
 
   for k, invader in pairs(self.invaders) do
     local x = invader.x + invader.width * self.direction
+
     if x > WINDOW_WIDTH - WINDOW_PADDING - invader.width or x < WINDOW_PADDING then
-      changesDirection = true
+      changeDirection = true
       break
     end
   end
 
-  if changesDirection then
+  if changeDirection then
     self.direction = self.direction * -1
+
+    for k, invader in pairs(self.invaders) do
+      local y = invader.y + invader.height
+
+      if y > WINDOW_HEIGHT - WINDOW_PADDING - player.height - invader.height then
+        collideWithPlayer = true
+        break
+      end
+    end
   end
 
   for k, invader in pairs(self.invaders) do
     Timer:after(
       self.delayMultiplier * invader.type,
       function()
-        if changesDirection then
+        if changeDirection then
           invader.y = invader.y + invader.height
         else
           invader.x = invader.x + invader.width * self.direction
@@ -66,7 +78,7 @@ function Invaders:update()
     )
   end
 
-  return changesDirection
+  return changeDirection, collideWithPlayer
 end
 
 function Invaders:render()

@@ -43,6 +43,9 @@ function love.load()
       end,
       ["pause"] = function()
         return PauseState:new()
+      end,
+      ["gameover"] = function()
+        return GameoverState:new()
       end
     }
   )
@@ -68,9 +71,10 @@ end
 
 function love.draw()
   --[[
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.line(WINDOW_PADDING, 0, WINDOW_PADDING, WINDOW_HEIGHT)
-    love.graphics.line(WINDOW_WIDTH - WINDOW_PADDING, 0, WINDOW_WIDTH - WINDOW_PADDING, WINDOW_HEIGHT)
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.line(WINDOW_PADDING, 0, WINDOW_PADDING, WINDOW_HEIGHT)
+  love.graphics.line(WINDOW_WIDTH - WINDOW_PADDING, 0, WINDOW_WIDTH - WINDOW_PADDING, WINDOW_HEIGHT)
+  love.graphics.line(0, WINDOW_HEIGHT - WINDOW_PADDING, WINDOW_WIDTH, WINDOW_HEIGHT - WINDOW_PADDING)
   --]]
   gStateMachine:render()
 end

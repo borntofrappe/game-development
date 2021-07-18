@@ -1,5 +1,7 @@
 PlayState = BaseState:new()
 
+local COUNTDOWN_DURATION = 4
+
 function PlayState:enter(params)
   self.interval =
     params and params.interval or
@@ -10,6 +12,10 @@ function PlayState:enter(params)
       ["duration"] = 0.9,
       ["label"] = "update"
     }
+
+  self.gameoverCountdown = {
+    ["duration"] = COUNTDOWN_DURATION
+  }
 
   self.collisions = params and params.collisions or Collisions:new()
   self.invaders = params and params.invaders or Invaders:new(self.interval.duration / (INVADER_TYPES + 1))
@@ -24,8 +30,17 @@ function PlayState:setupInterval()
   Timer:every(
     self.interval.duration,
     function()
-      local changesDirection = self.invaders:update()
-      if changesDirection then
+      local changeDirection, collideWithPlayer = self.invaders:update(self.player)
+
+      if collideWithPlayer then
+        Timer:remove(self.interval.label)
+        Timer:after(
+          self.gameoverCountdown.duration,
+          function()
+            gStateMachine:change("gameover")
+          end
+        )
+      elseif changeDirection then
         Timer:remove(self.interval.label)
         self.interval.duration = math.max(self.interval.min, self.interval.duration - self.interval.change)
         self.invaders.delayMultiplier = self.interval.duration / (INVADER_TYPES + 1)
