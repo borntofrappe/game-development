@@ -17,7 +17,8 @@ function Target:new()
 end
 
 function Target:render()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setLineWidth(1)
+  love.graphics.setColor(1, 1, 1, 1)
   if self.inFocus then
     love.graphics.setColor(1, 0.1, 0.2)
   end
