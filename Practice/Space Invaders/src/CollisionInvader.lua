@@ -4,8 +4,8 @@ local COLLISION_DELAY = 0.3
 
 function CollisionInvader:new(x, y)
   local this = {
-    ["x"] = x - COLLISION_INVADER_WIDTH / 2,
-    ["y"] = y - COLLISION_INVADER_HEIGHT / 2,
+    ["x"] = x,
+    ["y"] = y,
     ["delay"] = COLLISION_DELAY,
     ["time"] = 0,
     ["inPlay"] = true

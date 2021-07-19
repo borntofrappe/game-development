@@ -40,7 +40,7 @@ function PlayState:setupInterval()
         self:setupInterval()
       end
     end,
-    false,
+    true,
     self.interval.label
   )
 end
@@ -54,15 +54,17 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    gStateMachine:change(
-      "pause",
-      {
-        ["collisions"] = self.collisions,
-        ["invaders"] = self.invaders,
-        ["player"] = self.player,
-        ["interval"] = self.interval
-      }
-    )
+    if self.player.inPlay then
+      gStateMachine:change(
+        "pause",
+        {
+          ["collisions"] = self.collisions,
+          ["invaders"] = self.invaders,
+          ["player"] = self.player,
+          ["interval"] = self.interval
+        }
+      )
+    end
   end
 
   self.collisions:update(dt)
@@ -77,7 +79,11 @@ function PlayState:update(dt)
          then
           hasCollided = true
 
-          local collision = CollisionInvader:new(invader.x + invader.width / 2, invader.y + invader.height / 2)
+          local collision =
+            CollisionInvader:new(
+            invader.x + invader.width / 2 - COLLISION_INVADER_WIDTH / 2,
+            invader.y + invader.height / 2 - COLLISION_INVADER_HEIGHT / 2
+          )
           table.insert(self.collisions.collisions, collision)
 
           table.remove(self.invaders.invaders, j)

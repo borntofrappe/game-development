@@ -51,7 +51,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("play")
+  gStateMachine:change("title")
 
   love.keyboard.keypressed = {}
 end

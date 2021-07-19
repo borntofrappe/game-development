@@ -17,7 +17,5 @@ function Invader:new(x, y, type)
 end
 
 function Invader:render()
-  love.graphics.setColor(1, 1, 1)
-
   love.graphics.draw(gTextures["spritesheet"], gFrames["invaders"][self.type][self.frame], self.x, self.y)
 end

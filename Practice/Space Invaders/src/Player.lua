@@ -49,12 +49,12 @@ end
 
 function Player:render()
   love.graphics.setColor(1, 1, 1)
-
   for k, projectile in pairs(self.projectiles) do
     projectile:render()
   end
 
   if self.inPlay then
+    love.graphics.setColor(1, 1, 1)
     love.graphics.draw(gTextures["spritesheet"], gFrames["player"], self.x, self.y)
   end
 end

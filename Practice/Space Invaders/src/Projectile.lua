@@ -3,12 +3,14 @@ Projectile = {}
 local PROJECTILE_SPEED = 300
 
 function Projectile:new(x, y, direction)
+  local dy = direction and PROJECTILE_SPEED * direction or PROJECTILE_SPEED * -1
+
   local this = {
     ["x"] = x - PROJECTILE_WIDTH / 2,
     ["y"] = y - PROJECTILE_HEIGHT / 2,
     ["width"] = PROJECTILE_WIDTH,
     ["height"] = PROJECTILE_HEIGHT,
-    ["dy"] = direction == "down" and PROJECTILE_SPEED or PROJECTILE_SPEED * -1,
+    ["dy"] = dy,
     ["inPlay"] = true
   }
 
@@ -27,7 +29,6 @@ end
 
 function Projectile:render()
   if self.inPlay then
-    love.graphics.setColor(1, 1, 1)
     love.graphics.draw(gTextures["spritesheet"], gFrames["projectile"], self.x, self.y)
   end
 end

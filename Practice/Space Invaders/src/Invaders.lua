@@ -5,6 +5,8 @@ local INVADERS_GRID = {
   ["rows-per-type"] = {2, 2, 1}
 }
 
+local PROJECTILE_ODDS = 3 -- 1 in 3
+
 function Invaders:new(delayMultiplier)
   local invaders = {}
 
@@ -28,6 +30,7 @@ function Invaders:new(delayMultiplier)
   local this = {
     ["invaders"] = invaders,
     ["projectiles"] = {},
+    ["projectileOdds"] = PROJECTILE_ODDS,
     ["direction"] = 1,
     ["delayMultiplier"] = delayMultiplier
   }
@@ -42,17 +45,17 @@ function Invaders:update(player)
   local changeDirection = false
   local collideWithPlayer = false
 
-  local firingInvaders = {
+  local projectileCoords = {
     ["y"] = 0,
     ["x"] = {}
   }
 
   for k, invader in pairs(self.invaders) do
-    if invader.y > firingInvaders.y then
-      firingInvaders.y = invader.y
-      firingInvaders.x = {invader.x}
+    if invader.y > projectileCoords.y then
+      projectileCoords.y = invader.y
+      projectileCoords.x = {invader.x}
     else
-      table.insert(firingInvaders.x, invader.x)
+      table.insert(projectileCoords.x, invader.x)
     end
 
     local x = invader.x + invader.width * self.direction
@@ -63,13 +66,11 @@ function Invaders:update(player)
     end
   end
 
-  if math.random(4) == 1 then
-    local firingX = firingInvaders["x"][math.random(#firingInvaders["x"])]
+  if math.random(self.projectileOdds) == 1 then
+    local x = projectileCoords["x"][math.random(#projectileCoords["x"])]
+    local y = projectileCoords["y"]
 
-    table.insert(
-      self.projectiles,
-      Projectile:new(firingX + INVADER_WIDTH / 2, firingInvaders.y + INVADER_HEIGHT / 2, "down")
-    )
+    table.insert(self.projectiles, Projectile:new(x + INVADER_WIDTH / 2, y + INVADER_HEIGHT / 2, 1))
   end
 
   if changeDirection then
@@ -94,7 +95,12 @@ function Invaders:update(player)
         else
           invader.x = invader.x + invader.width * self.direction
         end
-        invader.frame = invader.frame == 1 and 2 or 1
+
+        if invader.frame == INVADER_FRAMES then
+          invader.frame = 1
+        else
+          invader.frame = invader.frame + 1
+        end
       end
     )
   end
@@ -108,6 +114,7 @@ function Invaders:render()
     projectile:render()
   end
 
+  love.graphics.setColor(1, 1, 1)
   for k, invader in pairs(self.invaders) do
     invader:render()
   end

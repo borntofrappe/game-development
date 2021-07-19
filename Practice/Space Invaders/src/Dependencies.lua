@@ -7,10 +7,11 @@ require "src/CollisionInvader"
 require "src/CollisionPlayer"
 require "src/Collisions"
 
+require "src/Projectile"
+
 require "src/Invader"
 require "src/Invaders"
 
-require "src/Projectile"
 require "src/Player"
 
 require "src/StateMachine"
