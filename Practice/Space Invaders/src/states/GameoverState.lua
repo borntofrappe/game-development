@@ -1,19 +1,19 @@
 GameoverState = BaseState:new()
 
-local COUNTDOWN_DURATION = 5
+local TITLE_STATE_DELAY = 5
 
 function GameoverState:enter()
-  self.startCountdown = {
-    ["duration"] = COUNTDOWN_DURATION,
-    ["label"] = "startCountdown"
+  self.delay = {
+    ["duration"] = TITLE_STATE_DELAY,
+    ["label"] = "title-state-delay"
   }
 
   Timer:after(
-    self.startCountdown.duration,
+    self.delay.duration,
     function()
-      gStateMachine:change("start")
+      gStateMachine:change("title")
     end,
-    self.startCountdown.label
+    self.delay.label
   )
 end
 
@@ -25,8 +25,8 @@ function GameoverState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    Timer:remove(self.startCountdown.label)
-    gStateMachine:change("start")
+    Timer:remove(self.delay.label)
+    gStateMachine:change("title")
   end
 end
 

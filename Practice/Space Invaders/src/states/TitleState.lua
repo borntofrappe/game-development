@@ -1,23 +1,25 @@
-StartState = BaseState:new()
+TitleState = BaseState:new()
 
-local TITLE_OFFSET = -8
+local TITLE_OFFSET_Y = -8
+local TITLE_DELAY = 0.5
+local TITLE_TWEEN = 1.5
+local INSTRUCTIONS_INTERVAL = 0.8
+local POINTS_STATE_DELAY = 9
 
-local DELAY_DURATION = 0.5
-local TWEEN_DURATION = 1.5
-local INTERVAL_DURATION = 0.8
-local COUNTDOWN_DURATION_MULTIPLIER = 9.5 -- odd number to have the state appear as the instructions are not shown
+function TitleState:enter(params)
+  local highScore = params and params.highScore or 1000
 
-function StartState:enter(params)
   self.title = {
     ["text"] = TITLE:upper(),
     ["y"] = WINDOW_HEIGHT,
-    ["y1"] = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() + TITLE_OFFSET,
+    ["y1"] = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() + TITLE_OFFSET_Y,
+    ["delay"] = {
+      ["duration"] = TITLE_DELAY
+    },
     ["tween"] = {
-      ["duration"] = TWEEN_DURATION
+      ["duration"] = TITLE_TWEEN
     }
   }
-
-  local highScore = params and params.highScore or 1000
 
   self.record = {
     ["text"] = string.upper("Hi-Score\t" .. highScore),
@@ -30,18 +32,18 @@ function StartState:enter(params)
     ["y"] = self.title.y1 + gFonts.large:getHeight() * 2,
     ["show"] = false,
     ["interval"] = {
-      ["label"] = "instructions",
-      ["duration"] = INTERVAL_DURATION
+      ["duration"] = INSTRUCTIONS_INTERVAL,
+      ["label"] = "instructions-interval"
     }
   }
 
-  self.pointsCountdown = {
-    ["duration"] = self.instructions.interval.duration * COUNTDOWN_DURATION_MULTIPLIER,
-    ["label"] = "pointsCountdown"
+  self.delay = {
+    ["duration"] = POINTS_STATE_DELAY,
+    ["label"] = "points-state-delay"
   }
 
   Timer:after(
-    DELAY_DURATION,
+    self.title.delay.duration,
     function()
       Timer:tween(
         self.title.tween.duration,
@@ -50,7 +52,7 @@ function StartState:enter(params)
         },
         function()
           Timer:after(
-            DELAY_DURATION,
+            self.title.delay.duration,
             function()
               self.record.show = true
 
@@ -64,11 +66,12 @@ function StartState:enter(params)
               )
 
               Timer:after(
-                self.pointsCountdown.duration,
+                self.delay.duration,
                 function()
+                  Timer:remove(self.instructions.interval.label)
                   gStateMachine:change("points")
                 end,
-                self.pointsCountdown.label
+                self.delay.label
               )
             end
           )
@@ -78,24 +81,23 @@ function StartState:enter(params)
   )
 end
 
-function StartState:update(dt)
+function TitleState:update(dt)
   Timer:update(dt)
 
   if love.keyboard.waspressed("escape") then
-    -- Timer:remove(self.instructions.interval.label)
     love.event.quit()
   end
 
   if love.keyboard.waspressed("return") then
     if self.record.show then
       Timer:remove(self.instructions.interval.label)
-      Timer:remove(self.pointsCountdown.label)
+      Timer:remove(self.delay.label)
       gStateMachine:change("play")
     end
   end
 end
 
-function StartState:render()
+function TitleState:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(self.title.text, 0, self.title.y, WINDOW_WIDTH, "center")

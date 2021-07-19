@@ -7,9 +7,9 @@ local OPTIONS = {
 }
 
 function love.load()
+  math.randomseed(os.time())
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
-  -- math.randomseed(os.time())
   love.graphics.setBackgroundColor(0.02, 0.02, 0.02)
 
   gFonts = {
@@ -33,8 +33,8 @@ function love.load()
   gStateMachine =
     StateMachine:new(
     {
-      ["start"] = function()
-        return StartState:new()
+      ["title"] = function()
+        return TitleState:new()
       end,
       ["points"] = function()
         return PointsState:new()

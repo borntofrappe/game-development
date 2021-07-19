@@ -1,6 +1,27 @@
 PauseState = BaseState:new()
 
 function PauseState:enter(params)
+  local r, g, b = love.graphics.getBackgroundColor()
+
+  self.title = {
+    ["text"] = string.upper("Pause"),
+    ["y"] = WINDOW_HEIGHT / 2 - gFonts.normal:getHeight() / 2
+  }
+
+  local width = gFonts.normal:getWidth(self.title.text)
+
+  self.background = {
+    ["x"] = WINDOW_WIDTH / 2 - width / 2,
+    ["y"] = self.title.y,
+    ["width"] = width,
+    ["height"] = gFonts.normal:getHeight(),
+    ["color"] = {
+      ["r"] = r,
+      ["g"] = g,
+      ["b"] = b
+    }
+  }
+
   self.collisions = params.collisions
   self.invaders = params.invaders
   self.player = params.player
@@ -30,13 +51,10 @@ function PauseState:render()
   self.invaders:render()
   self.player:render()
 
+  love.graphics.setColor(self.background.color.r, self.background.color.g, self.background.color.b)
+  love.graphics.rectangle("fill", self.background.x, self.background.y, self.background.width, self.background.height)
+
   love.graphics.setColor(1, 1, 1)
   love.graphics.setFont(gFonts.normal)
-  love.graphics.printf(
-    string.upper("Pause"),
-    0,
-    WINDOW_HEIGHT / 2 - gFonts.normal:getHeight() / 2,
-    WINDOW_WIDTH,
-    "center"
-  )
+  love.graphics.printf(self.title.text, 0, self.title.y, WINDOW_WIDTH, "center")
 end

@@ -16,7 +16,7 @@ require "src/Player"
 require "src/StateMachine"
 
 require "src/states/BaseState"
-require "src/states/StartState"
+require "src/states/TitleState"
 require "src/states/PointsState"
 require "src/states/PlayState"
 require "src/states/PauseState"

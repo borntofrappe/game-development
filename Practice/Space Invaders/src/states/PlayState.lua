@@ -1,20 +1,19 @@
 PlayState = BaseState:new()
 
-local COUNTDOWN_DURATION = 5
+local GAMEOVER_STATE_DELAY = 5
 
 function PlayState:enter(params)
   self.interval =
     params and params.interval or
     {
-      ["min"] = 0.4,
-      ["max"] = 0.9,
-      ["change"] = 0.1,
       ["duration"] = 0.9,
-      ["label"] = "update"
+      ["min"] = 0.4,
+      ["change"] = 0.1,
+      ["label"] = "update-interval"
     }
 
-  self.gameoverCountdown = {
-    ["duration"] = COUNTDOWN_DURATION
+  self.delay = {
+    ["duration"] = GAMEOVER_STATE_DELAY
   }
 
   self.collisions = params and params.collisions or Collisions:new()
@@ -51,11 +50,10 @@ function PlayState:update(dt)
 
   if love.keyboard.waspressed("escape") then
     Timer:remove(self.interval.label)
-    gStateMachine:change("start")
+    gStateMachine:change("title")
   end
 
   if love.keyboard.waspressed("return") then
-    -- Timer:remove(self.interval.label)
     gStateMachine:change(
       "pause",
       {
@@ -93,8 +91,6 @@ function PlayState:update(dt)
 
     for k, projectile in pairs(self.invaders.projectiles) do
       projectile:update(dt)
-
-      local hasCollided = false
       if
         projectile.x > self.player.x and projectile.x < self.player.x + self.player.width and
           projectile.y > self.player.y and
@@ -111,21 +107,24 @@ function PlayState:update(dt)
 end
 
 function PlayState:gameover()
-  Timer:remove(self.interval.label)
-  Timer:after(
-    self.gameoverCountdown.duration,
-    function()
-      gStateMachine:change("gameover")
-    end
-  )
+  Timer:reset()
+
+  self.player.inPlay = false
 
   local collision =
     CollisionPlayer:new(
     self.player.x + self.player.width / 2 - COLLISION_PLAYER_WIDTH / 2,
     self.player.y + self.player.height - COLLISION_PLAYER_HEIGHT
   )
+
   table.insert(self.collisions.collisions, collision)
-  self.player.inPlay = false
+
+  Timer:after(
+    self.delay.duration,
+    function()
+      gStateMachine:change("gameover")
+    end
+  )
 end
 
 function PlayState:render()

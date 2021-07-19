@@ -1,7 +1,6 @@
 PointsState = BaseState:new()
 
-local POINTS_MULTIPLIER = 10
-local COUNTDOWN_DURATION = 9
+local TITLE_STATE_DELAY = 9
 
 function PointsState:enter()
   self.title = {
@@ -10,7 +9,7 @@ function PointsState:enter()
   }
 
   local maxWidth =
-    INVADER_WIDTH + gFonts.normal:getWidth(string.upper(POINTS_MULTIPLIER * INVADER_TYPES .. " points\t"))
+    INVADER_WIDTH + gFonts.normal:getWidth(string.upper(INVADER_POINTS_MULTIPLIER * INVADER_TYPES .. " points\t"))
   local x = WINDOW_WIDTH / 2 - maxWidth / 2
   local y = WINDOW_HEIGHT / 2
 
@@ -21,7 +20,7 @@ function PointsState:enter()
       entries,
       {
         ["type"] = type,
-        ["text"] = string.upper(POINTS_MULTIPLIER * type .. " points"),
+        ["text"] = string.upper(INVADER_POINTS_MULTIPLIER * type .. " points"),
         ["x"] = x,
         ["y"] = y + gFonts.normal:getHeight() * 1.5 * (INVADER_TYPES - type + 1)
       }
@@ -33,17 +32,17 @@ function PointsState:enter()
   self.maxWidth = maxWidth
   self.entries = entries
 
-  self.startCountdown = {
-    ["duration"] = COUNTDOWN_DURATION,
-    ["label"] = "startCountdown"
+  self.delay = {
+    ["duration"] = TITLE_STATE_DELAY,
+    ["label"] = "title-state-delay"
   }
 
   Timer:after(
-    self.startCountdown.duration,
+    self.delay.duration,
     function()
-      gStateMachine:change("start")
+      gStateMachine:change("title")
     end,
-    self.startCountdown.label
+    self.delay.label
   )
 end
 
@@ -51,8 +50,8 @@ function PointsState:update(dt)
   Timer:update(dt)
 
   if love.keyboard.waspressed("escape") or love.keyboard.waspressed("return") then
-    Timer:remove(self.startCountdown.label)
-    gStateMachine:change("start")
+    Timer:remove(self.delay.label)
+    gStateMachine:change("title")
   end
 end
 
