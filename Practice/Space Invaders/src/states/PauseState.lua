@@ -1,6 +1,13 @@
 PauseState = BaseState:new()
 
 function PauseState:enter(params)
+  self.data = params.data
+  self.interval = params.interval
+  self.invaders = params.invaders
+
+  self.collisions = params.collisions
+  self.player = params.player
+
   local r, g, b = love.graphics.getBackgroundColor()
 
   self.title = {
@@ -21,11 +28,6 @@ function PauseState:enter(params)
       ["b"] = b
     }
   }
-
-  self.collisions = params.collisions
-  self.invaders = params.invaders
-  self.player = params.player
-  self.interval = params.interval
 end
 
 function PauseState:update(dt)
@@ -37,16 +39,19 @@ function PauseState:update(dt)
     gStateMachine:change(
       "play",
       {
-        ["collisions"] = self.collisions,
+        ["data"] = self.data,
+        ["interval"] = self.interval,
         ["invaders"] = self.invaders,
-        ["player"] = self.player,
-        ["interval"] = self.interval
+        ["collisions"] = self.collisions,
+        ["player"] = self.player
       }
     )
   end
 end
 
 function PauseState:render()
+  self.data:render()
+
   self.collisions:render()
   self.invaders:render()
   self.player:render()

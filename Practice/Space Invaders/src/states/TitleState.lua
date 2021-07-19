@@ -92,7 +92,7 @@ function TitleState:update(dt)
     if self.record.show then
       Timer:remove(self.instructions.interval.label)
       Timer:remove(self.delay.label)
-      gStateMachine:change("play")
+      gStateMachine:change("serve")
     end
   end
 end

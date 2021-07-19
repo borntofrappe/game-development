@@ -39,6 +39,9 @@ function love.load()
       ["points"] = function()
         return PointsState:new()
       end,
+      ["serve"] = function()
+        return ServeState:new()
+      end,
       ["play"] = function()
         return PlayState:new()
       end,
@@ -76,6 +79,7 @@ function love.draw()
   love.graphics.line(WINDOW_PADDING, 0, WINDOW_PADDING, WINDOW_HEIGHT)
   love.graphics.line(WINDOW_WIDTH - WINDOW_PADDING, 0, WINDOW_WIDTH - WINDOW_PADDING, WINDOW_HEIGHT)
   love.graphics.line(0, WINDOW_HEIGHT - WINDOW_PADDING, WINDOW_WIDTH, WINDOW_HEIGHT - WINDOW_PADDING)
+  love.graphics.line(0, WINDOW_PADDING, WINDOW_WIDTH, WINDOW_PADDING)
   --]]
   gStateMachine:render()
 end

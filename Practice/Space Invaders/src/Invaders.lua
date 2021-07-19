@@ -15,12 +15,12 @@ function Invaders:new(delayMultiplier)
     rows = rows + row
   end
 
-  for type = 1, INVADER_TYPES do
+  for type = 1, #INVADERS_GRID["rows-per-type"] do
     local rowsType = INVADERS_GRID["rows-per-type"][type]
     for row = 1, rowsType do
       for column = 1, INVADERS_GRID.columns do
         local x = WINDOW_PADDING + (column - 1) * (INVADER_WIDTH + INVADER_WIDTH / 2)
-        local y = WINDOW_PADDING + (rows - row) * (INVADER_HEIGHT + INVADER_HEIGHT / 2)
+        local y = WINDOW_PADDING + DATA_HEIGHT + (rows - row) * (INVADER_HEIGHT + INVADER_HEIGHT / 2)
         table.insert(invaders, Invader:new(x, y, type))
       end
     end

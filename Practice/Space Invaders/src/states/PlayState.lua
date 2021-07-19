@@ -1,26 +1,20 @@
 PlayState = BaseState:new()
 
-local GAMEOVER_STATE_DELAY = 5
+local COLLISION_PLAYER_DELAY = 5
 
 function PlayState:enter(params)
-  self.interval =
-    params and params.interval or
-    {
-      ["duration"] = 0.9,
-      ["min"] = 0.4,
-      ["change"] = 0.1,
-      ["label"] = "update-interval"
-    }
+  self.data = params.data
+  self.interval = params.interval
+  self.invaders = params.invaders
+
+  self.collisions = params.collisions or Collisions:new()
+  self.player = params.player or Player:new()
 
   self.delay = {
-    ["duration"] = GAMEOVER_STATE_DELAY
+    ["duration"] = COLLISION_PLAYER_DELAY
   }
 
-  self.collisions = params and params.collisions or Collisions:new()
-  self.invaders = params and params.invaders or Invaders:new(self.interval.duration / (INVADER_TYPES + 1))
-  self.player = params and params.player or Player:new()
-
-  if not params then
+  if params.setupInterval then
     self:setupInterval()
   end
 end
@@ -40,7 +34,7 @@ function PlayState:setupInterval()
         self:setupInterval()
       end
     end,
-    true,
+    false,
     self.interval.label
   )
 end
@@ -58,10 +52,11 @@ function PlayState:update(dt)
       gStateMachine:change(
         "pause",
         {
-          ["collisions"] = self.collisions,
+          ["data"] = self.data,
+          ["interval"] = self.interval,
           ["invaders"] = self.invaders,
-          ["player"] = self.player,
-          ["interval"] = self.interval
+          ["collisions"] = self.collisions,
+          ["player"] = self.player
         }
       )
     end
@@ -86,12 +81,31 @@ function PlayState:update(dt)
           )
           table.insert(self.collisions.collisions, collision)
 
+          self.data.score = self.data.score + invader.points
           table.remove(self.invaders.invaders, j)
           break
         end
       end
       if hasCollided then
         table.remove(self.player.projectiles, k)
+
+        if #self.invaders.invaders == 0 then
+          -- victory
+          Timer:reset()
+
+          Timer:after(
+            self.delay.duration,
+            function()
+              self.data.round = self.data.round + 1
+              gStateMachine:change(
+                "serve",
+                {
+                  ["data"] = self.data
+                }
+              )
+            end
+          )
+        end
       end
     end
 
@@ -113,8 +127,6 @@ function PlayState:update(dt)
 end
 
 function PlayState:gameover()
-  Timer:reset()
-
   self.player.inPlay = false
 
   local collision =
@@ -125,15 +137,39 @@ function PlayState:gameover()
 
   table.insert(self.collisions.collisions, collision)
 
-  Timer:after(
-    self.delay.duration,
-    function()
-      gStateMachine:change("gameover")
-    end
-  )
+  if self.data.lives == 1 then
+    Timer:reset()
+
+    -- here you'd check the high score
+    Timer:after(
+      self.delay.duration,
+      function()
+        gStateMachine:change("gameover")
+      end
+    )
+  else
+    Timer:remove(self.interval.label)
+
+    Timer:after(
+      self.delay.duration,
+      function()
+        self.data.lives = self.data.lives - 1
+        gStateMachine:change(
+          "serve",
+          {
+            ["interval"] = self.interval,
+            ["data"] = self.data,
+            ["invaders"] = self.invaders
+          }
+        )
+      end
+    )
+  end
 end
 
 function PlayState:render()
+  self.data:render()
+
   self.collisions:render()
   self.invaders:render()
   self.player:render()
