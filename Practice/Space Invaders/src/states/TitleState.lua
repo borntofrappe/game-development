@@ -6,9 +6,7 @@ local TITLE_TWEEN = 1.5
 local INSTRUCTIONS_INTERVAL = 0.8
 local POINTS_STATE_DELAY = 9
 
-function TitleState:enter(params)
-  local highScore = params and params.highScore or 1000
-
+function TitleState:enter()
   self.title = {
     ["text"] = TITLE:upper(),
     ["y"] = WINDOW_HEIGHT,
@@ -22,7 +20,7 @@ function TitleState:enter(params)
   }
 
   self.record = {
-    ["text"] = string.upper("Hi-Score\t" .. highScore),
+    ["text"] = string.upper("Hi-Score\t" .. gHighScore),
     ["y"] = WINDOW_PADDING,
     ["show"] = false
   }

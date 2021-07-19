@@ -140,11 +140,19 @@ function PlayState:gameover()
   if self.data.lives == 1 then
     Timer:reset()
 
-    -- here you'd check the high score
     Timer:after(
       self.delay.duration,
       function()
-        gStateMachine:change("gameover")
+        if self.data.score >= gHighScore then
+          gStateMachine:change(
+            "high-score",
+            {
+              ["highScore"] = self.data.score
+            }
+          )
+        else
+          gStateMachine:change("gameover")
+        end
       end
     )
   else

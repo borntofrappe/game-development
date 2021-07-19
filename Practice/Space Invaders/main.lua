@@ -30,6 +30,8 @@ function love.load()
     ["collision-player"] = GenerateQuadsCollisionPlayer(gTextures["spritesheet"])
   }
 
+  gHighScore = 1000
+
   gStateMachine =
     StateMachine:new(
     {
@@ -47,6 +49,9 @@ function love.load()
       end,
       ["pause"] = function()
         return PauseState:new()
+      end,
+      ["high-score"] = function()
+        return HighScoreState:new()
       end,
       ["gameover"] = function()
         return GameoverState:new()
