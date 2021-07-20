@@ -69,3 +69,20 @@ function GenerateQuadsCollisionPlayer(atlas)
 
   return quads
 end
+
+function GenerateQuadsCollisionProjectiles(atlas)
+  local quads = {}
+
+  local X_INITIAL = 48
+  local Y_INITIAL = 21
+  local WIDTH = COLLISION_PROJECTILE_WIDTH
+  local HEIGHT = COLLISION_PROJECTILE_HEIGHT
+  local COLLISION_PROJECTILE_TYPES = 2
+
+  for type = 1, COLLISION_PROJECTILE_TYPES do
+    quads[type] =
+      love.graphics.newQuad(X_INITIAL, Y_INITIAL + (type - 1) * HEIGHT, WIDTH, HEIGHT, atlas:getDimensions())
+  end
+
+  return quads
+end

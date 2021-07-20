@@ -27,7 +27,8 @@ function love.load()
     ["player"] = GenerateQuadPlayer(gTextures["spritesheet"]),
     ["projectile"] = GenerateQuadProjectile(gTextures["spritesheet"]),
     ["collision-invader"] = GenerateQuadCollisionInvader(gTextures["spritesheet"]),
-    ["collision-player"] = GenerateQuadsCollisionPlayer(gTextures["spritesheet"])
+    ["collision-player"] = GenerateQuadsCollisionPlayer(gTextures["spritesheet"]),
+    ["collision-projectiles"] = GenerateQuadsCollisionProjectiles(gTextures["spritesheet"])
   }
 
   gHighScore = 1000

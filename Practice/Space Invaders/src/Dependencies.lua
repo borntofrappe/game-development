@@ -7,6 +7,7 @@ require "src/Data"
 
 require "src/CollisionInvader"
 require "src/CollisionPlayer"
+require "src/CollisionProjectile"
 require "src/Collisions"
 
 require "src/Projectile"

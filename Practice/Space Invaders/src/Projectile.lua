@@ -22,7 +22,7 @@ end
 
 function Projectile:update(dt)
   self.y = self.y + self.dy * dt
-  if self.y < -self.height or self.y > WINDOW_HEIGHT then
+  if self.y <= 0 or self.y >= WINDOW_HEIGHT - self.height then
     self.inPlay = false
   end
 end

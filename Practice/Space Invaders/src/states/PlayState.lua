@@ -114,7 +114,6 @@ function PlayState:update(dt)
         table.remove(self.player.projectiles, k)
 
         if #self.invaders.invaders == 0 and not self.invaders.bonusInvader then
-          -- victory
           Timer:reset()
 
           Timer:after(
@@ -131,6 +130,16 @@ function PlayState:update(dt)
           )
         end
       end
+
+      if not projectile.inPlay then
+        local x = projectile.x + projectile.width / 2 - COLLISION_PROJECTILE_WIDTH / 2
+        local y = 0
+
+        local collision = CollisionProjectile:new(x, y)
+        table.insert(self.collisions.collisions, collision)
+
+        table.remove(self.player.projectiles, k)
+      end
     end
 
     for k, projectile in pairs(self.invaders.projectiles) do
@@ -143,6 +152,16 @@ function PlayState:update(dt)
         table.remove(self.invaders.projectiles, k)
         self:gameover()
         break
+      end
+
+      if not projectile.inPlay then
+        local x = projectile.x + projectile.width / 2 - COLLISION_PROJECTILE_WIDTH / 2
+        local y = WINDOW_HEIGHT - COLLISION_PROJECTILE_HEIGHT
+
+        local collision = CollisionProjectile:new(x, y, 2)
+        table.insert(self.collisions.collisions, collision)
+
+        table.remove(self.invaders.projectiles, k)
       end
     end
 

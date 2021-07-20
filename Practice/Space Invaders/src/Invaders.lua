@@ -79,7 +79,7 @@ function Invaders:updateInterval(player)
     end
   end
 
-  if math.random(PROJECTILE_ODDS) == 1 then
+  if #projectileCoords.y > 0 and math.random(PROJECTILE_ODDS) == 1 then
     local x = projectileCoords["x"][math.random(#projectileCoords["x"])]
     local y = projectileCoords["y"]
 

@@ -26,10 +26,6 @@ function Player:update(dt)
 
   for k, projectile in pairs(self.projectiles) do
     projectile:update(dt)
-
-    if not projectile.inPlay then
-      table.remove(self.projectiles, k)
-    end
   end
 
   if love.keyboard.waspressed("up") or love.keyboard.waspressed("space") then
