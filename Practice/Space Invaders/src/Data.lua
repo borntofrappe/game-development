@@ -3,8 +3,8 @@ Data = {}
 function Data:new()
   local this = {
     ["round"] = 1,
-    ["score"] = 1200,
-    ["lives"] = 1
+    ["score"] = 0,
+    ["lives"] = 3
   }
 
   self.__index = self

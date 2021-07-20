@@ -13,6 +13,7 @@ require "src/Projectile"
 
 require "src/Invader"
 require "src/Invaders"
+require "src/BonusInvader"
 
 require "src/Player"
 

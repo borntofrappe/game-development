@@ -5,7 +5,8 @@ local INVADERS_GRID = {
   ["rows-per-type"] = {2, 2, 1}
 }
 
-local PROJECTILE_ODDS = 3 -- 1 in 3
+local PROJECTILE_ODDS = 3 -- 1 in odds
+local INVADER_BONUS_ODDS = 12 -- 1 in odds
 
 function Invaders:new(delayMultiplier)
   local invaders = {}
@@ -20,7 +21,9 @@ function Invaders:new(delayMultiplier)
     for row = 1, rowsType do
       for column = 1, INVADERS_GRID.columns do
         local x = WINDOW_PADDING + (column - 1) * (INVADER_WIDTH + INVADER_WIDTH / 2)
-        local y = WINDOW_PADDING + DATA_HEIGHT + (rows - row) * (INVADER_HEIGHT + INVADER_HEIGHT / 2)
+        local y =
+          WINDOW_PADDING + DATA_HEIGHT + PLAYING_AREA_BONUS_HEIGHT +
+          (rows - row) * (INVADER_HEIGHT + INVADER_HEIGHT / 2)
         table.insert(invaders, Invader:new(x, y, type))
       end
     end
@@ -29,8 +32,8 @@ function Invaders:new(delayMultiplier)
 
   local this = {
     ["invaders"] = invaders,
+    ["bonusInvader"] = nil,
     ["projectiles"] = {},
-    ["projectileOdds"] = PROJECTILE_ODDS,
     ["direction"] = 1,
     ["delayMultiplier"] = delayMultiplier
   }
@@ -41,7 +44,17 @@ function Invaders:new(delayMultiplier)
   return this
 end
 
-function Invaders:update(player)
+function Invaders:update(dt)
+  if self.bonusInvader then
+    self.bonusInvader:update(dt)
+
+    if not self.bonusInvader.inPlay then
+      self.bonusInvader = nil
+    end
+  end
+end
+
+function Invaders:updateInterval(player)
   local changeDirection = false
   local collideWithPlayer = false
 
@@ -66,7 +79,7 @@ function Invaders:update(player)
     end
   end
 
-  if math.random(self.projectileOdds) == 1 then
+  if math.random(PROJECTILE_ODDS) == 1 then
     local x = projectileCoords["x"][math.random(#projectileCoords["x"])]
     local y = projectileCoords["y"]
 
@@ -105,6 +118,10 @@ function Invaders:update(player)
     )
   end
 
+  if not self.bonusInvader and math.random(INVADER_BONUS_ODDS) == 1 then
+    self.bonusInvader = BonusInvader:new()
+  end
+
   return changeDirection, collideWithPlayer
 end
 
@@ -117,5 +134,9 @@ function Invaders:render()
   love.graphics.setColor(1, 1, 1)
   for k, invader in pairs(self.invaders) do
     invader:render()
+  end
+
+  if self.bonusInvader then
+    self.bonusInvader:render()
   end
 end

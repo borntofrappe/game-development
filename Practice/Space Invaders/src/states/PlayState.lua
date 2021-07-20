@@ -23,7 +23,7 @@ function PlayState:setupInterval()
   Timer:every(
     self.interval.duration,
     function()
-      local changeDirection, collideWithPlayer = self.invaders:update(self.player)
+      local changeDirection, collideWithPlayer = self.invaders:updateInterval(self.player)
 
       if collideWithPlayer then
         self:gameover()
@@ -65,6 +65,8 @@ function PlayState:update(dt)
   self.collisions:update(dt)
 
   if self.player.inPlay then
+    self.invaders:update(dt)
+
     for k, projectile in pairs(self.player.projectiles) do
       local hasCollided = false
       for j, invader in pairs(self.invaders.invaders) do
@@ -86,10 +88,32 @@ function PlayState:update(dt)
           break
         end
       end
+
+      local bonusInvader = self.invaders.bonusInvader
+
+      if
+        bonusInvader and projectile.x > bonusInvader.x and projectile.x < bonusInvader.x + bonusInvader.width and
+          projectile.y > bonusInvader.y and
+          projectile.y < bonusInvader.y + bonusInvader.height
+       then
+        hasCollided = true
+
+        local collision =
+          CollisionInvader:new(
+          bonusInvader.x + bonusInvader.width / 2 - COLLISION_INVADER_WIDTH / 2,
+          bonusInvader.y + bonusInvader.height / 2 - COLLISION_INVADER_HEIGHT / 2
+        )
+        table.insert(self.collisions.collisions, collision)
+
+        self.data.score = self.data.score + bonusInvader.points
+
+        self.invaders.bonusInvader = nil
+      end
+
       if hasCollided then
         table.remove(self.player.projectiles, k)
 
-        if #self.invaders.invaders == 0 then
+        if #self.invaders.invaders == 0 and not self.invaders.bonusInvader then
           -- victory
           Timer:reset()
 
