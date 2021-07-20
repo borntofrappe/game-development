@@ -1,6 +1,6 @@
 HighScoreState = BaseState:new()
 
-local TITLE_STATE_DELAY = 2
+local TITLE_STATE_DELAY = 3.5
 
 function HighScoreState:enter(params)
   self.title = string.upper("You\nget\nHi-score!")

@@ -38,6 +38,7 @@ function love.load()
     ["high-score-state"] = love.audio.newSource("res/sounds/high-score-state.wav", "static"),
     ["pause-state"] = love.audio.newSource("res/sounds/pause-state.wav", "static"),
     ["projectile-player"] = love.audio.newSource("res/sounds/projectile-player.wav", "static"),
+    ["round-cleared"] = love.audio.newSource("res/sounds/round-cleared.wav", "static"),
     ["serve-state"] = love.audio.newSource("res/sounds/serve-state.wav", "static"),
     ["title-state"] = love.audio.newSource("res/sounds/title-state.wav", "static"),
     ["update-interval"] = love.audio.newSource("res/sounds/update-interval.wav", "static")

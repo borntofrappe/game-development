@@ -1,6 +1,6 @@
 PlayState = BaseState:new()
 
-local COLLISION_PLAYER_DELAY = 3.5
+local COLLISION_PLAYER_DELAY = 3
 
 function PlayState:enter(params)
   self.data = params.data
@@ -46,7 +46,7 @@ function PlayState:update(dt)
   Timer:update(dt)
 
   if love.keyboard.waspressed("escape") then
-    Timer:remove(self.interval.label)
+    Timer:reset()
     gStateMachine:change("title")
   end
 
@@ -122,7 +122,7 @@ function PlayState:update(dt)
 
         if #self.invaders.invaders == 0 and not self.invaders.bonusInvader then
           Timer:reset()
-
+          gSounds["round-cleared"]:play()
           Timer:after(
             self.delay.duration,
             function()

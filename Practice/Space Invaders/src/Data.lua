@@ -3,7 +3,7 @@ Data = {}
 function Data:new()
   local this = {
     ["round"] = 1,
-    ["score"] = 1212,
+    ["score"] = 0,
     ["lives"] = 3
   }
 
