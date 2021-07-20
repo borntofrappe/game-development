@@ -1,6 +1,6 @@
 ServeState = BaseState:new()
 
-local PLAY_STATE_DELAY = 2
+local PLAY_STATE_DELAY = 1.5
 
 function ServeState:enter(params)
   self.interval =

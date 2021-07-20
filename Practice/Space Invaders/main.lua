@@ -31,6 +31,18 @@ function love.load()
     ["collision-projectiles"] = GenerateQuadsCollisionProjectiles(gTextures["spritesheet"])
   }
 
+  gSounds = {
+    ["bonus-invader"] = love.audio.newSource("res/sounds/bonus-invader.wav", "static"),
+    ["collision-invader"] = love.audio.newSource("res/sounds/collision-invader.wav", "static"),
+    ["collision-player"] = love.audio.newSource("res/sounds/collision-player.wav", "static"),
+    ["high-score-state"] = love.audio.newSource("res/sounds/high-score-state.wav", "static"),
+    ["pause-state"] = love.audio.newSource("res/sounds/pause-state.wav", "static"),
+    ["projectile-player"] = love.audio.newSource("res/sounds/projectile-player.wav", "static"),
+    ["serve-state"] = love.audio.newSource("res/sounds/serve-state.wav", "static"),
+    ["title-state"] = love.audio.newSource("res/sounds/title-state.wav", "static"),
+    ["update-interval"] = love.audio.newSource("res/sounds/update-interval.wav", "static")
+  }
+
   gHighScore = 1000
 
   gStateMachine =
@@ -82,10 +94,13 @@ end
 function love.draw()
   --[[
   love.graphics.setColor(1, 1, 1)
-  love.graphics.line(WINDOW_PADDING, 0, WINDOW_PADDING, WINDOW_HEIGHT)
-  love.graphics.line(WINDOW_WIDTH - WINDOW_PADDING, 0, WINDOW_WIDTH - WINDOW_PADDING, WINDOW_HEIGHT)
-  love.graphics.line(0, WINDOW_HEIGHT - WINDOW_PADDING, WINDOW_WIDTH, WINDOW_HEIGHT - WINDOW_PADDING)
-  love.graphics.line(0, WINDOW_PADDING, WINDOW_WIDTH, WINDOW_PADDING)
+  love.graphics.rectangle(
+    "line",
+    WINDOW_PADDING,
+    WINDOW_PADDING + DATA_HEIGHT + PLAYING_AREA_BONUS_HEIGHT,
+    PLAYING_AREA_WIDTH,
+    PLAYING_AREA_HEIGHT
+  )
   --]]
   gStateMachine:render()
 end

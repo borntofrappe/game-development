@@ -6,7 +6,7 @@ local INVADERS_GRID = {
 }
 
 local PROJECTILE_ODDS = 3 -- 1 in odds
-local INVADER_BONUS_ODDS = 12 -- 1 in odds
+local INVADER_BONUS_ODDS = 20 -- 1 in odds
 
 function Invaders:new(delayMultiplier)
   local invaders = {}
@@ -79,7 +79,7 @@ function Invaders:updateInterval(player)
     end
   end
 
-  if #projectileCoords.y > 0 and math.random(PROJECTILE_ODDS) == 1 then
+  if #projectileCoords.x > 0 and math.random(PROJECTILE_ODDS) == 1 then
     local x = projectileCoords["x"][math.random(#projectileCoords["x"])]
     local y = projectileCoords["y"]
 
@@ -119,6 +119,8 @@ function Invaders:updateInterval(player)
   end
 
   if not self.bonusInvader and math.random(INVADER_BONUS_ODDS) == 1 then
+    gSounds["bonus-invader"]:play()
+
     self.bonusInvader = BonusInvader:new()
   end
 

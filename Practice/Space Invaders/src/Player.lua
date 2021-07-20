@@ -30,6 +30,7 @@ function Player:update(dt)
 
   if love.keyboard.waspressed("up") or love.keyboard.waspressed("space") then
     if #self.projectiles < PLAYER_PROJECTILES_CAP then
+      gSounds["projectile-player"]:play()
       table.insert(self.projectiles, Projectile:new(self.x + self.width / 2, self.y))
     end
   end

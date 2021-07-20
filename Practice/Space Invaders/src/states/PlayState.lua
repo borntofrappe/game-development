@@ -1,6 +1,6 @@
 PlayState = BaseState:new()
 
-local COLLISION_PLAYER_DELAY = 5
+local COLLISION_PLAYER_DELAY = 3.5
 
 function PlayState:enter(params)
   self.data = params.data
@@ -24,6 +24,9 @@ function PlayState:setupInterval()
     self.interval.duration,
     function()
       local changeDirection, collideWithPlayer = self.invaders:updateInterval(self.player)
+
+      gSounds["update-interval"]:stop()
+      gSounds["update-interval"]:play()
 
       if collideWithPlayer then
         self:gameover()
@@ -49,6 +52,8 @@ function PlayState:update(dt)
 
   if love.keyboard.waspressed("return") then
     if self.player.inPlay then
+      gSounds["pause-state"]:play()
+
       gStateMachine:change(
         "pause",
         {
@@ -111,6 +116,8 @@ function PlayState:update(dt)
       end
 
       if hasCollided then
+        gSounds["collision-invader"]:play()
+
         table.remove(self.player.projectiles, k)
 
         if #self.invaders.invaders == 0 and not self.invaders.bonusInvader then
@@ -120,6 +127,8 @@ function PlayState:update(dt)
             self.delay.duration,
             function()
               self.data.round = self.data.round + 1
+
+              gSounds["serve-state"]:play()
               gStateMachine:change(
                 "serve",
                 {
@@ -170,6 +179,9 @@ function PlayState:update(dt)
 end
 
 function PlayState:gameover()
+  gSounds["update-interval"]:stop()
+  gSounds["collision-player"]:play()
+
   self.player.inPlay = false
 
   local collision =
@@ -187,6 +199,7 @@ function PlayState:gameover()
       self.delay.duration,
       function()
         if self.data.score >= gHighScore then
+          gSounds["high-score-state"]:play()
           gStateMachine:change(
             "high-score",
             {

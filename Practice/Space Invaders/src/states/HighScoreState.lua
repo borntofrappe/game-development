@@ -6,8 +6,12 @@ function HighScoreState:enter(params)
   self.title = string.upper("You\nget\nHi-score!")
   gHighScore = params.highScore
 
+  self.delay = {
+    ["duration"] = TITLE_STATE_DELAY
+  }
+
   Timer:after(
-    TITLE_STATE_DELAY,
+    self.delay.duration,
     function()
       gStateMachine:change("title")
     end

@@ -7,7 +7,7 @@ function Invader:new(x, y, type)
     ["width"] = INVADER_WIDTH,
     ["height"] = INVADER_HEIGHT,
     ["type"] = type,
-    ["frame"] = 1,
+    ["frame"] = 2,
     ["points"] = type * INVADER_POINTS_MULTIPLIER
   }
 

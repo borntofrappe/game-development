@@ -40,6 +40,7 @@ function TitleState:enter()
     ["label"] = "points-state-delay"
   }
 
+  gSounds["title-state"]:play()
   Timer:after(
     self.title.delay.duration,
     function()
@@ -90,6 +91,8 @@ function TitleState:update(dt)
     if self.record.show then
       Timer:remove(self.instructions.interval.label)
       Timer:remove(self.delay.label)
+
+      gSounds["serve-state"]:play()
       gStateMachine:change("serve")
     end
   end
