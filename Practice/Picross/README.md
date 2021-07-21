@@ -49,3 +49,16 @@ The grid is built looping through the string and considering the letter at a spe
 ```lua
 local index = column + (row - 1) * dimension
 ```
+
+## Hints
+
+The idea is to build two separate tables describing the hints for the columns and rows respectively.
+
+```lua
+local hints = {
+  ["columns"] = {},
+  ["rows"] = {}
+}
+```
+
+The tables are populated considering the value of the individual cells and the fact that the hints should describe the number of contiguous `o`s in the respective column or row.

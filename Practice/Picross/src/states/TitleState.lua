@@ -9,8 +9,7 @@ local INSTRUCTIONS_BACKGROUND_OPACITY = 0.25
 local INSTRUCTIONS_BACKGROUND_INTERVAL = 1.1
 local INSTRUCTIONS_BACKGROUND_TWEEN = INSTRUCTIONS_BACKGROUND_INTERVAL - 0.1
 
-local OVERLAY_DELAY = 0.05
-local OVERLAY_TWEEN = 0.75
+local OVERLAY_TWEEN = 0.1
 
 function TitleState:enter()
   self.overlay = {
@@ -42,30 +41,25 @@ function TitleState:enter()
 
   self.instructions = instructions
 
-  Timer:after(
-    OVERLAY_DELAY,
+  Timer:tween(
+    OVERLAY_TWEEN,
+    {
+      [self.overlay] = {["opacity"] = 0}
+    },
     function()
-      Timer:tween(
-        OVERLAY_TWEEN,
-        {
-          [self.overlay] = {["opacity"] = 0}
-        },
+      Timer:every(
+        INSTRUCTIONS_BACKGROUND_INTERVAL,
         function()
-          Timer:every(
-            INSTRUCTIONS_BACKGROUND_INTERVAL,
-            function()
-              Timer:tween(
-                INSTRUCTIONS_BACKGROUND_TWEEN,
-                {
-                  [self.instructions.background] = {
-                    ["opacity"] = self.instructions.background.opacity == 0 and INSTRUCTIONS_BACKGROUND_OPACITY or 0
-                  }
-                }
-              )
-            end,
-            true
+          Timer:tween(
+            INSTRUCTIONS_BACKGROUND_TWEEN,
+            {
+              [self.instructions.background] = {
+                ["opacity"] = self.instructions.background.opacity == 0 and INSTRUCTIONS_BACKGROUND_OPACITY or 0
+              }
+            }
           )
-        end
+        end,
+        true
       )
     end
   )

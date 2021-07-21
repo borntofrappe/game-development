@@ -17,6 +17,21 @@ function PlayState:enter()
 end
 
 function PlayState:update(dt)
+  if love.keyboard.waspressed("escape") then
+    Timer:tween(
+      OVERLAY_TWEEN,
+      {
+        [self.overlay] = {["opacity"] = 1}
+      },
+      function()
+        gStateMachine:change("title")
+      end
+    )
+  end
+
+  if love.keyboard.waspressed("r") then
+    self.level = Level:new()
+  end
   Timer:update(dt)
 end
 
