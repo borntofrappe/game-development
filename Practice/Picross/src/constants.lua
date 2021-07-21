@@ -3,7 +3,11 @@ TITLE = "Picross"
 WINDOW_WIDTH = 520
 WINDOW_HEIGHT = 360
 
-GRID_SIZE = 160
+GRID_SIZE = 180
+GRID_PADDING = {
+  ["x"] = 36,
+  ["y"] = 36
+}
 
 LEVELS = {
   {

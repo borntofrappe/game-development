@@ -18,9 +18,9 @@ function Cell:new(column, row, size, state)
 end
 
 function Cell:render()
-  if self.state == "o" then
+  if self.value == "o" then
     love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
-  elseif self.state == "x" then
+  elseif self.value == "x" then
     love.graphics.setLineWidth(4)
     love.graphics.line(
       self.x + self.size / 4,

@@ -1,14 +1,7 @@
 Level = {}
 
-function Level:new(offset)
-  local offset =
-    offset or
-    {
-      ["x"] = WINDOW_WIDTH * 7 / 8 - GRID_SIZE,
-      ["y"] = WINDOW_HEIGHT * 7 / 8 - GRID_SIZE
-    }
-
-  local level = LEVELS[math.random(#LEVELS)]
+function Level:new(index)
+  local level = LEVELS[index]
   local sequence, dimension = level.grid:gsub("[^xo]", "")
   local grid = {}
 
@@ -20,8 +13,8 @@ function Level:new(offset)
     ["rows"] = {}
   }
 
-  for column = 1, dimension do
-    for row = 1, dimension do
+  for row = 1, dimension do
+    for column = 1, dimension do
       local index = column + (row - 1) * dimension
       local state = sequence:sub(index, index)
 
@@ -51,19 +44,18 @@ function Level:new(offset)
   end
 
   for i, hintColumn in ipairs(hints.columns) do
-    if hintColumn[#hintColumn] == 0 then
+    if #hintColumn > 1 and hintColumn[#hintColumn] == 0 then
       table.remove(hintColumn)
     end
   end
 
   for i, hintRow in ipairs(hints.rows) do
-    if hintRow[#hintRow] == 0 then
+    if #hintRow > 1 and hintRow[#hintRow] == 0 then
       table.remove(hintRow)
     end
   end
 
   local this = {
-    ["offset"] = offset,
     ["size"] = size,
     ["cellSize"] = cellSize,
     ["dimension"] = dimension,
@@ -78,9 +70,6 @@ function Level:new(offset)
 end
 
 function Level:render()
-  love.graphics.push()
-  love.graphics.translate(self.offset.x, self.offset.y)
-
   love.graphics.setColor(0.98, 0.85, 0.05)
   love.graphics.rectangle("fill", 0, 0, self.size, self.size)
 
@@ -103,7 +92,7 @@ function Level:render()
       love.graphics.printf(
         hintColumn,
         self.cellSize * (i - 1),
-        self.cellSize * #hintsColumn * -1 + self.cellSize * (j - 1) + gFonts.normal:getHeight() / 2,
+        self.cellSize * (#hintsColumn - j + 1) * -1 + self.cellSize / 2 - gFonts.normal:getHeight() / 2,
         self.cellSize,
         "center"
       )
@@ -114,13 +103,11 @@ function Level:render()
     for j, hintRow in ipairs(hintsRow) do
       love.graphics.printf(
         hintRow,
-        self.cellSize * #hintsRow * -1 + self.cellSize * (j - 1),
+        self.cellSize * (#hintsRow - j + 1) * -1,
         self.cellSize * (i - 1) + self.cellSize / 2 - gFonts.normal:getHeight() / 2,
         self.cellSize,
         "center"
       )
     end
   end
-
-  love.graphics.pop()
 end
