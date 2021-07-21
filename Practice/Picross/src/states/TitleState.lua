@@ -23,7 +23,7 @@ function TitleState:enter()
   }
 
   local instructions = {
-    ["text"] = "Levels",
+    ["text"] = "Play",
     ["y"] = self.title.y + gFonts.large:getHeight() + TITLE_MARGIN_BOTTOM
   }
 
@@ -78,12 +78,20 @@ function TitleState:update(dt)
     love.event.quit()
   end
 
-  -- if love.keyboard.waspressed("return") then
-  --  if self.overlay.opacity == 0 then
-  --    Timer:reset()
-  --    gStateMachine:change("select")
-  --  end
-  -- end
+  if love.keyboard.waspressed("return") then
+    if self.overlay.opacity == 0 then
+      Timer:reset()
+      Timer:tween(
+        OVERLAY_TWEEN,
+        {
+          [self.overlay] = {["opacity"] = 1}
+        },
+        function()
+          gStateMachine:change("play")
+        end
+      )
+    end
+  end
 end
 
 function TitleState:render()
