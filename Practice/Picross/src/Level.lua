@@ -2,6 +2,7 @@ Level = {}
 
 function Level:new(index)
   local level = LEVELS[index]
+  local name = level.name
   local sequence, dimension = level.grid:gsub("[^xo]", "")
   local grid = {}
 
@@ -56,6 +57,7 @@ function Level:new(index)
   end
 
   local this = {
+    ["name"] = name,
     ["size"] = size,
     ["cellSize"] = cellSize,
     ["dimension"] = dimension,

@@ -17,7 +17,8 @@ function love.load()
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/fonts/font.ttf", 52),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 14)
+    ["medium"] = love.graphics.newFont("res/fonts/font.ttf", 28),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
   gSounds = {
@@ -37,6 +38,9 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState:new()
+      end,
+      ["victory"] = function()
+        return VictoryState:new()
       end
     }
   )

@@ -91,10 +91,31 @@ function PlayState:update(dt)
         self.level.grid[index].value = nil
       else
         self.level.grid[index].value = "o"
+
+        if self:checkVictory() then
+          Timer:remove(self.interval.label)
+          gStateMachine:change(
+            "victory",
+            {
+              ["level"] = self.level,
+              ["offset"] = self.offset
+            }
+          )
+        end
       end
     elseif self.tool == "eraser" then
       if self.level.grid[index].value == "o" then
         self.level.grid[index].value = nil
+
+        if self:checkVictory() then
+          Timer:remove(self.interval.label)
+          gStateMachine:change(
+            "victory",
+            {
+              ["level"] = self.level
+            }
+          )
+        end
       else
         self.level.grid[index].value = "x"
       end
@@ -144,6 +165,19 @@ function PlayState:formatCounter(value)
   return h .. ":" .. m .. ":" .. s
 end
 
+function PlayState:checkVictory()
+  for k, cell in pairs(self.level.grid) do
+    if cell.state == "o" and cell.value ~= cell.state then
+      return false
+    end
+    if cell.value == "o" and cell.value ~= cell.state then
+      return false
+    end
+  end
+
+  return true
+end
+
 function PlayState:render()
   love.graphics.setColor(0.05, 0.05, 0.15, 0.15)
   love.graphics.rectangle("fill", self.counter.x + 6, self.counter.y + 4, self.counter.width, self.counter.height)
@@ -151,7 +185,7 @@ function PlayState:render()
   love.graphics.setColor(0.07, 0.07, 0.2)
   love.graphics.rectangle("fill", self.counter.x, self.counter.y, self.counter.width, self.counter.height)
 
-  love.graphics.print("Level " .. self.index + 1, self.counter.x, self.counter.y - gFonts.normal:getHeight() * 1.5)
+  love.graphics.print("Level " .. self.index + 1, self.counter.x, self.counter.y - gFonts.normal:getHeight() - 4)
 
   love.graphics.setColor(0.98, 0.85, 0.05)
   love.graphics.setFont(gFonts.normal)
