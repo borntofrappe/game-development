@@ -3,19 +3,7 @@ PlayState = BaseState:new()
 local OVERLAY_TWEEN = 0.1
 
 function PlayState:enter()
-  self.tool = "pen" -- [pen-eraser]
-
-  self.pen = {
-    ["x"] = WINDOW_WIDTH / 4 + 19,
-    ["y"] = WINDOW_HEIGHT / 2,
-    ["r"] = 25
-  }
-
-  self.eraser = {
-    ["x"] = self.pen.x - 38,
-    ["y"] = self.pen.y + 38,
-    ["r"] = 25
-  }
+  self.tools = Tools:new("pen")
 
   self.offset = {
     ["x"] = WINDOW_WIDTH - GRID_SIZE - GRID_PADDING.x,
@@ -39,12 +27,12 @@ function PlayState:enter()
     ["label"] = "timer"
   }
 
-  self.levelData = LevelData:new(self.index)
+  self.data = Data:new(self.index)
 
   Timer:every(
     self.interval.duration,
     function()
-      self.levelData.timer.time = self.levelData.timer.time + 1
+      self.data.timer.time = self.data.timer.time + 1
     end,
     false,
     self.interval.label
@@ -79,7 +67,7 @@ function PlayState:update(dt)
     local row = self.highlightedCell.row
     local index = column + (row - 1) * self.level.dimension
 
-    if self.tool == "pen" then
+    if self.tools.selection == "pen" then
       if self.level.grid[index].value == "x" then
         self.level.grid[index].value = nil
       else
@@ -92,12 +80,12 @@ function PlayState:update(dt)
             {
               ["offset"] = self.offset,
               ["level"] = self.level,
-              ["levelData"] = self.levelData
+              ["data"] = self.data
             }
           )
         end
       end
-    elseif self.tool == "eraser" then
+    elseif self.tools.selection == "eraser" then
       if self.level.grid[index].value == "o" then
         self.level.grid[index].value = nil
 
@@ -108,7 +96,7 @@ function PlayState:update(dt)
             {
               ["offset"] = self.offset,
               ["level"] = self.level,
-              ["levelData"] = self.levelData
+              ["data"] = self.data
             }
           )
         end
@@ -119,15 +107,41 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("space") or love.keyboard.waspressed("t") or love.keyboard.waspressed("x") then
-    self.tool = self.tool == "pen" and "eraser" or "pen"
+    local currentSelection = self.tools.selection
+    local newSelection = currentSelection == "pen" and "eraser" or "pen"
+    self.tools:select(newSelection)
+
+    Timer:tween(
+      0.2,
+      {
+        [self.tools[currentSelection]] = {["scale"] = 0.7},
+        [self.tools[newSelection]] = {["scale"] = 1}
+      }
+    )
   end
 
-  if love.keyboard.waspressed("p") then
-    self.tool = "pen"
+  if love.keyboard.waspressed("p") and self.tools.selection == "eraser" then
+    self.tools:select("pen")
+
+    Timer:tween(
+      0.2,
+      {
+        [self.tools.eraser] = {["scale"] = 0.7},
+        [self.tools.pen] = {["scale"] = 1}
+      }
+    )
   end
 
-  if love.keyboard.waspressed("e") then
-    self.tool = "eraser"
+  if love.keyboard.waspressed("e") and self.tools.selection == "pen" then
+    self.tools:select("eraser")
+
+    Timer:tween(
+      0.2,
+      {
+        [self.tools.pen] = {["scale"] = 0.7},
+        [self.tools.eraser] = {["scale"] = 1}
+      }
+    )
   end
 
   if love.keyboard.waspressed("up") and self.highlightedCell.row > 1 then
@@ -161,45 +175,8 @@ function PlayState:checkVictory()
 end
 
 function PlayState:render()
-  self.levelData:render()
-
-  love.graphics.setLineWidth(3)
-  love.graphics.push()
-  love.graphics.translate(self.pen.x, self.pen.y)
-
-  if self.tool == "eraser" then
-    love.graphics.scale(0.7, 0.7)
-    love.graphics.setColor(0.05, 0.05, 0.15, 0.15)
-  else
-    love.graphics.setColor(0.98, 0.85, 0.05)
-  end
-  love.graphics.circle("fill", 0, 0, self.pen.r)
-
-  love.graphics.setColor(0.07, 0.07, 0.2)
-  love.graphics.circle("line", 0, 0, self.pen.r)
-
-  love.graphics.polygon("fill", 5, -10, -9, 4, -9, 9, -3, 9, 10, -5)
-
-  love.graphics.pop()
-
-  love.graphics.push()
-  love.graphics.translate(self.eraser.x, self.eraser.y)
-
-  if self.tool == "pen" then
-    love.graphics.scale(0.7, 0.7)
-    love.graphics.setColor(0.05, 0.05, 0.15, 0.15)
-  else
-    love.graphics.setColor(0.98, 0.85, 0.05)
-  end
-  love.graphics.circle("fill", 0, 0, self.eraser.r)
-
-  love.graphics.setColor(0.07, 0.07, 0.2)
-  love.graphics.circle("line", 0, 0, self.eraser.r)
-
-  love.graphics.line(-6, -6, 6, 6)
-  love.graphics.line(-6, 6, 6, -6)
-
-  love.graphics.pop()
+  self.data:render()
+  self.tools:render()
 
   love.graphics.push()
   love.graphics.translate(self.offset.x, self.offset.y)

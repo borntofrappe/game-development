@@ -9,7 +9,7 @@ function VictoryState:enter(params)
 
   self.offset = params.offset
   self.level = params.level
-  self.levelData = params.levelData
+  self.data = params.data
 
   self.title = {
     ["text"] = self.level.name,
@@ -52,11 +52,17 @@ function VictoryState:update(dt)
 end
 
 function VictoryState:render()
-  self.levelData:render()
+  self.data:render()
 
   love.graphics.setColor(0.07, 0.07, 0.2, self.title.opacity)
   love.graphics.setFont(gFonts.medium)
-  love.graphics.printf(self.title.text, 0, WINDOW_HEIGHT / 2, WINDOW_WIDTH / 2, "center")
+  love.graphics.printf(
+    self.title.text,
+    WINDOW_WIDTH / 10,
+    WINDOW_HEIGHT / 2,
+    WINDOW_WIDTH / 2 - WINDOW_WIDTH / 10,
+    "center"
+  )
 
   love.graphics.push()
   love.graphics.translate(self.offset.x, self.offset.y)

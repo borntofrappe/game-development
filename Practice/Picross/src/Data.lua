@@ -1,6 +1,6 @@
-LevelData = {}
+Data = {}
 
-function LevelData:new(index)
+function Data:new(index)
   local timer = {
     ["time"] = 0,
     ["width"] = math.floor(gFonts.normal:getWidth("00:00:00") * 1.2),
@@ -21,7 +21,7 @@ function LevelData:new(index)
   return this
 end
 
-function LevelData:formatTime(time)
+function Data:formatTime(time)
   local seconds = time
   local hours = math.floor(seconds / 3600)
   seconds = seconds - hours * 3600
@@ -35,7 +35,7 @@ function LevelData:formatTime(time)
   return h .. ":" .. m .. ":" .. s
 end
 
-function LevelData:render()
+function Data:render()
   love.graphics.setFont(gFonts.normal)
   love.graphics.setColor(0.05, 0.05, 0.15, 0.15)
   love.graphics.rectangle("fill", self.timer.x + 6, self.timer.y + 4, self.timer.width, self.timer.height)
