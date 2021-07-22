@@ -1,6 +1,6 @@
 Cell = {}
 
-function Cell:new(column, row, size, state)
+function Cell:new(column, row, size, state, value)
   local this = {
     ["column"] = column,
     ["row"] = row,
@@ -8,7 +8,7 @@ function Cell:new(column, row, size, state)
     ["y"] = (row - 1) * size,
     ["size"] = size,
     ["state"] = state,
-    ["value"] = nil
+    ["value"] = value
   }
 
   self.__index = self

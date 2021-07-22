@@ -1,6 +1,6 @@
 Level = {}
 
-function Level:new(index)
+function Level:new(index, isComplete)
   local level = LEVELS[index]
   local name = level.name
   local sequence, dimension = level.grid:gsub("[^xo]", "")
@@ -18,8 +18,12 @@ function Level:new(index)
     for column = 1, dimension do
       local index = column + (row - 1) * dimension
       local state = sequence:sub(index, index)
+      local value
+      if isComplete and state == "o" then
+        value = state
+      end
 
-      local cell = Cell:new(column, row, cellSize, state)
+      local cell = Cell:new(column, row, cellSize, state, value)
       table.insert(grid, cell)
 
       if not hints.columns[column] then
@@ -62,7 +66,8 @@ function Level:new(index)
     ["cellSize"] = cellSize,
     ["dimension"] = dimension,
     ["grid"] = grid,
-    ["hints"] = hints
+    ["hints"] = hints,
+    ["extraOpacity"] = isComplete and 0 or 1
   }
 
   self.__index = self
@@ -72,11 +77,11 @@ function Level:new(index)
 end
 
 function Level:render()
-  love.graphics.setColor(0.98, 0.85, 0.05)
+  love.graphics.setColor(0.98, 0.85, 0.05, self.extraOpacity)
   love.graphics.rectangle("fill", 0, 0, self.size, self.size)
 
   love.graphics.setLineWidth(1)
-  love.graphics.setColor(0.05, 0.05, 0.15, 0.15)
+  love.graphics.setColor(0.05, 0.05, 0.15, self.extraOpacity * 0.15)
   for k = 1, self.dimension + 1 do
     love.graphics.line((k - 1) * self.cellSize, 0, (k - 1) * self.cellSize, self.size)
     love.graphics.line(0, (k - 1) * self.cellSize, self.size, (k - 1) * self.cellSize)
@@ -87,7 +92,7 @@ function Level:render()
     cell:render()
   end
 
-  love.graphics.setColor(0.07, 0.07, 0.2)
+  love.graphics.setColor(0.07, 0.07, 0.2, self.extraOpacity)
   love.graphics.setFont(gFonts.normal)
   for i, hintsColumn in ipairs(self.hints.columns) do
     for j, hintColumn in ipairs(hintsColumn) do

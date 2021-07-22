@@ -8,13 +8,13 @@ function PlayState:enter()
   self.pen = {
     ["x"] = WINDOW_WIDTH / 4 + 19,
     ["y"] = WINDOW_HEIGHT / 2,
-    ["r"] = 22
+    ["r"] = 25
   }
 
   self.eraser = {
     ["x"] = self.pen.x - 38,
     ["y"] = self.pen.y + 38,
-    ["r"] = 22
+    ["r"] = 25
   }
 
   self.offset = {
@@ -36,24 +36,17 @@ function PlayState:enter()
 
   self.interval = {
     ["duration"] = 1,
-    ["label"] = "timer",
-    ["value"] = 0
+    ["label"] = "timer"
   }
 
-  self.counter = {
-    ["value"] = 0,
-    ["width"] = math.floor(gFonts.normal:getWidth("00:00:00") * 1.2),
-    ["height"] = math.floor(gFonts.normal:getHeight() * 2)
-  }
-
-  self.counter.x = math.floor(WINDOW_WIDTH / 4 - self.counter.width / 2)
-  self.counter.y = math.floor(WINDOW_HEIGHT / 4 - self.counter.height / 2)
+  self.levelData = LevelData:new(self.index)
 
   Timer:every(
     self.interval.duration,
     function()
-      self.counter.value = self.counter.value + 1
+      self.levelData.timer.time = self.levelData.timer.time + 1
     end,
+    false,
     self.interval.label
   )
 
@@ -97,8 +90,9 @@ function PlayState:update(dt)
           gStateMachine:change(
             "victory",
             {
+              ["offset"] = self.offset,
               ["level"] = self.level,
-              ["offset"] = self.offset
+              ["levelData"] = self.levelData
             }
           )
         end
@@ -112,7 +106,9 @@ function PlayState:update(dt)
           gStateMachine:change(
             "victory",
             {
-              ["level"] = self.level
+              ["offset"] = self.offset,
+              ["level"] = self.level,
+              ["levelData"] = self.levelData
             }
           )
         end
@@ -151,20 +147,6 @@ function PlayState:update(dt)
   end
 end
 
-function PlayState:formatCounter(value)
-  local seconds = value
-  local hours = math.floor(seconds / 3600)
-  seconds = seconds - hours * 3600
-  local minutes = math.floor(seconds / 60)
-  seconds = seconds - minutes * 60
-
-  local h = hours >= 10 and hours or 0 .. hours
-  local m = minutes >= 10 and minutes or 0 .. minutes
-  local s = seconds >= 10 and seconds or 0 .. seconds
-
-  return h .. ":" .. m .. ":" .. s
-end
-
 function PlayState:checkVictory()
   for k, cell in pairs(self.level.grid) do
     if cell.state == "o" and cell.value ~= cell.state then
@@ -179,23 +161,7 @@ function PlayState:checkVictory()
 end
 
 function PlayState:render()
-  love.graphics.setColor(0.05, 0.05, 0.15, 0.15)
-  love.graphics.rectangle("fill", self.counter.x + 6, self.counter.y + 4, self.counter.width, self.counter.height)
-
-  love.graphics.setColor(0.07, 0.07, 0.2)
-  love.graphics.rectangle("fill", self.counter.x, self.counter.y, self.counter.width, self.counter.height)
-
-  love.graphics.print("Level " .. self.index + 1, self.counter.x, self.counter.y - gFonts.normal:getHeight() - 4)
-
-  love.graphics.setColor(0.98, 0.85, 0.05)
-  love.graphics.setFont(gFonts.normal)
-  love.graphics.printf(
-    self:formatCounter(self.counter.value),
-    self.counter.x,
-    self.counter.y + self.counter.height / 2 - gFonts.normal:getHeight() / 2 + 1,
-    self.counter.width,
-    "center"
-  )
+  self.levelData:render()
 
   love.graphics.setLineWidth(3)
   love.graphics.push()
