@@ -1,6 +1,7 @@
 SelectState = BaseState:new()
 
-local LEVELS_MARGIN_BOTTOM = 52
+local LEVELS_MARGIN_TOP = 12
+local LEVELS_MARGIN_BOTTOM = 48
 local PADDING_PERCENTAGE = 0.25
 
 local SELECTION_BACKGROUND = {
@@ -27,10 +28,11 @@ function SelectState:enter(params)
   self.size = size
   self.spaceAround = spaceAround
 
+  local y = WINDOW_HEIGHT / 2 - size + LEVELS_MARGIN_TOP
   local levels = {}
+
   for i, level in ipairs(LEVELS) do
     local x = spaceAround + (i - 1) * (size + spaceBetween)
-    local y = WINDOW_HEIGHT / 2 - size
     local index = gLevelsCleared[i] and i or 0
     table.insert(
       levels,
@@ -51,6 +53,7 @@ function SelectState:enter(params)
 
   self.selection = {
     ["index"] = index,
+    ["y"] = y + size + LEVELS_MARGIN_BOTTOM,
     ["opacity"] = SELECTION_BACKGROUND.opacity
   }
 
@@ -78,8 +81,81 @@ function SelectState:enter(params)
   )
 end
 
+function SelectState:goToTitleState()
+  self.active = false
+
+  Timer:reset()
+  Timer:tween(
+    OVERLAY_TWEEN,
+    {
+      [self.overlay] = {["opacity"] = 1}
+    },
+    function()
+      gStateMachine:change("title")
+    end
+  )
+end
+
+function SelectState:goToPlayState()
+  self.active = false
+
+  Timer:reset()
+  Timer:tween(
+    OVERLAY_TWEEN,
+    {
+      [self.overlay] = {["opacity"] = 1}
+    },
+    function()
+      gStateMachine:change(
+        "play",
+        {
+          ["index"] = self.selection.index
+        }
+      )
+    end
+  )
+end
+
 function SelectState:update(dt)
   Timer:update(dt)
+
+  if gMouseInput then
+    local x, y = love.mouse:getPosition()
+    for i, level in ipairs(self.levels) do
+      if x > level.x and x < level.x + self.size and y > level.y and y < level.y + self.size then
+        self.selection.index = i
+        break
+      end
+    end
+  end
+
+  if love.mouse.waspressed(1) then
+    if self.active then
+      local x, y = love.mouse:getPosition()
+      if x ^ 2 + y ^ 2 < BACK_BUTTON_RADIUS ^ 2 then
+        self:goToTitleState()
+      else
+        for i, level in ipairs(self.levels) do
+          if x > level.x and x < level.x + self.size and y > level.y and y < level.y + self.size then
+            self:goToPlayState()
+            break
+          end
+        end
+      end
+    end
+  end
+
+  if love.keyboard.waspressed("escape") then
+    if self.active then
+      self:goToTitleState()
+    end
+  end
+
+  if love.keyboard.waspressed("return") then
+    if self.active then
+      self:goToPlayState()
+    end
+  end
 
   if love.keyboard.waspressed("right") then
     if self.active and self.selection.index < #self.levels then
@@ -90,45 +166,6 @@ function SelectState:update(dt)
   if love.keyboard.waspressed("left") then
     if self.active and self.selection.index > 1 then
       self.selection.index = self.selection.index - 1
-    end
-  end
-
-  if love.keyboard.waspressed("escape") then
-    if self.active then
-      self.active = false
-
-      Timer:reset()
-      Timer:tween(
-        OVERLAY_TWEEN,
-        {
-          [self.overlay] = {["opacity"] = 1}
-        },
-        function()
-          gStateMachine:change("title")
-        end
-      )
-    end
-  end
-
-  if love.keyboard.waspressed("return") then
-    if self.active then
-      self.active = false
-
-      Timer:reset()
-      Timer:tween(
-        OVERLAY_TWEEN,
-        {
-          [self.overlay] = {["opacity"] = 1}
-        },
-        function()
-          gStateMachine:change(
-            "play",
-            {
-              ["index"] = self.selection.index
-            }
-          )
-        end
-      )
     end
   end
 end
@@ -153,10 +190,14 @@ function SelectState:render()
     gLevelsCleared[self.selection.index] and self.levels[self.selection.index].level.name or
       "Level " .. self.selection.index,
     0,
-    WINDOW_HEIGHT / 2 + LEVELS_MARGIN_BOTTOM,
+    self.selection.y,
     WINDOW_WIDTH,
     "center"
   )
+
+  if gMouseInput then
+    drawBackButton()
+  end
 
   if not self.active then
     love.graphics.setColor(gColors.overlay.r, gColors.overlay.g, gColors.overlay.b, self.overlay.opacity)

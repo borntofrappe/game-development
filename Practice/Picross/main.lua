@@ -15,6 +15,8 @@ function love.load()
 
   background = love.graphics.newImage("res/graphics/background.png")
 
+  gMouseInput = false
+
   gLevelsCleared = {}
 
   gFonts = {
@@ -77,24 +79,54 @@ function love.load()
   gStateMachine:change("title")
 
   love.keyboard.keypressed = {}
+  love.mouse.buttonpressed = {}
 end
 
 function love.keypressed(key)
   love.keyboard.keypressed[key] = true
+
+  if gMouseInput then
+    gMouseInput = false
+  end
 end
 
 function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
+function love.mousepressed(x, y, button)
+  love.mouse.buttonpressed[button] = true
+
+  if not gMouseInput then
+    gMouseInput = true
+  end
+end
+
+function love.mouse.waspressed(button)
+  return love.mouse.buttonpressed[button]
+end
+
 function love.update(dt)
   gStateMachine:update(dt)
 
   love.keyboard.keypressed = {}
+  love.mouse.buttonpressed = {}
 end
 
 function love.draw()
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(background, 0, 0)
   gStateMachine:render()
+end
+
+function drawBackButton(x, y, r)
+  love.graphics.setColor(gColors.shadow.r, gColors.shadow.g, gColors.shadow.b, gColors.shadow.a)
+  love.graphics.circle("fill", 0, 0, BACK_BUTTON_RADIUS)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
+  love.graphics.setLineWidth(2)
+  love.graphics.circle("line", 0, 0, BACK_BUTTON_RADIUS)
+
+  love.graphics.setLineWidth(3)
+  love.graphics.line(7, 9, 17, 19)
+  love.graphics.line(17, 9, 7, 19)
 end

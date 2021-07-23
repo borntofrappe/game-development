@@ -34,42 +34,61 @@ function VictoryState:enter(params)
   )
 end
 
+function VictoryState:goToTitleState()
+  self.active = false
+  Timer:reset()
+  Timer:tween(
+    OVERLAY_TWEEN,
+    {
+      [self.overlay] = {["opacity"] = 1}
+    },
+    function()
+      gStateMachine:change("title")
+    end
+  )
+end
+
+function VictoryState:goToSelectState()
+  self.active = false
+  Timer:tween(
+    OVERLAY_TWEEN,
+    {
+      [self.overlay] = {["opacity"] = 1}
+    },
+    function()
+      gStateMachine:change(
+        "select",
+        {
+          ["index"] = self.level.index
+        }
+      )
+    end
+  )
+end
+
 function VictoryState:update(dt)
   Timer:update(dt)
 
+  if love.mouse.waspressed(1) then
+    if self.active then
+      local x, y = love.mouse:getPosition()
+      if x ^ 2 + y ^ 2 < BACK_BUTTON_RADIUS ^ 2 then
+        self:goToTitleState()
+      else
+        self:goToSelectState()
+      end
+    end
+  end
+
   if love.keyboard.waspressed("escape") then
     if self.active then
-      self.active = false
-      Timer:reset()
-      Timer:tween(
-        OVERLAY_TWEEN,
-        {
-          [self.overlay] = {["opacity"] = 1}
-        },
-        function()
-          gStateMachine:change("title")
-        end
-      )
+      self:goToTitleState()
     end
   end
 
   if love.keyboard.waspressed("return") then
     if self.active then
-      self.active = false
-      Timer:tween(
-        OVERLAY_TWEEN,
-        {
-          [self.overlay] = {["opacity"] = 1}
-        },
-        function()
-          gStateMachine:change(
-            "select",
-            {
-              ["index"] = self.level.index
-            }
-          )
-        end
-      )
+      self:goToSelectState()
     end
   end
 end
@@ -88,6 +107,10 @@ function VictoryState:render()
   )
 
   self.level:render()
+
+  if gMouseInput then
+    drawBackButton()
+  end
 
   if not self.active then
     love.graphics.setColor(gColors.overlay.r, gColors.overlay.g, gColors.overlay.b, self.overlay.opacity)

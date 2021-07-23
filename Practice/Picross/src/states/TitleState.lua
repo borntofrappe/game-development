@@ -73,6 +73,21 @@ function TitleState:enter()
   )
 end
 
+function TitleState:goToSelectState()
+  self.active = false
+
+  Timer:reset()
+  Timer:tween(
+    OVERLAY_TWEEN,
+    {
+      [self.overlay] = {["opacity"] = 1}
+    },
+    function()
+      gStateMachine:change("select")
+    end
+  )
+end
+
 function TitleState:update(dt)
   Timer:update(dt)
 
@@ -80,20 +95,22 @@ function TitleState:update(dt)
     love.event.quit()
   end
 
+  if love.mouse.waspressed(1) then
+    if self.active then
+      local x, y = love.mouse:getPosition()
+      if
+        x > self.instructions.background.x and x < self.instructions.background.x + self.instructions.background.width and
+          y > self.instructions.background.y and
+          y < self.instructions.background.y + self.instructions.background.height
+       then
+        self:goToSelectState()
+      end
+    end
+  end
+
   if love.keyboard.waspressed("return") then
     if self.active then
-      self.active = false
-
-      Timer:reset()
-      Timer:tween(
-        OVERLAY_TWEEN,
-        {
-          [self.overlay] = {["opacity"] = 1}
-        },
-        function()
-          gStateMachine:change("select")
-        end
-      )
+      self:goToSelectState()
     end
   end
 end

@@ -111,137 +111,61 @@ function PlayState:enter(params)
   )
 end
 
-function PlayState:update(dt)
-  Timer:update(dt)
+function PlayState:selectCell()
+  local column = self.highlightedCell.column
+  local row = self.highlightedCell.row
+  local index = column + (row - 1) * self.dimension
 
-  if love.keyboard.waspressed("escape") then
-    if self.active then
-      self.active = false
+  if self.tools.selection == "pen" then
+    if self.level.grid[index].value == "x" then
+      self.level.grid[index].value = nil
+    else
+      self.level.grid[index].value = "o"
 
-      Timer:reset()
+      if self:checkVictory() then
+        self:goToVictoryState()
+      end
+    end
+  elseif self.tools.selection == "eraser" then
+    if self.level.grid[index].value == "o" then
+      self.level.grid[index].value = nil
+
+      if self:checkVictory() then
+        self:goToVictoryState()
+      end
+    else
+      self.level.grid[index].value = "x"
+    end
+  end
+end
+
+function PlayState:goToSelectState()
+  self.active = false
+
+  Timer:reset()
+  Timer:tween(
+    TOOLS.tween,
+    {
+      [self.tools.pen] = {["scale"] = 0},
+      [self.tools.eraser] = {["scale"] = 0}
+    },
+    function()
       Timer:tween(
-        TOOLS.tween,
+        OVERLAY_TWEEN,
         {
-          [self.tools.pen] = {["scale"] = 0},
-          [self.tools.eraser] = {["scale"] = 0}
+          [self.overlay] = {["opacity"] = 1}
         },
         function()
-          Timer:tween(
-            OVERLAY_TWEEN,
+          gStateMachine:change(
+            "select",
             {
-              [self.overlay] = {["opacity"] = 1}
-            },
-            function()
-              gStateMachine:change(
-                "select",
-                {
-                  ["index"] = self.index
-                }
-              )
-            end
+              ["index"] = self.index
+            }
           )
         end
       )
     end
-  end
-
-  if love.keyboard.waspressed("return") then
-    if self.active then
-      local column = self.highlightedCell.column
-      local row = self.highlightedCell.row
-      local index = column + (row - 1) * self.dimension
-
-      if self.tools.selection == "pen" then
-        if self.level.grid[index].value == "x" then
-          self.level.grid[index].value = nil
-        else
-          self.level.grid[index].value = "o"
-
-          if self:checkVictory() then
-            self:goToVictoryState()
-          end
-        end
-      elseif self.tools.selection == "eraser" then
-        if self.level.grid[index].value == "o" then
-          self.level.grid[index].value = nil
-
-          if self:checkVictory() then
-            self:goToVictoryState()
-          end
-        else
-          self.level.grid[index].value = "x"
-        end
-      end
-    end
-  end
-
-  if love.keyboard.waspressed("space") or love.keyboard.waspressed("t") or love.keyboard.waspressed("x") then
-    if self.active then
-      local currentSelection = self.tools.selection
-      local newSelection = currentSelection == "pen" and "eraser" or "pen"
-      self.tools:select(newSelection)
-
-      Timer:tween(
-        TOOLS.tween,
-        {
-          [self.tools[newSelection]] = {["scale"] = TOOLS.scales[1]},
-          [self.tools[currentSelection]] = {["scale"] = TOOLS.scales[2]}
-        }
-      )
-    end
-  end
-
-  if love.keyboard.waspressed("p") and self.tools.selection == "eraser" then
-    if self.active then
-      self.tools:select("pen")
-
-      Timer:tween(
-        TOOLS.tween,
-        {
-          [self.tools.pen] = {["scale"] = TOOLS.scales[1]},
-          [self.tools.eraser] = {["scale"] = TOOLS.scales[2]}
-        }
-      )
-    end
-  end
-
-  if love.keyboard.waspressed("e") and self.tools.selection == "pen" then
-    if self.active then
-      self.tools:select("eraser")
-
-      Timer:tween(
-        TOOLS.tween,
-        {
-          [self.tools.eraser] = {["scale"] = TOOLS.scales[1]},
-          [self.tools.pen] = {["scale"] = TOOLS.scales[2]}
-        }
-      )
-    end
-  end
-
-  if love.keyboard.waspressed("up") and self.highlightedCell.row > 1 then
-    if self.active then
-      self.highlightedCell.row = self.highlightedCell.row - 1
-    end
-  end
-
-  if love.keyboard.waspressed("right") and self.highlightedCell.column < self.dimension then
-    if self.active then
-      self.highlightedCell.column = self.highlightedCell.column + 1
-    end
-  end
-
-  if love.keyboard.waspressed("down") and self.highlightedCell.row < self.dimension then
-    if self.active then
-      self.highlightedCell.row = self.highlightedCell.row + 1
-    end
-  end
-
-  if love.keyboard.waspressed("left") and self.highlightedCell.column > 1 then
-    if self.active then
-      self.highlightedCell.column = self.highlightedCell.column - 1
-    end
-  end
+  )
 end
 
 function PlayState:goToVictoryState()
@@ -271,6 +195,134 @@ function PlayState:goToVictoryState()
       )
     end
   )
+end
+
+function PlayState:selectPen()
+  self.tools:select("pen")
+
+  Timer:tween(
+    TOOLS.tween,
+    {
+      [self.tools.pen] = {["scale"] = TOOLS.scales[1]},
+      [self.tools.eraser] = {["scale"] = TOOLS.scales[2]}
+    }
+  )
+end
+
+function PlayState:selectEraser()
+  self.tools:select("eraser")
+
+  Timer:tween(
+    TOOLS.tween,
+    {
+      [self.tools.eraser] = {["scale"] = TOOLS.scales[1]},
+      [self.tools.pen] = {["scale"] = TOOLS.scales[2]}
+    }
+  )
+end
+
+function PlayState:update(dt)
+  Timer:update(dt)
+
+  if gMouseInput then
+    local x, y = love.mouse:getPosition()
+    if x > self.level.x and x < self.level.x + self.size and y > self.level.y and y < self.level.y + self.size then
+      local column = math.floor((x - self.level.x) / self.cellSize) + 1
+      local row = math.floor((y - self.level.y) / self.cellSize) + 1
+
+      if column ~= self.highlightedCell.column or row ~= self.highlightedCell.row then
+        self.highlightedCell.column = column
+        self.highlightedCell.row = row
+
+        if love.mouse.isDown(1) then
+          self:selectCell()
+        end
+      end
+    end
+  end
+
+  if love.mouse.waspressed(1) then
+    if self.active then
+      local x, y = love.mouse:getPosition()
+      if x ^ 2 + y ^ 2 < BACK_BUTTON_RADIUS ^ 2 then
+        self:goToSelectState()
+      else
+        if x > self.level.x and x < self.level.x + self.size and y > self.level.y and y < self.level.y + self.size then
+          self:selectCell()
+        else
+          if (x - self.tools.pen.x) ^ 2 + (y - self.tools.pen.y) ^ 2 < (self.tools.pen.r * self.tools.pen.scale) ^ 2 then
+            self:selectPen()
+          elseif
+            (x - self.tools.eraser.x) ^ 2 + (y - self.tools.eraser.y) ^ 2 <
+              (self.tools.eraser.r * self.tools.eraser.scale) ^ 2
+           then
+            self:selectEraser()
+          end
+        end
+      end
+    end
+  end
+
+  if love.keyboard.waspressed("escape") then
+    if self.active then
+      self:goToSelectState()
+    end
+  end
+
+  if love.keyboard.waspressed("return") then
+    if self.active then
+      self:selectCell()
+    end
+  end
+
+  if love.keyboard.waspressed("space") or love.keyboard.waspressed("tab") or love.keyboard.waspressed("x") then
+    if self.active then
+      if self.tools.selection == "pen" then
+        self:selectEraser()
+      else
+        self:selectPen()
+      end
+    end
+  end
+
+  if love.keyboard.waspressed("p") and self.tools.selection == "eraser" then
+    if self.active then
+      self:selectPen()
+    end
+  end
+
+  if love.keyboard.waspressed("e") and self.tools.selection == "pen" then
+    if self.active then
+      self:selectEraser()
+    end
+  end
+
+  if
+    love.keyboard.waspressed("up") or love.keyboard.waspressed("right") or love.keyboard.waspressed("down") or
+      love.keyboard.waspressed("left")
+   then
+    if self.active then
+      if love.keyboard.waspressed("up") and self.highlightedCell.row > 1 then
+        self.highlightedCell.row = self.highlightedCell.row - 1
+      end
+
+      if love.keyboard.waspressed("right") and self.highlightedCell.column < self.dimension then
+        self.highlightedCell.column = self.highlightedCell.column + 1
+      end
+
+      if love.keyboard.waspressed("down") and self.highlightedCell.row < self.dimension then
+        self.highlightedCell.row = self.highlightedCell.row + 1
+      end
+
+      if love.keyboard.waspressed("left") and self.highlightedCell.column > 1 then
+        self.highlightedCell.column = self.highlightedCell.column - 1
+      end
+
+      if love.keyboard.isDown("return") then
+        self:selectCell()
+      end
+    end
+  end
 end
 
 function PlayState:checkVictory()
@@ -363,6 +415,10 @@ function PlayState:render()
     self.cellSize,
     self.cellSize
   )
+
+  if gMouseInput then
+    drawBackButton()
+  end
 
   if not self.active then
     love.graphics.setColor(gColors.overlay.r, gColors.overlay.g, gColors.overlay.b, self.overlay.opacity)
