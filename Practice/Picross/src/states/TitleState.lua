@@ -5,7 +5,7 @@ local INSTRUCTIONS_PADDING = {
   ["x"] = 28,
   ["y"] = 11
 }
-local INSTRUCTIONS_BACKGROUND_OPACITY = 0.25
+local INSTRUCTIONS_BACKGROUND_OPACITY = 0.3
 local INSTRUCTIONS_BACKGROUND_INTERVAL = 1.1
 local INSTRUCTIONS_BACKGROUND_TWEEN = INSTRUCTIONS_BACKGROUND_INTERVAL - 0.1
 
@@ -22,7 +22,7 @@ function TitleState:enter()
   }
 
   local instructions = {
-    ["text"] = "Play",
+    ["text"] = "Levels",
     ["y"] = self.title.y + gFonts.large:getHeight() + TITLE_MARGIN_BOTTOM
   }
 
@@ -81,7 +81,7 @@ function TitleState:update(dt)
           [self.overlay] = {["opacity"] = 1}
         },
         function()
-          gStateMachine:change("play")
+          gStateMachine:change("select")
         end
       )
     end

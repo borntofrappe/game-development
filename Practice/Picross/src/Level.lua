@@ -1,12 +1,12 @@
 Level = {}
 
-function Level:new(index, isComplete)
+function Level:new(index, gridSize, isComplete)
   local level = LEVELS[index]
   local name = level.name
   local sequence, dimension = level.grid:gsub("[^xo]", "")
   local grid = {}
 
-  local size = GRID_SIZE
+  local size = gridSize or GRID_SIZE
   local cellSize = size / dimension
 
   local hints = {

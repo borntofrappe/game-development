@@ -39,13 +39,16 @@ function love.load()
       ["play"] = function()
         return PlayState:new()
       end,
+      ["select"] = function()
+        return SelectState:new()
+      end,
       ["victory"] = function()
         return VictoryState:new()
       end
     }
   )
 
-  gStateMachine:change("title")
+  gStateMachine:change("select")
 
   love.keyboard.keypressed = {}
 end

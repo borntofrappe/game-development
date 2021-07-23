@@ -2,15 +2,13 @@ PlayState = BaseState:new()
 
 local OVERLAY_TWEEN = 0.1
 
-function PlayState:enter()
-  self.tools = Tools:new("pen")
-
+function PlayState:enter(params)
   self.offset = {
     ["x"] = WINDOW_WIDTH - GRID_SIZE - GRID_PADDING.x,
     ["y"] = WINDOW_HEIGHT - GRID_SIZE - GRID_PADDING.y
   }
 
-  self.index = math.random(#LEVELS)
+  self.index = params.index
   self.level = Level:new(self.index)
   self.highlightedCell = {
     ["column"] = math.random(self.level.dimension),
@@ -28,6 +26,7 @@ function PlayState:enter()
   }
 
   self.data = Data:new(self.index)
+  self.tools = Tools:new("pen")
 
   Timer:every(
     self.interval.duration,
