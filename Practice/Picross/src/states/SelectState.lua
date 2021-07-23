@@ -82,6 +82,8 @@ function SelectState:enter(params)
 end
 
 function SelectState:goToTitleState()
+  gSounds["confirm"]:play()
+
   self.active = false
 
   Timer:reset()
@@ -97,6 +99,8 @@ function SelectState:goToTitleState()
 end
 
 function SelectState:goToPlayState()
+  gSounds["confirm"]:play()
+
   self.active = false
 
   Timer:reset()
@@ -122,7 +126,12 @@ function SelectState:update(dt)
   if gMouseInput then
     local x, y = love.mouse:getPosition()
     for i, level in ipairs(self.levels) do
-      if x > level.x and x < level.x + self.size and y > level.y and y < level.y + self.size then
+      if
+        x > level.x and x < level.x + self.size and y > level.y and y < level.y + self.size and
+          self.selection.index ~= i
+       then
+        gSounds["select"]:stop()
+        gSounds["select"]:play()
         self.selection.index = i
         break
       end
@@ -159,12 +168,18 @@ function SelectState:update(dt)
 
   if love.keyboard.waspressed("right") then
     if self.active and self.selection.index < #self.levels then
+      gSounds["select"]:stop()
+      gSounds["select"]:play()
+
       self.selection.index = self.selection.index + 1
     end
   end
 
   if love.keyboard.waspressed("left") then
     if self.active and self.selection.index > 1 then
+      gSounds["select"]:stop()
+      gSounds["select"]:play()
+
       self.selection.index = self.selection.index - 1
     end
   end

@@ -80,6 +80,10 @@ function love.load()
 
   love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
+
+  gSounds["music"]:setLooping(true)
+  gSounds["music"]:setVolume(0.1)
+  gSounds["music"]:play()
 end
 
 function love.keypressed(key)

@@ -35,6 +35,8 @@ function VictoryState:enter(params)
 end
 
 function VictoryState:goToTitleState()
+  gSounds["confirm"]:play()
+
   self.active = false
   Timer:reset()
   Timer:tween(
@@ -49,6 +51,8 @@ function VictoryState:goToTitleState()
 end
 
 function VictoryState:goToSelectState()
+  gSounds["confirm"]:play()
+
   self.active = false
   Timer:tween(
     OVERLAY_TWEEN,

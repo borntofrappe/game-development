@@ -111,35 +111,9 @@ function PlayState:enter(params)
   )
 end
 
-function PlayState:selectCell()
-  local column = self.highlightedCell.column
-  local row = self.highlightedCell.row
-  local index = column + (row - 1) * self.dimension
-
-  if self.tools.selection == "pen" then
-    if self.level.grid[index].value == "x" then
-      self.level.grid[index].value = nil
-    else
-      self.level.grid[index].value = "o"
-
-      if self:checkVictory() then
-        self:goToVictoryState()
-      end
-    end
-  elseif self.tools.selection == "eraser" then
-    if self.level.grid[index].value == "o" then
-      self.level.grid[index].value = nil
-
-      if self:checkVictory() then
-        self:goToVictoryState()
-      end
-    else
-      self.level.grid[index].value = "x"
-    end
-  end
-end
-
 function PlayState:goToSelectState()
+  gSounds["confirm"]:play()
+
   self.active = false
 
   Timer:reset()
@@ -169,6 +143,8 @@ function PlayState:goToSelectState()
 end
 
 function PlayState:goToVictoryState()
+  gSounds["victory"]:play()
+
   self.active = false
 
   for k, cell in pairs(self.level.grid) do
@@ -197,7 +173,44 @@ function PlayState:goToVictoryState()
   )
 end
 
+function PlayState:selectCell()
+  local column = self.highlightedCell.column
+  local row = self.highlightedCell.row
+  local index = column + (row - 1) * self.dimension
+
+  if self.tools.selection == "pen" then
+    if self.level.grid[index].value == "x" then
+      self.level.grid[index].value = nil
+    else
+      gSounds["pen"]:stop()
+      gSounds["pen"]:play()
+
+      self.level.grid[index].value = "o"
+
+      if self:checkVictory() then
+        self:goToVictoryState()
+      end
+    end
+  elseif self.tools.selection == "eraser" then
+    if self.level.grid[index].value == "o" then
+      self.level.grid[index].value = nil
+
+      if self:checkVictory() then
+        self:goToVictoryState()
+      end
+    else
+      gSounds["eraser"]:stop()
+      gSounds["eraser"]:play()
+
+      self.level.grid[index].value = "x"
+    end
+  end
+end
+
 function PlayState:selectPen()
+  gSounds["confirm"]:stop()
+  gSounds["confirm"]:play()
+
   self.tools:select("pen")
 
   Timer:tween(
@@ -210,6 +223,9 @@ function PlayState:selectPen()
 end
 
 function PlayState:selectEraser()
+  gSounds["confirm"]:stop()
+  gSounds["confirm"]:play()
+
   self.tools:select("eraser")
 
   Timer:tween(
@@ -236,6 +252,9 @@ function PlayState:update(dt)
 
         if love.mouse.isDown(1) then
           self:selectCell()
+        else
+          gSounds["select"]:stop()
+          gSounds["select"]:play()
         end
       end
     end
@@ -302,6 +321,9 @@ function PlayState:update(dt)
       love.keyboard.waspressed("left")
    then
     if self.active then
+      gSounds["select"]:stop()
+      gSounds["select"]:play()
+
       if love.keyboard.waspressed("up") and self.highlightedCell.row > 1 then
         self.highlightedCell.row = self.highlightedCell.row - 1
       end

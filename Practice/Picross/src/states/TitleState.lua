@@ -74,6 +74,8 @@ function TitleState:enter()
 end
 
 function TitleState:goToSelectState()
+  gSounds["confirm"]:play()
+
   self.active = false
 
   Timer:reset()
