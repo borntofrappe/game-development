@@ -12,7 +12,19 @@ GRID_PADDING = {
 }
 
 LEVELS = {
-  {
+  [0] = {
+    ["name"] = "?",
+    ["grid"] = [[
+xooooox
+xoxxxox
+xoxxxox
+xxxooox
+xxxoxxx
+xxxxxxx
+xxxoxxx
+]]
+  },
+  [1] = {
     ["name"] = "Star",
     ["grid"] = [[
 ooxoo
@@ -22,7 +34,7 @@ oxxxo
 oxoxo
 ]]
   },
-  {
+  [2] = {
     ["name"] = "Cell phone",
     ["grid"] = [[
 xxxox
@@ -32,7 +44,7 @@ xooox
 xooox
 ]]
   },
-  {
+  [3] = {
     ["name"] = "Heart",
     ["grid"] = [[
 ooxoo
@@ -42,7 +54,7 @@ xooox
 xxoxx
 ]]
   },
-  {
+  [4] = {
     ["name"] = "Musical note",
     ["grid"] = [[
 xxooo
@@ -52,7 +64,7 @@ oooxx
 oooxx
 ]]
   },
-  {
+  [5] = {
     ["name"] = "Moon",
     ["grid"] = [[
 xxoox

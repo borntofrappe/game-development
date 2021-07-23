@@ -1,12 +1,12 @@
 Level = {}
 
-function Level:new(index, gridSize, isComplete)
+function Level:new(index, x, y, size, isComplete)
   local level = LEVELS[index]
   local name = level.name
   local sequence, dimension = level.grid:gsub("[^xo]", "")
   local grid = {}
 
-  local size = gridSize or GRID_SIZE
+  local size = size or GRID_SIZE
   local cellSize = size / dimension
 
   local hints = {
@@ -23,7 +23,7 @@ function Level:new(index, gridSize, isComplete)
         value = state
       end
 
-      local cell = Cell:new(column, row, cellSize, state, value)
+      local cell = Cell:new(x + (column - 1) * cellSize, y + (row - 1) * cellSize, cellSize, state, value)
       table.insert(grid, cell)
 
       if not hints.columns[column] then
@@ -63,10 +63,12 @@ function Level:new(index, gridSize, isComplete)
   local this = {
     ["index"] = index,
     ["name"] = name,
+    ["x"] = x,
+    ["y"] = y,
     ["size"] = size,
     ["cellSize"] = cellSize,
-    ["dimension"] = dimension,
     ["grid"] = grid,
+    ["dimension"] = dimension,
     ["hints"] = hints,
     ["extraOpacity"] = isComplete and 0 or 1
   }
@@ -79,13 +81,13 @@ end
 
 function Level:render()
   love.graphics.setColor(gColors.highlight.r, gColors.highlight.g, gColors.highlight.b, self.extraOpacity)
-  love.graphics.rectangle("fill", 0, 0, self.size, self.size)
+  love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 
   love.graphics.setLineWidth(1)
   love.graphics.setColor(gColors.shadow.r, gColors.shadow.g, gColors.shadow.b, gColors.shadow.a * self.extraOpacity)
   for k = 1, self.dimension + 1 do
-    love.graphics.line((k - 1) * self.cellSize, 0, (k - 1) * self.cellSize, self.size)
-    love.graphics.line(0, (k - 1) * self.cellSize, self.size, (k - 1) * self.cellSize)
+    love.graphics.line(self.x + (k - 1) * self.cellSize, self.y, self.x + (k - 1) * self.cellSize, self.y + self.size)
+    love.graphics.line(self.x, self.y + (k - 1) * self.cellSize, self.x + self.size, self.y + (k - 1) * self.cellSize)
   end
 
   love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
@@ -99,8 +101,8 @@ function Level:render()
     for j, hintColumn in ipairs(hintsColumn) do
       love.graphics.printf(
         hintColumn,
-        self.cellSize * (i - 1),
-        self.cellSize * (#hintsColumn - j + 1) * -1 + self.cellSize / 2 - gFonts.normal:getHeight() / 2,
+        self.x + self.cellSize * (i - 1),
+        self.y + self.cellSize * (#hintsColumn - j + 1) * -1 + self.cellSize / 2 - gFonts.normal:getHeight() / 2,
         self.cellSize,
         "center"
       )
@@ -111,8 +113,8 @@ function Level:render()
     for j, hintRow in ipairs(hintsRow) do
       love.graphics.printf(
         hintRow,
-        self.cellSize * (#hintsRow - j + 1) * -1,
-        self.cellSize * (i - 1) + self.cellSize / 2 - gFonts.normal:getHeight() / 2,
+        self.x + self.cellSize * (#hintsRow - j + 1) * -1,
+        self.y + self.cellSize * (i - 1) + self.cellSize / 2 - gFonts.normal:getHeight() / 2,
         self.cellSize,
         "center"
       )

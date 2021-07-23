@@ -9,7 +9,7 @@ local INSTRUCTIONS = {
     ["y"] = 11
   },
   ["background"] = {
-    ["opacity"] = 0.3,
+    ["opacity"] = 0.4,
     ["interval"] = 1.1,
     ["tween"] = 1
   }

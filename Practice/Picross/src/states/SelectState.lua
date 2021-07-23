@@ -1,9 +1,10 @@
 SelectState = BaseState:new()
 
-local LEVELS_MARGIN_BOTTOM = 48
+local LEVELS_MARGIN_BOTTOM = 52
+local PADDING_PERCENTAGE = 0.25
 
 local SELECTION_BACKGROUND = {
-  ["opacity"] = 0.3,
+  ["opacity"] = 0.4,
   ["interval"] = 1.1,
   ["tween"] = 1
 }
@@ -15,22 +16,25 @@ function SelectState:enter(params)
 
   local spaceAround = 40
   local spaceBetween = 22
-  local totalWidth = WINDOW_WIDTH - spaceAround * 2 - spaceBetween * (#LEVELS + 1)
+  local totalWidth = WINDOW_WIDTH - spaceAround * 2 - spaceBetween * (#LEVELS - 1)
 
-  local size = totalWidth / #LEVELS + 1
+  local size = totalWidth / #LEVELS
+  local padding = math.floor(size * PADDING_PERCENTAGE)
+  local gridSize = size - padding * 2
 
   self.size = size
   self.spaceAround = spaceAround
 
   local levels = {}
   for i, level in ipairs(LEVELS) do
+    local x = spaceAround + (i - 1) * (size + spaceBetween)
+    local y = WINDOW_HEIGHT / 2 - size
     table.insert(
       levels,
       {
-        ["offset"] = {
-          ["x"] = size + spaceBetween,
-          ["y"] = 0
-        }
+        ["x"] = x,
+        ["y"] = y,
+        ["level"] = Level:new(0, x + padding, y + padding, gridSize, true)
       }
     )
   end
@@ -121,26 +125,21 @@ function SelectState:update(dt)
 end
 
 function SelectState:render()
-  love.graphics.push()
-
-  love.graphics.translate(self.spaceAround - self.size, WINDOW_HEIGHT / 2 - self.size)
-
   for i, level in ipairs(self.levels) do
-    love.graphics.translate(level.offset.x, level.offset.y)
-
     if i == self.selection.index then
       love.graphics.setColor(gColors.shadow.r, gColors.shadow.g, gColors.shadow.b, self.selection.opacity)
-      love.graphics.rectangle("fill", 0, 0, self.size, self.size)
+      love.graphics.rectangle("fill", level.x, level.y, self.size, self.size)
     end
 
     love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
     love.graphics.setLineWidth(3)
-    love.graphics.rectangle("line", 0, 0, self.size, self.size)
+    love.graphics.rectangle("line", level.x, level.y, self.size, self.size)
+
+    level.level:render()
   end
 
-  love.graphics.pop()
-
   love.graphics.setFont(gFonts.normal)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
   love.graphics.printf(
     "Level " .. self.selection.index,
     0,

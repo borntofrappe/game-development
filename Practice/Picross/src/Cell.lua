@@ -1,11 +1,9 @@
 Cell = {}
 
-function Cell:new(column, row, size, state, value)
+function Cell:new(x, y, size, state, value)
   local this = {
-    ["column"] = column,
-    ["row"] = row,
-    ["x"] = (column - 1) * size,
-    ["y"] = (row - 1) * size,
+    ["x"] = x,
+    ["y"] = y,
     ["size"] = size,
     ["state"] = state,
     ["value"] = value
