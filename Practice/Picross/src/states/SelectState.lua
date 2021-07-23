@@ -10,6 +10,8 @@ local SELECTION_BACKGROUND = {
 }
 
 function SelectState:enter(params)
+  self.active = false
+
   self.overlay = {
     ["opacity"] = 1
   }
@@ -29,12 +31,13 @@ function SelectState:enter(params)
   for i, level in ipairs(LEVELS) do
     local x = spaceAround + (i - 1) * (size + spaceBetween)
     local y = WINDOW_HEIGHT / 2 - size
+    local index = gLevelsCleared[i] and i or 0
     table.insert(
       levels,
       {
         ["x"] = x,
         ["y"] = y,
-        ["level"] = Level:new(0, x + padding, y + padding, gridSize, true)
+        ["level"] = Level:new(index, x + padding, y + padding, gridSize, true)
       }
     )
   end
@@ -57,6 +60,8 @@ function SelectState:enter(params)
       [self.overlay] = {["opacity"] = 0}
     },
     function()
+      self.active = true
+
       Timer:every(
         SELECTION_BACKGROUND.interval,
         function()
@@ -77,19 +82,21 @@ function SelectState:update(dt)
   Timer:update(dt)
 
   if love.keyboard.waspressed("right") then
-    if self.overlay.opacity == 0 and self.selection.index < #self.levels then
+    if self.active and self.selection.index < #self.levels then
       self.selection.index = self.selection.index + 1
     end
   end
 
   if love.keyboard.waspressed("left") then
-    if self.overlay.opacity == 0 and self.selection.index > 1 then
+    if self.active and self.selection.index > 1 then
       self.selection.index = self.selection.index - 1
     end
   end
 
   if love.keyboard.waspressed("escape") then
-    if self.overlay.opacity == 0 then
+    if self.active then
+      self.active = false
+
       Timer:reset()
       Timer:tween(
         OVERLAY_TWEEN,
@@ -104,7 +111,9 @@ function SelectState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    if self.overlay.opacity == 0 then
+    if self.active then
+      self.active = false
+
       Timer:reset()
       Timer:tween(
         OVERLAY_TWEEN,
@@ -141,14 +150,15 @@ function SelectState:render()
   love.graphics.setFont(gFonts.normal)
   love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
   love.graphics.printf(
-    "Level " .. self.selection.index,
+    gLevelsCleared[self.selection.index] and self.levels[self.selection.index].level.name or
+      "Level " .. self.selection.index,
     0,
     WINDOW_HEIGHT / 2 + LEVELS_MARGIN_BOTTOM,
     WINDOW_WIDTH,
     "center"
   )
 
-  if self.overlay.opacity > 0 then
+  if not self.active then
     love.graphics.setColor(gColors.overlay.r, gColors.overlay.g, gColors.overlay.b, self.overlay.opacity)
     love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
   end

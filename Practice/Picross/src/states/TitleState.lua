@@ -16,6 +16,8 @@ local INSTRUCTIONS = {
 }
 
 function TitleState:enter()
+  self.active = false
+
   self.overlay = {
     ["opacity"] = 1
   }
@@ -51,6 +53,8 @@ function TitleState:enter()
       [self.overlay] = {["opacity"] = 0}
     },
     function()
+      self.active = true
+
       Timer:every(
         INSTRUCTIONS.background.interval,
         function()
@@ -77,7 +81,9 @@ function TitleState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    if self.overlay.opacity == 0 then
+    if self.active then
+      self.active = false
+
       Timer:reset()
       Timer:tween(
         OVERLAY_TWEEN,
@@ -117,7 +123,7 @@ function TitleState:render()
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(self.instructions.text, 0, self.instructions.y, WINDOW_WIDTH, "center")
 
-  if self.overlay.opacity > 0 then
+  if not self.active then
     love.graphics.setColor(gColors.overlay.r, gColors.overlay.g, gColors.overlay.b, self.overlay.opacity)
     love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
   end

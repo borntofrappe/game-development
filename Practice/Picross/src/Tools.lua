@@ -1,22 +1,22 @@
 Tools = {}
 
-function Tools:new(selection)
+function Tools:new()
   local pen = {
     ["x"] = WINDOW_WIDTH / 4 + 19,
     ["y"] = WINDOW_HEIGHT / 2,
     ["r"] = 25,
-    ["scale"] = 1
+    ["scale"] = 0
   }
 
   local eraser = {
     ["x"] = pen.x - 38,
     ["y"] = pen.y + 38,
     ["r"] = 25,
-    ["scale"] = 0.7
+    ["scale"] = 0
   }
 
   local this = {
-    ["selection"] = selection,
+    ["selection"] = nil,
     ["pen"] = pen,
     ["eraser"] = eraser
   }

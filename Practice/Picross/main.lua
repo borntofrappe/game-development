@@ -15,6 +15,8 @@ function love.load()
 
   background = love.graphics.newImage("res/graphics/background.png")
 
+  gLevelsCleared = {}
+
   gFonts = {
     ["large"] = love.graphics.newFont("res/fonts/font.ttf", 52),
     ["medium"] = love.graphics.newFont("res/fonts/font.ttf", 26),
