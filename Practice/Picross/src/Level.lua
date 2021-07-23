@@ -61,6 +61,7 @@ function Level:new(index, gridSize, isComplete)
   end
 
   local this = {
+    ["index"] = index,
     ["name"] = name,
     ["size"] = size,
     ["cellSize"] = cellSize,
@@ -77,22 +78,22 @@ function Level:new(index, gridSize, isComplete)
 end
 
 function Level:render()
-  love.graphics.setColor(0.98, 0.85, 0.05, self.extraOpacity)
+  love.graphics.setColor(gColors.highlight.r, gColors.highlight.g, gColors.highlight.b, self.extraOpacity)
   love.graphics.rectangle("fill", 0, 0, self.size, self.size)
 
   love.graphics.setLineWidth(1)
-  love.graphics.setColor(0.05, 0.05, 0.15, self.extraOpacity * 0.15)
+  love.graphics.setColor(gColors.shadow.r, gColors.shadow.g, gColors.shadow.b, gColors.shadow.a * self.extraOpacity)
   for k = 1, self.dimension + 1 do
     love.graphics.line((k - 1) * self.cellSize, 0, (k - 1) * self.cellSize, self.size)
     love.graphics.line(0, (k - 1) * self.cellSize, self.size, (k - 1) * self.cellSize)
   end
 
-  love.graphics.setColor(0.07, 0.07, 0.2)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
   for k, cell in pairs(self.grid) do
     cell:render()
   end
 
-  love.graphics.setColor(0.07, 0.07, 0.2, self.extraOpacity)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b, self.extraOpacity)
   love.graphics.setFont(gFonts.normal)
   for i, hintsColumn in ipairs(self.hints.columns) do
     for j, hintColumn in ipairs(hintsColumn) do

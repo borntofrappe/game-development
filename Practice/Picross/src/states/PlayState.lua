@@ -1,8 +1,17 @@
 PlayState = BaseState:new()
 
-local OVERLAY_TWEEN = 0.1
+local TIMER_INTERVAL = 1
+
+local TOOLS = {
+  ["tween"] = 0.2,
+  ["scales"] = {1, 0.7}
+}
 
 function PlayState:enter(params)
+  self.overlay = {
+    ["opacity"] = 1
+  }
+
   self.offset = {
     ["x"] = WINDOW_WIDTH - GRID_SIZE - GRID_PADDING.x,
     ["y"] = WINDOW_HEIGHT - GRID_SIZE - GRID_PADDING.y
@@ -10,38 +19,29 @@ function PlayState:enter(params)
 
   self.index = params.index
   self.level = Level:new(self.index)
+
   self.highlightedCell = {
     ["column"] = math.random(self.level.dimension),
     ["row"] = math.random(self.level.dimension),
     ["size"] = self.level.cellSize
   }
 
-  self.overlay = {
-    ["opacity"] = 1
-  }
-
-  self.interval = {
-    ["duration"] = 1,
-    ["label"] = "timer"
-  }
-
-  self.data = Data:new(self.index)
+  self.data = Data:new(self.level)
   self.tools = Tools:new("pen")
-
-  Timer:every(
-    self.interval.duration,
-    function()
-      self.data.timer.time = self.data.timer.time + 1
-    end,
-    false,
-    self.interval.label
-  )
 
   Timer:tween(
     OVERLAY_TWEEN,
     {
       [self.overlay] = {["opacity"] = 0}
-    }
+    },
+    function()
+      Timer:every(
+        TIMER_INTERVAL,
+        function()
+          self.data.timer.time = self.data.timer.time + 1
+        end
+      )
+    end
   )
 end
 
@@ -49,115 +49,135 @@ function PlayState:update(dt)
   Timer:update(dt)
 
   if love.keyboard.waspressed("escape") then
-    Timer:remove(self.interval.label)
-    Timer:tween(
-      OVERLAY_TWEEN,
-      {
-        [self.overlay] = {["opacity"] = 1}
-      },
-      function()
-        gStateMachine:change("title")
-      end
-    )
+    if self.overlay.opacity == 0 then
+      Timer:reset()
+      Timer:tween(
+        OVERLAY_TWEEN,
+        {
+          [self.overlay] = {["opacity"] = 1}
+        },
+        function()
+          gStateMachine:change(
+            "select",
+            {
+              ["index"] = self.index
+            }
+          )
+        end
+      )
+    end
   end
 
   if love.keyboard.waspressed("return") then
-    local column = self.highlightedCell.column
-    local row = self.highlightedCell.row
-    local index = column + (row - 1) * self.level.dimension
+    if self.overlay.opacity == 0 then
+      local column = self.highlightedCell.column
+      local row = self.highlightedCell.row
+      local index = column + (row - 1) * self.level.dimension
 
-    if self.tools.selection == "pen" then
-      if self.level.grid[index].value == "x" then
-        self.level.grid[index].value = nil
-      else
-        self.level.grid[index].value = "o"
+      if self.tools.selection == "pen" then
+        if self.level.grid[index].value == "x" then
+          self.level.grid[index].value = nil
+        else
+          self.level.grid[index].value = "o"
 
-        if self:checkVictory() then
-          Timer:remove(self.interval.label)
-          gStateMachine:change(
-            "victory",
-            {
-              ["offset"] = self.offset,
-              ["level"] = self.level,
-              ["data"] = self.data
-            }
-          )
+          if self:checkVictory() then
+            self:goToVictoryState()
+          end
         end
-      end
-    elseif self.tools.selection == "eraser" then
-      if self.level.grid[index].value == "o" then
-        self.level.grid[index].value = nil
+      elseif self.tools.selection == "eraser" then
+        if self.level.grid[index].value == "o" then
+          self.level.grid[index].value = nil
 
-        if self:checkVictory() then
-          Timer:remove(self.interval.label)
-          gStateMachine:change(
-            "victory",
-            {
-              ["offset"] = self.offset,
-              ["level"] = self.level,
-              ["data"] = self.data
-            }
-          )
+          if self:checkVictory() then
+            self:goToVictoryState()
+          end
+        else
+          self.level.grid[index].value = "x"
         end
-      else
-        self.level.grid[index].value = "x"
       end
     end
   end
 
   if love.keyboard.waspressed("space") or love.keyboard.waspressed("t") or love.keyboard.waspressed("x") then
-    local currentSelection = self.tools.selection
-    local newSelection = currentSelection == "pen" and "eraser" or "pen"
-    self.tools:select(newSelection)
+    if self.overlay.opacity == 0 then
+      local currentSelection = self.tools.selection
+      local newSelection = currentSelection == "pen" and "eraser" or "pen"
+      self.tools:select(newSelection)
 
-    Timer:tween(
-      0.2,
-      {
-        [self.tools[currentSelection]] = {["scale"] = 0.7},
-        [self.tools[newSelection]] = {["scale"] = 1}
-      }
-    )
+      Timer:tween(
+        TOOLS.tween,
+        {
+          [self.tools[newSelection]] = {["scale"] = TOOLS.scales[1]},
+          [self.tools[currentSelection]] = {["scale"] = TOOLS.scales[2]}
+        }
+      )
+    end
   end
 
   if love.keyboard.waspressed("p") and self.tools.selection == "eraser" then
-    self.tools:select("pen")
+    if self.overlay.opacity == 0 then
+      self.tools:select("pen")
 
-    Timer:tween(
-      0.2,
-      {
-        [self.tools.eraser] = {["scale"] = 0.7},
-        [self.tools.pen] = {["scale"] = 1}
-      }
-    )
+      Timer:tween(
+        TOOLS.tween,
+        {
+          [self.tools.pen] = {["scale"] = TOOLS.scales[1]},
+          [self.tools.eraser] = {["scale"] = TOOLS.scales[2]}
+        }
+      )
+    end
   end
 
   if love.keyboard.waspressed("e") and self.tools.selection == "pen" then
-    self.tools:select("eraser")
+    if self.overlay.opacity == 0 then
+      self.tools:select("eraser")
 
-    Timer:tween(
-      0.2,
-      {
-        [self.tools.pen] = {["scale"] = 0.7},
-        [self.tools.eraser] = {["scale"] = 1}
-      }
-    )
+      Timer:tween(
+        TOOLS.tween,
+        {
+          [self.tools.eraser] = {["scale"] = TOOLS.scales[1]},
+          [self.tools.pen] = {["scale"] = TOOLS.scales[2]}
+        }
+      )
+    end
   end
 
   if love.keyboard.waspressed("up") and self.highlightedCell.row > 1 then
-    self.highlightedCell.row = self.highlightedCell.row - 1
+    if self.overlay.opacity == 0 then
+      self.highlightedCell.row = self.highlightedCell.row - 1
+    end
   end
 
   if love.keyboard.waspressed("right") and self.highlightedCell.column < self.level.dimension then
-    self.highlightedCell.column = self.highlightedCell.column + 1
+    if self.overlay.opacity == 0 then
+      self.highlightedCell.column = self.highlightedCell.column + 1
+    end
   end
 
   if love.keyboard.waspressed("down") and self.highlightedCell.row < self.level.dimension then
-    self.highlightedCell.row = self.highlightedCell.row + 1
+    if self.overlay.opacity == 0 then
+      self.highlightedCell.row = self.highlightedCell.row + 1
+    end
   end
 
   if love.keyboard.waspressed("left") and self.highlightedCell.column > 1 then
-    self.highlightedCell.column = self.highlightedCell.column - 1
+    if self.overlay.opacity == 0 then
+      self.highlightedCell.column = self.highlightedCell.column - 1
+    end
   end
+end
+
+function PlayState:goToVictoryState()
+  Timer:reset()
+
+  gStateMachine:change(
+    "victory",
+    {
+      ["offset"] = self.offset,
+      ["level"] = self.level,
+      ["data"] = self.data
+    }
+  )
 end
 
 function PlayState:checkVictory()
@@ -183,7 +203,7 @@ function PlayState:render()
   self.level:render()
 
   if self.highlightedCell then
-    love.graphics.setColor(0.05, 0.05, 0.15, 0.15)
+    love.graphics.setColor(gColors.shadow.r, gColors.shadow.g, gColors.shadow.b, gColors.shadow.a)
     love.graphics.rectangle(
       "fill",
       self.highlightedCell.size * #self.level.hints.rows[self.highlightedCell.row] * -1,
@@ -208,7 +228,7 @@ function PlayState:render()
       self.highlightedCell.size
     )
 
-    love.graphics.setColor(0.07, 0.07, 0.2)
+    love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
     love.graphics.setLineWidth(3)
     love.graphics.rectangle(
       "line",
@@ -222,7 +242,7 @@ function PlayState:render()
   love.graphics.pop()
 
   if self.overlay.opacity > 0 then
-    love.graphics.setColor(1, 1, 1, self.overlay.opacity)
+    love.graphics.setColor(gColors.overlay.r, gColors.overlay.g, gColors.overlay.b, self.overlay.opacity)
     love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
   end
 end

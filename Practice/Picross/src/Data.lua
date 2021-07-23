@@ -1,6 +1,6 @@
 Data = {}
 
-function Data:new(index)
+function Data:new(level)
   local timer = {
     ["time"] = 0,
     ["width"] = math.floor(gFonts.normal:getWidth("00:00:00") * 1.2),
@@ -11,7 +11,7 @@ function Data:new(index)
   timer.y = math.floor(WINDOW_HEIGHT / 4 - timer.height / 2)
 
   local this = {
-    ["index"] = index,
+    ["index"] = level.index,
     ["timer"] = timer
   }
 
@@ -37,15 +37,15 @@ end
 
 function Data:render()
   love.graphics.setFont(gFonts.normal)
-  love.graphics.setColor(0.05, 0.05, 0.15, 0.15)
+  love.graphics.setColor(gColors.shadow.r, gColors.shadow.g, gColors.shadow.b, gColors.shadow.a)
   love.graphics.rectangle("fill", self.timer.x + 6, self.timer.y + 4, self.timer.width, self.timer.height)
 
-  love.graphics.setColor(0.07, 0.07, 0.2)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
   love.graphics.rectangle("fill", self.timer.x, self.timer.y, self.timer.width, self.timer.height)
 
   love.graphics.print("Level " .. self.index, self.timer.x, self.timer.y - gFonts.normal:getHeight() - 4)
 
-  love.graphics.setColor(0.98, 0.85, 0.05)
+  love.graphics.setColor(gColors.highlight.r, gColors.highlight.g, gColors.highlight.b)
   love.graphics.printf(
     self:formatTime(self.timer.time),
     self.timer.x,

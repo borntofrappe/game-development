@@ -30,6 +30,30 @@ function love.load()
     ["music"] = love.audio.newSource("res/sounds/music.mp3", "static")
   }
 
+  gColors = {
+    ["text"] = {
+      ["r"] = 0.07,
+      ["g"] = 0.07,
+      ["b"] = 0.2
+    },
+    ["shadow"] = {
+      ["r"] = 0.05,
+      ["g"] = 0.05,
+      ["b"] = 0.15,
+      ["a"] = 0.15
+    },
+    ["highlight"] = {
+      ["r"] = 0.98,
+      ["g"] = 0.85,
+      ["b"] = 0.05
+    },
+    ["overlay"] = {
+      ["r"] = 1,
+      ["g"] = 1,
+      ["b"] = 1
+    }
+  }
+
   gStateMachine =
     StateMachine:new(
     {
@@ -48,7 +72,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("select")
+  gStateMachine:change("title")
 
   love.keyboard.keypressed = {}
 end

@@ -1,15 +1,19 @@
 TitleState = BaseState:new()
 
-local TITLE_MARGIN_BOTTOM = 64
-local INSTRUCTIONS_PADDING = {
-  ["x"] = 28,
-  ["y"] = 11
-}
-local INSTRUCTIONS_BACKGROUND_OPACITY = 0.3
-local INSTRUCTIONS_BACKGROUND_INTERVAL = 1.1
-local INSTRUCTIONS_BACKGROUND_TWEEN = INSTRUCTIONS_BACKGROUND_INTERVAL - 0.1
+local TITLE_MARGIN_TOP = -12
+local TITLE_MARGIN_BOTTOM = 68
 
-local OVERLAY_TWEEN = 0.1
+local INSTRUCTIONS = {
+  ["padding"] = {
+    ["x"] = 28,
+    ["y"] = 11
+  },
+  ["background"] = {
+    ["opacity"] = 0.3,
+    ["interval"] = 1.1,
+    ["tween"] = 1
+  }
+}
 
 function TitleState:enter()
   self.overlay = {
@@ -18,7 +22,7 @@ function TitleState:enter()
 
   self.title = {
     ["text"] = TITLE,
-    ["y"] = WINDOW_HEIGHT / 2 - gFonts.large:getHeight()
+    ["y"] = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() + TITLE_MARGIN_TOP
   }
 
   local instructions = {
@@ -26,8 +30,8 @@ function TitleState:enter()
     ["y"] = self.title.y + gFonts.large:getHeight() + TITLE_MARGIN_BOTTOM
   }
 
-  local width = gFonts.normal:getWidth(instructions.text) + INSTRUCTIONS_PADDING.x * 2
-  local height = gFonts.normal:getHeight() + INSTRUCTIONS_PADDING.y * 2
+  local width = gFonts.normal:getWidth(instructions.text) + INSTRUCTIONS.padding.x * 2
+  local height = gFonts.normal:getHeight() + INSTRUCTIONS.padding.y * 2
   local x = WINDOW_WIDTH / 2 - width / 2
   local y = instructions.y + gFonts.normal:getHeight() / 2 - height / 2
 
@@ -36,7 +40,7 @@ function TitleState:enter()
     ["y"] = y,
     ["width"] = width,
     ["height"] = height,
-    ["opacity"] = INSTRUCTIONS_BACKGROUND_OPACITY
+    ["opacity"] = INSTRUCTIONS.background.opacity
   }
 
   self.instructions = instructions
@@ -48,13 +52,13 @@ function TitleState:enter()
     },
     function()
       Timer:every(
-        INSTRUCTIONS_BACKGROUND_INTERVAL,
+        INSTRUCTIONS.background.interval,
         function()
           Timer:tween(
-            INSTRUCTIONS_BACKGROUND_TWEEN,
+            INSTRUCTIONS.background.tween,
             {
               [self.instructions.background] = {
-                ["opacity"] = self.instructions.background.opacity == 0 and INSTRUCTIONS_BACKGROUND_OPACITY or 0
+                ["opacity"] = self.instructions.background.opacity == 0 and INSTRUCTIONS.background.opacity or 0
               }
             }
           )
@@ -89,11 +93,11 @@ function TitleState:update(dt)
 end
 
 function TitleState:render()
-  love.graphics.setColor(0.07, 0.07, 0.2)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(self.title.text, 0, self.title.y, WINDOW_WIDTH, "center")
 
-  love.graphics.setColor(0.05, 0.05, 0.15, self.instructions.background.opacity)
+  love.graphics.setColor(gColors.shadow.r, gColors.shadow.g, gColors.shadow.b, self.instructions.background.opacity)
   love.graphics.rectangle(
     "fill",
     self.instructions.background.x,
@@ -101,7 +105,7 @@ function TitleState:render()
     self.instructions.background.width,
     self.instructions.background.height
   )
-  love.graphics.setColor(0.07, 0.07, 0.2)
+  love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
   love.graphics.setLineWidth(3)
   love.graphics.rectangle(
     "line",
@@ -114,7 +118,7 @@ function TitleState:render()
   love.graphics.printf(self.instructions.text, 0, self.instructions.y, WINDOW_WIDTH, "center")
 
   if self.overlay.opacity > 0 then
-    love.graphics.setColor(1, 1, 1, self.overlay.opacity)
+    love.graphics.setColor(gColors.overlay.r, gColors.overlay.g, gColors.overlay.b, self.overlay.opacity)
     love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
   end
 end

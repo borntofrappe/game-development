@@ -1,14 +1,17 @@
 SelectState = BaseState:new()
 
-local OVERLAY_TWEEN = 0.1
 local LEVELS_MARGIN_BOTTOM = 48
 
-local SELECTION_BACKGROUND_OPACITY = 0.3
-local SELECTION_BACKGROUND_INTERVAL = 1.1
-local SELECTION_BACKGROUND_TWEEN = SELECTION_BACKGROUND_INTERVAL - 0.1
+local SELECTION_BACKGROUND = {
+  ["opacity"] = 0.3,
+  ["interval"] = 1.1,
+  ["tween"] = 1
+}
 
-function SelectState:enter()
-  self.index = 1
+function SelectState:enter(params)
+  self.overlay = {
+    ["opacity"] = 1
+  }
 
   local spaceAround = 40
   local spaceBetween = 22
@@ -34,12 +37,14 @@ function SelectState:enter()
 
   self.levels = levels
 
-  self.selection = {
-    ["opacity"] = SELECTION_BACKGROUND_OPACITY
-  }
+  local index = 1
+  if params and params.index then
+    index = params.index
+  end
 
-  self.overlay = {
-    ["opacity"] = 1
+  self.selection = {
+    ["index"] = index,
+    ["opacity"] = SELECTION_BACKGROUND.opacity
   }
 
   Timer:tween(
@@ -49,12 +54,12 @@ function SelectState:enter()
     },
     function()
       Timer:every(
-        SELECTION_BACKGROUND_INTERVAL,
+        SELECTION_BACKGROUND.interval,
         function()
           Timer:tween(
-            SELECTION_BACKGROUND_TWEEN,
+            SELECTION_BACKGROUND.tween,
             {
-              [self.selection] = {["opacity"] = self.selection.opacity == 0 and SELECTION_BACKGROUND_OPACITY or 0}
+              [self.selection] = {["opacity"] = self.selection.opacity == 0 and SELECTION_BACKGROUND.opacity or 0}
             }
           )
         end,
@@ -68,19 +73,20 @@ function SelectState:update(dt)
   Timer:update(dt)
 
   if love.keyboard.waspressed("right") then
-    if self.overlay.opacity == 0 and self.index < #self.levels then
-      self.index = self.index + 1
+    if self.overlay.opacity == 0 and self.selection.index < #self.levels then
+      self.selection.index = self.selection.index + 1
     end
   end
 
   if love.keyboard.waspressed("left") then
-    if self.overlay.opacity == 0 and self.index > 1 then
-      self.index = self.index - 1
+    if self.overlay.opacity == 0 and self.selection.index > 1 then
+      self.selection.index = self.selection.index - 1
     end
   end
 
   if love.keyboard.waspressed("escape") then
     if self.overlay.opacity == 0 then
+      Timer:reset()
       Timer:tween(
         OVERLAY_TWEEN,
         {
@@ -95,6 +101,7 @@ function SelectState:update(dt)
 
   if love.keyboard.waspressed("return") then
     if self.overlay.opacity == 0 then
+      Timer:reset()
       Timer:tween(
         OVERLAY_TWEEN,
         {
@@ -104,7 +111,7 @@ function SelectState:update(dt)
           gStateMachine:change(
             "play",
             {
-              ["index"] = self.index
+              ["index"] = self.selection.index
             }
           )
         end
@@ -121,12 +128,12 @@ function SelectState:render()
   for i, level in ipairs(self.levels) do
     love.graphics.translate(level.offset.x, level.offset.y)
 
-    if i == self.index then
-      love.graphics.setColor(0.05, 0.05, 0.15, self.selection.opacity)
+    if i == self.selection.index then
+      love.graphics.setColor(gColors.shadow.r, gColors.shadow.g, gColors.shadow.b, self.selection.opacity)
       love.graphics.rectangle("fill", 0, 0, self.size, self.size)
     end
 
-    love.graphics.setColor(0.07, 0.07, 0.2)
+    love.graphics.setColor(gColors.text.r, gColors.text.g, gColors.text.b)
     love.graphics.setLineWidth(3)
     love.graphics.rectangle("line", 0, 0, self.size, self.size)
   end
@@ -134,10 +141,16 @@ function SelectState:render()
   love.graphics.pop()
 
   love.graphics.setFont(gFonts.normal)
-  love.graphics.printf("Level " .. self.index, 0, WINDOW_HEIGHT / 2 + LEVELS_MARGIN_BOTTOM, WINDOW_WIDTH, "center")
+  love.graphics.printf(
+    "Level " .. self.selection.index,
+    0,
+    WINDOW_HEIGHT / 2 + LEVELS_MARGIN_BOTTOM,
+    WINDOW_WIDTH,
+    "center"
+  )
 
   if self.overlay.opacity > 0 then
-    love.graphics.setColor(1, 1, 1, self.overlay.opacity)
+    love.graphics.setColor(gColors.overlay.r, gColors.overlay.g, gColors.overlay.b, self.overlay.opacity)
     love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
   end
 end
