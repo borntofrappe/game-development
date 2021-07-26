@@ -4,7 +4,7 @@ function GenerateQuadsPlayer(atlas)
   local x = 0
   local y = 0
 
-  for i, type in ipairs(PLAYER) do
+  for i, type in ipairs(PLAYER.data) do
     for j, variety in ipairs(type.varieties) do
       quads[variety] = love.graphics.newQuad(x, y, type.width, type.height, atlas:getDimensions())
       x = x + type.width

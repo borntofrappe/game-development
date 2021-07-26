@@ -11,6 +11,21 @@ function GameoverState:update(dt)
   end
 
   self.player:update(dt)
+
+  if self.player.y + self.player.height >= WINDOW_HEIGHT then
+    self.player.y = WINDOW_HEIGHT - self.player.height
+    self.player:bounce()
+  end
+
+  if love.keyboard.isDown("right") then
+    self.player.dx = SLIDE
+    self.player.direction = 1
+  end
+
+  if love.keyboard.isDown("left") then
+    self.player.dx = SLIDE
+    self.player.direction = -1
+  end
 end
 
 function GameoverState:render()

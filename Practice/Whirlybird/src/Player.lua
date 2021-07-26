@@ -2,21 +2,27 @@ Player = {}
 
 local ANIMATION_INTERVAL = 0.15
 
-function Player:new(x, y, type)
+function Player:new(x, y, direction, type)
+  local direction = direction or 1
   local type = type or "default"
-  local data = PLAYER[PLAYER_TYPES[type]]
+
+  local data = PLAYER.data[PLAYER.types[type]]
   local width = data.width
   local height = data.height
   local varieties = data.varieties
 
   local this = {
+    ["type"] = type,
+    ["variety"] = 1,
+    ["varieties"] = varieties,
+    ["timer"] = 0,
     ["x"] = x - width / 2,
     ["y"] = y - height / 2,
     ["width"] = width,
     ["height"] = height,
-    ["variety"] = 1,
-    ["varieties"] = varieties,
-    ["timer"] = 0
+    ["dx"] = 0,
+    ["dy"] = 0,
+    ["direction"] = 1
   }
 
   self.__index = self
@@ -26,6 +32,20 @@ function Player:new(x, y, type)
 end
 
 function Player:update(dt)
+  self.dy = self.dy + GRAVITY * dt
+  self.y = self.y + self.dy
+
+  self.dx = math.max(0, self.dx - FRICTION * dt)
+  self.x = self.x + self.dx * self.direction
+
+  if self.x < -self.width then
+    self.x = WINDOW_WIDTH
+  end
+
+  if self.x > WINDOW_WIDTH then
+    self.x = -self.width
+  end
+
   if #self.varieties > 1 then
     self.timer = self.timer + dt
     if self.timer >= ANIMATION_INTERVAL then
@@ -35,12 +55,17 @@ function Player:update(dt)
   end
 end
 
+function Player:bounce()
+  self.dy = JUMP * -1
+end
+
 function Player:change(type)
-  local data = PLAYER[PLAYER_TYPES[type]]
+  local data = PLAYER.data[PLAYER.types[type]]
   local width = data.width
   local height = data.height
   local varieties = data.varieties
 
+  self.type = type
   self.x = self.x + (self.width - width)
   self.y = self.y + (self.height - height)
   self.width = width
@@ -54,7 +79,10 @@ function Player:render()
   love.graphics.draw(
     gTextures["spritesheet"],
     gFrames["player"][self.varieties[self.variety]],
-    math.floor(self.x),
-    math.floor(self.y)
+    self.direction == 1 and math.floor(self.x) or math.floor(self.x) + self.width,
+    math.floor(self.y),
+    0,
+    self.direction == 1 and 1 or -1,
+    1
   )
 end

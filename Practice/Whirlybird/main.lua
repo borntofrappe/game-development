@@ -12,7 +12,7 @@ function love.load()
   love.graphics.setBackgroundColor(1, 1, 1)
 
   gFonts = {
-    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 56),
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 48),
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
   }
 
