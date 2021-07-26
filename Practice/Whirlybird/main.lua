@@ -11,6 +11,27 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
   love.graphics.setBackgroundColor(1, 1, 1)
 
+  gFonts = {
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 56),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+  }
+
+  gSounds = {
+    ["bounce"] = love.audio.newSource("res/sounds/bounce.wav", "static"),
+    ["destroy"] = love.audio.newSource("res/sounds/destroy.wav", "static"),
+    ["fly"] = love.audio.newSource("res/sounds/fly.wav", "static"),
+    ["hurt"] = love.audio.newSource("res/sounds/hurt.wav", "static"),
+    ["jump"] = love.audio.newSource("res/sounds/jump.wav", "static")
+  }
+
+  gTextures = {
+    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
+  }
+
+  gFrames = {
+    ["player"] = GenerateQuadsPlayer(gTextures["spritesheet"])
+  }
+
   gStateMachine =
     StateMachine:new(
     {
@@ -32,6 +53,10 @@ function love.load()
 end
 
 function love.keypressed(key)
+  if key == "escape" then
+    love.event.quit()
+  end
+
   love.keyboard.keypressed[key] = true
 end
 
@@ -46,6 +71,5 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0, 0, 0)
   gStateMachine:render()
 end

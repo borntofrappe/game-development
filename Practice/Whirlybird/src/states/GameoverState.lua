@@ -1,15 +1,22 @@
 GameoverState = BaseState:new()
 
-function GameoverState:update(dt)
-  if love.keyboard.waspressed("escape") then
-    gStateMachine:change("play")
-  end
+function GameoverState:enter(params)
+  self.player = params.player
+  self.player:change("falling")
+end
 
+function GameoverState:update(dt)
   if love.keyboard.waspressed("return") then
     gStateMachine:change("start")
   end
+
+  self.player:update(dt)
 end
 
 function GameoverState:render()
-  love.graphics.printf("Gameover", 0, WINDOW_HEIGHT / 2 - 8, WINDOW_WIDTH, "center")
+  love.graphics.setFont(gFonts["normal"])
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.printf("Gameover", 0, 8, WINDOW_WIDTH, "center")
+
+  self.player:render()
 end
