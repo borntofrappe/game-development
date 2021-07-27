@@ -25,11 +25,15 @@ function love.load()
   }
 
   gTextures = {
-    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
+    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png"),
+    ["spritesheet-gameover"] = love.graphics.newImage("res/graphics/spritesheet-gameover.png")
   }
 
   gFrames = {
-    ["player"] = GenerateQuadsPlayer(gTextures["spritesheet"])
+    ["player"] = GenerateQuadsPlayer(gTextures["spritesheet"]),
+    ["sprites"] = GenerateQuadsSprites(gTextures["spritesheet-gameover"]),
+    ["marks"] = GenerateQuadsMarks(gTextures["spritesheet-gameover"]),
+    ["button"] = GenerateQuadButton(gTextures["spritesheet-gameover"])
   }
 
   gStateMachine =
@@ -41,22 +45,22 @@ function love.load()
       ["play"] = function()
         return PlayState:new()
       end,
+      ["falling"] = function()
+        return FallingState:new()
+      end,
       ["gameover"] = function()
         return GameoverState:new()
       end
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("gameover")
 
   love.keyboard.keypressed = {}
+  love.mouse.buttonpressed = {}
 end
 
 function love.keypressed(key)
-  if key == "escape" then
-    love.event.quit()
-  end
-
   love.keyboard.keypressed[key] = true
 end
 
@@ -64,10 +68,19 @@ function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
+function love.mousepressed(x, y, button)
+  love.mouse.buttonpressed[button] = true
+end
+
+function love.mouse.waspressed(button)
+  return love.mouse.buttonpressed[button]
+end
+
 function love.update(dt)
   gStateMachine:update(dt)
 
   love.keyboard.keypressed = {}
+  love.mouse.buttonpressed = {}
 end
 
 function love.draw()

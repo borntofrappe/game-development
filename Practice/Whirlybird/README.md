@@ -2,6 +2,18 @@
 
 Recreate the pixelated game available in the "Play Games" application developed by Google.
 
+## Roadmap
+
+- platforms
+
+- flying
+
+- falling and gameover
+
+- touch controls
+
+- sound
+
 ## Resources
 
 The font is the same font introduced in `00 Pong`.
