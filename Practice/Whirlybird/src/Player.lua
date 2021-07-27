@@ -2,19 +2,19 @@ Player = {}
 
 local ANIMATION_INTERVAL = 0.1
 
-function Player:new(x, y, direction, type)
+function Player:new(x, y, direction, state)
   local direction = direction or 1
-  local type = type or "default"
+  local state = state or "default"
 
-  local data = PLAYER.data[PLAYER.types[type]]
+  local data = PLAYER[state]
   local width = data.width
   local height = data.height
-  local varieties = data.varieties
+  local frames = data.frames
 
   local this = {
-    ["type"] = type,
-    ["variety"] = 1,
-    ["varieties"] = varieties,
+    ["state"] = state,
+    ["frame"] = 1,
+    ["frames"] = frames,
     ["timer"] = 0,
     ["x"] = x - width / 2,
     ["y"] = y - height / 2,
@@ -32,10 +32,8 @@ function Player:new(x, y, direction, type)
 end
 
 function Player:update(dt)
-  if self.type == "default" or self.type == "flying" then
-    self.dy = self.dy + GRAVITY * dt
-    self.y = self.y + self.dy
-  end
+  self.dy = self.dy + GRAVITY * dt
+  self.y = self.y + self.dy
 
   self.dx = math.max(0, self.dx - FRICTION * dt)
   self.x = self.x + self.dx * self.direction
@@ -48,11 +46,29 @@ function Player:update(dt)
     self.x = -self.width
   end
 
-  if #self.varieties > 1 then
+  if love.keyboard.isDown("right") then
+    self:slide("right")
+  end
+
+  if love.keyboard.isDown("left") then
+    self:slide("left")
+  end
+
+  if love.mouse.isDown(1) then
+    local x, y = love.mouse:getPosition()
+
+    if x > WINDOW_WIDTH / 2 then
+      self:slide("right")
+    else
+      self:slide("left")
+    end
+  end
+
+  if self.frames > 1 then
     self.timer = self.timer + dt
     if self.timer >= ANIMATION_INTERVAL then
       self.timer = self.timer % ANIMATION_INTERVAL
-      self.variety = self.variety == #self.varieties and 1 or self.variety + 1
+      self.frame = self.frame == self.frames and 1 or self.frame + 1
     end
   end
 end
@@ -66,26 +82,26 @@ function Player:slide(direction)
   self.direction = direction == "right" and 1 or -1
 end
 
-function Player:change(type)
-  local data = PLAYER.data[PLAYER.types[type]]
+function Player:change(state)
+  local data = PLAYER[state]
   local width = data.width
   local height = data.height
-  local varieties = data.varieties
+  local frames = data.frames
 
-  self.type = type
+  self.state = state
   self.x = self.x + (self.width - width)
   self.y = self.y + (self.height - height)
   self.width = width
   self.height = height
-  self.variety = 1
-  self.varieties = varieties
+  self.frame = 1
+  self.frames = frames
 end
 
 function Player:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(
     gTextures["spritesheet"],
-    gFrames["player"][self.varieties[self.variety]],
+    gFrames["player"][self.state][self.frame],
     self.direction == 1 and math.floor(self.x) or math.floor(self.x) + self.width,
     math.floor(self.y),
     0,

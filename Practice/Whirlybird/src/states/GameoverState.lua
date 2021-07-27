@@ -32,7 +32,7 @@ end
 
 function GameoverState:update(dt)
   if love.keyboard.waspressed("escape") then
-    love.event.quit()
+    gStateMachine:change("start")
   end
 
   if love.keyboard.waspressed("return") then

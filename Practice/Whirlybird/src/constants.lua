@@ -1,37 +1,36 @@
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 600
 
-UPPER_THRESHOLD = WINDOW_HEIGHT / 8
-LOWER_THRESHOLD = WINDOW_HEIGHT - WINDOW_HEIGHT / 8
+UPPER_THRESHOLD = 100
+LOWER_THRESHOLD = 500
 
-GRAVITY = 16
+GRAVITY = 15
 FRICTION = 10
 SLIDE = 4
-JUMP = 12
+JUMP = 10
 
 FRICTION = 4
 PLAYER = {
-  ["data"] = {
-    {
-      ["width"] = 39,
-      ["height"] = 33,
-      ["varieties"] = {1}
-    },
-    {
-      ["width"] = 36,
-      ["height"] = 42,
-      ["varieties"] = {2, 3, 4}
-    },
-    {
-      ["width"] = 39,
-      ["height"] = 45,
-      ["varieties"] = {5, 6}
-    }
+  ["default"] = {
+    ["x"] = 0,
+    ["y"] = 0,
+    ["width"] = 39,
+    ["height"] = 33,
+    ["frames"] = 1
   },
-  ["types"] = {
-    ["default"] = 1,
-    ["flying"] = 2,
-    ["falling"] = 3
+  ["flying"] = {
+    ["x"] = 39,
+    ["y"] = 0,
+    ["width"] = 36,
+    ["height"] = 42,
+    ["frames"] = 3
+  },
+  ["falling"] = {
+    ["x"] = 147,
+    ["y"] = 0,
+    ["width"] = 39,
+    ["height"] = 45,
+    ["frames"] = 2
   }
 }
 

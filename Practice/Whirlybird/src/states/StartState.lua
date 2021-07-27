@@ -36,25 +36,7 @@ function StartState:update(dt)
     self.player:bounce()
   end
 
-  if love.keyboard.isDown("right") then
-    self.player:slide("right")
-  end
-
-  if love.keyboard.isDown("left") then
-    self.player:slide("left")
-  end
-
-  if love.mouse.isDown(1) then
-    local x, y = love.mouse:getPosition()
-
-    if x > WINDOW_WIDTH / 2 then
-      self.player:slide("right")
-    else
-      self.player:slide("left")
-    end
-  end
-
-  if love.mouse.waspressed then
+  if love.mouse.waspressed(1) then
     local x, y = love.mouse:getPosition()
 
     if y > self.menu.y and y < self.menu.y + self.menu.height then

@@ -21,24 +21,7 @@ function PlayState:update(dt)
 
   self.player:update(dt)
 
-  if love.keyboard.isDown("right") then
-    self.player:slide("right")
-  end
-
-  if love.keyboard.isDown("left") then
-    self.player:slide("left")
-  end
-
-  if love.mouse.isDown(1) then
-    local x = love.mouse:getPosition()
-    if x > WINDOW_WIDTH / 2 then
-      self.player:slide("right")
-    else
-      self.player:slide("left")
-    end
-  end
-
-  if love.keyboard.isDown("up") then
+  if love.keyboard.isDown("up") or love.mouse.waspressed(1) then
     self.player:bounce()
     self.timer = 0
   end
@@ -55,7 +38,8 @@ function PlayState:update(dt)
       gStateMachine:change(
         "falling",
         {
-          ["player"] = self.player
+          ["player"] = self.player,
+          ["scrollY"] = self.scrollY
         }
       )
     end

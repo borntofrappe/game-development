@@ -1,13 +1,17 @@
 function GenerateQuadsPlayer(atlas)
   local quads = {}
 
-  local x = 0
-  local y = 0
-
-  for i, type in ipairs(PLAYER.data) do
-    for j, variety in ipairs(type.varieties) do
-      quads[variety] = love.graphics.newQuad(x, y, type.width, type.height, atlas:getDimensions())
-      x = x + type.width
+  for k, state in pairs(PLAYER) do
+    quads[k] = {}
+    for frame = 1, state.frames do
+      quads[k][frame] =
+        love.graphics.newQuad(
+        state.x + (frame - 1) * state.width,
+        state.y,
+        state.width,
+        state.height,
+        atlas:getDimensions()
+      )
     end
   end
 

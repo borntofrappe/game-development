@@ -54,7 +54,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("gameover")
+  gStateMachine:change("play")
 
   love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
