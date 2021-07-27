@@ -1,6 +1,6 @@
 Player = {}
 
-local ANIMATION_INTERVAL = 0.15
+local ANIMATION_INTERVAL = 0.1
 
 function Player:new(x, y, direction, type)
   local direction = direction or 1
@@ -32,8 +32,10 @@ function Player:new(x, y, direction, type)
 end
 
 function Player:update(dt)
-  self.dy = self.dy + GRAVITY * dt
-  self.y = self.y + self.dy
+  if self.type == "default" or self.type == "flying" then
+    self.dy = self.dy + GRAVITY * dt
+    self.y = self.y + self.dy
+  end
 
   self.dx = math.max(0, self.dx - FRICTION * dt)
   self.x = self.x + self.dx * self.direction
@@ -57,6 +59,11 @@ end
 
 function Player:bounce()
   self.dy = JUMP * -1
+end
+
+function Player:slide(direction)
+  self.dx = SLIDE
+  self.direction = direction == "right" and 1 or -1
 end
 
 function Player:change(type)
