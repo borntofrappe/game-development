@@ -2,6 +2,8 @@ require "src/constants"
 require "src/Utils"
 
 require "src/Interactable"
+require "src/Interactables"
+
 require "src/Player"
 
 require "src/StateMachine"

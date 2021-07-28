@@ -8,14 +8,13 @@ function Interactable:new(x, y, type)
   local frames = data.frames
 
   local this = {
-    ["type"] = type,
-    ["frame"] = 1,
-    ["frames"] = frames,
     ["x"] = math.floor(x - width / 2),
     ["y"] = math.floor(y - height / 2),
     ["width"] = width,
     ["height"] = height,
-    ["inPlay"] = true
+    ["type"] = type,
+    ["frame"] = 1,
+    ["frames"] = frames
   }
 
   self.__index = self

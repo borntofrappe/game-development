@@ -10,7 +10,6 @@ SLIDE = 4
 JUMP = 12
 HOP = 4
 
-FRICTION = 4
 PLAYER = {
   ["default"] = {
     ["x"] = 0,
@@ -41,7 +40,7 @@ INTERACTABLES = {
     ["y"] = 60,
     ["width"] = 39,
     ["height"] = 9,
-    ["frames"] = 4
+    ["frames"] = 1
   },
   ["fading"] = {
     ["x"] = 0,
@@ -62,7 +61,7 @@ INTERACTABLES = {
     ["y"] = 93,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 4
+    ["frames"] = 2
   },
   ["cloud"] = {
     ["x"] = 0,
