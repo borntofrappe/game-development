@@ -50,7 +50,8 @@ INTERACTABLES = {
     },
     ["movement"] = {
       ["canMove"] = false
-    }
+    },
+    ["hatOdds"] = 5
   },
   ["fading"] = {
     ["x"] = 0,
@@ -67,7 +68,8 @@ INTERACTABLES = {
     },
     ["movement"] = {
       ["canMove"] = false
-    }
+    },
+    ["hatOdds"] = 0
   },
   ["crumbling"] = {
     ["x"] = 0,
@@ -85,7 +87,8 @@ INTERACTABLES = {
     },
     ["movement"] = {
       ["canMove"] = false
-    }
+    },
+    ["hatOdds"] = 5
   },
   ["moving"] = {
     ["x"] = 0,
@@ -95,7 +98,7 @@ INTERACTABLES = {
     ["frames"] = 2,
     ["animation"] = {
       ["isAnimated"] = true,
-      ["interval"] = 0.25
+      ["interval"] = 4
     },
     ["interaction"] = {
       ["canBeInteracted"] = false
@@ -103,7 +106,8 @@ INTERACTABLES = {
     ["movement"] = {
       ["canMove"] = true,
       ["dx"] = 80
-    }
+    },
+    ["hatOdds"] = 5
   },
   ["cloud"] = {
     ["x"] = 0,
@@ -121,7 +125,8 @@ INTERACTABLES = {
     },
     ["movement"] = {
       ["canMove"] = false
-    }
+    },
+    ["hatOdds"] = 0
   },
   ["trampoline"] = {
     ["x"] = 0,
@@ -139,7 +144,8 @@ INTERACTABLES = {
     },
     ["movement"] = {
       ["canMove"] = false
-    }
+    },
+    ["hatOdds"] = 0
   },
   ["spikes"] = {
     ["x"] = 0,
@@ -156,7 +162,8 @@ INTERACTABLES = {
     },
     ["movement"] = {
       ["canMove"] = false
-    }
+    },
+    ["hatOdds"] = 0
   },
   ["enemy"] = {
     ["x"] = 0,
@@ -174,8 +181,17 @@ INTERACTABLES = {
     ["movement"] = {
       ["canMove"] = true,
       ["dx"] = 80
-    }
+    },
+    ["hatOdds"] = 0
   }
+}
+
+HAT = {
+  ["x"] = 0,
+  ["y"] = 42,
+  ["width"] = 21,
+  ["height"] = 18,
+  ["frames"] = 4
 }
 
 PARTICLES = {

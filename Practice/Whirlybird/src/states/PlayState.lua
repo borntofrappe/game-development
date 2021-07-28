@@ -28,16 +28,13 @@ function PlayState:update(dt)
   self.player:update(dt)
 
   if self.player.dy > 0 then
+    self.player:change("default")
     for i, interactable in ipairs(self.interactables.interactables) do
       if self.player:isOnTop(interactable) then
         self.timer = 0
         local type = interactable.type
 
-        if type == "crumbling" then
-          interactable.isInteracted = true
-          self.player.y = interactable.y - self.player.height
-          self.player:bounce()
-        elseif type == "cloud" then
+        if type == "cloud" then
           interactable.isInteracted = true
         elseif type == "trampoline" then
           interactable.isInteracted = true
@@ -64,8 +61,18 @@ function PlayState:update(dt)
             )
           end
         else
+          if type == "crumbling" then
+            interactable.isInteracted = true
+          end
           self.player.y = interactable.y - self.player.height
-          self.player:bounce()
+
+          if interactable.hat then
+            interactable.hat = nil
+            self.player:change("flying")
+            self.player:bounce(4)
+          else
+            self.player:bounce()
+          end
         end
         break
       end

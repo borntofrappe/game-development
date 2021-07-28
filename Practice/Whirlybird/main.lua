@@ -7,6 +7,7 @@ local OPTIONS = {
 }
 
 function love.load()
+  math.randomseed(os.time())
   love.window.setTitle("Whirlybird")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
   love.graphics.setBackgroundColor(1, 1, 1)
@@ -33,6 +34,7 @@ function love.load()
     ["player"] = GenerateQuadsPlayer(gTextures["spritesheet"]),
     ["interactables"] = GenerateQuadsInteractables(gTextures["spritesheet"]),
     ["particles"] = GenerateQuadsParticles(gTextures["spritesheet"]),
+    ["hat"] = GenerateQuadsHat(gTextures["spritesheet"]),
     ["sprites"] = GenerateQuadsSprites(gTextures["spritesheet-gameover"]),
     ["marks"] = GenerateQuadsMarks(gTextures["spritesheet-gameover"]),
     ["button"] = GenerateQuadButton(gTextures["spritesheet-gameover"])

@@ -24,8 +24,13 @@ function Interactable:new(x, y, type)
     ["inPlay"] = true,
     ["isInteracted"] = false,
     ["movement"] = movement,
-    ["direction"] = math.random(2) == 1 and 1 or -1
+    ["direction"] = math.random(2) == 1 and 1 or -1,
+    ["hat"] = hat
   }
+
+  if data.hatOdds > 0 and math.random(data.hatOdds) == 1 then
+    this.hat = Hat:new(this.x + this.width / 2, this.y - HAT.height)
+  end
 
   self.__index = self
   setmetatable(this, self)
@@ -34,6 +39,10 @@ function Interactable:new(x, y, type)
 end
 
 function Interactable:update(dt)
+  if self.hat then
+    self.hat:update(dt)
+  end
+
   if self.animation.isAnimated then
     self.timer = self.timer + dt
     if self.timer >= self.animation.interval then
@@ -61,6 +70,9 @@ function Interactable:update(dt)
 
   if self.movement.canMove then
     self.x = self.x + self.movement.dx * self.direction * dt
+    if self.hat then
+      self.hat.x = self.x + self.width / 2 - self.hat.width / 2
+    end
     if self.x > WINDOW_WIDTH - self.width then
       self.x = WINDOW_WIDTH - self.width
       self.direction = -1
@@ -73,5 +85,8 @@ function Interactable:update(dt)
 end
 
 function Interactable:render()
+  if self.hat then
+    self.hat:render()
+  end
   love.graphics.draw(gTextures["spritesheet"], gFrames["interactables"][self.type][self.frame], self.x, self.y)
 end

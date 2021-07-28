@@ -55,6 +55,16 @@ function GenerateQuadsParticles(atlas)
   return quads
 end
 
+function GenerateQuadsHat(atlas)
+  local quads = {}
+
+  for i = 1, HAT.frames do
+    quads[i] = love.graphics.newQuad((i - 1) * HAT.width, HAT.y, HAT.width, HAT.height, atlas:getDimensions())
+  end
+
+  return quads
+end
+
 function GenerateQuadsSprites(atlas)
   local quads = {}
 
