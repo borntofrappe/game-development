@@ -73,6 +73,22 @@ function Player:update(dt)
   end
 end
 
+function Player:isOnTop(interactable)
+  if self.x + self.width < interactable.x or self.x > interactable.x + interactable.width then
+    return false
+  end
+
+  if self.y + self.height < interactable.y or self.y > interactable.y + interactable.height then
+    return false
+  end
+
+  return self.y + self.height < interactable.y + interactable.height
+end
+
+function Player:hop()
+  self.dy = HOP * -1
+end
+
 function Player:bounce()
   self.dy = JUMP * -1
 end

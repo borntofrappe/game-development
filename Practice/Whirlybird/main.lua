@@ -31,6 +31,7 @@ function love.load()
 
   gFrames = {
     ["player"] = GenerateQuadsPlayer(gTextures["spritesheet"]),
+    ["interactables"] = GenerateQuadsInteractables(gTextures["spritesheet"]),
     ["sprites"] = GenerateQuadsSprites(gTextures["spritesheet-gameover"]),
     ["marks"] = GenerateQuadsMarks(gTextures["spritesheet-gameover"]),
     ["button"] = GenerateQuadButton(gTextures["spritesheet-gameover"])
@@ -54,7 +55,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("play")
+  gStateMachine:change("start")
 
   love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}

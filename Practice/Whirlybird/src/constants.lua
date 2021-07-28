@@ -4,10 +4,11 @@ WINDOW_HEIGHT = 600
 UPPER_THRESHOLD = 100
 LOWER_THRESHOLD = 500
 
-GRAVITY = 15
+GRAVITY = 16
 FRICTION = 10
 SLIDE = 4
-JUMP = 10
+JUMP = 12
+HOP = 4
 
 FRICTION = 4
 PLAYER = {
@@ -31,6 +32,65 @@ PLAYER = {
     ["width"] = 39,
     ["height"] = 45,
     ["frames"] = 2
+  }
+}
+
+INTERACTABLES = {
+  ["solid"] = {
+    ["x"] = 0,
+    ["y"] = 60,
+    ["width"] = 39,
+    ["height"] = 9,
+    ["frames"] = 4
+  },
+  ["fading"] = {
+    ["x"] = 0,
+    ["y"] = 69,
+    ["width"] = 39,
+    ["height"] = 9,
+    ["frames"] = 4
+  },
+  ["crumbling"] = {
+    ["x"] = 0,
+    ["y"] = 78,
+    ["width"] = 39,
+    ["height"] = 15,
+    ["frames"] = 4
+  },
+  ["moving"] = {
+    ["x"] = 0,
+    ["y"] = 93,
+    ["width"] = 39,
+    ["height"] = 15,
+    ["frames"] = 4
+  },
+  ["cloud"] = {
+    ["x"] = 0,
+    ["y"] = 108,
+    ["width"] = 39,
+    ["height"] = 15,
+    ["frames"] = 4
+  },
+  ["trampoline"] = {
+    ["x"] = 0,
+    ["y"] = 123,
+    ["width"] = 39,
+    ["height"] = 21,
+    ["frames"] = 4
+  },
+  ["spikes"] = {
+    ["x"] = 0,
+    ["y"] = 144,
+    ["width"] = 39,
+    ["height"] = 21,
+    ["frames"] = 4
+  },
+  ["enemy"] = {
+    ["x"] = 0,
+    ["y"] = 165,
+    ["width"] = 39,
+    ["height"] = 39,
+    ["frames"] = 4
   }
 }
 

@@ -18,6 +18,26 @@ function GenerateQuadsPlayer(atlas)
   return quads
 end
 
+function GenerateQuadsInteractables(atlas)
+  local quads = {}
+
+  for k, interactable in pairs(INTERACTABLES) do
+    quads[k] = {}
+    for frame = 1, interactable.frames do
+      quads[k][frame] =
+        love.graphics.newQuad(
+        interactable.x + (frame - 1) * interactable.width,
+        interactable.y,
+        interactable.width,
+        interactable.height,
+        atlas:getDimensions()
+      )
+    end
+  end
+
+  return quads
+end
+
 function GenerateQuadsSprites(atlas)
   local quads = {}
 
