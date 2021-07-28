@@ -33,6 +33,8 @@ PLAYER = {
   }
 }
 
+INTERACTABLES_SAFE = {"solid", "fading", "crumbling", "moving", "trampoline"}
+
 INTERACTABLES = {
   ["solid"] = {
     ["x"] = 0,
@@ -90,6 +92,14 @@ INTERACTABLES = {
     ["height"] = 39,
     ["frames"] = 4
   }
+}
+
+PARTICLES = {
+  ["x"] = 198,
+  ["y"] = 45,
+  ["width"] = 27,
+  ["height"] = 27,
+  ["frames"] = 6
 }
 
 SPRITES = {

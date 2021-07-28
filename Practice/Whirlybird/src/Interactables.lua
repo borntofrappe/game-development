@@ -1,23 +1,34 @@
 Interactables = {}
 
 local PADDING = 50
-local GAP = {math.floor(WINDOW_HEIGHT / 5), math.floor(WINDOW_HEIGHT / 4)}
+local GAP = {70, 150}
 local X = {PADDING, WINDOW_WIDTH - PADDING}
 
 function Interactables:new(x, y)
   local interactables = {}
 
+  local types = {}
+  for type, _ in pairs(INTERACTABLES) do
+    table.insert(types, type)
+  end
+
+  local wasSafe = true
+
   local y = PADDING
   while y < WINDOW_HEIGHT * 2 do
     local x = math.random(X[1], X[2])
-    table.insert(interactables, Interactable:new(x, WINDOW_HEIGHT - y))
+    local type = wasSafe and types[math.random(#types)] or INTERACTABLES_SAFE[math.random(#INTERACTABLES_SAFE)]
+    table.insert(interactables, Interactable:new(x, WINDOW_HEIGHT - y, type))
     local gap = math.random(GAP[1], GAP[2])
     y = y + gap
+    wasSafe = not wasSafe
   end
 
   local this = {
     ["interactables"] = interactables,
-    ["y"] = y
+    ["y"] = y,
+    ["types"] = types,
+    ["wasSafe"] = wasSafe
   }
 
   self.__index = self
@@ -28,10 +39,13 @@ end
 
 function Interactables:add()
   local x = math.random(X[1], X[2])
+  local type =
+    self.wasSafe and self.types[math.random(#self.types)] or INTERACTABLES_SAFE[math.random(#INTERACTABLES_SAFE)]
 
-  table.insert(self.interactables, Interactable:new(x, WINDOW_HEIGHT - self.y))
+  table.insert(self.interactables, Interactable:new(x, WINDOW_HEIGHT - self.y, type))
   local gap = math.random(GAP[1], GAP[2])
   self.y = self.y + gap
+  self.wasSafe = not self.wasSafe
 end
 
 function Interactables:update(dt, scrollY)

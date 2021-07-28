@@ -1,7 +1,7 @@
 FallingState = BaseState:new()
 
-local GAMEOVER_DELAY = 1
-local FALLING_DELAY = 0.9
+local GAMEOVER_DELAY = 1.5
+local FALLING_DELAY = 1.3
 
 function FallingState:enter(params)
   self.player = params.player

@@ -38,6 +38,23 @@ function GenerateQuadsInteractables(atlas)
   return quads
 end
 
+function GenerateQuadsParticles(atlas)
+  local quads = {}
+
+  for i = 1, PARTICLES.frames do
+    quads[i] =
+      love.graphics.newQuad(
+      PARTICLES.x,
+      PARTICLES.y + (i - 1) * PARTICLES.height,
+      PARTICLES.width,
+      PARTICLES.height,
+      atlas:getDimensions()
+    )
+  end
+
+  return quads
+end
+
 function GenerateQuadsSprites(atlas)
   local quads = {}
 

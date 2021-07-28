@@ -6,7 +6,7 @@ function PlayState:enter(params)
   self.player = params and params.player or Player:new(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
   if not params then
-    self.player:bounce(0.4)
+    self.player:bounce()
   end
 
   self.interactables = Interactables:new()
@@ -31,8 +31,40 @@ function PlayState:update(dt)
     for i, interactable in ipairs(self.interactables.interactables) do
       if self.player:isOnTop(interactable) then
         self.timer = 0
-        self.player.y = interactable.y - self.player.height
-        self.player:bounce()
+        local type = interactable.type
+
+        if type == "crumbling" then
+          self.player.y = interactable.y - self.player.height
+          self.player:bounce()
+        elseif type == "cloud" then
+          --  nothing
+        elseif type == "trampoline" then
+          self.player.y = interactable.y - self.player.height
+          self.player:bounce(2)
+        elseif type == "spikes" then
+          gStateMachine:change(
+            "hurt",
+            {
+              ["player"] = self.player,
+              ["interactables"] = self.interactables,
+              ["scrollY"] = self.scrollY
+            }
+          )
+        elseif type == "enemy" then
+          if interactable.frame == 2 or interactable.frame == 3 then
+            gStateMachine:change(
+              "hurt",
+              {
+                ["player"] = self.player,
+                ["interactables"] = self.interactables,
+                ["scrollY"] = scrollY
+              }
+            )
+          end
+        else
+          self.player.y = interactable.y - self.player.height
+          self.player:bounce()
+        end
         break
       end
     end
