@@ -89,8 +89,9 @@ function Player:hop()
   self.dy = HOP * -1
 end
 
-function Player:bounce()
-  self.dy = JUMP * -1
+function Player:bounce(intensity)
+  local intensity = intensity or 1
+  self.dy = JUMP * intensity * -1
 end
 
 function Player:slide(direction)

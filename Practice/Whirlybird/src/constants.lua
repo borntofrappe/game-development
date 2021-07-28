@@ -47,49 +47,63 @@ INTERACTABLES = {
     ["y"] = 69,
     ["width"] = 39,
     ["height"] = 9,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["interval"] = 0.8,
+    ["isAnimated"] = true
   },
   ["crumbling"] = {
     ["x"] = 0,
     ["y"] = 78,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["interval"] = 0.07,
+    ["canBeDestroyed"] = true
   },
   ["moving"] = {
     ["x"] = 0,
     ["y"] = 93,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 2
+    ["frames"] = 2,
+    ["interval"] = 0.25,
+    ["isAnimated"] = true
   },
   ["cloud"] = {
     ["x"] = 0,
     ["y"] = 108,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["interval"] = 0.08,
+    ["canBeDestroyed"] = true
   },
   ["trampoline"] = {
     ["x"] = 0,
     ["y"] = 123,
     ["width"] = 39,
     ["height"] = 21,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["interval"] = 0.05,
+    ["canBeDestroyed"] = false
   },
   ["spikes"] = {
     ["x"] = 0,
     ["y"] = 144,
     ["width"] = 39,
     ["height"] = 21,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["interval"] = 0.05,
+    ["isAnimated"] = true
   },
   ["enemy"] = {
     ["x"] = 0,
     ["y"] = 165,
     ["width"] = 39,
     ["height"] = 39,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["interval"] = 0.05,
+    ["isAnimated"] = true
   }
 }
 
