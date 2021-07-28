@@ -1,11 +1,12 @@
 PlayState = BaseState:new()
 
-local FALLING_DELAY = 1.5
+local FALLING_DELAY = 0.5
 
 function PlayState:enter(params)
   self.player = params and params.player or Player:new(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+
   if not params then
-    self.player:hop()
+    self.player:bounce(0.4)
   end
 
   self.interactables = Interactables:new()
@@ -29,44 +30,9 @@ function PlayState:update(dt)
   if self.player.dy > 0 then
     for i, interactable in ipairs(self.interactables.interactables) do
       if self.player:isOnTop(interactable) then
-        if interactable.type == "solid" or interactable.type == "moving" then
-          self.player.y = interactable.y - self.player.height
-          self.player:bounce()
-        end
-
-        if interactable.type == "fading" then
-          if interactable.frame < interactable.frames then
-            self.player.y = interactable.y - self.player.height
-            self.player:bounce()
-          end
-        end
-
-        if interactable.type == "crumbling" and interactable.inPlay then
-          interactable.isInteracted = true
-          self.player.y = interactable.y - self.player.height
-          self.player:bounce()
-        end
-
-        if interactable.type == "cloud" and interactable.inPlay then
-          interactable.isInteracted = true
-        end
-
-        if interactable.type == "trampoline" and interactable.inPlay then
-          interactable.isInteracted = true
-          self.player.y = interactable.y - self.player.height
-          self.player:bounce(2)
-        end
-
-        if interactable.type == "spikes" then
-          gStateMachine:change("gameover")
-        end
-
-        if interactable.type == "enemy" then
-          if interactable.frame == 2 or interactable.frame == 3 then
-            gStateMachine:change("gameover")
-          end
-        end
-
+        self.timer = 0
+        self.player.y = interactable.y - self.player.height
+        self.player:bounce()
         break
       end
     end
@@ -78,11 +44,13 @@ function PlayState:update(dt)
     self.scrollY = UPPER_THRESHOLD - self.player.y
   end
 
-  if self.player.y > LOWER_THRESHOLD - self.scrollY then
-    self.scrollY = LOWER_THRESHOLD - self.player.y
+  if self.player.y >= LOWER_THRESHOLD - self.player.height - self.scrollY then
+    self.scrollY = LOWER_THRESHOLD - self.player.height - self.player.y
 
     self.timer = self.timer + dt
-    if self.timer > FALLING_DELAY then
+
+    if self.timer >= FALLING_DELAY then
+      self.player:change("falling")
       gStateMachine:change(
         "falling",
         {

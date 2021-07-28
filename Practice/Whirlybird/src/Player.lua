@@ -12,17 +12,17 @@ function Player:new(x, y, direction, state)
   local frames = data.frames
 
   local this = {
-    ["state"] = state,
-    ["frame"] = 1,
-    ["frames"] = frames,
-    ["timer"] = 0,
     ["x"] = x - width / 2,
     ["y"] = y - height / 2,
     ["width"] = width,
     ["height"] = height,
     ["dx"] = 0,
     ["dy"] = 0,
-    ["direction"] = 1
+    ["direction"] = 1,
+    ["state"] = state,
+    ["frame"] = 1,
+    ["frames"] = frames,
+    ["timer"] = 0
   }
 
   self.__index = self
@@ -82,11 +82,7 @@ function Player:isOnTop(interactable)
     return false
   end
 
-  return self.y + self.height < interactable.y + interactable.height
-end
-
-function Player:hop()
-  self.dy = HOP * -1
+  return self.y + self.height / 2 < interactable.y
 end
 
 function Player:bounce(intensity)

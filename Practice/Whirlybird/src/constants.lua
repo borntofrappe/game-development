@@ -2,13 +2,12 @@ WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 600
 
 UPPER_THRESHOLD = 100
-LOWER_THRESHOLD = 500
+LOWER_THRESHOLD = 550
 
 GRAVITY = 16
 FRICTION = 10
-SLIDE = 4
+SLIDE = 5
 JUMP = 12
-HOP = 4
 
 PLAYER = {
   ["default"] = {
@@ -47,63 +46,49 @@ INTERACTABLES = {
     ["y"] = 69,
     ["width"] = 39,
     ["height"] = 9,
-    ["frames"] = 4,
-    ["interval"] = 0.8,
-    ["isAnimated"] = true
+    ["frames"] = 4
   },
   ["crumbling"] = {
     ["x"] = 0,
     ["y"] = 78,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 4,
-    ["interval"] = 0.07,
-    ["canBeDestroyed"] = true
+    ["frames"] = 4
   },
   ["moving"] = {
     ["x"] = 0,
     ["y"] = 93,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 2,
-    ["interval"] = 0.25,
-    ["isAnimated"] = true
+    ["frames"] = 2
   },
   ["cloud"] = {
     ["x"] = 0,
     ["y"] = 108,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 4,
-    ["interval"] = 0.08,
-    ["canBeDestroyed"] = true
+    ["frames"] = 4
   },
   ["trampoline"] = {
     ["x"] = 0,
     ["y"] = 123,
     ["width"] = 39,
     ["height"] = 21,
-    ["frames"] = 4,
-    ["interval"] = 0.05,
-    ["canBeDestroyed"] = false
+    ["frames"] = 4
   },
   ["spikes"] = {
     ["x"] = 0,
     ["y"] = 144,
     ["width"] = 39,
     ["height"] = 21,
-    ["frames"] = 4,
-    ["interval"] = 0.05,
-    ["isAnimated"] = true
+    ["frames"] = 4
   },
   ["enemy"] = {
     ["x"] = 0,
     ["y"] = 165,
     ["width"] = 39,
     ["height"] = 39,
-    ["frames"] = 4,
-    ["interval"] = 0.05,
-    ["isAnimated"] = true
+    ["frames"] = 4
   }
 }
 

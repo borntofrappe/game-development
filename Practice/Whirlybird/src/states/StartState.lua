@@ -1,14 +1,14 @@
 StartState = BaseState:new()
 
 function StartState:enter(params)
-  local height = math.floor(gFonts["large"]:getHeight() * 1.5)
+  local menuHeight = math.floor(gFonts["large"]:getHeight() * 1.5)
 
   self.menu = {
     ["text"] = string.upper("Start"),
-    ["y"] = WINDOW_HEIGHT - height,
+    ["y"] = WINDOW_HEIGHT - menuHeight,
     ["width"] = WINDOW_WIDTH,
-    ["height"] = height,
-    ["padding"] = (height - gFonts["large"]:getHeight()) / 2
+    ["height"] = menuHeight,
+    ["yText"] = WINDOW_HEIGHT - menuHeight / 2 - gFonts["large"]:getHeight() / 2
   }
 
   self.player = params and params.player or Player:new(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
@@ -31,13 +31,12 @@ function StartState:update(dt)
   self.player:update(dt)
 
   if self.player.y + self.player.height >= self.menu.y then
-    gSounds["bounce"]:play()
     self.player.y = self.menu.y - self.player.height
     self.player:bounce()
   end
 
   if love.mouse.waspressed(1) then
-    local x, y = love.mouse:getPosition()
+    local _, y = love.mouse:getPosition()
 
     if y > self.menu.y and y < self.menu.y + self.menu.height then
       gStateMachine:change(
@@ -56,7 +55,7 @@ function StartState:render()
 
   love.graphics.setFont(gFonts["large"])
   love.graphics.setColor(1, 1, 1)
-  love.graphics.printf(self.menu.text, 0, self.menu.y + self.menu.padding, self.menu.width, "center")
+  love.graphics.printf(self.menu.text, 0, self.menu.yText, self.menu.width, "center")
 
   self.player:render()
 end
