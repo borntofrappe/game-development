@@ -41,56 +41,140 @@ INTERACTABLES = {
     ["y"] = 60,
     ["width"] = 39,
     ["height"] = 9,
-    ["frames"] = 1
+    ["frames"] = 1,
+    ["animation"] = {
+      ["isAnimated"] = false
+    },
+    ["interaction"] = {
+      ["canBeInteracted"] = false
+    },
+    ["movement"] = {
+      ["canMove"] = false
+    }
   },
   ["fading"] = {
     ["x"] = 0,
     ["y"] = 69,
     ["width"] = 39,
     ["height"] = 9,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["animation"] = {
+      ["isAnimated"] = true,
+      ["interval"] = 0.8
+    },
+    ["interaction"] = {
+      ["canBeInteracted"] = false
+    },
+    ["movement"] = {
+      ["canMove"] = false
+    }
   },
   ["crumbling"] = {
     ["x"] = 0,
     ["y"] = 78,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["animation"] = {
+      ["isAnimated"] = false
+    },
+    ["interaction"] = {
+      ["canBeInteracted"] = true,
+      ["interval"] = 0.07,
+      ["isDestroyed"] = true
+    },
+    ["movement"] = {
+      ["canMove"] = false
+    }
   },
   ["moving"] = {
     ["x"] = 0,
     ["y"] = 93,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 2
+    ["frames"] = 2,
+    ["animation"] = {
+      ["isAnimated"] = true,
+      ["interval"] = 0.25
+    },
+    ["interaction"] = {
+      ["canBeInteracted"] = false
+    },
+    ["movement"] = {
+      ["canMove"] = true,
+      ["dx"] = 80
+    }
   },
   ["cloud"] = {
     ["x"] = 0,
     ["y"] = 108,
     ["width"] = 39,
     ["height"] = 15,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["animation"] = {
+      ["isAnimated"] = false
+    },
+    ["interaction"] = {
+      ["canBeInteracted"] = true,
+      ["interval"] = 0.08,
+      ["isDestroyed"] = true
+    },
+    ["movement"] = {
+      ["canMove"] = false
+    }
   },
   ["trampoline"] = {
     ["x"] = 0,
     ["y"] = 123,
     ["width"] = 39,
     ["height"] = 21,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["animation"] = {
+      ["isAnimated"] = false
+    },
+    ["interaction"] = {
+      ["canBeInteracted"] = true,
+      ["interval"] = 0.05,
+      ["isDestroyed"] = false
+    },
+    ["movement"] = {
+      ["canMove"] = false
+    }
   },
   ["spikes"] = {
     ["x"] = 0,
     ["y"] = 144,
     ["width"] = 39,
     ["height"] = 21,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["animation"] = {
+      ["isAnimated"] = true,
+      ["interval"] = 0.05
+    },
+    ["interaction"] = {
+      ["canBeInteracted"] = false
+    },
+    ["movement"] = {
+      ["canMove"] = false
+    }
   },
   ["enemy"] = {
     ["x"] = 0,
     ["y"] = 165,
     ["width"] = 39,
     ["height"] = 39,
-    ["frames"] = 4
+    ["frames"] = 4,
+    ["animation"] = {
+      ["isAnimated"] = true,
+      ["interval"] = 0.5
+    },
+    ["interaction"] = {
+      ["canBeInteracted"] = false
+    },
+    ["movement"] = {
+      ["canMove"] = true,
+      ["dx"] = 80
+    }
   }
 }
 

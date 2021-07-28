@@ -50,17 +50,17 @@ end
 
 function Interactables:update(dt, scrollY)
   for k, interactable in pairs(self.interactables) do
-    if interactable.y > WINDOW_HEIGHT - scrollY then
+    interactable:update(dt)
+    if interactable.y > WINDOW_HEIGHT - scrollY or not interactable.inPlay then
       self:add()
 
       table.remove(self.interactables, k)
-      break
     end
   end
 end
 
 function Interactables:render()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(1, 1, 1, 1)
   for k, interactable in pairs(self.interactables) do
     interactable:render()
   end

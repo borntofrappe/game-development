@@ -1,6 +1,6 @@
 HurtState = BaseState:new()
 
-local GAMEOVER_DELAY = 1
+local GAMEOVER_DELAY = 1.2
 
 function HurtState:enter(params)
   self.player = params.player
@@ -13,6 +13,8 @@ end
 
 function HurtState:update(dt)
   self.particles:update(dt)
+
+  self.interactables:update(dt, self.scrollY)
 
   if not self.particles.inPlay then
     self.timer = self.timer + dt

@@ -34,11 +34,13 @@ function PlayState:update(dt)
         local type = interactable.type
 
         if type == "crumbling" then
+          interactable.isInteracted = true
           self.player.y = interactable.y - self.player.height
           self.player:bounce()
         elseif type == "cloud" then
-          --  nothing
+          interactable.isInteracted = true
         elseif type == "trampoline" then
+          interactable.isInteracted = true
           self.player.y = interactable.y - self.player.height
           self.player:bounce(2)
         elseif type == "spikes" then
@@ -57,7 +59,7 @@ function PlayState:update(dt)
               {
                 ["player"] = self.player,
                 ["interactables"] = self.interactables,
-                ["scrollY"] = scrollY
+                ["scrollY"] = self.scrollY
               }
             )
           end
