@@ -2,7 +2,12 @@ GameoverState = BaseState:new()
 
 local ANIMATION_INTERVAL = 0.1
 
-function GameoverState:enter()
+function GameoverState:enter(params)
+  self.score = params.score
+  if self.score > gHiScore then
+    gHiScore = self.score
+  end
+
   self.title = {
     ["text"] = string.upper("Game\nOver"),
     ["y"] = WINDOW_HEIGHT / 4 - gFonts["large"]:getHeight()
@@ -57,6 +62,8 @@ function GameoverState:update(dt)
 end
 
 function GameoverState:render()
+  renderScore(self.score)
+
   love.graphics.setFont(gFonts["large"])
   love.graphics.setColor(0.35, 0.37, 0.39)
   love.graphics.printf(self.title.text, 0, self.title.y, WINDOW_WIDTH, "center")

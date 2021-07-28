@@ -5,6 +5,7 @@ local FALLING_DELAY = 1.3
 
 function FallingState:enter(params)
   self.player = params.player
+  self.score = params.score
   self.scrollY = params.scrollY
 
   self.timer = 0
@@ -16,7 +17,12 @@ function FallingState:update(dt)
   self.timer = self.timer + dt
 
   if self.timer > GAMEOVER_DELAY then
-    gStateMachine:change("gameover")
+    gStateMachine:change(
+      "gameover",
+      {
+        ["score"] = self.score
+      }
+    )
   end
 
   if self.timer < FALLING_DELAY then
@@ -25,6 +31,8 @@ function FallingState:update(dt)
 end
 
 function FallingState:render()
+  renderScore(self.score)
+
   love.graphics.translate(0, math.floor(self.scrollY))
 
   self.player:render()

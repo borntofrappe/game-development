@@ -31,6 +31,8 @@ function StartState:update(dt)
   self.player:update(dt)
 
   if self.player.y + self.player.height >= self.menu.y then
+    gSounds["bounce"]:play()
+
     self.player.y = self.menu.y - self.player.height
     self.player:bounce()
   end

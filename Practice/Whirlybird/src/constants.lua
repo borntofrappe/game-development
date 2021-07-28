@@ -7,7 +7,7 @@ LOWER_THRESHOLD = 550
 GRAVITY = 16
 FRICTION = 10
 SLIDE = 5
-JUMP = 12
+BOUNCE = 12
 
 PLAYER = {
   ["default"] = {

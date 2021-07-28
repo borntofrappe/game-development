@@ -12,8 +12,10 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
   love.graphics.setBackgroundColor(1, 1, 1)
 
+  gHiScore = 0
+
   gFonts = {
-    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 48),
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 56),
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
   }
 
@@ -92,4 +94,10 @@ end
 
 function love.draw()
   gStateMachine:render()
+end
+
+function renderScore(score)
+  love.graphics.setFont(gFonts.normal)
+  love.graphics.setColor(0.35, 0.37, 0.39)
+  love.graphics.print(score .. " HI:" .. gHiScore, 8, 8)
 end

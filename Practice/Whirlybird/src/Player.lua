@@ -87,7 +87,7 @@ end
 
 function Player:bounce(intensity)
   local intensity = intensity or 1
-  self.dy = JUMP * intensity * -1
+  self.dy = BOUNCE * intensity * -1
 end
 
 function Player:slide(direction)
