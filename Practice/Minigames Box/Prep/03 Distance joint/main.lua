@@ -2,13 +2,14 @@ WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 500
 RADIUS = 8
 METER = 80
+RADIUS_BRIDGE = 10
 
 function addObject(x, y)
   local body = love.physics.newBody(world, x, y, "dynamic")
 
   local shape1 = love.physics.newCircleShape(RADIUS * 1.5, 0, RADIUS)
   local shape2 = love.physics.newCircleShape(-RADIUS * 1.5, 0, RADIUS)
-  local shape3 = love.physics.newRectangleShape(RADIUS * 4, RADIUS)
+  local shape3 = love.physics.newRectangleShape(RADIUS * 4, RADIUS * 2 / 3)
 
   local fixture1 = love.physics.newFixture(body, shape1)
   local fixture2 = love.physics.newFixture(body, shape2)
@@ -33,7 +34,7 @@ function addObject(x, y)
 end
 
 function love.load()
-  love.window.setTitle("Complex shapes")
+  love.window.setTitle("Distance joint")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
 
   love.graphics.setBackgroundColor(0.1, 0.1, 0.2)
@@ -42,32 +43,44 @@ function love.load()
   world = love.physics.newWorld(0, 9.81 * METER, true)
   objects = {}
 
-  platform = {}
-  platform.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4)
-  platform.shape = love.physics.newRectangleShape(WINDOW_WIDTH / 3, 16)
-  platform.fixture = love.physics.newFixture(platform.body, platform.shape)
+  objectsBridge = {}
+  objectsBridgeNumber = math.floor(WINDOW_WIDTH / (RADIUS_BRIDGE * 2)) + 1
 
-  terrain = {}
-  terrain.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT)
-  terrain.shape =
-    love.physics.newChainShape(
-    false,
-    -WINDOW_WIDTH / 2,
-    -WINDOW_HEIGHT,
-    -WINDOW_WIDTH / 2,
-    -50,
-    0,
-    0,
-    WINDOW_WIDTH / 2,
-    -100,
-    WINDOW_WIDTH / 2,
-    -WINDOW_HEIGHT
-  )
-  terrain.fixture = love.physics.newFixture(terrain.body, terrain.shape)
+  for i = 1, objectsBridgeNumber do
+    local x = (i - 1) * RADIUS_BRIDGE * 2
+    local y = WINDOW_HEIGHT / 2
+    local type = i == 1 or i == objectsBridgeNumber and "static" or "dynamic"
+    local body = love.physics.newBody(world, x, y, type)
+    local shape = love.physics.newCircleShape(RADIUS_BRIDGE)
+    local fixture = love.physics.newFixture(body, shape)
+    table.insert(
+      objectsBridge,
+      {
+        ["body"] = body,
+        ["shapes"] = shape,
+        ["fixtures"] = fixture
+      }
+    )
+  end
+
+  for i = 1, objectsBridgeNumber - 1 do
+    local body1 = objectsBridge[i].body
+    local body2 = objectsBridge[i + 1].body
+
+    local x1 = body1:getX()
+    local y1 = body1:getY()
+
+    local x2 = body2:getX()
+    local y2 = body2:getY()
+
+    love.physics.newDistanceJoint(body1, body2, x1, y1, x2, y2)
+  end
 end
 
 function love.mousepressed(x, y, button)
-  addObject(x, y)
+  if button == 1 then
+    addObject(x, y)
+  end
 end
 
 function love.keypressed(key)
@@ -103,6 +116,15 @@ function love.draw()
     love.graphics.polygon("fill", object.body:getWorldPoints(object.shapes[3]:getPoints()))
   end
 
-  love.graphics.polygon("fill", platform.body:getWorldPoints(platform.shape:getPoints()))
-  love.graphics.polygon("line", terrain.body:getWorldPoints(terrain.shape:getPoints()))
+  for i, circle in ipairs(objectsBridge) do
+    local cx1 = circle.body:getX()
+    local cy1 = circle.body:getY()
+
+    if i ~= #objectsBridge then
+      local cx2 = objectsBridge[i + 1].body:getX()
+      local cy2 = objectsBridge[i + 1].body:getY()
+      love.graphics.line(cx1, cy1, cx2, cy2)
+    end
+    love.graphics.circle("fill", cx1, cy1, circle.shapes:getRadius())
+  end
 end

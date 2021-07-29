@@ -1,10 +1,39 @@
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 500
-RADIUS = 10
+RADIUS = 8
 METER = 80
 
+function addObject(x, y)
+  local body = love.physics.newBody(world, x, y, "dynamic")
+
+  local shape1 = love.physics.newCircleShape(RADIUS * 2, 0, RADIUS)
+  local shape2 = love.physics.newCircleShape(-RADIUS * 2, 0, RADIUS)
+  local shape3 = love.physics.newRectangleShape(RADIUS * 4, RADIUS * 2 / 3)
+
+  local fixture1 = love.physics.newFixture(body, shape1)
+  local fixture2 = love.physics.newFixture(body, shape2)
+  local fixture3 = love.physics.newFixture(body, shape3)
+
+  table.insert(
+    objects,
+    {
+      ["body"] = body,
+      ["shapes"] = {
+        shape1,
+        shape2,
+        shape3
+      },
+      ["fixtures"] = {
+        fixture1,
+        fixture2,
+        fixture3
+      }
+    }
+  )
+end
+
 function love.load()
-  love.window.setTitle("Static shapes")
+  love.window.setTitle("Complex shapes")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
 
   love.graphics.setBackgroundColor(0.1, 0.1, 0.2)
@@ -15,9 +44,7 @@ function love.load()
 
   platform = {}
   platform.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4)
-  platform.shape =
-    love.physics.newPolygonShape(-WINDOW_WIDTH / 6, -8, WINDOW_WIDTH / 6, -8, WINDOW_WIDTH / 6, 8, -WINDOW_WIDTH / 6, 8)
-  -- platform.shape = love.physics.newRectangleShape(WINDOW_WIDTH / 3, 16)
+  platform.shape = love.physics.newRectangleShape(WINDOW_WIDTH / 3, 16)
   platform.fixture = love.physics.newFixture(platform.body, platform.shape)
 
   terrain = {}
@@ -40,18 +67,9 @@ function love.load()
 end
 
 function love.mousepressed(x, y, button)
-  local body = love.physics.newBody(world, x, y, "dynamic")
-  local shape = love.physics.newCircleShape(RADIUS)
-  local fixture = love.physics.newFixture(body, shape)
-
-  table.insert(
-    objects,
-    {
-      ["body"] = body,
-      ["shape"] = shape,
-      ["fixture"] = fixture
-    }
-  )
+  if button == 1 then
+    addObject(x, y)
+  end
 end
 
 function love.keypressed(key)
@@ -68,19 +86,7 @@ end
 function love.update(dt)
   if love.mouse.isDown(1) then
     local x, y = love.mouse:getPosition()
-
-    local body = love.physics.newBody(world, x, y, "dynamic")
-    local shape = love.physics.newCircleShape(RADIUS)
-    local fixture = love.physics.newFixture(body, shape)
-
-    table.insert(
-      objects,
-      {
-        ["body"] = body,
-        ["shape"] = shape,
-        ["fixture"] = fixture
-      }
-    )
+    addObject(x, y)
   end
 
   world:update(dt)
@@ -88,8 +94,15 @@ end
 
 function love.draw()
   love.graphics.setColor(1, 1, 1)
+
   for i, object in ipairs(objects) do
-    love.graphics.circle("fill", object.body:getX(), object.body:getY(), object.shape:getRadius())
+    local cx1, cy1 = object.body:getWorldPoints(object.shapes[1]:getPoint())
+    love.graphics.circle("fill", cx1, cy1, object.shapes[1]:getRadius())
+
+    local cx2, cy2 = object.body:getWorldPoints(object.shapes[2]:getPoint())
+    love.graphics.circle("fill", cx2, cy2, object.shapes[2]:getRadius())
+
+    love.graphics.polygon("fill", object.body:getWorldPoints(object.shapes[3]:getPoints()))
   end
 
   love.graphics.polygon("fill", platform.body:getWorldPoints(platform.shape:getPoints()))

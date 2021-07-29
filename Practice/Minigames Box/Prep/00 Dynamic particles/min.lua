@@ -3,7 +3,7 @@ WINDOW_HEIGHT = 500
 RADIUS = 10
 
 function love.load()
-  love.window.setTitle("Dynamic particles")
+  love.window.setTitle("Not dynamic circles")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
 
   love.graphics.setBackgroundColor(0.1, 0.1, 0.2)
@@ -12,14 +12,16 @@ function love.load()
 end
 
 function love.mousepressed(x, y, button)
-  table.insert(
-    circles,
-    {
-      ["cx"] = x,
-      ["cy"] = y,
-      ["r"] = RADIUS
-    }
-  )
+  if button == 1 then
+    table.insert(
+      circles,
+      {
+        ["cx"] = x,
+        ["cy"] = y,
+        ["r"] = RADIUS
+      }
+    )
+  end
 end
 
 function love.keypressed(key)

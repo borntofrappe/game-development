@@ -3,18 +3,7 @@ WINDOW_HEIGHT = 500
 RADIUS = 10
 METER = 80
 
-function love.load()
-  love.window.setTitle("Dynamic particles")
-  love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-
-  love.graphics.setBackgroundColor(0.1, 0.1, 0.2)
-
-  love.physics.setMeter(METER)
-  world = love.physics.newWorld(0, 9.81 * METER, true)
-  objects = {}
-end
-
-function love.mousepressed(x, y, button)
+function addObject(x, y)
   local body = love.physics.newBody(world, x, y, "dynamic")
   local shape = love.physics.newCircleShape(RADIUS)
   local fixture = love.physics.newFixture(body, shape)
@@ -27,6 +16,23 @@ function love.mousepressed(x, y, button)
       ["fixture"] = fixture
     }
   )
+end
+
+function love.load()
+  love.window.setTitle("Dynamic particles")
+  love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
+
+  love.graphics.setBackgroundColor(0.1, 0.1, 0.2)
+
+  love.physics.setMeter(METER)
+  world = love.physics.newWorld(0, 9.81 * METER, true)
+  objects = {}
+end
+
+function love.mousepressed(x, y, button)
+  if button == 1 then
+    addObject(x, y)
+  end
 end
 
 function love.keypressed(key)
@@ -44,18 +50,7 @@ function love.update(dt)
   if love.mouse.isDown(1) then
     local x, y = love.mouse:getPosition()
 
-    local body = love.physics.newBody(world, x, y, "dynamic")
-    local shape = love.physics.newCircleShape(RADIUS)
-    local fixture = love.physics.newFixture(body, shape)
-
-    table.insert(
-      objects,
-      {
-        ["body"] = body,
-        ["shape"] = shape,
-        ["fixture"] = fixture
-      }
-    )
+    addObject(x, y)
   end
 
   world:update(dt)

@@ -3,22 +3,20 @@ WINDOW_HEIGHT = 500
 RADIUS = 6
 METER = 40
 
-function addObjects()
-  for i = 1, 8 do
-    local x = WINDOW_WIDTH / 2.5 + math.random(WINDOW_WIDTH / 5)
-    local y = math.random(WINDOW_HEIGHT / 8) * -1
-    local body = love.physics.newBody(world, x, y, "dynamic")
-    local shape = love.physics.newCircleShape(math.random(math.floor(RADIUS / 2), RADIUS))
-    local fixture = love.physics.newFixture(body, shape)
-    table.insert(
-      objects,
-      {
-        ["body"] = body,
-        ["shape"] = shape,
-        ["fixture"] = fixture
-      }
-    )
-  end
+function addObject()
+  local x = WINDOW_WIDTH / 2.5 + math.random(WINDOW_WIDTH / 5)
+  local y = math.random(WINDOW_HEIGHT / 8) * -1
+  local body = love.physics.newBody(world, x, y, "dynamic")
+  local shape = love.physics.newCircleShape(math.random(math.floor(RADIUS / 2), RADIUS))
+  local fixture = love.physics.newFixture(body, shape)
+  table.insert(
+    objects,
+    {
+      ["body"] = body,
+      ["shape"] = shape,
+      ["fixture"] = fixture
+    }
+  )
 end
 
 function love.load()
@@ -30,8 +28,6 @@ function love.load()
   love.physics.setMeter(METER)
   world = love.physics.newWorld(0, 9.81 * METER, true)
   objects = {}
-  timer = 0
-  interval = 0.5
 
   platform = {}
   platform.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4)
@@ -56,8 +52,10 @@ function love.load()
   }
 end
 
-function love.mousepressed()
-  revoluteJoint:setMotorEnabled(not revoluteJoint:isMotorEnabled())
+function love.mousepressed(x, y, button)
+  if button == 1 then
+    revoluteJoint:setMotorEnabled(not revoluteJoint:isMotorEnabled())
+  end
 end
 
 function love.keypressed(key)
@@ -72,10 +70,8 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-  timer = timer + dt
-  if timer > interval then
-    timer = timer % interval
-    addObjects()
+  if math.random(2) == 1 then
+    addObject()
   end
 
   for i, object in ipairs(objects) do
@@ -84,6 +80,7 @@ function love.update(dt)
       table.remove(objects, i)
     end
   end
+
   world:update(dt)
 end
 

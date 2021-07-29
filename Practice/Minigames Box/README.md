@@ -2,58 +2,19 @@
 
 Practice with Box2D with a series of time-sensitive minigames.
 
-## Box2D
+## Prep
 
 The `Prep` folder includes a series of demos to re-introduce the physics-based library, inspired by [a playlist](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy4FyZtCHsZc_K0BrXzxfE) from [TheCodingTrain Youtube channel](https://www.youtube.com/c/TheCodingTrain).
 
-### Dynamic particles
+### 00 Dynamic particles
 
-With this first demo, the idea is to generate a world, and later populate this world as the mouse is pressed in the window.
+The goal is to generate a world and later populate this world following the a mouse press in the widnow.
 
-_Please note_: the folder `Dynamic particles` contains multiple files, which work to develop the demo in increments. Remember that Love2D runs the code found in a file labeled `main.lua`.
+_Please note_: while the folder multiple scripts Love2D runs the code found in `main.lua` only.
 
-- `min.lua` details the code necessary to draw circles, without the contribution of Box2D. Refer to the section [_Physics-less circles_](#physics-less-circles).
+`min.lua` details the code necessary to draw circles, without the contribution of Box2D. The code is useful to show the contribution of `love.physics` and how the simulation changes the code.
 
-#### Physics-less circles
-
-Without the use of `love.physics`, the demo first renders a series of circles as the mouse is pressed. This is useful to show the contribution of `love.physics` and how the simulation changes the code.
-
-The idea is to have a table in which to store the information to draw the circles.
-
-```lua
-function love.load()
-  circles = {}
-end
-```
-
-`love.graphics.circle` function draws a circle using three pieces of information: the horizontal and vertical coordinates, and the radius.
-
-```lua
-love.graphics.circle("fill", cx, cy, r)
-```
-
-This means that all is necessary to have a circle drawn where the game registers a mouse click is a table with these values.
-
-```lua
-function love.mousepressed(x, y)
-  table.insert(
-    circles,
-    {
-      ["cx"] = x,
-      ["cy"] = y,
-      ["r"] = RADIUS
-    }
-  )
-end
-```
-
-`love.mousepressed` provides the coordinates through the first and second arguments, while the radius is stored in a constant at the top of the script.
-
-_Please note_: circles are added to the table also in `love.update`, as the game registers that the mouse is being pressed.
-
-#### Physics-filled objects
-
-In order to emulate physics, it is first necessary to set up a world.
+It is first necessary to set up a world.
 
 ```lua
 world = love.physics.newWorld(0, 9.81 * METER, true)
@@ -93,7 +54,7 @@ The function takes care of simulating the world's physics, the position and move
 
   - static, immovable objects
 
-  - kinematic, movable objects, but not subjects to gravity
+  - kinematic, movable objects, but not subjects to gravity or world forces
 
 - define a shape
 
@@ -139,7 +100,9 @@ end
 
 Notice how the coordinates and size of the circle are retrieved from the body and shape respectively. Remember how the body describes the position and type, while it is the shape responsible for the object's features and appearance.
 
-_Please note_: similarly to the previous demo, objects are included in `love.update`, as the mouse is detected as pressed.
+_Please note_: objects are included in `love.update` as the mouse is down.
+
+_Please note_: the logic adding a new object is moved into a dedicated function to avoid repeating the code following a single or continuous mouse press.
 
 _Please note_: when resetting the demo's values, it's not enough to empty the `objects` table. It is first necessary to destroy the body so that the world stops tracking their movement.
 
@@ -149,23 +112,21 @@ for i, object in ipairs(objects) do
 end
 ```
 
-Eventually, as the table is reset so that the game can continue anew with a different set of particles.
+Eventually, the table is reset so that the game and the simulation have a similar setup.
 
 ```lua
 objects = {}
 ```
 
-### Static shapes
+### 01 Static shapes
 
-The demo buids from the progress achieved with the previous section (see [_Dynamic particles_](#dynamic-particles)) to include two static objects.
-
-The difference with respect to the previous objects, is that the body are initialized with a static type.
+The demo shows the effect of two static objects.
 
 ```lua
 love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4, "static")
 ```
 
-_Please note_: if the type is not specified, the engine defaults to `static`, so that it is equivalent to avoid describing the additional argument.
+_Please note_: if the type is not specified Love2D defaults to `static`, so that it is equally possible to skip the argument.
 
 ```lua
 love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4)
@@ -191,7 +152,7 @@ Beyond the different type, the demo also introduces two additional functions to 
   _Please note_: Love2D offers `newRectangleShape` as a shorthand to create rectangles.
 
   ```lua
-  love.physics.newRectangleShape(WINDOW_WIDTH / 3, 20)
+  love.physics.newRectangleShape(WINDOW_WIDTH / 3, 16)
   ```
 
 - `love.physics.newChainShape` to draw a jagged terrain
@@ -214,27 +175,23 @@ Beyond the different type, the demo also introduces two additional functions to 
 
   The first argument describes whether the shape should loop back to the first point or not.
 
-Finally, to draw the new features, the demo uses `love.graphics.polygon`. This function is especially suited for polygons, rectangles, or again chains, as it allows to draw the shapes based on their points. `getPoints` is available on the mentioned shapes.
+Finally, to draw the new features, the demo uses `love.graphics.polygon`. This function is especially suited for polygons, rectangles, or again chains, as it allows to draw the shapes based on their points.
+
+`shape:getPoints` methods provides the points from the individual shape.
 
 ```lua
 love.graphics.polygon("fill", platform.shape:getPoints())
 ```
 
-One important addition, however: `Body:getWorldPoints` is necessary to have the game convert between the units in the game and those in the world. Between pixels and meters.
+`body:getWorldPoints` is helps to the convert between game and world units. Between pixels and meters.
 
 ```lua
 love.graphics.polygon("fill", platform.body:getWorldPoints(platform.shape:getPoints()))
 ```
 
-### Complex shapes
+### 02 Complex shapes
 
-Instead of drawing circles as in the previous sections (see [_Dynamic particles_](#dynamic-particles) and [_Static shapes_](#static-shapes)), the demo adds objects in the form of complex shapes. The idea is to create objects in the form of two circles connected by a rectangle, as in the following rough ASCII representation.
-
-```text
-o--o
-```
-
-To create the complex shape, the idea is to create multiple shapes, and attach them to the same body. Two circles:
+The demo adds objects in the form of two circles connected by a rectangle. To create the object, the idea is to create multiple shapes, and attach them to the same body. Two circles:
 
 ```lua
 local shape1 = love.physics.newCircleShape(RADIUS)
@@ -270,28 +227,9 @@ local cx1, cy1 = object.body:getWorldPoints(object.shapes[1]:getPoint())
 
 `CircleShape:getPoint()` provides the center of the circle, while `Body:getWorldPoints` converts the units to the world measure.
 
-_Please note_: the code producing the desired complex shape is moved into a function, to avoid repeating the instruction in `love.mousepressed` and `love.update(dt)`.
+### 03 Distance joint
 
-```lua
-function love.mousepressed(x, y)
-  addObject(x, y)
-end
-
-function love.update(dt)
-  if love.mouse.isDown(1) then
-    local x, y = love.mouse:getPosition()
-    addObject(x, y)
-  end
-end
-```
-
-_Please note_: the radius of the circles is reduced to reduce the impact of each individual body.
-
-### Distance joint
-
-The demo creates a bridge with a series of connected circles. The goal is to use a distance joint to bind the circles together, and have the first and last element fixed, static so that the structure oscillates in the lower porition of the window.
-
-_Please note_: the platform and terrain introduced in the previous demo are removed to focus on the bridge.
+The demo creates a bridge with a series of connected circles. The goal is to use a distance joint to bind the circles together, and to fix the first and last element so that the structure oscillates in the lower porition of the window.
 
 To create the bridge, the code first produces a series of objects in the form of circles, spanning the entirety of the window's width.
 
@@ -310,7 +248,7 @@ The objects are created with an increasing `x` coordinate, so to have the circle
 local x = (i - 1) * RADIUS_BRIDGE * 2
 ```
 
-Moreover, the first and last object are made `static`, so that the connected structure doesn't fall due to gravity.
+The first and last object are made `static`, so that the connected structure doesn't fall due to gravity.
 
 ```lua
 local type = i == 1 or i == objectsBridgeNumber and "static" or "dynamic"
@@ -365,9 +303,9 @@ This is enough to have the objects connected to one another. To finally show suc
 
 _Please note_: `newDistanceJoint` accepts an additional argument, to specify whether or not the connected bodies should collide.
 
-### Revolute joint
+### 04 Revolute joint
 
-The idea is to bind bodies to the same anchor point, and have the bodies rotate from this shared coordinate. To show the joint, the demo first introduces a series of circles above the window, and has the objects fall down as subject to gravity. These objects are included at an interval, and to ensure that the demo doesn't slow down excessively, are removed when they exceed the window's height.
+The idea is to bind bodies to the same anchor point, and rotate from this shared coordinate. To show the joint, the demo first introduces a series of circles above the window, and has the objects fall down as subject to gravity. These objects are included at an interval, and to ensure that the demo doesn't slow down excessively, are removed when they exceed the window's height.
 
 ```lua
 for i, object in ipairs(objects) do
@@ -378,7 +316,7 @@ for i, object in ipairs(objects) do
 end
 ```
 
-The script is however devoted to the revolute joint. Two rectangles are included to define the pieces of the joint: a platform and a rotor. The idea is to fix the platform in the lower portion of the window, by way of the `static` type. The rotor, on the other hand, specifies a `dynamic` type, so that the object is able to rotate on the connected anchor point.
+From this setup, two rectangles are included to define the pieces of the joint: a platform and a rotor. The idea is to fix the platform in the lower portion of the window, by way of the `static` type. The rotor, on the other hand, specifies a `dynamic` type, so that the object is able to rotate on the connected anchor point.
 
 ```lua
 platform.body = love.physics.newBody(world, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4)
@@ -393,7 +331,7 @@ From this setup, the revolute joint considers two bodies and the coordinates of 
 love.physics.newRevoluteJoint(platform.body, rotor.body, WINDOW_WIDTH / 2, WINDOW_HEIGHT * 3 / 4 - 25)
 ```
 
-This is enough to have the rotor fixed and rotate as the circles collide with the object. To have the object actively rotate, however, it's possible to specify a motor with a series of functions:
+This is enough to have the rotor fixed and rotate as the circles collide with the object. To have the object actively rotate, however, it's necessary to specify a motor with a series of functions:
 
 - `setMotorSpeed` and `setMaxMotorTorque` specify the physics in terms of motor speed and torque
 
@@ -403,7 +341,7 @@ This is enough to have the rotor fixed and rotate as the circles collide with th
   revoluteJoint:setMotorEnabled(true)
   ```
 
-  Note that the value change considering the structure of the platform and rotor. A thinner/shorter rotor requires less torque to rotate than a thicker/taller one.
+  Note that the value change considering the structure of the platform and rotor. A thinner, shorter rotor requires less torque to rotate than a thicker and taller one.
 
 - `setMotorEnabled()` enables the rotation
 
@@ -417,11 +355,11 @@ This is enough to have the rotor fixed and rotate as the circles collide with th
 
 _Please note_: the demo also takes advantage of the `getAnchors()` function. This one provide the coordinates of the anchor point, so that the `draw` function is able to draw a black circle where the two objects are connected.
 
-### Mouse joint
+### 05 Mouse joint
 
-The demo removes the progress achieved in the previous sections to focus on a single object. A rectangle shape is included in the middle of the window, while a chain shape works to define the window's edges. This allows to constrain the object to the visible area. From this setup, the mouse joint is included between the object and the mouse current position, but only if the cursor is pressed.
+The demo removes populates the world with a rectangle shape in the middle of the window and a chain shape to define the window's edges, to constrain the dynamic body to the visible area. From this setup, the mouse joint is included between the object and the position of the mouse, but only when the cursor is pressed.
 
-`mouseJoint` is initialized in `love.load` to keep track of the joint itself. A reference is useful in the moment the `draw` function needs to include a visual for the joint itself.
+`mouseJoint` is initialized at the top of the document and to keep track of the joint itself. A reference is useful in the moment the `draw` function needs to include a visual for the joint itself.
 
 ```lua
 mouseJoint = nil
@@ -463,17 +401,15 @@ local x2, y2 = mouseJoint:getAnchors()
 love.graphics.line(x1, y1, x2, y2)
 ```
 
-### Body force
+### 06 Body force
 
-The demo works to introduce the concept of forces. These are applied to the world's bodies through the `applyForce` function, specifying the intensity of the force in the horizontal and vertical dimension.
+Forces are applied to the world's bodies through the `applyForce` function, and by specifying the intensity of the force in the horizontal and vertical dimensions.
 
 ```lua
 body:applyForce(forceX, forceY)
 ```
 
-To showcase these forces, the demo introduces a series of rectangle shapes from the top of the screen. These are included and removed in a similar manner to the circles described in the [_Revolute joint_](#revolute-joint) section.
-
-As the mouse is being pressed, the idea is to then loop through the `objects` table to apply a force pushing the shapes toward the mouse's position.
+To showcase these forces, the demo introduces a series of rectangle shapes from the top of the screen. As the mouse is being pressed, the idea is to then loop through the `objects` table to apply a force pushing the shapes toward the mouse's position.
 
 ```lua
 if love.mouse.isDown(1) then
@@ -489,20 +425,14 @@ end
 Based on the direction, the force is applied on every objects stored in the table.
 
 ```lua
-object.body:applyForce(50 * direction, 0)
-```
-
-_Please note_: the hard-coded value is moved into its own variable, so that the force is described at the top of the script with a constant.
-
-```lua
-FORCE = 50
+object.body:applyForce(FORCE * direction, 0)
 ```
 
 _Please note_: the demo also introduces two platforms, on either side of the window. These are not rendered, but included in the world to see how the shapes would impact the window's edges.
 
-### Collision events
+### 07 Collision events
 
-Similarly to the demo introduced in the previous section, see [_Body force_](#body-force), the script introduces a series of rectangle shapes from the top of the window. In the lower section of the window, however, the demo adds a circular shape to represent the player. The idea is to here detect a collision between this circle and one of the falling rectangles. In such an instance, the rectangle shape is destroyed.
+The script introduces a series of rectangle shapes from the top of the window. In the lower section of the window, then, the demo adds a circular shape to represent the player. From this setup, the idea is to detect a collision between the circle and one of the rectangles and remove the falling objects.
 
 To complete this demo, it is first necessary to have the world listen for a collision.
 
@@ -579,7 +509,7 @@ function love.update(dt)
 end
 ```
 
-_Please note_: this is not the topic of the demo, but the player is introduced as a kinematic object.
+_Please note_: while beyond the score of the demo, the player is introduced as a kinematic object.
 
 ```lua
 player.body = love.physics.newBody(world, x, y, "kinematic")

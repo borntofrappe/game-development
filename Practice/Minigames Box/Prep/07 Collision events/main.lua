@@ -2,27 +2,25 @@ WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 500
 MAX_SIZE = 20
 METER = 50
-VELOCITY = 150
+VELOCITY = 200
 
-function addObjects()
-  for i = 1, 10 do
-    local x = math.random(MAX_SIZE, WINDOW_WIDTH - MAX_SIZE)
-    local y = math.random(WINDOW_HEIGHT / 4) * -1
-    local size = math.random(math.floor(MAX_SIZE / 2), MAX_SIZE)
-    local body = love.physics.newBody(world, x, y, "dynamic")
-    local shape = love.physics.newRectangleShape(size, size)
-    local fixture = love.physics.newFixture(body, shape)
-    fixture:setUserData("Object")
+function addObject()
+  local x = math.random(MAX_SIZE, WINDOW_WIDTH - MAX_SIZE)
+  local y = math.random(WINDOW_HEIGHT / 4) * -1
+  local size = math.random(math.floor(MAX_SIZE / 2), MAX_SIZE)
+  local body = love.physics.newBody(world, x, y, "dynamic")
+  local shape = love.physics.newRectangleShape(size, size)
+  local fixture = love.physics.newFixture(body, shape)
+  fixture:setUserData("Object")
 
-    table.insert(
-      objects,
-      {
-        ["body"] = body,
-        ["shape"] = shape,
-        ["fixture"] = fixture
-      }
-    )
-  end
+  table.insert(
+    objects,
+    {
+      ["body"] = body,
+      ["shape"] = shape,
+      ["fixture"] = fixture
+    }
+  )
 end
 
 function beginContact(fixture1, fixture2)
@@ -64,8 +62,6 @@ function love.load()
   player.fixture:setUserData("Player")
 
   objects = {}
-  timer = 0
-  interval = 1
 end
 
 function love.keypressed(key)
@@ -90,10 +86,8 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-  timer = timer + dt
-  if timer > interval then
-    timer = timer % interval
-    addObjects()
+  if math.random(4) == 1 then
+    addObject()
   end
 
   for i, object in ipairs(objects) do

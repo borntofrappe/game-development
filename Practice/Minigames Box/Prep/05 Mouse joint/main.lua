@@ -26,12 +26,16 @@ function love.load()
   mouseJoint = nil
 end
 
-function love.mousepressed(x, y)
-  mouseJoint = love.physics.newMouseJoint(object.body, x, y)
+function love.mousepressed(x, y, button)
+  if button == 1 then
+    mouseJoint = love.physics.newMouseJoint(object.body, x, y)
+  end
 end
 
-function love.mousereleased()
-  mouseJoint:destroy()
+function love.mousereleased(x, y, button)
+  if button == 1 then
+    mouseJoint:destroy()
+  end
 end
 
 function love.keypressed(key)
