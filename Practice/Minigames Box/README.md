@@ -516,3 +516,9 @@ player.body = love.physics.newBody(world, x, y, "kinematic")
 ```
 
 The movement of the circle is then modified through the `setLinearVelocity` function, to have the shape follow the direction instructed by the arrow keys.
+
+## Resources
+
+The `res` folder includes [Amatic SC](https://fonts.google.com/specimen/Amatic+SC) as the font chosen for the game as well as `Timer.lua` as a timer library.
+
+## Minigames
