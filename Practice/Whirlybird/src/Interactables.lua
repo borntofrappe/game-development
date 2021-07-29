@@ -60,7 +60,7 @@ function Interactables:update(dt, scrollY)
 end
 
 function Interactables:render()
-  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setColor(1, 1, 1)
   for k, interactable in pairs(self.interactables) do
     interactable:render()
   end

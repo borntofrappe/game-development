@@ -42,15 +42,6 @@ INTERACTABLES = {
     ["width"] = 39,
     ["height"] = 9,
     ["frames"] = 1,
-    ["animation"] = {
-      ["isAnimated"] = false
-    },
-    ["interaction"] = {
-      ["canBeInteracted"] = false
-    },
-    ["movement"] = {
-      ["canMove"] = false
-    },
     ["hatOdds"] = 5
   },
   ["fading"] = {
@@ -59,16 +50,7 @@ INTERACTABLES = {
     ["width"] = 39,
     ["height"] = 9,
     ["frames"] = 4,
-    ["animation"] = {
-      ["isAnimated"] = true,
-      ["interval"] = 0.8
-    },
-    ["interaction"] = {
-      ["canBeInteracted"] = false
-    },
-    ["movement"] = {
-      ["canMove"] = false
-    },
+    ["animationInterval"] = 0.8,
     ["hatOdds"] = 0
   },
   ["crumbling"] = {
@@ -77,17 +59,8 @@ INTERACTABLES = {
     ["width"] = 39,
     ["height"] = 15,
     ["frames"] = 4,
-    ["animation"] = {
-      ["isAnimated"] = false
-    },
-    ["interaction"] = {
-      ["canBeInteracted"] = true,
-      ["interval"] = 0.07,
-      ["isDestroyed"] = true
-    },
-    ["movement"] = {
-      ["canMove"] = false
-    },
+    ["interactionInterval"] = 0.07,
+    ["canBeDestroyed"] = true,
     ["hatOdds"] = 5
   },
   ["moving"] = {
@@ -96,17 +69,8 @@ INTERACTABLES = {
     ["width"] = 39,
     ["height"] = 15,
     ["frames"] = 2,
-    ["animation"] = {
-      ["isAnimated"] = true,
-      ["interval"] = 4
-    },
-    ["interaction"] = {
-      ["canBeInteracted"] = false
-    },
-    ["movement"] = {
-      ["canMove"] = true,
-      ["dx"] = 80
-    },
+    ["animationInterval"] = 0.25,
+    ["dx"] = 80,
     ["hatOdds"] = 5
   },
   ["cloud"] = {
@@ -115,17 +79,8 @@ INTERACTABLES = {
     ["width"] = 39,
     ["height"] = 15,
     ["frames"] = 4,
-    ["animation"] = {
-      ["isAnimated"] = false
-    },
-    ["interaction"] = {
-      ["canBeInteracted"] = true,
-      ["interval"] = 0.08,
-      ["isDestroyed"] = true
-    },
-    ["movement"] = {
-      ["canMove"] = false
-    },
+    ["interactionInterval"] = 0.08,
+    ["canBeDestroyed"] = true,
     ["hatOdds"] = 0
   },
   ["trampoline"] = {
@@ -134,17 +89,8 @@ INTERACTABLES = {
     ["width"] = 39,
     ["height"] = 21,
     ["frames"] = 4,
-    ["animation"] = {
-      ["isAnimated"] = false
-    },
-    ["interaction"] = {
-      ["canBeInteracted"] = true,
-      ["interval"] = 0.05,
-      ["isDestroyed"] = false
-    },
-    ["movement"] = {
-      ["canMove"] = false
-    },
+    ["interactionInterval"] = 0.05,
+    ["canBeDestroyed"] = false,
     ["hatOdds"] = 0
   },
   ["spikes"] = {
@@ -153,16 +99,7 @@ INTERACTABLES = {
     ["width"] = 39,
     ["height"] = 21,
     ["frames"] = 4,
-    ["animation"] = {
-      ["isAnimated"] = true,
-      ["interval"] = 0.05
-    },
-    ["interaction"] = {
-      ["canBeInteracted"] = false
-    },
-    ["movement"] = {
-      ["canMove"] = false
-    },
+    ["animationInterval"] = 0.05,
     ["hatOdds"] = 0
   },
   ["enemy"] = {
@@ -171,17 +108,8 @@ INTERACTABLES = {
     ["width"] = 39,
     ["height"] = 39,
     ["frames"] = 4,
-    ["animation"] = {
-      ["isAnimated"] = true,
-      ["interval"] = 0.5
-    },
-    ["interaction"] = {
-      ["canBeInteracted"] = false
-    },
-    ["movement"] = {
-      ["canMove"] = true,
-      ["dx"] = 80
-    },
+    ["animationInterval"] = 0.5,
+    ["dx"] = 80,
     ["hatOdds"] = 0
   }
 }

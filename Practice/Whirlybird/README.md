@@ -2,29 +2,42 @@
 
 Recreate the pixelated game available in the "Play Games" application developed by Google.
 
+![Whirlybird in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/whirlybird.gif)
+
 ## Resources
 
-The font is the same font introduced in `00 Pong`.
+The `res` folder includes the font and audio files initialized in `love.load`. In the `graphics` sub-folder you also find the spritesheet used to generate the game assets. `Utils.lua` provides the function necessary to section the images and produce the necessary quads.
 
-In terms of graphics, `spritesheet.png` introduces the player and the different game objects.
+There are actually two images, as I later developed the game over screen to include a sprite-based animation and additional visuals.
 
-| Visual                               | x   | y   | width | height |
-| ------------------------------------ | --- | --- | ----- | ------ |
-| Player                               | 0   | 0   | 39    | 33     |
-| Player Flying                        | 39  | 0   | 36    | 42     |
-| Player Falling                       | 147 | 0   | 39    | 45     |
-| Player Particles                     | 198 | 45  | 27    | 27     |
-| Hat                                  | 0   | 42  | 21    | 18     |
-| Solid platform                       | 0   | 60  | 39    | 9      |
-| Fading platform                      | 0   | 69  | 39    | 9      |
-| Crumbling and moving platform, cloud | 0   | 78  | 39    | 15     |
-| Trampoline and spikes                | 0   | 123 | 39    | 21     |
-| Enemy                                | 0   | 165 | 39    | 39     |
+## Input
 
-For the gameover state, additional visuals are designed in `spritesheet-gameover.png`
+The game supports both keyboard and mouse input. With a keyboard it is possible to move between states by pressing either the <i>enter</i> or <i>escape</i> key, to move the player with the right and left arrow keys. With touch the game moves forward by pressing the areas dedicated to the start button and replay buttons, while the player slides left or right by pressing the left or right half of the screen.
 
-| Visual                  | x   | y   | width | height |
-| ----------------------- | --- | --- | ----- | ------ |
-| Jumping, falling player | 0   | 0   | 45    | 48     |
-| Check, exclamation mark | 0   | 96  | 30    | 24     |
-| Play again              | 0   | 120 | 66    | 50     |
+## Frames
+
+Many of the game assets cycle through a series of frames, from the falling or flying player to the different platforms, to even the particles. The naive approach is to have a `timer` variable keep track of the passing of time and through delta time.
+
+```lua
+self.timer = self.timer + dt
+```
+
+When the value crosses an arbitrary threshold, the counter variable keeping track of the current frame is incremented.
+
+## Player
+
+The player has three possible types, or states, depending on the actual gameplay. `Player:change` is defined to receive a state and update the visual accordingly. Notice that in the different states the visual describing the player changes in width or even height. To make sure the graphic doesn't stutter, the `x` and `y` coordinates are updated to ensure that the player is centered.
+
+The different height is particularly relevant when moving between the play and falling state. In this instance, when considering the lower threshold, it is helpful to refer to the height of the player.
+
+```lua
+self.scrollY = LOWER_THRESHOLD - self.player.y - self.player.height
+```
+
+Considering a hard-coded measure would have the player shift abruptly downwards. It is a matter of a couple of pixels, but enough to be noticeable.
+
+## Interactables
+
+`Interactables` populates a table to ensure a certain number of objects, and specifically ensure that every other object is picked from the `INTERACTABLE_SAFE` table. In this manner, it should be possible to avoid a situation in which the player cannot feasibly continue.
+
+The interactables themselves include a series of conditional to animate the visual in a loop, animate the graphic following interaction with the player, or again move horizontally. I am not particularly proud of this approach, and a future update will hopefully address this convoluted structure, perhaps considering dedicated classes which inherit from a base class.

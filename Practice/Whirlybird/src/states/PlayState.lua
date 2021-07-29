@@ -104,13 +104,12 @@ function PlayState:update(dt)
     self.score = self.score + 5
   end
 
-  if self.player.y >= LOWER_THRESHOLD - self.player.height - self.scrollY then
-    self.scrollY = LOWER_THRESHOLD - self.player.height - self.player.y
+  if self.player.y >= LOWER_THRESHOLD - self.scrollY - self.player.height then
+    self.scrollY = LOWER_THRESHOLD - self.player.y - self.player.height
 
     self.timer = self.timer + dt
 
     if self.timer >= FALLING_DELAY then
-      self.player:change("falling")
       gStateMachine:change(
         "falling",
         {

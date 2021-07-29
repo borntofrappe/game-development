@@ -6,9 +6,10 @@ function Interactable:new(x, y, type)
   local width = data.width
   local height = data.height
   local frames = data.frames
-  local animation = data.animation
-  local interaction = data.interaction
-  local movement = data.movement
+  local animationInterval = data.animationInterval
+  local interactionInterval = data.interactionInterval
+  local canBeDestroyed = data.canBeDestroyed
+  local dx = data.dx
 
   local this = {
     ["x"] = math.floor(x - width / 2),
@@ -19,11 +20,12 @@ function Interactable:new(x, y, type)
     ["frame"] = 1,
     ["frames"] = frames,
     ["timer"] = 0,
-    ["animation"] = animation,
-    ["interaction"] = interaction,
+    ["animationInterval"] = animationInterval,
+    ["interactionInterval"] = interactionInterval,
+    ["canBeDestroyed"] = canBeDestroyed,
     ["inPlay"] = true,
     ["isInteracted"] = false,
-    ["movement"] = movement,
+    ["dx"] = dx,
     ["direction"] = math.random(2) == 1 and 1 or -1,
     ["hat"] = hat
   }
@@ -43,20 +45,20 @@ function Interactable:update(dt)
     self.hat:update(dt)
   end
 
-  if self.animation.isAnimated then
+  if self.animationInterval then
     self.timer = self.timer + dt
-    if self.timer >= self.animation.interval then
-      self.timer = self.timer % self.animation.interval
+    if self.timer >= self.animationInterval then
+      self.timer = self.timer % self.animationInterval
       self.frame = self.frame == self.frames and 1 or self.frame + 1
     end
   end
 
-  if self.interaction.canBeInteracted and self.isInteracted then
+  if self.interactionInterval and self.isInteracted then
     self.timer = self.timer + dt
-    if self.timer >= self.interaction.interval then
-      self.timer = self.timer % self.interaction.interval
+    if self.timer >= self.interactionInterval then
+      self.timer = self.timer % self.interactionInterval
       if self.frame == self.frames then
-        if self.interaction.isDestroyed then
+        if self.canBeDestroyed then
           self.inPlay = false
         else
           self.isInteracted = false
@@ -68,8 +70,8 @@ function Interactable:update(dt)
     end
   end
 
-  if self.movement.canMove then
-    self.x = self.x + self.movement.dx * self.direction * dt
+  if self.dx then
+    self.x = self.x + self.dx * self.direction * dt
     if self.hat then
       self.hat.x = self.x + self.width / 2 - self.hat.width / 2
     end
@@ -85,8 +87,9 @@ function Interactable:update(dt)
 end
 
 function Interactable:render()
+  love.graphics.draw(gTextures["spritesheet"], gFrames["interactables"][self.type][self.frame], self.x, self.y)
+
   if self.hat then
     self.hat:render()
   end
-  love.graphics.draw(gTextures["spritesheet"], gFrames["interactables"][self.type][self.frame], self.x, self.y)
 end

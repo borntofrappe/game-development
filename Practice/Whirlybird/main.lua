@@ -15,8 +15,8 @@ function love.load()
   gHiScore = 0
 
   gFonts = {
-    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 56),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 54),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 22)
   }
 
   gSounds = {

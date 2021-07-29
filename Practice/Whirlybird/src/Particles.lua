@@ -4,8 +4,8 @@ local ANIMATION_INTERVAL = 0.1
 
 function Particles:new(x, y)
   local this = {
-    ["x"] = x - PARTICLES.width / 2,
-    ["y"] = y - PARTICLES.height / 2,
+    ["x"] = math.floor(x - PARTICLES.width / 2),
+    ["y"] = math.floor(y - PARTICLES.height / 2),
     ["width"] = PARTICLES.width,
     ["height"] = PARTICLES.height,
     ["frame"] = 1,

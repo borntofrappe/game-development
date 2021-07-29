@@ -5,6 +5,8 @@ local FALLING_DELAY = 1.3
 
 function FallingState:enter(params)
   self.player = params.player
+  self.player:change("falling")
+
   self.score = params.score
   self.scrollY = params.scrollY
 
@@ -26,7 +28,7 @@ function FallingState:update(dt)
   end
 
   if self.timer < FALLING_DELAY then
-    self.scrollY = LOWER_THRESHOLD - self.player.height - self.player.y
+    self.scrollY = LOWER_THRESHOLD - self.player.y - self.player.height
   end
 end
 
