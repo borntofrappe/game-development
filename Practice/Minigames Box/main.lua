@@ -7,7 +7,7 @@ function love.load()
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/fonts/font.ttf", 52),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 28)
   }
 
   gStateMachine =
@@ -15,6 +15,12 @@ function love.load()
     {
       ["start"] = function()
         return StartState:new()
+      end,
+      ["countdown"] = function()
+        return CountdownState:new()
+      end,
+      ["play"] = function()
+        return PlayState:new()
       end
     }
   )
@@ -39,5 +45,14 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.rectangle(
+    "line",
+    WINDOW_PADDING,
+    WINDOW_PADDING,
+    WINDOW_WIDTH - WINDOW_PADDING * 2,
+    WINDOW_HEIGHT - WINDOW_PADDING * 2
+  )
+
   gStateMachine:render()
 end
