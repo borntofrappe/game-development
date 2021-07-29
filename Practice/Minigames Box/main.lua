@@ -21,11 +21,14 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState:new()
+      end,
+      ["bowling"] = function()
+        return BowlingState:new()
       end
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("bowling")
 
   love.keyboard.keypressed = {}
 end
@@ -45,6 +48,7 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setLineWidth(2)
   love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.rectangle(
     "line",
@@ -53,6 +57,5 @@ function love.draw()
     WINDOW_WIDTH - WINDOW_PADDING * 2,
     WINDOW_HEIGHT - WINDOW_PADDING * 2
   )
-
   gStateMachine:render()
 end
