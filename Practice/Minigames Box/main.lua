@@ -21,11 +21,14 @@ function love.load()
       end,
       ["bowling"] = function()
         return BowlingState:new()
+      end,
+      ["feedback"] = function()
+        return FeedbackState:new()
       end
     }
   )
 
-  gStateMachine:change("bowling")
+  gStateMachine:change("start")
 
   love.keyboard.keypressed = {}
 end

@@ -3,7 +3,11 @@ BowlingState = BaseState:new()
 local BALL_SPEED = 1000
 local ANGLE_SPEED = 70
 
+local COUNTDOWN = 5
+local PROGRESS_HEIGHT = 6
+
 function BowlingState:enter()
+  self.timer = COUNTDOWN
   self.state = "launching"
 
   local world = love.physics.newWorld(0, 0)
@@ -78,6 +82,17 @@ function BowlingState:update(dt)
     gStateMachine:change("start")
   end
 
+  self.timer = math.max(0, self.timer - dt)
+
+  if self.timer == 0 then
+    gStateMachine:change(
+      "feedback",
+      {
+        ["hasWon"] = false
+      }
+    )
+  end
+
   if love.keyboard.waspressed("return") and self.state == "launching" then
     local ix = math.cos(math.rad(self.angle)) * BALL_SPEED
     local iy = math.sin(math.rad(self.angle)) * BALL_SPEED
@@ -105,6 +120,13 @@ end
 
 function BowlingState:render()
   love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.rectangle(
+    "fill",
+    0,
+    PLAYING_HEIGHT - PROGRESS_HEIGHT,
+    PLAYING_WIDTH * self.timer / COUNTDOWN,
+    PROGRESS_HEIGHT
+  )
 
   love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
 
