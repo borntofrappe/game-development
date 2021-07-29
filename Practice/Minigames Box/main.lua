@@ -19,9 +19,6 @@ function love.load()
       ["countdown"] = function()
         return CountdownState:new()
       end,
-      ["play"] = function()
-        return PlayState:new()
-      end,
       ["bowling"] = function()
         return BowlingState:new()
       end
@@ -48,14 +45,9 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING)
   love.graphics.setLineWidth(2)
   love.graphics.setColor(0.95, 0.95, 0.95)
-  love.graphics.rectangle(
-    "line",
-    WINDOW_PADDING,
-    WINDOW_PADDING,
-    WINDOW_WIDTH - WINDOW_PADDING * 2,
-    WINDOW_HEIGHT - WINDOW_PADDING * 2
-  )
+  love.graphics.rectangle("line", 0, 0, PLAYING_WIDTH, PLAYING_HEIGHT)
   gStateMachine:render()
 end
