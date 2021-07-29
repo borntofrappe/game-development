@@ -1,12 +1,12 @@
-# Box2D Demos
+# Minigames Box
 
-The goal of this folder is to re-introduce the physics library Box2D, as first seen in the game `07 Angry Birds`. The library is used in the context of the Love2D game engine, and specifically looking at the code behind the `love.physics` module.
+Practice with Box2D with a series of time-sensitive minigames.
 
-Most folders describe a specific concept of Box2D, and are inspired by [a playlist](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy4FyZtCHsZc_K0BrXzxfE) from [TheCodingTrain Youtube channel](https://www.youtube.com/c/TheCodingTrain), and are detailed in the sections which follow.
+## Box2D
 
-Beyond these demos, the idea is to develop more complex experiences with the semblance of a game. Consider `Hillside ride` and `Bowling lane`.
+The `Prep` folder includes a series of demos to re-introduce the physics-based library, inspired by [a playlist](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy4FyZtCHsZc_K0BrXzxfE) from [TheCodingTrain Youtube channel](https://www.youtube.com/c/TheCodingTrain).
 
-## Dynamic particles
+### Dynamic particles
 
 With this first demo, the idea is to generate a world, and later populate this world as the mouse is pressed in the window.
 
@@ -14,7 +14,7 @@ _Please note_: the folder `Dynamic particles` contains multiple files, which wor
 
 - `min.lua` details the code necessary to draw circles, without the contribution of Box2D. Refer to the section [_Physics-less circles_](#physics-less-circles).
 
-### Physics-less circles
+#### Physics-less circles
 
 Without the use of `love.physics`, the demo first renders a series of circles as the mouse is pressed. This is useful to show the contribution of `love.physics` and how the simulation changes the code.
 
@@ -51,7 +51,7 @@ end
 
 _Please note_: circles are added to the table also in `love.update`, as the game registers that the mouse is being pressed.
 
-### Physics-filled objects
+#### Physics-filled objects
 
 In order to emulate physics, it is first necessary to set up a world.
 
@@ -155,7 +155,7 @@ Eventually, as the table is reset so that the game can continue anew with a diff
 objects = {}
 ```
 
-## Static shapes
+### Static shapes
 
 The demo buids from the progress achieved with the previous section (see [_Dynamic particles_](#dynamic-particles)) to include two static objects.
 
@@ -226,7 +226,7 @@ One important addition, however: `Body:getWorldPoints` is necessary to have the 
 love.graphics.polygon("fill", platform.body:getWorldPoints(platform.shape:getPoints()))
 ```
 
-## Complex shapes
+### Complex shapes
 
 Instead of drawing circles as in the previous sections (see [_Dynamic particles_](#dynamic-particles) and [_Static shapes_](#static-shapes)), the demo adds objects in the form of complex shapes. The idea is to create objects in the form of two circles connected by a rectangle, as in the following rough ASCII representation.
 
@@ -287,7 +287,7 @@ end
 
 _Please note_: the radius of the circles is reduced to reduce the impact of each individual body.
 
-## Distance joint
+### Distance joint
 
 The demo creates a bridge with a series of connected circles. The goal is to use a distance joint to bind the circles together, and have the first and last element fixed, static so that the structure oscillates in the lower porition of the window.
 
@@ -365,7 +365,7 @@ This is enough to have the objects connected to one another. To finally show suc
 
 _Please note_: `newDistanceJoint` accepts an additional argument, to specify whether or not the connected bodies should collide.
 
-## Revolute joint
+### Revolute joint
 
 The idea is to bind bodies to the same anchor point, and have the bodies rotate from this shared coordinate. To show the joint, the demo first introduces a series of circles above the window, and has the objects fall down as subject to gravity. These objects are included at an interval, and to ensure that the demo doesn't slow down excessively, are removed when they exceed the window's height.
 
@@ -417,7 +417,7 @@ This is enough to have the rotor fixed and rotate as the circles collide with th
 
 _Please note_: the demo also takes advantage of the `getAnchors()` function. This one provide the coordinates of the anchor point, so that the `draw` function is able to draw a black circle where the two objects are connected.
 
-## Mouse joint
+### Mouse joint
 
 The demo removes the progress achieved in the previous sections to focus on a single object. A rectangle shape is included in the middle of the window, while a chain shape works to define the window's edges. This allows to constrain the object to the visible area. From this setup, the mouse joint is included between the object and the mouse current position, but only if the cursor is pressed.
 
@@ -463,7 +463,7 @@ local x2, y2 = mouseJoint:getAnchors()
 love.graphics.line(x1, y1, x2, y2)
 ```
 
-## Body force
+### Body force
 
 The demo works to introduce the concept of forces. These are applied to the world's bodies through the `applyForce` function, specifying the intensity of the force in the horizontal and vertical dimension.
 
@@ -500,7 +500,7 @@ FORCE = 50
 
 _Please note_: the demo also introduces two platforms, on either side of the window. These are not rendered, but included in the world to see how the shapes would impact the window's edges.
 
-## Collision events
+### Collision events
 
 Similarly to the demo introduced in the previous section, see [_Body force_](#body-force), the script introduces a series of rectangle shapes from the top of the window. In the lower section of the window, however, the demo adds a circular shape to represent the player. The idea is to here detect a collision between this circle and one of the falling rectangles. In such an instance, the rectangle shape is destroyed.
 
@@ -586,9 +586,3 @@ player.body = love.physics.newBody(world, x, y, "kinematic")
 ```
 
 The movement of the circle is then modified through the `setLinearVelocity` function, to have the shape follow the direction instructed by the arrow keys.
-
-## Resources
-
-- [Love2D physics](https://love2d.org/wiki/love.physics). The wiki describes in detail how the module works.
-
-- [Box2D Physics](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy4FyZtCHsZc_K0BrXzxfE). The playlist from [TheCodingTrain Youtube channel](https://www.youtube.com/c/TheCodingTrain) illustrates the ideas reproduced in the folder. It provides more of inspiration than actual code, as the physics engine is introduced in the context of Processing (java).
