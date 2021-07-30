@@ -22,13 +22,16 @@ function love.load()
       ["strike"] = function()
         return StrikeState:new()
       end,
+      ["pop"] = function()
+        return PopState:new()
+      end,
       ["feedback"] = function()
         return FeedbackState:new()
       end
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("pop")
 
   love.keyboard.keypressed = {}
 end

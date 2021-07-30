@@ -8,5 +8,6 @@ require "src/states/StartState"
 require "src/states/CountdownState"
 
 require "src/states/StrikeState"
+require "src/states/PopState"
 
 require "src/states/FeedbackState"
