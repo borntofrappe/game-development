@@ -2,13 +2,16 @@ TiltState = BaseState:new()
 
 local GRAVITY = 500
 local ANGLE_SPEED = 2
-local ANGLE_INITIAL = 2 -- degrees
+local ANGLE_INITIAL = 3
 
 function TiltState:enter()
+  self.timer = COUNTDOWN_LEVEL
+  self.hasWon = false
+
   local world = love.physics.newWorld(0, GRAVITY)
 
   local platform = {
-    ["width"] = 220,
+    ["width"] = 200,
     ["height"] = 8
   }
   platform.x = PLAYING_WIDTH / 2 - platform.width / 2
@@ -19,6 +22,7 @@ function TiltState:enter()
   platform.shape = love.physics.newRectangleShape(platform.width, platform.height)
   platform.fixture = love.physics.newFixture(platform.body, platform.shape)
   platform.body:setAngle(math.random(2) == 1 and math.rad(ANGLE_INITIAL * -1) or math.rad(ANGLE_INITIAL))
+  platform.fixture:setUserData("platform")
 
   self.platform = platform
 
@@ -34,6 +38,7 @@ function TiltState:enter()
   ball.body:setSleepingAllowed(false)
   ball.fixture:setRestitution(0.5)
   ball.fixture:setFriction(0.25)
+  ball.fixture:setUserData("ball")
 
   self.ball = ball
 
@@ -51,21 +56,59 @@ function TiltState:enter()
   container.shape =
     love.physics.newChainShape(false, 0, 0, 0, container.height, container.width, container.height, container.width, 0)
   container.fixture = love.physics.newFixture(container.body, container.shape)
+  container.fixture:setUserData("container")
 
   self.container = container
+
+  local threshold = {}
+  threshold.body = love.physics.newBody(world, container.x + container.width / 2, container.y + container.height / 2)
+  threshold.shape = love.physics.newRectangleShape(container.width, container.height)
+  threshold.fixture = love.physics.newFixture(threshold.body, threshold.shape)
+  threshold.fixture:setSensor(true)
+  threshold.fixture:setUserData("threshold")
+
+  self.threshold = threshold
 
   local walls = {}
   walls.body = love.physics.newBody(world, 0, 0)
   walls.shape =
     love.physics.newChainShape(true, 0, 0, PLAYING_WIDTH, 0, PLAYING_WIDTH, PLAYING_HEIGHT, 0, PLAYING_HEIGHT)
   walls.fixture = love.physics.newFixture(walls.body, walls.shape)
+  walls.fixture:setUserData("walls")
 
   self.walls = walls
+
+  world:setCallbacks(
+    function(fixture1, fixture2)
+      if self.hasWon then
+        return
+      end
+
+      local userData = {}
+      userData[fixture1:getUserData()] = true
+      userData[fixture2:getUserData()] = true
+
+      if userData["ball"] and userData["threshold"] then
+        self.hasWon = true
+      end
+    end
+  )
 
   self.world = world
 end
 
 function TiltState:update(dt)
+  self.timer = math.max(0, self.timer - dt)
+
+  if self.timer == 0 then
+    gStateMachine:change(
+      "feedback",
+      {
+        ["hasWon"] = self.hasWon
+      }
+    )
+  end
+
   self.world:update(dt)
 
   if love.mouse.isDown(1) then
@@ -80,10 +123,20 @@ end
 
 function TiltState:render()
   love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.rectangle(
+    "fill",
+    0,
+    PLAYING_HEIGHT - COUNTDOWN_LEVEL_BAR_HEIGHT,
+    PLAYING_WIDTH * self.timer / COUNTDOWN_LEVEL,
+    COUNTDOWN_LEVEL_BAR_HEIGHT
+  )
+
   love.graphics.polygon("fill", self.platform.body:getWorldPoints(self.platform.shape:getPoints()))
 
   love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
 
   love.graphics.setLineWidth(self.container.lineWidth)
   love.graphics.line(self.container.body:getWorldPoints(self.container.shape:getPoints()))
+
+  -- love.graphics.polygon("fill", self.threshold.body:getWorldPoints(self.threshold.shape:getPoints()))
 end

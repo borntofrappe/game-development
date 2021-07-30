@@ -37,7 +37,7 @@ function PopState:enter()
   local yMin = math.floor(PLAYING_HEIGHT / 3)
   local yMax = math.floor(PLAYING_HEIGHT / 1.5)
 
-  local n = 3
+  local n = math.random(3, 4)
   local r = 25
   for i = 1, n do
     local y = math.random(yMin, yMax)

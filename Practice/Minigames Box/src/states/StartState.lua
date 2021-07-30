@@ -1,14 +1,6 @@
 StartState = BaseState:new()
 
 function StartState:update(dt)
-  if love.keyboard.waspressed("escape") then
-    love.event.quit()
-  end
-
-  if love.keyboard.waspressed("return") then
-    gStateMachine:change("countdown")
-  end
-
   if love.mouse.waspressed(1) then
     local x, y = love.mouse:getPosition()
     if

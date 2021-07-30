@@ -37,7 +37,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("tilt")
+  gStateMachine:change("start")
 
   love.mouse.buttonpressed = {}
 end
@@ -50,6 +50,10 @@ end
 
 function love.mousepressed(x, y, button)
   love.mouse.buttonpressed[button] = true
+end
+
+function love.mouse.waspressed(button)
+  return love.mouse.buttonpressed[button]
 end
 
 function love.update(dt)

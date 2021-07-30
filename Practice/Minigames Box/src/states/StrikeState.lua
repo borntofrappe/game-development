@@ -104,15 +104,8 @@ function StrikeState:enter()
 
   self.world = world
 
-  self.angle = 0
+  self.angle = math.random(-45, 45)
   self.directionAngle = math.random(2) == 1 and 1 or -1
-end
-
-function StrikeState:launch()
-  local ix = math.cos(math.rad(self.angle)) * BALL_SPEED
-  local iy = math.sin(math.rad(self.angle)) * BALL_SPEED
-  self.ball.body:applyLinearImpulse(ix, iy)
-  self.state = "launched"
 end
 
 function StrikeState:update(dt)
@@ -133,12 +126,11 @@ function StrikeState:update(dt)
       x > WINDOW_PADDING and x < WINDOW_WIDTH - WINDOW_PADDING and y > WINDOW_PADDING and
         y < WINDOW_HEIGHT - WINDOW_PADDING
      then
-      self:launch()
+      local ix = math.cos(math.rad(self.angle)) * BALL_SPEED
+      local iy = math.sin(math.rad(self.angle)) * BALL_SPEED
+      self.ball.body:applyLinearImpulse(ix, iy)
+      self.state = "launched"
     end
-  end
-
-  if love.keyboard.waspressed("return") and self.state == "launching" then
-    self:launch()
   end
 
   if self.state == "launched" then
