@@ -524,3 +524,7 @@ The `res` folder includes [Amatic SC](https://fonts.google.com/specimen/Amatic+S
 ## Minigames
 
 - `StrikeState`: move every pin on the opposing side
+
+- `PopState`: remove the balloons lifting the weight out of the box
+
+- `TiltState`: move a platform to have a ball fall in the container below

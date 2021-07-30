@@ -11,7 +11,7 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 28)
   }
 
-  gStates = {"strike", "pop"}
+  gStates = {"strike", "pop", "tilt"}
 
   gStateMachine =
     StateMachine:new(
@@ -28,38 +28,33 @@ function love.load()
       ["pop"] = function()
         return PopState:new()
       end,
+      ["tilt"] = function()
+        return TiltState:new()
+      end,
       ["feedback"] = function()
         return FeedbackState:new()
       end
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("tilt")
 
-  love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
 end
 
 function love.keypressed(key)
-  love.keyboard.keypressed[key] = true
-end
-
-function love.keyboard.waspressed(key)
-  return love.keyboard.keypressed[key]
+  if key == "escape" then
+    love.event.quit()
+  end
 end
 
 function love.mousepressed(x, y, button)
   love.mouse.buttonpressed[button] = true
 end
 
-function love.mouse.waspressed(button)
-  return love.mouse.buttonpressed[button]
-end
-
 function love.update(dt)
   gStateMachine:update(dt)
 
-  love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
 end
 
