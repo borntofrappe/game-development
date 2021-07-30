@@ -1,6 +1,8 @@
 CountdownState = BaseState:new()
 
 function CountdownState:enter()
+  gSounds["countdown"]:play()
+
   local state = gStates[math.random(#gStates)]
   self.title = string.upper(state .. "!")
 

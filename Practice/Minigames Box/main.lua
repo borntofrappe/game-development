@@ -11,6 +11,16 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 28)
   }
 
+  gSounds = {
+    ["bounce"] = love.audio.newSource("res/sounds/bounce.wav", "static"),
+    ["countdown"] = love.audio.newSource("res/sounds/countdown.wav", "static"),
+    ["feedback"] = love.audio.newSource("res/sounds/feedback.wav", "static"),
+    ["launch"] = love.audio.newSource("res/sounds/launch.wav", "static"),
+    ["pop"] = love.audio.newSource("res/sounds/pop.wav", "static"),
+    ["strike"] = love.audio.newSource("res/sounds/strike.wav", "static"),
+    ["victory"] = love.audio.newSource("res/sounds/victory.wav", "static")
+  }
+
   gStates = {"strike", "pop", "tilt"}
 
   gStateMachine =

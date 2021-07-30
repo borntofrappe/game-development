@@ -60,14 +60,15 @@ function TiltState:enter()
 
   self.container = container
 
-  local threshold = {}
-  threshold.body = love.physics.newBody(world, container.x + container.width / 2, container.y + container.height / 2)
-  threshold.shape = love.physics.newRectangleShape(container.width, container.height)
-  threshold.fixture = love.physics.newFixture(threshold.body, threshold.shape)
-  threshold.fixture:setSensor(true)
-  threshold.fixture:setUserData("threshold")
+  local sensor = {}
+  sensor.body =
+    love.physics.newBody(world, container.x + container.width / 2, container.y + container.height / 2 + ball.r / 2)
+  sensor.shape = love.physics.newRectangleShape(container.width - container.lineWidth, container.height - ball.r)
+  sensor.fixture = love.physics.newFixture(sensor.body, sensor.shape)
+  sensor.fixture:setSensor(true)
+  sensor.fixture:setUserData("sensor")
 
-  self.threshold = threshold
+  self.sensor = sensor
 
   local walls = {}
   walls.body = love.physics.newBody(world, 0, 0)
@@ -88,7 +89,13 @@ function TiltState:enter()
       userData[fixture1:getUserData()] = true
       userData[fixture2:getUserData()] = true
 
-      if userData["ball"] and userData["threshold"] then
+      if userData["ball"] then
+        gSounds["bounce"]:play()
+      end
+
+      if userData["ball"] and userData["sensor"] then
+        gSounds["victory"]:play()
+
         self.hasWon = true
       end
     end
@@ -111,7 +118,7 @@ function TiltState:update(dt)
 
   self.world:update(dt)
 
-  if love.mouse.isDown(1) then
+  if love.mouse.isDown(1) and not self.hasWon then
     local x = love.mouse:getPosition()
     if x > PLAYING_WIDTH / 2 then
       self.platform.body:setAngle(self.platform.body:getAngle() + ANGLE_SPEED * dt)
@@ -138,5 +145,5 @@ function TiltState:render()
   love.graphics.setLineWidth(self.container.lineWidth)
   love.graphics.line(self.container.body:getWorldPoints(self.container.shape:getPoints()))
 
-  -- love.graphics.polygon("fill", self.threshold.body:getWorldPoints(self.threshold.shape:getPoints()))
+  -- love.graphics.polygon("fill", self.sensor.body:getWorldPoints(self.sensor.shape:getPoints()))
 end

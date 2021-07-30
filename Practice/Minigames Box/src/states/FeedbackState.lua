@@ -1,6 +1,8 @@
 FeedbackState = BaseState:new()
 
 function FeedbackState:enter(params)
+  gSounds["feedback"]:play()
+
   self.feedback = params.hasWon and "Congrats!" or "Too bad..."
 
   Timer:after(

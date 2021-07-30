@@ -15,20 +15,19 @@ function PopState:enter()
 
   local size = 40
   local weight = {
-    ["x"] = PLAYING_WIDTH / 2 - 20,
-    ["y"] = PLAYING_HEIGHT - size - 20,
     ["size"] = size
   }
+  weight.x = PLAYING_WIDTH / 2 - weight.size / 2
+  weight.y = PLAYING_HEIGHT - weight.size * 1.5
 
   weight.body = love.physics.newBody(world, weight.x + weight.size / 2, weight.y + weight.size / 2, "dynamic")
   weight.shape = love.physics.newRectangleShape(weight.size, weight.size)
   weight.fixture = love.physics.newFixture(weight.body, weight.shape)
-  weight.fixture:setRestitution(0.1)
-
   weight.body:setLinearVelocity(
     math.random(WEIGHT_LINEAR_VELOCITY.x[1], WEIGHT_LINEAR_VELOCITY.x[2]),
     WEIGHT_LINEAR_VELOCITY.y
   )
+  weight.fixture:setRestitution(0.1)
 
   self.weight = weight
 
@@ -99,7 +98,7 @@ function PopState:update(dt)
 
   self.world:update(dt)
 
-  if love.mouse.waspressed(1) then
+  if love.mouse.waspressed(1) and not self.hasWon then
     local mouseX, mouseY = love.mouse:getPosition()
 
     for i, balloon in ipairs(self.balloons) do
@@ -107,11 +106,17 @@ function PopState:update(dt)
       local y = balloon.body:getY()
       local r = balloon.shape:getRadius()
       if ((mouseX - WINDOW_PADDING) - x) ^ 2 + ((mouseY - WINDOW_PADDING) - y) ^ 2 < r ^ 2 then
+        gSounds["pop"]:play()
+
         balloon.joint:destroy()
         balloon.body:destroy()
         table.remove(self.balloons, i)
 
-        self.hasWon = #self.balloons == 0
+        if #self.balloons == 0 then
+          gSounds["victory"]:play()
+
+          self.hasWon = true
+        end
         break
       end
     end

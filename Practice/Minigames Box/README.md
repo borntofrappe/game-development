@@ -2,6 +2,8 @@
 
 Practice with Box2D with a series of time-sensitive minigames.
 
+![Minigames Box](https://github.com/borntofrappe/game-development/blob/master/Showcase/minigames-box.gif)
+
 ## Prep
 
 The `Prep` folder includes a series of demos to re-introduce the physics-based library, inspired by [a playlist](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy4FyZtCHsZc_K0BrXzxfE) from [TheCodingTrain Youtube channel](https://www.youtube.com/c/TheCodingTrain).
@@ -519,12 +521,30 @@ The movement of the circle is then modified through the `setLinearVelocity` func
 
 ## Resources
 
-The `res` folder includes [Amatic SC](https://fonts.google.com/specimen/Amatic+SC) as the font chosen for the game as well as `Timer.lua` as a timer library.
+The `res` folder includes [Amatic SC](https://fonts.google.com/specimen/Amatic+SC) as the font chosen for the game as well as `Timer.lua` to manage delays.
 
 ## Minigames
 
-- `StrikeState`: move every pin on the opposing side
+The <b>box</b> introduces the games with a dedicated state:
 
-- `PopState`: remove the balloons lifting the weight out of the box
+- `StrikeState`, where you are tasked to direct a ball toward a set of pins
 
-- `TiltState`: move a platform to have a ball fall in the container below
+- `PopState`, where you need to free a small weight from a series of floating balloons
+
+- `TiltState`, where you rotate a platform to have a ball fall in a container
+
+At a later stage I might update the project with additional scripts, but the three are enough to show the overall flow of the application.
+
+`CountdownState` helps to introduce the individual titles with a string and a brief delay.
+
+The state-based titles are then time-sensitive, but do not rely on the timer library. Here `self.timer` is updated continuously and through delta time, so to incrementally update a progress bar.
+
+Each of the three titles sets up a basic simulation with the Box2D library and the `love.physics` module:
+
+- `StrikeState`: dynamic objects, collision callback
+
+- `PopState`: velocity, forces, distance joints
+
+- `TiltState`: kinematic object, collision callback, sensor
+
+With a completed game, `FeedbackState` provides feeback in the form of an arbitrary string. Following a delay similar to that introduced in the countdown state, the game progresses to a different title.

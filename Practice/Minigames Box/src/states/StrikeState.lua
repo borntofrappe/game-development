@@ -2,11 +2,13 @@ StrikeState = BaseState:new()
 
 local BALL_SPEED = 1000
 local ANGLE_SPEED = 70
+local ANGLE_MIN = -45
+local ANGLE_MAX = 45
 
 function StrikeState:enter()
   self.timer = COUNTDOWN_LEVEL
-  self.state = "launching"
   self.hasWon = false
+  self.state = "launching"
 
   local world = love.physics.newWorld(0, 0)
 
@@ -86,6 +88,9 @@ function StrikeState:enter()
       local userData = {fixture1:getUserData(), fixture2:getUserData()}
       for _, data in ipairs(userData) do
         if data:sub(1, 3) == "pin" and not struckPins[data] then
+          gSounds["strike"]:stop()
+          gSounds["strike"]:play()
+
           struckPins[data] = true
 
           local hasWon = true
@@ -96,7 +101,11 @@ function StrikeState:enter()
             end
           end
 
-          self.hasWon = hasWon
+          if hasWon then
+            gSounds["victory"]:play()
+
+            self.hasWon = hasWon
+          end
         end
       end
     end
@@ -104,7 +113,7 @@ function StrikeState:enter()
 
   self.world = world
 
-  self.angle = math.random(-45, 45)
+  self.angle = math.random(ANGLE_MIN, ANGLE_MAX)
   self.directionAngle = math.random(2) == 1 and 1 or -1
 end
 
@@ -126,6 +135,8 @@ function StrikeState:update(dt)
       x > WINDOW_PADDING and x < WINDOW_WIDTH - WINDOW_PADDING and y > WINDOW_PADDING and
         y < WINDOW_HEIGHT - WINDOW_PADDING
      then
+      gSounds["launch"]:play()
+
       local ix = math.cos(math.rad(self.angle)) * BALL_SPEED
       local iy = math.sin(math.rad(self.angle)) * BALL_SPEED
       self.ball.body:applyLinearImpulse(ix, iy)
@@ -139,13 +150,13 @@ function StrikeState:update(dt)
 
   if self.state == "launching" then
     self.angle = self.angle + ANGLE_SPEED * dt * self.directionAngle
-    if self.angle >= 45 then
-      self.angle = 45
+    if self.angle >= ANGLE_MAX then
+      self.angle = ANGLE_MAX
       self.directionAngle = -1
     end
 
-    if self.angle <= -45 then
-      self.angle = -45
+    if self.angle <= ANGLE_MIN then
+      self.angle = ANGLE_MIN
       self.directionAngle = 1
     end
   end
