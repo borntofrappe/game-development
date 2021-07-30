@@ -6,12 +6,17 @@ function StartState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    gStateMachine:change(
-      "countdown",
-      {
-        ["state"] = "strike"
-      }
-    )
+    gStateMachine:change("countdown")
+  end
+
+  if love.mouse.waspressed(1) then
+    local x, y = love.mouse:getPosition()
+    if
+      x > WINDOW_PADDING and x < WINDOW_WIDTH - WINDOW_PADDING and y > WINDOW_PADDING and
+        y < WINDOW_HEIGHT - WINDOW_PADDING
+     then
+      gStateMachine:change("countdown")
+    end
   end
 end
 

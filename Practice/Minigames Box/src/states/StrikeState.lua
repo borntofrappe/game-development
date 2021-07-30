@@ -3,11 +3,8 @@ StrikeState = BaseState:new()
 local BALL_SPEED = 1000
 local ANGLE_SPEED = 70
 
-local COUNTDOWN = 4
-local PROGRESS_HEIGHT = 6
-
 function StrikeState:enter()
-  self.timer = COUNTDOWN
+  self.timer = COUNTDOWN_LEVEL
   self.state = "launching"
   self.hasWon = false
 
@@ -111,6 +108,13 @@ function StrikeState:enter()
   self.directionAngle = math.random(2) == 1 and 1 or -1
 end
 
+function StrikeState:launch()
+  local ix = math.cos(math.rad(self.angle)) * BALL_SPEED
+  local iy = math.sin(math.rad(self.angle)) * BALL_SPEED
+  self.ball.body:applyLinearImpulse(ix, iy)
+  self.state = "launched"
+end
+
 function StrikeState:update(dt)
   self.timer = math.max(0, self.timer - dt)
 
@@ -123,11 +127,18 @@ function StrikeState:update(dt)
     )
   end
 
+  if love.mouse.waspressed(1) and self.state == "launching" then
+    local x, y = love.mouse:getPosition()
+    if
+      x > WINDOW_PADDING and x < WINDOW_WIDTH - WINDOW_PADDING and y > WINDOW_PADDING and
+        y < WINDOW_HEIGHT - WINDOW_PADDING
+     then
+      self:launch()
+    end
+  end
+
   if love.keyboard.waspressed("return") and self.state == "launching" then
-    local ix = math.cos(math.rad(self.angle)) * BALL_SPEED
-    local iy = math.sin(math.rad(self.angle)) * BALL_SPEED
-    self.ball.body:applyLinearImpulse(ix, iy)
-    self.state = "launched"
+    self:launch()
   end
 
   if self.state == "launched" then
@@ -153,9 +164,9 @@ function StrikeState:render()
   love.graphics.rectangle(
     "fill",
     0,
-    PLAYING_HEIGHT - PROGRESS_HEIGHT,
-    PLAYING_WIDTH * self.timer / COUNTDOWN,
-    PROGRESS_HEIGHT
+    PLAYING_HEIGHT - COUNTDOWN_LEVEL_BAR_HEIGHT,
+    PLAYING_WIDTH * self.timer / COUNTDOWN_LEVEL,
+    COUNTDOWN_LEVEL_BAR_HEIGHT
   )
 
   love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())

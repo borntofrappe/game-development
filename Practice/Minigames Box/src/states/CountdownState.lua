@@ -1,14 +1,13 @@
 CountdownState = BaseState:new()
 
-local COUNTDOWN = 2
-
-function CountdownState:enter(params)
-  self.title = string.upper(params.state .. "!")
+function CountdownState:enter()
+  local state = gStates[math.random(#gStates)]
+  self.title = string.upper(state .. "!")
 
   Timer:after(
-    COUNTDOWN,
+    COUNTDOWN_FEEBACK,
     function()
-      gStateMachine:change(params.state)
+      gStateMachine:change(state)
     end
   )
 end
@@ -20,5 +19,5 @@ end
 function CountdownState:render()
   love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.setFont(gFonts.large)
-  love.graphics.printf(self.title, 0, WINDOW_HEIGHT / 2 - gFonts.large:getHeight() / 2, WINDOW_WIDTH, "center")
+  love.graphics.printf(self.title, 0, PLAYING_HEIGHT / 2 - gFonts.large:getHeight() / 2, PLAYING_WIDTH, "center")
 end

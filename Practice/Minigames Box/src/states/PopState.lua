@@ -2,13 +2,35 @@ PopState = BaseState:new()
 
 local GRAVITY = 200
 local WEIGHT_LINEAR_VELOCITY = {
-  ["y"] = 100,
+  ["y"] = 50,
   ["x"] = {-60, 60}
 }
-local BALLOON_FORCE = GRAVITY * 1.3
+local BALLOON_FORCE = GRAVITY * 1.5
 
 function PopState:enter()
+  self.timer = COUNTDOWN_LEVEL
+  self.hasWon = false
+
   local world = love.physics.newWorld(0, GRAVITY)
+
+  local size = 40
+  local weight = {
+    ["x"] = PLAYING_WIDTH / 2 - 20,
+    ["y"] = PLAYING_HEIGHT - size - 20,
+    ["size"] = size
+  }
+
+  weight.body = love.physics.newBody(world, weight.x + weight.size / 2, weight.y + weight.size / 2, "dynamic")
+  weight.shape = love.physics.newRectangleShape(weight.size, weight.size)
+  weight.fixture = love.physics.newFixture(weight.body, weight.shape)
+  weight.fixture:setRestitution(0.1)
+
+  weight.body:setLinearVelocity(
+    math.random(WEIGHT_LINEAR_VELOCITY.x[1], WEIGHT_LINEAR_VELOCITY.x[2]),
+    WEIGHT_LINEAR_VELOCITY.y
+  )
+
+  self.weight = weight
 
   local balloons = {}
 
@@ -31,45 +53,21 @@ function PopState:enter()
     balloon.fixture:setRestitution(0.5)
 
     balloon.force = balloon.body:getMass() * BALLOON_FORCE * -1 -- mass * gravity to have the balloon stand still
+
+    balloon.joint =
+      love.physics.newDistanceJoint(
+      balloon.body,
+      weight.body,
+      balloon.body:getX(),
+      balloon.body:getY(),
+      weight.body:getX(),
+      weight.body:getY()
+    )
+
     table.insert(balloons, balloon)
   end
 
   self.balloons = balloons
-
-  local size = 40
-  local weight = {
-    ["x"] = PLAYING_WIDTH / 2 - 20,
-    ["y"] = PLAYING_HEIGHT - size - 20,
-    ["size"] = size
-  }
-
-  weight.body = love.physics.newBody(world, weight.x + weight.size / 2, weight.y + weight.size / 2, "dynamic")
-  weight.shape = love.physics.newRectangleShape(weight.size, weight.size)
-  weight.fixture = love.physics.newFixture(weight.body, weight.shape)
-  weight.body:setLinearVelocity(
-    math.random(WEIGHT_LINEAR_VELOCITY.x[1], WEIGHT_LINEAR_VELOCITY.x[2]),
-    WEIGHT_LINEAR_VELOCITY.y
-  )
-
-  self.weight = weight
-
-  local joints = {}
-  for _, balloon in ipairs(balloons) do
-    local body1 = balloon.body
-    local body2 = weight.body
-
-    local x1 = body1:getX()
-    local y1 = body1:getY()
-
-    local x2 = body2:getX()
-    local y2 = body2:getY()
-
-    local joint = love.physics.newDistanceJoint(body1, body2, x1, y1, x2, y2)
-
-    table.insert(joints, joint)
-  end
-
-  self.joints = joints
 
   local walls = {}
   walls.body = love.physics.newBody(world, 0, 0)
@@ -84,22 +82,57 @@ function PopState:enter()
 end
 
 function PopState:update(dt)
+  self.timer = math.max(0, self.timer - dt)
+
+  if self.timer == 0 then
+    gStateMachine:change(
+      "feedback",
+      {
+        ["hasWon"] = self.hasWon
+      }
+    )
+  end
+
   for _, balloon in ipairs(self.balloons) do
     balloon.body:applyForce(0, balloon.force)
   end
 
   self.world:update(dt)
+
+  if love.mouse.waspressed(1) then
+    local mouseX, mouseY = love.mouse:getPosition()
+
+    for i, balloon in ipairs(self.balloons) do
+      local x = balloon.body:getX()
+      local y = balloon.body:getY()
+      local r = balloon.shape:getRadius()
+      if ((mouseX - WINDOW_PADDING) - x) ^ 2 + ((mouseY - WINDOW_PADDING) - y) ^ 2 < r ^ 2 then
+        balloon.joint:destroy()
+        balloon.body:destroy()
+        table.remove(self.balloons, i)
+
+        self.hasWon = #self.balloons == 0
+        break
+      end
+    end
+  end
 end
 
 function PopState:render()
   love.graphics.setColor(0.95, 0.95, 0.95)
-  love.graphics.setLineWidth(1)
-  for _, joint in ipairs(self.joints) do
-    local x1, y1, x2, y2 = joint:getAnchors()
-    love.graphics.line(x1, y1, x2, y2)
-  end
+  love.graphics.rectangle(
+    "fill",
+    0,
+    PLAYING_HEIGHT - COUNTDOWN_LEVEL_BAR_HEIGHT,
+    PLAYING_WIDTH * self.timer / COUNTDOWN_LEVEL,
+    COUNTDOWN_LEVEL_BAR_HEIGHT
+  )
 
+  love.graphics.setLineWidth(1)
   for _, balloon in ipairs(self.balloons) do
+    local x1, y1, x2, y2 = balloon.joint:getAnchors()
+    love.graphics.line(x1, y1, x2, y2)
+
     love.graphics.circle("fill", balloon.body:getX(), balloon.body:getY(), balloon.shape:getRadius())
   end
 
