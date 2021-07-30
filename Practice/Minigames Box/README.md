@@ -521,6 +521,6 @@ The movement of the circle is then modified through the `setLinearVelocity` func
 
 The `res` folder includes [Amatic SC](https://fonts.google.com/specimen/Amatic+SC) as the font chosen for the game as well as `Timer.lua` as a timer library.
 
-## Countdown
+## Minigames
 
-The countdown state is designed to introduce the minigames. A progress bar then manages how long the individual titles should last.
+- `StrikeState`: move every pin on the opposing side

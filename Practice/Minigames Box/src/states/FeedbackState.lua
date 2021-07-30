@@ -1,22 +1,20 @@
 FeedbackState = BaseState:new()
 
+local COUNTDOWN = 2
+
 function FeedbackState:enter(params)
   self.feedback = params.hasWon and "Congrats!" or "Too bad..."
+
+  Timer:after(
+    COUNTDOWN,
+    function()
+      gStateMachine:change("start") -- ideally you'd move to the countdown and another game
+    end
+  )
 end
 
 function FeedbackState:update(dt)
-  if love.keyboard.waspressed("escape") then
-    gStateMachine:change("start")
-  end
-
-  if love.keyboard.waspressed("return") then
-    gStateMachine:change(
-      "countdown",
-      {
-        ["state"] = "bowling" -- ideally a random state
-      }
-    )
-  end
+  Timer:update(dt)
 end
 
 function FeedbackState:render()

@@ -9,7 +9,7 @@ function StartState:update(dt)
     gStateMachine:change(
       "countdown",
       {
-        ["state"] = "bowling"
+        ["state"] = "strike"
       }
     )
   end

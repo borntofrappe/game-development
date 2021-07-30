@@ -19,8 +19,8 @@ function love.load()
       ["countdown"] = function()
         return CountdownState:new()
       end,
-      ["bowling"] = function()
-        return BowlingState:new()
+      ["strike"] = function()
+        return StrikeState:new()
       end,
       ["feedback"] = function()
         return FeedbackState:new()

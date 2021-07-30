@@ -1,14 +1,15 @@
-BowlingState = BaseState:new()
+StrikeState = BaseState:new()
 
 local BALL_SPEED = 1000
 local ANGLE_SPEED = 70
 
-local COUNTDOWN = 5
+local COUNTDOWN = 4
 local PROGRESS_HEIGHT = 6
 
-function BowlingState:enter()
+function StrikeState:enter()
   self.timer = COUNTDOWN
   self.state = "launching"
+  self.hasWon = false
 
   local world = love.physics.newWorld(0, 0)
 
@@ -24,10 +25,9 @@ function BowlingState:enter()
   ball.fixture = love.physics.newFixture(ball.body, ball.shape)
   ball.fixture:setRestitution(0.5)
   ball.fixture:setFriction(1)
+  ball.fixture:setUserData("ball")
 
   self.ball = ball
-
-  local pins = {}
 
   self.arrow = {
     ["x0"] = self.ball.x,
@@ -36,6 +36,8 @@ function BowlingState:enter()
     ["x2"] = self.ball.r * 1.5 + 30,
     ["flap"] = 10
   }
+
+  local pins = {}
 
   local columns = 3
   local rows = 1
@@ -55,21 +57,53 @@ function BowlingState:enter()
       pin.shape = love.physics.newCircleShape(pin.r)
       pin.fixture = love.physics.newFixture(pin.body, pin.shape)
       pin.fixture:setRestitution(0.5)
+      pin.fixture:setUserData("pin-c" .. column .. "-r" .. row)
 
       table.insert(pins, pin)
     end
     rows = rows + 1
   end
 
+  local struckPins = {}
+  for _, pin in ipairs(pins) do
+    struckPins[pin.fixture:getUserData()] = false
+  end
+
   self.pins = pins
 
-  local edges = {}
-  edges.body = love.physics.newBody(world, 0, 0)
-  edges.shape =
+  local walls = {}
+  walls.body = love.physics.newBody(world, 0, 0)
+  walls.shape =
     love.physics.newChainShape(true, 0, 0, PLAYING_WIDTH, 0, PLAYING_WIDTH, PLAYING_HEIGHT, 0, PLAYING_HEIGHT)
-  edges.fixture = love.physics.newFixture(edges.body, edges.shape)
+  walls.fixture = love.physics.newFixture(walls.body, walls.shape)
+  walls.fixture:setUserData("walls")
 
-  self.edges = edges
+  self.walls = walls
+
+  world:setCallbacks(
+    function(fixture1, fixture2)
+      if self.hasWon then
+        return
+      end
+
+      local userData = {fixture1:getUserData(), fixture2:getUserData()}
+      for _, data in ipairs(userData) do
+        if data:sub(1, 3) == "pin" and not struckPins[data] then
+          struckPins[data] = true
+
+          local hasWon = true
+          for _, struckPin in pairs(struckPins) do
+            if not struckPin then
+              hasWon = false
+              break
+            end
+          end
+
+          self.hasWon = hasWon
+        end
+      end
+    end
+  )
 
   self.world = world
 
@@ -77,18 +111,14 @@ function BowlingState:enter()
   self.directionAngle = math.random(2) == 1 and 1 or -1
 end
 
-function BowlingState:update(dt)
-  if love.keyboard.waspressed("escape") then
-    gStateMachine:change("start")
-  end
-
+function StrikeState:update(dt)
   self.timer = math.max(0, self.timer - dt)
 
   if self.timer == 0 then
     gStateMachine:change(
       "feedback",
       {
-        ["hasWon"] = false
+        ["hasWon"] = self.hasWon
       }
     )
   end
@@ -118,7 +148,7 @@ function BowlingState:update(dt)
   end
 end
 
-function BowlingState:render()
+function StrikeState:render()
   love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.rectangle(
     "fill",
@@ -130,7 +160,9 @@ function BowlingState:render()
 
   love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
 
+  love.graphics.setLineWidth(1)
   for i, pin in pairs(self.pins) do
+    love.graphics.circle("line", pin.x, pin.y, pin.r * 0.8)
     love.graphics.circle("fill", pin.body:getX(), pin.body:getY(), pin.shape:getRadius())
   end
 

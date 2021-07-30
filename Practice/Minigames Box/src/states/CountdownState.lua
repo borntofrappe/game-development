@@ -1,26 +1,15 @@
 CountdownState = BaseState:new()
 
-local COUNTDOWN = {
-  ["duration"] = 2,
-  ["speed"] = 1,
-  ["label"] = "countdown"
-}
+local COUNTDOWN = 2
 
 function CountdownState:enter(params)
-  self.countdown = COUNTDOWN.duration
+  self.title = string.upper(params.state .. "!")
 
-  Timer:every(
-    COUNTDOWN.speed,
+  Timer:after(
+    COUNTDOWN,
     function()
-      if self.countdown == 0 then
-        Timer:remove(COUNTDOWN.label)
-        gStateMachine:change(params.state)
-      else
-        self.countdown = self.countdown - 1
-      end
-    end,
-    false,
-    COUNTDOWN.label
+      gStateMachine:change(params.state)
+    end
   )
 end
 
@@ -31,5 +20,5 @@ end
 function CountdownState:render()
   love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.setFont(gFonts.large)
-  love.graphics.printf("Strike!", 0, WINDOW_HEIGHT / 2 - gFonts.large:getHeight() / 2, WINDOW_WIDTH, "center")
+  love.graphics.printf(self.title, 0, WINDOW_HEIGHT / 2 - gFonts.large:getHeight() / 2, WINDOW_WIDTH, "center")
 end
