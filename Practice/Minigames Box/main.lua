@@ -4,21 +4,11 @@ function love.load()
   math.randomseed(os.time())
   love.window.setTitle("Minigames Box")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.12, 0.13, 0.1)
+  love.graphics.setBackgroundColor(0.96, 0.94, 0.85)
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/fonts/font.ttf", 52),
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 28)
-  }
-
-  gSounds = {
-    ["bounce"] = love.audio.newSource("res/sounds/bounce.wav", "static"),
-    ["countdown"] = love.audio.newSource("res/sounds/countdown.wav", "static"),
-    ["feedback"] = love.audio.newSource("res/sounds/feedback.wav", "static"),
-    ["launch"] = love.audio.newSource("res/sounds/launch.wav", "static"),
-    ["pop"] = love.audio.newSource("res/sounds/pop.wav", "static"),
-    ["strike"] = love.audio.newSource("res/sounds/strike.wav", "static"),
-    ["victory"] = love.audio.newSource("res/sounds/victory.wav", "static")
   }
 
   gStates = {"strike", "pop", "tilt"}
@@ -74,8 +64,8 @@ end
 
 function love.draw()
   love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING)
-  love.graphics.setLineWidth(2)
-  love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.setLineWidth(3)
+  love.graphics.setColor(0.28, 0.25, 0.18)
   love.graphics.rectangle("line", 0, 0, PLAYING_WIDTH, PLAYING_HEIGHT)
   gStateMachine:render()
 end

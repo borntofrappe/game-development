@@ -88,9 +88,6 @@ function StrikeState:enter()
       local userData = {fixture1:getUserData(), fixture2:getUserData()}
       for _, data in ipairs(userData) do
         if data:sub(1, 3) == "pin" and not struckPins[data] then
-          gSounds["strike"]:stop()
-          gSounds["strike"]:play()
-
           struckPins[data] = true
 
           local hasWon = true
@@ -102,8 +99,6 @@ function StrikeState:enter()
           end
 
           if hasWon then
-            gSounds["victory"]:play()
-
             self.hasWon = hasWon
           end
         end
@@ -135,8 +130,6 @@ function StrikeState:update(dt)
       x > WINDOW_PADDING and x < WINDOW_WIDTH - WINDOW_PADDING and y > WINDOW_PADDING and
         y < WINDOW_HEIGHT - WINDOW_PADDING
      then
-      gSounds["launch"]:play()
-
       local ix = math.cos(math.rad(self.angle)) * BALL_SPEED
       local iy = math.sin(math.rad(self.angle)) * BALL_SPEED
       self.ball.body:applyLinearImpulse(ix, iy)
@@ -163,7 +156,7 @@ function StrikeState:update(dt)
 end
 
 function StrikeState:render()
-  love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.setColor(0.28, 0.25, 0.18)
   love.graphics.rectangle(
     "fill",
     0,
@@ -172,8 +165,13 @@ function StrikeState:render()
     COUNTDOWN_LEVEL_BAR_HEIGHT
   )
 
+  love.graphics.setColor(0.38, 0.35, 0.27)
   love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
+  love.graphics.setColor(0.28, 0.25, 0.18)
+  love.graphics.setLineWidth(4)
+  love.graphics.circle("line", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
 
+  love.graphics.setColor(0.38, 0.35, 0.27)
   love.graphics.setLineWidth(1)
   for i, pin in pairs(self.pins) do
     love.graphics.circle("line", pin.x, pin.y, pin.r * 0.8)
@@ -181,6 +179,7 @@ function StrikeState:render()
   end
 
   if self.state == "launching" then
+    love.graphics.setColor(0.28, 0.25, 0.18)
     love.graphics.setLineWidth(4)
     love.graphics.translate(self.arrow.x0, self.arrow.y0)
     love.graphics.rotate(math.rad(self.angle))

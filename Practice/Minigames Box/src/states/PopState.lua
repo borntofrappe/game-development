@@ -27,7 +27,7 @@ function PopState:enter()
     math.random(WEIGHT_LINEAR_VELOCITY.x[1], WEIGHT_LINEAR_VELOCITY.x[2]),
     WEIGHT_LINEAR_VELOCITY.y
   )
-  weight.fixture:setRestitution(0.1)
+  weight.fixture:setRestitution(0.25)
 
   self.weight = weight
 
@@ -106,15 +106,11 @@ function PopState:update(dt)
       local y = balloon.body:getY()
       local r = balloon.shape:getRadius()
       if ((mouseX - WINDOW_PADDING) - x) ^ 2 + ((mouseY - WINDOW_PADDING) - y) ^ 2 < r ^ 2 then
-        gSounds["pop"]:play()
-
         balloon.joint:destroy()
         balloon.body:destroy()
         table.remove(self.balloons, i)
 
         if #self.balloons == 0 then
-          gSounds["victory"]:play()
-
           self.hasWon = true
         end
         break
@@ -124,7 +120,7 @@ function PopState:update(dt)
 end
 
 function PopState:render()
-  love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.setColor(0.28, 0.25, 0.18)
   love.graphics.rectangle(
     "fill",
     0,
@@ -133,13 +129,24 @@ function PopState:render()
     COUNTDOWN_LEVEL_BAR_HEIGHT
   )
 
-  love.graphics.setLineWidth(1)
+  love.graphics.setColor(0.38, 0.35, 0.27)
   for _, balloon in ipairs(self.balloons) do
+    love.graphics.setColor(0.38, 0.35, 0.27)
+
+    love.graphics.setLineWidth(1)
     local x1, y1, x2, y2 = balloon.joint:getAnchors()
     love.graphics.line(x1, y1, x2, y2)
 
+    love.graphics.setLineWidth(4)
     love.graphics.circle("fill", balloon.body:getX(), balloon.body:getY(), balloon.shape:getRadius())
+
+    love.graphics.setColor(0.28, 0.25, 0.18)
+    love.graphics.circle("line", balloon.body:getX(), balloon.body:getY(), balloon.shape:getRadius())
   end
 
+  love.graphics.setColor(0.38, 0.35, 0.27)
   love.graphics.polygon("fill", self.weight.body:getWorldPoints(self.weight.shape:getPoints()))
+  love.graphics.setColor(0.28, 0.25, 0.18)
+  love.graphics.setLineWidth(4)
+  love.graphics.polygon("line", self.weight.body:getWorldPoints(self.weight.shape:getPoints()))
 end

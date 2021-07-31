@@ -12,7 +12,7 @@ function TiltState:enter()
 
   local platform = {
     ["width"] = 200,
-    ["height"] = 8
+    ["height"] = 10
   }
   platform.x = PLAYING_WIDTH / 2 - platform.width / 2
   platform.y = PLAYING_HEIGHT / 3 - platform.height / 2
@@ -28,7 +28,7 @@ function TiltState:enter()
 
   local ball = {
     ["x"] = PLAYING_WIDTH / 2,
-    ["r"] = 12
+    ["r"] = 15
   }
   ball.y = platform.y - ball.r - 10
 
@@ -43,7 +43,7 @@ function TiltState:enter()
   self.ball = ball
 
   local container = {
-    ["lineWidth"] = 5,
+    ["lineWidth"] = 8,
     ["width"] = platform.width / 3,
     ["height"] = 100
   }
@@ -89,13 +89,7 @@ function TiltState:enter()
       userData[fixture1:getUserData()] = true
       userData[fixture2:getUserData()] = true
 
-      if userData["ball"] then
-        gSounds["bounce"]:play()
-      end
-
       if userData["ball"] and userData["sensor"] then
-        gSounds["victory"]:play()
-
         self.hasWon = true
       end
     end
@@ -118,7 +112,7 @@ function TiltState:update(dt)
 
   self.world:update(dt)
 
-  if love.mouse.isDown(1) and not self.hasWon then
+  if love.mouse.isDown(1) then
     local x = love.mouse:getPosition()
     if x > PLAYING_WIDTH / 2 then
       self.platform.body:setAngle(self.platform.body:getAngle() + ANGLE_SPEED * dt)
@@ -129,7 +123,7 @@ function TiltState:update(dt)
 end
 
 function TiltState:render()
-  love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.setColor(0.28, 0.25, 0.18)
   love.graphics.rectangle(
     "fill",
     0,
@@ -138,10 +132,16 @@ function TiltState:render()
     COUNTDOWN_LEVEL_BAR_HEIGHT
   )
 
+  love.graphics.setLineWidth(4)
+  love.graphics.setColor(0.38, 0.35, 0.27)
+  love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
+  love.graphics.setColor(0.28, 0.25, 0.18)
+  love.graphics.circle("line", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
+
+  love.graphics.setColor(0.38, 0.35, 0.27)
   love.graphics.polygon("fill", self.platform.body:getWorldPoints(self.platform.shape:getPoints()))
 
-  love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
-
+  love.graphics.setColor(0.28, 0.25, 0.18)
   love.graphics.setLineWidth(self.container.lineWidth)
   love.graphics.line(self.container.body:getWorldPoints(self.container.shape:getPoints()))
 
