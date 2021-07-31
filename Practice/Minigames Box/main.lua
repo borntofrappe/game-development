@@ -32,13 +32,16 @@ function love.load()
       ["tilt"] = function()
         return TiltState:new()
       end,
+      ["catch"] = function()
+        return CatchState:new()
+      end,
       ["feedback"] = function()
         return FeedbackState:new()
       end
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("catch")
 
   love.mouse.buttonpressed = {}
 end
