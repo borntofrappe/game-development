@@ -1,7 +1,13 @@
 CountdownState = BaseState:new()
 
 function CountdownState:enter()
-  local state = gStates[math.random(#gStates)]
+  local state
+  repeat
+    state = gStates[math.random(#gStates)]
+  until state ~= gState
+
+  gState = state
+
   self.title = string.upper(state .. "!")
 
   self.cameraShake = {
@@ -23,7 +29,7 @@ function CountdownState:enter()
     COUNTDOWN_FEEBACK,
     function()
       Timer:remove(CAMERA_SHAKE.label)
-      gStateMachine:change(state)
+      gStateMachine:change("pop")
     end
   )
 end

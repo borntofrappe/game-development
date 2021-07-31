@@ -36,8 +36,8 @@ function PopState:enter()
   local yMin = math.floor(PLAYING_HEIGHT / 3)
   local yMax = math.floor(PLAYING_HEIGHT / 1.5)
 
-  local n = math.random(3, 4)
-  local r = 25
+  local n = math.random(2, 5)
+  local r = math.random(20, 25)
   for i = 1, n do
     local y = math.random(yMin, yMax)
     local balloon = {
@@ -87,7 +87,8 @@ function PopState:update(dt)
     gStateMachine:change(
       "feedback",
       {
-        ["hasWon"] = self.hasWon
+        ["hasWon"] = self.hasWon,
+        ["label"] = label
       }
     )
   end
@@ -137,11 +138,7 @@ function PopState:render()
     local x1, y1, x2, y2 = balloon.joint:getAnchors()
     love.graphics.line(x1, y1, x2, y2)
 
-    love.graphics.setLineWidth(4)
     love.graphics.circle("fill", balloon.body:getX(), balloon.body:getY(), balloon.shape:getRadius())
-
-    love.graphics.setColor(0.28, 0.25, 0.18)
-    love.graphics.circle("line", balloon.body:getX(), balloon.body:getY(), balloon.shape:getRadius())
   end
 
   love.graphics.setColor(0.38, 0.35, 0.27)

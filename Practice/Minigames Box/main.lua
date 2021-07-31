@@ -12,6 +12,7 @@ function love.load()
   }
 
   gStates = {"strike", "pop", "tilt"}
+  gState = nil
 
   gStateMachine =
     StateMachine:new(

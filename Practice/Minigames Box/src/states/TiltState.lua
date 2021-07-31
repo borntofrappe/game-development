@@ -2,7 +2,7 @@ TiltState = BaseState:new()
 
 local GRAVITY = 500
 local ANGLE_SPEED = 2
-local ANGLE_INITIAL = 3
+local ANGLE_INITIAL = 4
 
 function TiltState:enter()
   self.timer = COUNTDOWN_LEVEL
@@ -11,8 +11,8 @@ function TiltState:enter()
   local world = love.physics.newWorld(0, GRAVITY)
 
   local platform = {
-    ["width"] = 200,
-    ["height"] = 10
+    ["width"] = math.random(180, 220),
+    ["height"] = 8
   }
   platform.x = PLAYING_WIDTH / 2 - platform.width / 2
   platform.y = PLAYING_HEIGHT / 3 - platform.height / 2
@@ -44,7 +44,7 @@ function TiltState:enter()
 
   local container = {
     ["lineWidth"] = 8,
-    ["width"] = platform.width / 3,
+    ["width"] = math.random(math.floor(platform.width / 4), math.floor(platform.width / 2)),
     ["height"] = 100
   }
 

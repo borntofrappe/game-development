@@ -38,7 +38,7 @@ function StrikeState:enter()
 
   local pins = {}
 
-  local columns = 3
+  local columns = math.random(2, 4)
   local rows = 1
   local r = 10
   local xStart = PLAYING_WIDTH * 3 / 4
