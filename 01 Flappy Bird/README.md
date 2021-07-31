@@ -2,7 +2,7 @@
 
 The second video continues with Lua and LOVE2D to create the game Flappy Bird.
 
-![A few frames from the assignment for "Flappy Bird"](https://github.com/borntofrappe/game-development/blob/master/Showcase/flappy-bird.gif)
+![A few frames from the assignment for "Flappy Bird"](https://github.com/borntofrappe/game-development/blob/master/01%20Flappy%20Bird/flappy-bird.gif)
 
 ## Topics
 

@@ -11,8 +11,13 @@ function CatchState:enter()
 
   local world = love.physics.newWorld(0, GRAVITY)
 
+  local mouseX = love.mouse:getPosition()
+  local xStart = PLAYING_WIDTH / 2
+  if mouseX > WINDOW_PADDING and mouseX < WINDOW_PADDING + PLAYING_WIDTH then
+    xStart = mouseX
+  end
   local container = {
-    ["xStart"] = PLAYING_WIDTH / 2,
+    ["xStart"] = xStart,
     ["yStart"] = PLAYING_HEIGHT * 3 / 4,
     ["size"] = 50,
     ["points"] = {},
