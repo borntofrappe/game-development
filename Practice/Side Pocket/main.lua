@@ -4,7 +4,7 @@ function love.load()
   math.randomseed(os.time())
   love.window.setTitle("Side Pocket")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
+  love.graphics.setBackgroundColor(0.18, 0.18, 0.19)
 
   gStateMachine =
     StateMachine:new(
@@ -45,5 +45,6 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING)
   gStateMachine:render()
 end
