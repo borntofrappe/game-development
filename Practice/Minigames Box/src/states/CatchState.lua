@@ -1,64 +1,118 @@
 CatchState = BaseState:new()
 
+local GRAVITY = 200
+local BALL_LINEAR_VELOCITY = {
+  ["x"] = {-100, 100},
+  ["y"] = -100
+}
+
 function CatchState:enter()
-  local width = 45
-  local height = 45
-  local points = {}
-  local xStart = PLAYING_WIDTH / 2
-  local yStart = PLAYING_HEIGHT * 3 / 4 - height / 2
-  self.lineWidth = 8
-  self.width = width
-  self.xStart = xStart
-  self.yStart = yStart
+  local world = love.physics.newWorld(0, GRAVITY)
+
+  local container = {
+    ["xStart"] = PLAYING_WIDTH / 2,
+    ["yStart"] = PLAYING_HEIGHT * 3 / 4,
+    ["width"] = 50,
+    ["height"] = 50,
+    ["points"] = {},
+    ["lineWidth"] = 8
+  }
+  container.flap = container.lineWidth / 2
 
   local n = 20 -- the higher the smoother
-  for i = 0, n do
+  for i = 0, n - 1 do
+    local angle = math.rad(180 - i * 180 / n)
+    local x = math.cos(angle) * container.width
+    local y = math.sin(angle) * container.height
+
+    table.insert(container.points, x)
+    table.insert(container.points, y)
+  end
+
+  for i = 0, n - 1 do
+    local angle = math.rad(180 + i * 180 / n)
+    local x = container.width + container.flap + math.cos(angle) * container.flap
+    local y = math.sin(angle) * container.flap
+
+    table.insert(container.points, x)
+    table.insert(container.points, y)
+  end
+
+  for i = 0, n - 1 do
     local angle = math.rad(i * 180 / n)
-    local x = math.cos(angle) * width
-    local y = math.sin(angle) * height
+    local x = math.cos(angle) * (container.width + container.flap * 2)
+    local y = math.sin(angle) * (container.height + container.flap * 2)
 
-    table.insert(points, x)
-    table.insert(points, y)
+    table.insert(container.points, x)
+    table.insert(container.points, y)
   end
 
-  self.points = points
+  for i = 0, n - 1 do
+    local angle = math.rad(180 + i * 180 / n)
+    local x = -(container.width + container.flap) + math.cos(angle) * container.flap
+    local y = math.sin(angle) * container.flap
 
-  local balls = {}
-  local r = 15
-  for i = 1, 1 do
-    local x = math.random(r, PLAYING_WIDTH - r)
-    local y = math.random(r, math.floor(PLAYING_HEIGHT / 2 - r))
-    local ball = {
-      ["x"] = x,
-      ["y"] = y,
-      ["r"] = r
-    }
-
-    table.insert(balls, ball)
+    table.insert(container.points, x)
+    table.insert(container.points, y)
   end
 
-  self.balls = balls
+  container.body = love.physics.newBody(world, container.xStart, container.yStart, "kinematic")
+  container.shape = love.physics.newChainShape(true, container.points)
+  container.fixture = love.physics.newFixture(container.body, container.shape)
+  container.fixture:setFriction(0)
+
+  self.container = container
+
+  local r = math.random(12, 20)
+  local ball = {
+    ["x"] = math.random(r, PLAYING_WIDTH - r),
+    ["y"] = math.random(r, math.floor(PLAYING_HEIGHT / 2 - r)),
+    ["r"] = r
+  }
+
+  ball.body = love.physics.newBody(world, ball.x, ball.y, "dynamic")
+  ball.shape = love.physics.newCircleShape(ball.r)
+  ball.fixture = love.physics.newFixture(ball.body, ball.shape)
+  ball.fixture:setRestitution(0.5)
+  ball.body:setLinearVelocity(math.random(BALL_LINEAR_VELOCITY.x[1], BALL_LINEAR_VELOCITY.x[2]), BALL_LINEAR_VELOCITY.y)
+
+  self.ball = ball
+
+  local walls = {}
+  walls.body = love.physics.newBody(world, 0, 0)
+  walls.shape =
+    love.physics.newChainShape(true, 0, 0, PLAYING_WIDTH, 0, PLAYING_WIDTH, PLAYING_HEIGHT, 0, PLAYING_HEIGHT)
+  walls.fixture = love.physics.newFixture(walls.body, walls.shape)
+
+  self.walls = walls
+
+  self.world = world
 end
 
 function CatchState:update(dt)
+  self.world:update(dt)
   local x, y = love.mouse:getPosition()
   if
     x > WINDOW_PADDING and x < WINDOW_WIDTH - WINDOW_PADDING and y > WINDOW_PADDING and
       y < WINDOW_HEIGHT - WINDOW_PADDING
    then
-    self.xStart =
-      math.max(self.width + self.lineWidth / 2, math.min(PLAYING_WIDTH - self.width - self.lineWidth / 2, x))
+    self.container.xStart =
+      math.max(
+      self.container.width + self.container.flap + self.container.lineWidth,
+      math.min(PLAYING_WIDTH - self.container.width - self.container.flap - self.container.lineWidth, x)
+    )
+    self.container.body:setX(self.container.xStart)
   end
 end
 
 function CatchState:render()
   love.graphics.setColor(0.38, 0.35, 0.27)
-  for _, ball in ipairs(self.balls) do
-    love.graphics.circle("fill", ball.x, ball.y, ball.r)
-  end
-
-  love.graphics.translate(self.xStart, self.yStart)
-  love.graphics.setLineWidth(self.lineWidth)
+  love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
   love.graphics.setColor(0.28, 0.25, 0.18)
-  love.graphics.line(self.points)
+  love.graphics.setLineWidth(4)
+  love.graphics.circle("line", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
+
+  love.graphics.setColor(0.38, 0.35, 0.27)
+  love.graphics.setLineWidth(self.container.lineWidth)
+  love.graphics.line(self.container.body:getWorldPoints(self.container.shape:getPoints()))
 end

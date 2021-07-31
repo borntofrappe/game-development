@@ -71,7 +71,7 @@ function PopState:enter()
   local walls = {}
   walls.body = love.physics.newBody(world, 0, 0)
   walls.shape =
-    love.physics.newChainShape(false, 0, 0, 0, PLAYING_HEIGHT, PLAYING_WIDTH, PLAYING_HEIGHT, PLAYING_WIDTH, 0)
+    love.physics.newChainShape(true, 0, 0, PLAYING_WIDTH, 0, PLAYING_WIDTH, PLAYING_HEIGHT, 0, PLAYING_HEIGHT)
   walls.fixture = love.physics.newFixture(walls.body, walls.shape)
   walls.fixture:setUserData("walls")
 
