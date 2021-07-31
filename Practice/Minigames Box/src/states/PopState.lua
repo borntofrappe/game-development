@@ -87,8 +87,7 @@ function PopState:update(dt)
     gStateMachine:change(
       "feedback",
       {
-        ["hasWon"] = self.hasWon,
-        ["label"] = label
+        ["hasWon"] = self.hasWon
       }
     )
   end

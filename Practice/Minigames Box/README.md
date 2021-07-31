@@ -533,7 +533,9 @@ The <b>box</b> introduces the games with a dedicated state:
 
 - `TiltState`, where you rotate a platform to have a ball fall in a container
 
-At a later stage I might update the project with additional scripts, but the three are enough to show the overall flow of the application.
+- `CatchState`, where you move a container to collect a ball subject to gravity
+
+At a later stage I might update the project with additional scripts, but these are enough to show the overall flow of the application.
 
 `CountdownState` helps to introduce the individual titles with a string and a brief delay.
 
@@ -545,6 +547,8 @@ Each of the three titles sets up a basic simulation with the Box2D library and t
 
 - `PopState`: velocity, forces, distance joints
 
-- `TiltState`: kinematic object, collision callback, sensor
+- `TiltState`: dynamic and kinematic objects, collision callback, sensor
+
+- `CatchState`: dynamic and kinematic objects, chain shape
 
 With a completed game, `FeedbackState` provides feeback in the form of an arbitrary string. Following a delay similar to that introduced in the countdown state, the game progresses to a different title.

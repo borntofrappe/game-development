@@ -29,7 +29,7 @@ function CountdownState:enter()
     COUNTDOWN_FEEBACK,
     function()
       Timer:remove(CAMERA_SHAKE.label)
-      gStateMachine:change("pop")
+      gStateMachine:change(state)
     end
   )
 end

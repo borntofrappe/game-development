@@ -7,23 +7,24 @@ local BALL_LINEAR_VELOCITY = {
 }
 
 function CatchState:enter()
+  self.timer = COUNTDOWN_LEVEL
+
   local world = love.physics.newWorld(0, GRAVITY)
 
   local container = {
     ["xStart"] = PLAYING_WIDTH / 2,
     ["yStart"] = PLAYING_HEIGHT * 3 / 4,
-    ["width"] = 50,
-    ["height"] = 50,
+    ["size"] = 50,
     ["points"] = {},
     ["lineWidth"] = 8
   }
   container.flap = container.lineWidth / 2
 
-  local n = 20 -- the higher the smoother
+  local n = 20
   for i = 0, n - 1 do
     local angle = math.rad(180 - i * 180 / n)
-    local x = math.cos(angle) * container.width
-    local y = math.sin(angle) * container.height
+    local x = math.cos(angle) * container.size
+    local y = math.sin(angle) * container.size
 
     table.insert(container.points, x)
     table.insert(container.points, y)
@@ -31,7 +32,7 @@ function CatchState:enter()
 
   for i = 0, n - 1 do
     local angle = math.rad(180 + i * 180 / n)
-    local x = container.width + container.flap + math.cos(angle) * container.flap
+    local x = container.size + container.flap + math.cos(angle) * container.flap
     local y = math.sin(angle) * container.flap
 
     table.insert(container.points, x)
@@ -40,8 +41,8 @@ function CatchState:enter()
 
   for i = 0, n - 1 do
     local angle = math.rad(i * 180 / n)
-    local x = math.cos(angle) * (container.width + container.flap * 2)
-    local y = math.sin(angle) * (container.height + container.flap * 2)
+    local x = math.cos(angle) * (container.size + container.flap * 2)
+    local y = math.sin(angle) * (container.size + container.flap * 2)
 
     table.insert(container.points, x)
     table.insert(container.points, y)
@@ -49,7 +50,7 @@ function CatchState:enter()
 
   for i = 0, n - 1 do
     local angle = math.rad(180 + i * 180 / n)
-    local x = -(container.width + container.flap) + math.cos(angle) * container.flap
+    local x = -(container.size + container.flap) + math.cos(angle) * container.flap
     local y = math.sin(angle) * container.flap
 
     table.insert(container.points, x)
@@ -90,7 +91,35 @@ function CatchState:enter()
 end
 
 function CatchState:update(dt)
+  self.timer = math.max(0, self.timer - dt)
+
+  if self.timer == 0 then
+    local ball = {
+      ["x"] = self.ball.body:getX(),
+      ["y"] = self.ball.body:getY(),
+      ["r"] = self.ball.shape:getRadius()
+    }
+
+    local container = {
+      ["x"] = self.container.body:getX(),
+      ["y"] = self.container.body:getY(),
+      ["r"] = self.container.size
+    }
+
+    local hasWon =
+      ball.y > container.y - ball.r and ball.y < container.y + container.r and ball.x > container.x - container.r and
+      ball.x < container.x + container.r
+
+    gStateMachine:change(
+      "feedback",
+      {
+        ["hasWon"] = hasWon
+      }
+    )
+  end
+
   self.world:update(dt)
+
   local x, y = love.mouse:getPosition()
   if
     x > WINDOW_PADDING and x < WINDOW_WIDTH - WINDOW_PADDING and y > WINDOW_PADDING and
@@ -98,14 +127,23 @@ function CatchState:update(dt)
    then
     self.container.xStart =
       math.max(
-      self.container.width + self.container.flap + self.container.lineWidth,
-      math.min(PLAYING_WIDTH - self.container.width - self.container.flap - self.container.lineWidth, x)
+      self.container.size + self.container.flap + self.container.lineWidth,
+      math.min(PLAYING_WIDTH - self.container.size - self.container.flap - self.container.lineWidth, x)
     )
     self.container.body:setX(self.container.xStart)
   end
 end
 
 function CatchState:render()
+  love.graphics.setColor(0.28, 0.25, 0.18)
+  love.graphics.rectangle(
+    "fill",
+    0,
+    PLAYING_HEIGHT - COUNTDOWN_LEVEL_BAR_HEIGHT,
+    PLAYING_WIDTH * self.timer / COUNTDOWN_LEVEL,
+    COUNTDOWN_LEVEL_BAR_HEIGHT
+  )
+
   love.graphics.setColor(0.38, 0.35, 0.27)
   love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
   love.graphics.setColor(0.28, 0.25, 0.18)
