@@ -2,13 +2,13 @@ require "src/Dependencies"
 
 function love.load()
   math.randomseed(os.time())
-  love.window.setTitle("Side Pocket")
+  love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.18, 0.18, 0.19)
 
   gFonts = {
-    ["large"] = love.graphics.newFont("res/font.ttf", 42),
-    ["normal"] = love.graphics.newFont("res/font.ttf", 20)
+    ["large"] = love.graphics.newFont("res/font.ttf", 48),
+    ["normal"] = love.graphics.newFont("res/font.ttf", 18)
   }
 
   gStateMachine =

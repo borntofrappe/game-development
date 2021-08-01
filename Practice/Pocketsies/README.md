@@ -1,4 +1,4 @@
-# Side Pocket
+# Pocketsies
 
 Try to pocket every single colorful ball in a basic game of pool.
 

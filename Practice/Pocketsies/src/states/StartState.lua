@@ -2,7 +2,7 @@ StartState = BaseState:new()
 
 function StartState:enter()
   self.title = {
-    ["text"] = "Side Pocket",
+    ["text"] = TITLE,
     ["y"] = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() - 12
   }
 
