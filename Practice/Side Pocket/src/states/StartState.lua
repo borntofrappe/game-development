@@ -35,15 +35,14 @@ function StartState:render()
 
   love.graphics.setLineWidth(6)
   love.graphics.rectangle(
-    "fill",
+    "line",
     WINDOW_WIDTH / 2 - self.menu.width,
-    self.menu.y - self.menu.height / 2,
+    self.menu.y - self.menu.height / 2 + 1,
     self.menu.width * 2,
     self.menu.height * 2,
     10
   )
 
-  love.graphics.setColor(0.18, 0.18, 0.19)
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(self.menu.text, 0, self.menu.y, WINDOW_WIDTH, "center")
 end
