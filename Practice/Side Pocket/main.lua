@@ -6,11 +6,19 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.18, 0.18, 0.19)
 
+  gFonts = {
+    ["large"] = love.graphics.newFont("res/font.ttf", 42),
+    ["normal"] = love.graphics.newFont("res/font.ttf", 20)
+  }
+
   gStateMachine =
     StateMachine:new(
     {
       ["start"] = function()
         return StartState:new()
+      end,
+      ["play"] = function()
+        return PlayState:new()
       end
     }
   )
@@ -45,6 +53,5 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING)
   gStateMachine:render()
 end

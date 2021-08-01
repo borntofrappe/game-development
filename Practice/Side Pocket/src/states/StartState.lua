@@ -1,73 +1,49 @@
 StartState = BaseState:new()
 
 function StartState:enter()
-  local balls = {}
-  local columns = 3
-  local rows = 1
-  local r = 12
+  self.title = {
+    ["text"] = "Side Pocket",
+    ["y"] = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() - 12
+  }
 
-  local xStart = PLAYING_WIDTH * 3 / 4
-  local yStart = PLAYING_HEIGHT / 2
+  local menu = {
+    ["text"] = "Play",
+    ["y"] = self.title.y + gFonts.large:getHeight() + 44
+  }
 
-  for column = 1, columns do
-    for row = 1, rows do
-      local ball = {
-        ["x"] = xStart + (column - (columns - 1) / 2 - 1) * r * 2.5,
-        ["y"] = yStart + (row - (rows - 1) / 2 - 1) * r * 2.5,
-        ["r"] = r,
-        ["color"] = {
-          ["r"] = math.random() ^ 0.5,
-          ["g"] = math.random() ^ 0.5,
-          ["b"] = math.random() ^ 0.5
-        }
-      }
+  menu.width = gFonts.normal:getWidth(menu.text)
+  menu.height = gFonts.normal:getHeight()
 
-      table.insert(balls, ball)
-    end
-    rows = rows + 1
-  end
-
-  self.balls = balls
+  self.menu = menu
 end
 
 function StartState:update(dt)
   if love.keyboard.waspressed("escape") then
     love.event.quit()
   end
+
+  if love.keyboard.waspressed("return") then
+    gStateMachine:change("play")
+  end
 end
 
 function StartState:render()
-  --table
-  love.graphics.setColor(0.63, 0.63, 0.63)
-  love.graphics.rectangle("fill", 0, 0, PLAYING_WIDTH, PLAYING_HEIGHT, 24)
-
-  love.graphics.setColor(0.25, 0.39, 0.25)
-  love.graphics.rectangle("fill", 28, 28, PLAYING_WIDTH - 56, PLAYING_HEIGHT - 56)
-
-  love.graphics.setColor(0.49, 0.33, 0.28)
-  love.graphics.rectangle("fill", 0, 28, 28, PLAYING_HEIGHT - 56)
-  love.graphics.rectangle("fill", 28, 0, PLAYING_WIDTH - 56, 28)
-  love.graphics.rectangle("fill", 28, PLAYING_HEIGHT - 28, PLAYING_WIDTH - 56, 28)
-  love.graphics.rectangle("fill", PLAYING_WIDTH - 28, 28, 28, PLAYING_HEIGHT - 56)
-
-  love.graphics.setColor(0.63, 0.63, 0.63)
-  love.graphics.rectangle("fill", PLAYING_WIDTH / 2 - 20, 0, 40, 12)
-  love.graphics.rectangle("fill", PLAYING_WIDTH / 2 - 20, PLAYING_HEIGHT - 12, 40, 12)
-
-  love.graphics.setColor(0.12, 0.11, 0.12)
-  love.graphics.circle("fill", 28, 28, 18)
-  love.graphics.circle("fill", PLAYING_WIDTH - 28, 28, 18)
-  love.graphics.circle("fill", PLAYING_WIDTH / 2, 22, 18)
-  love.graphics.circle("fill", PLAYING_WIDTH / 2, PLAYING_HEIGHT - 22, 18)
-  love.graphics.circle("fill", PLAYING_WIDTH - 28, PLAYING_HEIGHT - 28, 18)
-  love.graphics.circle("fill", 28, PLAYING_HEIGHT - 28, 18)
-
-  -- balls
   love.graphics.setColor(1, 1, 1)
-  love.graphics.circle("fill", PLAYING_WIDTH / 4, PLAYING_HEIGHT / 2, 14)
 
-  for _, ball in ipairs(self.balls) do
-    love.graphics.setColor(ball.color.r, ball.color.g, ball.color.b)
-    love.graphics.circle("fill", ball.x, ball.y, ball.r)
-  end
+  love.graphics.setFont(gFonts.large)
+  love.graphics.printf(self.title.text, 0, self.title.y, WINDOW_WIDTH, "center")
+
+  love.graphics.setLineWidth(6)
+  love.graphics.rectangle(
+    "fill",
+    WINDOW_WIDTH / 2 - self.menu.width,
+    self.menu.y - self.menu.height / 2,
+    self.menu.width * 2,
+    self.menu.height * 2,
+    10
+  )
+
+  love.graphics.setColor(0.18, 0.18, 0.19)
+  love.graphics.setFont(gFonts.normal)
+  love.graphics.printf(self.menu.text, 0, self.menu.y, WINDOW_WIDTH, "center")
 end
