@@ -1,0 +1,1 @@
+CongratsState = BaseState:new()
