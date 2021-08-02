@@ -24,10 +24,6 @@ function love.load()
     }
   }
 
-  gTextures = {
-    ["particle"] = love.graphics.newImage("res/particle.png")
-  }
-
   gFonts = {
     ["large"] = love.graphics.newFont("res/font.ttf", 64),
     ["normal"] = love.graphics.newFont("res/font.ttf", 22)

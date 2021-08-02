@@ -1,30 +1,18 @@
 PlayState = BaseState:new()
 
 local IMPULSE_BALL = 400
+local VELOCITY_MIN = 8
 
 function PlayState:enter()
-  self.particles = {}
   self.state = "waiting"
+
   local world = love.physics.newWorld(0, 0)
 
   local balls = {}
-  local colors = {
-    {["r"] = 0.25, ["g"] = 0.56, ["b"] = 0.84},
-    {["r"] = 0.94, ["g"] = 0.5, ["b"] = 0.17},
-    {["r"] = 0.88, ["g"] = 0.34, ["b"] = 0.34},
-    {["r"] = 0.38, ["g"] = 0.71, ["b"] = 0.65},
-    {["r"] = 0.34, ["g"] = 0.81, ["b"] = 0.31},
-    {["r"] = 0.92, ["g"] = 0.72, ["b"] = 0.28},
-    {["r"] = 1, ["g"] = 0.51, ["b"] = 0.5}
-  }
-
-  self.color = {["r"] = 1, ["g"] = 1, ["b"] = 1}
-
-  local r = BALL_SIZE
 
   local xStart = TABLE_INNER_WIDTH * 3 / 4
   local yStart = TABLE_INNER_HEIGHT / 2
-
+  local r = BALL_SIZE
   local keyPrefix = "ball"
 
   local i = 1
@@ -41,7 +29,7 @@ function PlayState:enter()
       ["x"] = x,
       ["y"] = y,
       ["r"] = r,
-      ["color"] = colors[i]
+      ["color"] = gColors.balls[i]
     }
 
     i = i + 1
@@ -54,7 +42,7 @@ function PlayState:enter()
     ["x"] = xStart,
     ["y"] = yStart,
     ["r"] = r,
-    ["color"] = colors[i]
+    ["color"] = gColors.balls[i]
   }
 
   for _, ball in pairs(balls) do
@@ -73,7 +61,8 @@ function PlayState:enter()
     ["isPocketed"] = false,
     ["x"] = TABLE_INNER_WIDTH / 4,
     ["y"] = TABLE_INNER_HEIGHT / 2,
-    ["r"] = r
+    ["r"] = r,
+    ["color"] = gColors.balls[#gColors.balls]
   }
 
   ball.body = love.physics.newBody(world, ball.x, ball.y, "dynamic")
@@ -87,39 +76,30 @@ function PlayState:enter()
 
   local cue = {
     ["length"] = CUE_LENGTH,
-    ["angle"] = 180,
-    ["offset"] = self.ball.r * 1.5
+    ["offset"] = ball.r * 1.5
   }
+
+  local angle = math.pi
+  local x, y = love.mouse:getPosition()
+  if x > 0 and x < WINDOW_WIDTH and y > 0 and y < WINDOW_HEIGHT then
+    x = x - (TABLE_MARGIN + TABLE_PADDING)
+    y = y - (TABLE_MARGIN + TABLE_PADDING)
+    local dx = x - self.ball.body:getX()
+    local dy = y - self.ball.body:getY()
+    angle = math.atan2(dy, dx)
+  end
+
+  cue.angle = angle
 
   self.cue = cue
 
-  local pocketsCoords = {
-    {POCKET_PADDING, POCKET_PADDING},
-    {TABLE_INNER_WIDTH - POCKET_PADDING, POCKET_PADDING},
-    {TABLE_INNER_WIDTH / 2, 0},
-    {TABLE_INNER_WIDTH / 2, TABLE_INNER_HEIGHT},
-    {TABLE_INNER_WIDTH - POCKET_PADDING, TABLE_INNER_HEIGHT - POCKET_PADDING},
-    {POCKET_PADDING, TABLE_INNER_HEIGHT - POCKET_PADDING}
-  }
-
-  local pockets = {}
-  for _, pocketCoords in ipairs(pocketsCoords) do
-    local pocket = {
-      ["x"] = pocketCoords[1],
-      ["y"] = pocketCoords[2],
-      ["r"] = POCKET_RADIUS
-    }
-
-    pocket.body = love.physics.newBody(world, pocket.x, pocket.y)
-    pocket.shape = love.physics.newCircleShape(pocket.r - 4)
-    pocket.fixture = love.physics.newFixture(pocket.body, pocket.shape)
-    pocket.fixture:setSensor(true)
-    pocket.fixture:setUserData("pocket")
-
-    table.insert(pockets, pocket)
+  for _, pocketCoords in ipairs(POCKET_COORDS) do
+    local body = love.physics.newBody(world, pocketCoords[1], pocketCoords[2])
+    local shape = love.physics.newCircleShape(POCKET_RADIUS * 0.8)
+    local fixture = love.physics.newFixture(body, shape)
+    fixture:setSensor(true)
+    fixture:setUserData("pocket")
   end
-
-  self.pockets = pockets
 
   local poolTable = {
     ["x"] = 0,
@@ -164,41 +144,39 @@ function PlayState:enter()
       end
     end
   )
+
   self.world = world
 end
 
 function PlayState:update(dt)
-  for i, particles in ipairs(self.particles) do
-    particles:update(dt)
-    if not particles.isEmitting then
-      table.remove(self.particles, i)
-    end
-  end
-
   self.world:update(dt)
 
   if love.mouse.waspressed(1) and self.state == "waiting" then
     self.state = "playing"
-    local ix = math.cos(math.rad(self.cue.angle)) * IMPULSE_BALL
-    local iy = math.sin(math.rad(self.cue.angle)) * IMPULSE_BALL
-    self.ball.body:applyLinearImpulse(ix * -1, iy * -1)
+    local ix = math.cos(self.cue.angle) * IMPULSE_BALL * -1
+    local iy = math.sin(self.cue.angle) * IMPULSE_BALL * -1
+    self.ball.body:applyLinearImpulse(ix, iy)
   end
 
   if self.state == "playing" then
     if self.ball.isPocketed then
-      self.color = {["r"] = 1, ["g"] = 1, ["b"] = 1}
-
       self.ball.isPocketed = false
       self.ball.body:setLinearVelocity(0, 0)
       self.ball.body:setX(self.ball.x)
       self.ball.body:setY(self.ball.y)
+
+      local x, y = love.mouse:getPosition()
+      if x > 0 and x < WINDOW_WIDTH and y > 0 and y < WINDOW_HEIGHT then
+        x = x - (TABLE_MARGIN + TABLE_PADDING)
+        y = y - (TABLE_MARGIN + TABLE_PADDING)
+        local dx = x - self.ball.body:getX()
+        local dy = y - self.ball.body:getY()
+        self.cue.angle = math.atan2(dy, dx)
+      end
     end
 
     for k, ball in pairs(self.balls) do
       if ball.isPocketed then
-        self.color = ball.color
-        table.insert(self.particles, Particles:new(ball.body:getX(), ball.body:getY(), ball.color))
-
         ball.body:destroy()
         self.balls[k] = nil
 
@@ -218,65 +196,51 @@ function PlayState:update(dt)
     end
 
     local vx, vy = self.ball.body:getLinearVelocity()
-    if vx ^ 2 + vy ^ 2 < 8 then
-      self.ball.body:setLinearVelocity(0, 0)
-      self.state = "waiting"
+    if vx ^ 2 + vy ^ 2 < VELOCITY_MIN then
+      local isMoving = false
+      for _, ball in pairs(self.balls) do
+        local vx, vy = ball.body:getLinearVelocity()
+        if vx ^ 2 + vy ^ 2 > VELOCITY_MIN then
+          isMoving = true
+          break
+        end
+      end
+
+      if not isMoving then
+        self.ball.body:setLinearVelocity(0, 0)
+        for _, ball in pairs(self.balls) do
+          ball.body:setLinearVelocity(0, 0)
+        end
+
+        self.state = "waiting"
+      end
     end
   elseif self.state == "waiting" then
     local x, y = love.mouse:getPosition()
     if x > 0 and x < WINDOW_WIDTH and y > 0 and y < WINDOW_HEIGHT then
-      local dx = x - (TABLE_MARGIN + TABLE_PADDING) - self.ball.body:getX()
-      local dy = y - (TABLE_MARGIN + TABLE_PADDING) - self.ball.body:getY()
-      self.cue.angle = math.atan2(dy, dx) * 180 / math.pi
+      x = x - (TABLE_MARGIN + TABLE_PADDING)
+      y = y - (TABLE_MARGIN + TABLE_PADDING)
+      local dx = x - self.ball.body:getX()
+      local dy = y - self.ball.body:getY()
+      self.cue.angle = math.atan2(dy, dx)
     end
   end
 end
 
 function PlayState:render()
-  love.graphics.translate(TABLE_MARGIN, TABLE_MARGIN)
-
-  love.graphics.setColor(self.color.r, self.color.g, self.color.b)
-  love.graphics.setLineWidth(TABLE_LINE_WIDTH)
-  love.graphics.rectangle("line", 0, 0, TABLE_WIDTH, TABLE_HEIGHT, 24)
-  love.graphics.rectangle("line", TABLE_PADDING, TABLE_PADDING, TABLE_INNER_WIDTH, TABLE_INNER_HEIGHT)
-
-  love.graphics.translate(TABLE_PADDING, TABLE_PADDING)
-  for _, pocket in ipairs(self.pockets) do
-    love.graphics.circle("line", pocket.x, pocket.y, pocket.r)
-  end
-
-  love.graphics.setColor(0.14, 0.14, 0.14)
-  love.graphics.setLineWidth(TABLE_PADDING - TABLE_LINE_WIDTH)
-  love.graphics.rectangle(
-    "line",
-    -TABLE_PADDING / 2,
-    -TABLE_PADDING / 2,
-    TABLE_INNER_WIDTH + TABLE_PADDING,
-    TABLE_INNER_HEIGHT + TABLE_PADDING,
-    20
-  )
-  for _, pocket in ipairs(self.pockets) do
-    love.graphics.circle("fill", pocket.x, pocket.y, POCKET_INNER_RADIUS)
-  end
-
-  love.graphics.setLineWidth(BALL_LINE_WIDTH)
   for _, ball in pairs(self.balls) do
     love.graphics.setColor(ball.color.r, ball.color.g, ball.color.b)
-    love.graphics.circle("line", ball.body:getX(), ball.body:getY(), ball.shape:getRadius() - BALL_LINE_WIDTH / 2)
+    love.graphics.circle("fill", ball.body:getX(), ball.body:getY(), ball.shape:getRadius())
   end
 
-  love.graphics.setColor(1, 1, 1)
-  for i, particles in ipairs(self.particles) do
-    particles:render()
-  end
-
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(self.ball.color.r, self.ball.color.g, self.ball.color.b)
   love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
 
   if self.state == "waiting" then
-    love.graphics.setLineWidth(4)
+    love.graphics.setColor(gColors.ui.r, gColors.ui.g, gColors.ui.b)
+    love.graphics.setLineWidth(CUE_LINE_WIDTH)
     love.graphics.translate(self.ball.body:getX(), self.ball.body:getY())
-    love.graphics.rotate(math.rad(self.cue.angle))
+    love.graphics.rotate(self.cue.angle)
     love.graphics.translate(self.cue.offset, 0)
     love.graphics.line(0, 0, self.cue.length, 0)
   end
