@@ -8,7 +8,7 @@ function love.load()
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/font.ttf", 48),
-    ["normal"] = love.graphics.newFont("res/font.ttf", 18)
+    ["normal"] = love.graphics.newFont("res/font.ttf", 22)
   }
 
   gStateMachine =

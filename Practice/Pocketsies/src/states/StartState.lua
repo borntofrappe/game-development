@@ -11,8 +11,10 @@ function StartState:enter()
     ["y"] = self.title.y + gFonts.large:getHeight() + 44
   }
 
-  menu.width = gFonts.normal:getWidth(menu.text)
-  menu.height = gFonts.normal:getHeight()
+  menu.buttonWidth = gFonts.normal:getWidth(menu.text) * 1.6
+  menu.buttonHeight = gFonts.normal:getHeight() * 1.3
+  menu.buttonY = menu.y + gFonts.normal:getHeight() / 2 - menu.buttonHeight / 2
+  menu.buttonX = WINDOW_WIDTH / 2 - menu.buttonWidth / 2
 
   self.menu = menu
 end
@@ -25,6 +27,16 @@ function StartState:update(dt)
   if love.keyboard.waspressed("return") then
     gStateMachine:change("play")
   end
+
+  if love.mouse.waspressed(1) then
+    local x, y = love.mouse:getPosition()
+    if
+      x > self.menu.buttonX and x < self.menu.buttonX + self.menu.buttonWidth and y > self.menu.buttonY and
+        y < self.menu.buttonY + self.menu.buttonHeight
+     then
+      gStateMachine:change("play")
+    end
+  end
 end
 
 function StartState:render()
@@ -33,13 +45,13 @@ function StartState:render()
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(self.title.text, 0, self.title.y, WINDOW_WIDTH, "center")
 
-  love.graphics.setLineWidth(6)
+  love.graphics.setLineWidth(4)
   love.graphics.rectangle(
     "line",
-    WINDOW_WIDTH / 2 - self.menu.width,
-    self.menu.y - self.menu.height / 2 + 1,
-    self.menu.width * 2,
-    self.menu.height * 2,
+    self.menu.buttonX,
+    self.menu.buttonY,
+    self.menu.buttonWidth,
+    self.menu.buttonHeight,
     10
   )
 
