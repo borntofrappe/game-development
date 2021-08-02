@@ -21,14 +21,6 @@ function StartState:enter()
 end
 
 function StartState:update(dt)
-  if love.keyboard.waspressed("escape") then
-    love.event.quit()
-  end
-
-  if love.keyboard.waspressed("return") then
-    gStateMachine:change("play")
-  end
-
   local x, y = love.mouse:getPosition()
   if x > 0 and x < WINDOW_WIDTH and y > 0 and y < WINDOW_HEIGHT then
     if

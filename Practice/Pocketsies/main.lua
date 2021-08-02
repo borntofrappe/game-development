@@ -4,7 +4,11 @@ function love.load()
   math.randomseed(os.time())
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.18, 0.18, 0.19)
+  love.graphics.setBackgroundColor(0.14, 0.14, 0.14)
+
+  gTextures = {
+    ["particle"] = love.graphics.newImage("res/particle.png")
+  }
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/font.ttf", 48),
@@ -23,18 +27,15 @@ function love.load()
     }
   )
 
-  gStateMachine:change("play")
+  gStateMachine:change("start")
 
-  love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
 end
 
 function love.keypressed(key)
-  love.keyboard.keypressed[key] = true
-end
-
-function love.keyboard.waspressed(key)
-  return love.keyboard.keypressed[key]
+  if key == "escape" then
+    love.event.quit()
+  end
 end
 
 function love.mousepressed(x, y, button)
@@ -48,7 +49,6 @@ end
 function love.update(dt)
   gStateMachine:update(dt)
 
-  love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
 end
 

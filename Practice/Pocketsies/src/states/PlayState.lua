@@ -3,10 +3,22 @@ PlayState = BaseState:new()
 local IMPULSE_BALL = 400
 
 function PlayState:enter()
+  self.particles = {}
   self.state = "waiting"
   local world = love.physics.newWorld(0, 0)
 
   local balls = {}
+  local colors = {
+    {["r"] = 0.25, ["g"] = 0.56, ["b"] = 0.84},
+    {["r"] = 0.94, ["g"] = 0.5, ["b"] = 0.17},
+    {["r"] = 0.88, ["g"] = 0.34, ["b"] = 0.34},
+    {["r"] = 0.38, ["g"] = 0.71, ["b"] = 0.65},
+    {["r"] = 0.34, ["g"] = 0.81, ["b"] = 0.31},
+    {["r"] = 0.92, ["g"] = 0.72, ["b"] = 0.28},
+    {["r"] = 1, ["g"] = 0.51, ["b"] = 0.5}
+  }
+
+  self.color = {["r"] = 1, ["g"] = 1, ["b"] = 1}
 
   local r = BALL_SIZE
 
@@ -29,11 +41,7 @@ function PlayState:enter()
       ["x"] = x,
       ["y"] = y,
       ["r"] = r,
-      ["color"] = {
-        ["r"] = math.random() ^ 0.2,
-        ["g"] = math.random() ^ 0.8,
-        ["b"] = math.random() ^ 0.8
-      }
+      ["color"] = colors[i]
     }
 
     i = i + 1
@@ -46,11 +54,7 @@ function PlayState:enter()
     ["x"] = xStart,
     ["y"] = yStart,
     ["r"] = r,
-    ["color"] = {
-      ["r"] = math.random() ^ 0.2,
-      ["g"] = math.random() ^ 0.8,
-      ["b"] = math.random() ^ 0.8
-    }
+    ["color"] = colors[i]
   }
 
   for _, ball in pairs(balls) do
@@ -164,11 +168,14 @@ function PlayState:enter()
 end
 
 function PlayState:update(dt)
-  self.world:update(dt)
-
-  if love.keyboard.waspressed("escape") then
-    gStateMachine:change("start")
+  for i, particles in ipairs(self.particles) do
+    particles:update(dt)
+    if not particles.isEmitting then
+      table.remove(self.particles, i)
+    end
   end
+
+  self.world:update(dt)
 
   if love.mouse.waspressed(1) and self.state == "waiting" then
     self.state = "playing"
@@ -179,6 +186,8 @@ function PlayState:update(dt)
 
   if self.state == "playing" then
     if self.ball.isPocketed then
+      self.color = {["r"] = 1, ["g"] = 1, ["b"] = 1}
+
       self.ball.isPocketed = false
       self.ball.body:setLinearVelocity(0, 0)
       self.ball.body:setX(self.ball.x)
@@ -187,6 +196,9 @@ function PlayState:update(dt)
 
     for k, ball in pairs(self.balls) do
       if ball.isPocketed then
+        self.color = ball.color
+        table.insert(self.particles, Particles:new(ball.body:getX(), ball.body:getY(), ball.color))
+
         ball.body:destroy()
         self.balls[k] = nil
 
@@ -223,7 +235,7 @@ end
 function PlayState:render()
   love.graphics.translate(TABLE_MARGIN, TABLE_MARGIN)
 
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(self.color.r, self.color.g, self.color.b)
   love.graphics.setLineWidth(TABLE_LINE_WIDTH)
   love.graphics.rectangle("line", 0, 0, TABLE_WIDTH, TABLE_HEIGHT, 24)
   love.graphics.rectangle("line", TABLE_PADDING, TABLE_PADDING, TABLE_INNER_WIDTH, TABLE_INNER_HEIGHT)
@@ -233,7 +245,7 @@ function PlayState:render()
     love.graphics.circle("line", pocket.x, pocket.y, pocket.r)
   end
 
-  love.graphics.setColor(0.18, 0.18, 0.19)
+  love.graphics.setColor(0.14, 0.14, 0.14)
   love.graphics.setLineWidth(TABLE_PADDING - TABLE_LINE_WIDTH)
   love.graphics.rectangle(
     "line",
@@ -251,6 +263,11 @@ function PlayState:render()
   for _, ball in pairs(self.balls) do
     love.graphics.setColor(ball.color.r, ball.color.g, ball.color.b)
     love.graphics.circle("line", ball.body:getX(), ball.body:getY(), ball.shape:getRadius() - BALL_LINE_WIDTH / 2)
+  end
+
+  love.graphics.setColor(1, 1, 1)
+  for i, particles in ipairs(self.particles) do
+    particles:render()
   end
 
   love.graphics.setColor(1, 1, 1)
