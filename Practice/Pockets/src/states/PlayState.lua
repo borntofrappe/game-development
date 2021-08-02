@@ -5,6 +5,10 @@ local VELOCITY_MIN = 8
 
 function PlayState:enter()
   self.state = "waiting"
+  self.data = {
+    ["ballPocketed"] = 0,
+    ["ballsPocketed"] = 0
+  }
 
   local world = love.physics.newWorld(0, 0)
 
@@ -151,9 +155,13 @@ function PlayState:enter()
           for _, pocket in pairs(self.pockets) do
             pocket.color = nil
           end
+
+          self.data.ballPocketed = self.data.ballPocketed + 1
         elseif fixture2:getUserData():sub(1, #keyPrefixBall) == keyPrefixBall then
           self.balls[fixture2:getUserData()].isPocketed = true
           self.pockets[fixture1:getUserData()].color = self.balls[fixture2:getUserData()].color
+
+          self.data.ballsPocketed = self.data.ballsPocketed + 1
         end
       elseif fixture2:getUserData():sub(1, #keyPrefixPocket) == keyPrefixPocket then
         if fixture1:getUserData() == keyPrefixBall then
@@ -161,9 +169,13 @@ function PlayState:enter()
           for _, pocket in pairs(self.pockets) do
             pocket.color = nil
           end
+
+          self.data.ballPocketed = self.data.ballPocketed + 1
         elseif fixture1:getUserData():sub(1, #keyPrefixBall) == keyPrefixBall then
           self.balls[fixture1:getUserData()].isPocketed = true
           self.pockets[fixture2:getUserData()].color = self.balls[fixture1:getUserData()].color
+
+          self.data.ballsPocketed = self.data.ballsPocketed + 1
         end
       end
     end
@@ -195,20 +207,21 @@ function PlayState:update(dt)
         ball.body:destroy()
         self.balls[k] = nil
 
-        local hasWon = true
+        local isGameover = true
         for _, remainingBall in pairs(self.balls) do
           if remainingBall then
-            hasWon = false
+            isGameover = false
             break
           end
         end
 
-        if hasWon then
+        if isGameover then
           gStateMachine:change(
-            "congrats",
+            "gameover",
             {
               ["ball"] = self.ball,
-              ["pockets"] = self.pockets
+              ["pockets"] = self.pockets,
+              ["data"] = self.data
             }
           )
         else

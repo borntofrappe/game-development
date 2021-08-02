@@ -38,8 +38,8 @@ function love.load()
       ["play"] = function()
         return PlayState:new()
       end,
-      ["congrats"] = function()
-        return CongratsState:new()
+      ["gameover"] = function()
+        return GameoverState:new()
       end,
       ["points"] = function()
         return PointsState:new()
