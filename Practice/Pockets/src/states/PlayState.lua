@@ -13,7 +13,7 @@ function PlayState:enter()
   local xStart = TABLE_INNER_WIDTH * 3 / 4
   local yStart = TABLE_INNER_HEIGHT / 2
   local r = BALL_SIZE
-  local keyPrefix = "ball"
+  local keyPrefixBall = "ball"
 
   local i = 1
   while i <= 6 do
@@ -22,7 +22,7 @@ function PlayState:enter()
     local x = xStart + math.cos(angle) * r * 2
     local y = yStart + math.sin(angle) * r * 2
 
-    local key = keyPrefix .. i
+    local key = keyPrefixBall .. i
     balls[key] = {
       ["key"] = key,
       ["isPocketed"] = false,
@@ -35,7 +35,7 @@ function PlayState:enter()
     i = i + 1
   end
 
-  local key = keyPrefix .. i
+  local key = keyPrefixBall .. i
   balls[key] = {
     ["key"] = key,
     ["isPocketed"] = false,
@@ -57,7 +57,7 @@ function PlayState:enter()
   self.balls = balls
 
   local ball = {
-    ["key"] = keyPrefix,
+    ["key"] = keyPrefixBall,
     ["isPocketed"] = false,
     ["x"] = TABLE_INNER_WIDTH / 4,
     ["y"] = TABLE_INNER_HEIGHT / 2,
@@ -93,13 +93,29 @@ function PlayState:enter()
 
   self.cue = cue
 
-  for _, pocketCoords in ipairs(POCKET_COORDS) do
-    local body = love.physics.newBody(world, pocketCoords[1], pocketCoords[2])
-    local shape = love.physics.newCircleShape(POCKET_RADIUS * 0.8)
+  local pockets = {}
+  local keyPrefixPocket = "pocket"
+
+  for i, pocketCoords in ipairs(POCKET_COORDS) do
+    local key = keyPrefixPocket .. i
+    local pocket = {
+      ["key"] = key,
+      ["x"] = pocketCoords[1],
+      ["y"] = pocketCoords[2],
+      ["r"] = POCKET_RADIUS,
+      ["color"] = nil
+    }
+
+    local body = love.physics.newBody(world, pocket.x, pocket.y)
+    local shape = love.physics.newCircleShape(pocket.r * 0.5)
     local fixture = love.physics.newFixture(body, shape)
     fixture:setSensor(true)
-    fixture:setUserData("pocket")
+    fixture:setUserData(key)
+
+    pockets[key] = pocket
   end
+
+  self.pockets = pockets
 
   local poolTable = {
     ["x"] = 0,
@@ -129,17 +145,25 @@ function PlayState:enter()
 
   world:setCallbacks(
     function(fixture1, fixture2)
-      if fixture1:getUserData() == "pocket" then
-        if fixture2:getUserData() == keyPrefix then
+      if fixture1:getUserData():sub(1, #keyPrefixPocket) == keyPrefixPocket then
+        if fixture2:getUserData() == keyPrefixBall then
           self.ball.isPocketed = true
-        elseif fixture2:getUserData():sub(1, #keyPrefix) == keyPrefix then
+          for _, pocket in pairs(self.pockets) do
+            pocket.color = nil
+          end
+        elseif fixture2:getUserData():sub(1, #keyPrefixBall) == keyPrefixBall then
           self.balls[fixture2:getUserData()].isPocketed = true
+          self.pockets[fixture1:getUserData()].color = self.balls[fixture2:getUserData()].color
         end
-      elseif fixture2:getUserData() == "pocket" then
-        if fixture1:getUserData() == keyPrefix then
+      elseif fixture2:getUserData():sub(1, #keyPrefixPocket) == keyPrefixPocket then
+        if fixture1:getUserData() == keyPrefixBall then
           self.ball.isPocketed = true
-        elseif fixture1:getUserData():sub(1, #keyPrefix) == keyPrefix then
+          for _, pocket in pairs(self.pockets) do
+            pocket.color = nil
+          end
+        elseif fixture1:getUserData():sub(1, #keyPrefixBall) == keyPrefixBall then
           self.balls[fixture1:getUserData()].isPocketed = true
+          self.pockets[fixture2:getUserData()].color = self.balls[fixture1:getUserData()].color
         end
       end
     end
@@ -164,15 +188,6 @@ function PlayState:update(dt)
       self.ball.body:setLinearVelocity(0, 0)
       self.ball.body:setX(self.ball.x)
       self.ball.body:setY(self.ball.y)
-
-      local x, y = love.mouse:getPosition()
-      if x > 0 and x < WINDOW_WIDTH and y > 0 and y < WINDOW_HEIGHT then
-        x = x - (TABLE_MARGIN + TABLE_PADDING)
-        y = y - (TABLE_MARGIN + TABLE_PADDING)
-        local dx = x - self.ball.body:getX()
-        local dy = y - self.ball.body:getY()
-        self.cue.angle = math.atan2(dy, dx)
-      end
     end
 
     for k, ball in pairs(self.balls) do
@@ -180,15 +195,22 @@ function PlayState:update(dt)
         ball.body:destroy()
         self.balls[k] = nil
 
-        local gameover = true
-        for l, b in pairs(self.balls) do
-          if b then
-            gameover = false
+        local hasWon = true
+        for _, remainingBall in pairs(self.balls) do
+          if remainingBall then
+            hasWon = false
             break
           end
         end
-        if gameover then
-          love.event.quit()
+
+        if hasWon then
+          gStateMachine:change(
+            "congrats",
+            {
+              ["ball"] = self.ball,
+              ["pockets"] = self.pockets
+            }
+          )
         else
           break
         end
@@ -235,6 +257,13 @@ function PlayState:render()
 
   love.graphics.setColor(self.ball.color.r, self.ball.color.g, self.ball.color.b)
   love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
+
+  for _, pocket in pairs(self.pockets) do
+    if pocket.color then
+      love.graphics.setColor(pocket.color.r, pocket.color.g, pocket.color.b)
+      love.graphics.circle("fill", pocket.x, pocket.y, BALL_SIZE)
+    end
+  end
 
   if self.state == "waiting" then
     love.graphics.setColor(gColors.ui.r, gColors.ui.g, gColors.ui.b)
