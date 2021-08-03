@@ -1,16 +1,25 @@
 require "src/Dependencies"
 
 function love.load()
-  -- math.randomseed(os.time())
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
+
+  gTerrain = getTerrain()
+
+  gFonts = {
+    ["large"] = love.graphics.newFont("res/font.ttf", 44),
+    ["normal"] = love.graphics.newFont("res/font.ttf", 20)
+  }
 
   gStateMachine =
     StateMachine:new(
     {
       ["start"] = function()
         return StartState:new()
+      end,
+      ["play"] = function()
+        return PlayState:new()
       end
     }
   )
@@ -40,10 +49,13 @@ end
 function love.update(dt)
   gStateMachine:update(dt)
 
-  love.mouse.keypressed = {}
+  love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
 end
 
 function love.draw()
+  love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.setLineWidth(2)
+  love.graphics.line(gTerrain)
   gStateMachine:render()
 end
