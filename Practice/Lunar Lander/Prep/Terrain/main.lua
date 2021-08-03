@@ -26,7 +26,7 @@ function love.load()
     ["points"] = {}
   }
 
-  local points = 100
+  local points = 70
 
   local yBaseline = WINDOW_HEIGHT * 3 / 4
   local yGap = WINDOW_HEIGHT / 2.5
@@ -36,7 +36,7 @@ function love.load()
 
   local offsetNoisePlatform = offsetNoise
 
-  local pointsPerPlatform = math.ceil(points / WINDOW_WIDTH * 25) -- at least 20px wide
+  local pointsPerPlatform = math.ceil(points / WINDOW_WIDTH * 20) -- at least 20 px wide
   local platforms = 3
   local platformsStart = {}
 
