@@ -2,17 +2,24 @@ LandState = BaseState:new()
 
 function LandState:enter(params)
   self.lander = params.lander
+  self.data = params.data
 end
 
 function LandState:update(dt)
   if love.keyboard.waspressed("return") or love.keyboard.waspressed("escape") then
     self.lander.body:destroy()
+
+    gTerrain = getTerrain()
     gStateMachine:change("start")
   end
 end
 
 function LandState:render()
   love.graphics.setColor(0.95, 0.95, 0.95)
+  love.graphics.setFont(gFonts.small)
+  for _, data in pairs(self.data) do
+    love.graphics.print(data.format(data.value):upper(), data.x, data.y)
+  end
 
   love.graphics.setLineWidth(2)
   love.graphics.circle("line", self.lander.body:getX(), self.lander.body:getY(), self.lander.core.shape:getRadius())

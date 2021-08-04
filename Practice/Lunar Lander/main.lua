@@ -34,7 +34,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("play")
 
   love.keyboard.keypressed = {}
 end

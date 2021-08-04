@@ -1,12 +1,14 @@
 PlayState = BaseState:new()
 
 local IMPULSE = 10
-local VELOCITY = 10
-local VELOCITY_THRESHOLD = 350
+local VELOCITY = 12
+local VELOCITY_THRESHOLD = 20
+local FUEL = 1000
+local FUEL_SPEED = 20
 
 function PlayState:enter()
   lander = {}
-  lander.body = love.physics.newBody(gWorld, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "dynamic")
+  lander.body = love.physics.newBody(gWorld, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, "dynamic")
 
   lander.core = {}
   lander.core.shape = love.physics.newCircleShape(10)
@@ -70,11 +72,18 @@ function PlayState:enter()
       userData[fixture2:getUserData()] = true
 
       if userData["core"] and userData["terrain"] then
+        Timer:reset()
+
         gWorld:setCallbacks()
         self.lander.body:destroy()
         self.terrain.body:destroy()
 
-        gStateMachine:change("crash")
+        gStateMachine:change(
+          "crash",
+          {
+            ["data"] = self.data
+          }
+        )
       end
 
       if userData["landing-gear"] and userData["terrain"] then
@@ -83,30 +92,131 @@ function PlayState:enter()
         gWorld:setCallbacks()
         self.terrain.body:destroy()
 
-        if vx ^ 2 + vy ^ 2 < VELOCITY_THRESHOLD then
+        if math.abs(vx) < VELOCITY_THRESHOLD / 2 and math.abs(vy) < VELOCITY_THRESHOLD then
+          Timer:reset()
+
           gStateMachine:change(
             "land",
             {
-              ["lander"] = self.lander
+              ["lander"] = self.lander,
+              ["data"] = self.data
             }
           )
         else
+          Timer:reset()
+
           self.lander.body:destroy()
-          gStateMachine:change("crash")
+          gStateMachine:change(
+            "crash",
+            {
+              ["data"] = self.data
+            }
+          )
         end
       end
+    end
+  )
+
+  local yStart = 8
+  local yGap = gFonts.small:getHeight() * 1.5
+  local widthRightColumn = gFonts.small:getWidth("Horizontal Velocity 12 →")
+
+  local data = {
+    ["score"] = {
+      ["label"] = "Score",
+      ["value"] = 0,
+      ["format"] = function(value)
+        local formattedValue = string.format("%04d", value)
+        return string.format("Score% 8s", formattedValue)
+      end,
+      ["x"] = 18,
+      ["y"] = yStart
+    },
+    ["time"] = {
+      ["label"] = "Time",
+      ["value"] = 0,
+      ["format"] = function(value)
+        local seconds = value
+        local minutes = math.floor(seconds / 60)
+        seconds = seconds - minutes * 60
+
+        local formattedValue = string.format("%02d:%02d", minutes, seconds)
+
+        return string.format("Time% 9s", formattedValue)
+      end,
+      ["x"] = 18,
+      ["y"] = yStart + yGap
+    },
+    ["fuel"] = {
+      ["label"] = "Fuel",
+      ["value"] = FUEL,
+      ["format"] = function(value)
+        local formattedValue = string.format("%04d", value)
+        return string.format("Fuel% 9s", formattedValue)
+      end,
+      ["x"] = 18,
+      ["y"] = yStart + yGap * 2
+    },
+    ["altitude"] = {
+      ["label"] = "Altitude",
+      ["value"] = WINDOW_HEIGHT - lander.body:getY(),
+      ["format"] = function(value)
+        return string.format("Altitude % 14d", value)
+      end,
+      ["x"] = WINDOW_WIDTH - widthRightColumn - 18,
+      ["y"] = yStart
+    },
+    ["horizontal-speed"] = {
+      ["label"] = "Horizontal speed",
+      ["value"] = 0,
+      ["format"] = function(value)
+        local suffix = " "
+        if value > 0 then
+          suffix = "→"
+        elseif value < 0 then
+          suffix = "←"
+        end
+
+        return string.format("Horizontal Speed % 4d " .. suffix, value)
+      end,
+      ["x"] = WINDOW_WIDTH - widthRightColumn - 18,
+      ["y"] = yStart + yGap
+    },
+    ["vertical-speed"] = {
+      ["label"] = "Vertical Speed",
+      ["value"] = 0,
+      ["format"] = function(value)
+        local suffix = " "
+        if value > 0 then
+          suffix = "↓"
+        elseif value < 0 then
+          suffix = "↑"
+        end
+
+        return string.format("Vertical Speed % 6d " .. suffix, value)
+      end,
+      ["x"] = WINDOW_WIDTH - widthRightColumn - 18,
+      ["y"] = yStart + yGap * 2
+    }
+  }
+
+  self.data = data
+
+  Timer:every(
+    1,
+    function()
+      self.data.time.value = self.data.time.value + 1
     end
   )
 end
 
 function PlayState:update(dt)
-  if love.keyboard.waspressed("escape") then
-    gWorld:setCallbacks()
-    self.lander.body:destroy()
-    self.terrain.body:destroy()
+  Timer:update(dt)
 
-    gStateMachine:change("start")
-  end
+  self.data.altitude.value = WINDOW_HEIGHT - self.lander.body:getY()
+  local vx, vy = self.lander.body:getLinearVelocity()
+  self.data["horizontal-speed"].value = vx
+  self.data["vertical-speed"].value = vy
 
   if love.keyboard.waspressed("up") then
     lander.body:applyLinearImpulse(0, -IMPULSE)
@@ -119,22 +229,39 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.isDown("up") then
-    lander.body:applyForce(0, -VELOCITY)
+    if self.data.fuel.value > 0 then
+      self.data.fuel.value = math.max(0, self.data.fuel.value - dt * FUEL_SPEED)
+      lander.body:applyForce(0, -VELOCITY)
+    end
   end
 
   if love.keyboard.isDown("right") then
-    lander.body:applyForce(VELOCITY / 2, 0)
+    if self.data.fuel.value > 0 then
+      lander.body:applyForce(VELOCITY / 2, 0)
+    end
   elseif love.keyboard.isDown("left") then
-    lander.body:applyForce(-VELOCITY / 2, 0)
+    if self.data.fuel.value > 0 then
+      lander.body:applyForce(-VELOCITY / 2, 0)
+    end
   end
 
   gWorld:update(dt)
+
+  if love.keyboard.waspressed("escape") then
+    Timer:reset()
+    gWorld:setCallbacks()
+    self.lander.body:destroy()
+    self.terrain.body:destroy()
+
+    gStateMachine:change("start")
+  end
 end
 
 function PlayState:render()
-  love.graphics.setFont(gFonts.normal)
-  local vx, vy = self.lander.body:getLinearVelocity()
-  love.graphics.print("velocity " .. math.floor(vx ^ 2 + vy ^ 2), 8, 8)
+  love.graphics.setFont(gFonts.small)
+  for _, data in pairs(self.data) do
+    love.graphics.print(data.format(data.value):upper(), data.x, data.y)
+  end
 
   love.graphics.setLineWidth(2)
   love.graphics.circle("line", self.lander.body:getX(), self.lander.body:getY(), self.lander.core.shape:getRadius())

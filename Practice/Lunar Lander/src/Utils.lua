@@ -1,11 +1,12 @@
-local POINTS = 70
-local Y_BASELINE = WINDOW_HEIGHT * 3 / 4
-local Y_GAP = WINDOW_HEIGHT / 2
+local POINTS = 100
+local Y_BASELINE = WINDOW_HEIGHT / 2
+local Y_GAP = WINDOW_HEIGHT / 2 - 15
+local Y_GAP_RANDOM = WINDOW_HEIGHT - Y_BASELINE - Y_GAP
 local OFFSET_INITIAL_MAX = 1000
-local OFFSET_INCREMENT = 0.15
+local OFFSET_INCREMENT = 0.08
 
 local PLATFORMS = 4
-local PLATFORM_MIN_WIDTH = 16
+local PLATFORM_MIN_WIDTH = 20
 local POINTS_PER_PLATFORM = math.ceil(POINTS / WINDOW_WIDTH * PLATFORM_MIN_WIDTH)
 
 function getTerrain()
@@ -40,13 +41,15 @@ function getTerrain()
   local offset = love.math.random(OFFSET_INITIAL_MAX)
   for point = 1, POINTS + 1 do
     local x = (point - 1) * WINDOW_WIDTH / POINTS
-    local y = Y_BASELINE + love.math.noise(offset) * Y_GAP - Y_GAP / 2
-    table.insert(points, x)
-    table.insert(points, y)
+    local y = Y_BASELINE + love.math.noise(offset) * Y_GAP
 
     if not pointsPlatforms[point] then
       offset = offset + OFFSET_INCREMENT
+      y = y + love.math.random(Y_GAP_RANDOM)
     end
+
+    table.insert(points, x)
+    table.insert(points, y)
   end
 
   return points

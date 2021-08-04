@@ -91,7 +91,7 @@ function StartState:render()
 
   love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.setFont(gFonts.large)
-  love.graphics.printf(TITLE, 0, self.sensor.body:getY(), WINDOW_WIDTH, "center")
+  love.graphics.printf(TITLE:upper(), 0, self.sensor.body:getY(), WINDOW_WIDTH, "center")
 
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(
