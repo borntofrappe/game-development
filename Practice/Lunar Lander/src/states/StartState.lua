@@ -2,7 +2,7 @@ StartState = BaseState:new()
 
 function StartState:enter()
   local yStart = -gFonts.large:getHeight()
-  local yFinish = WINDOW_HEIGHT / 2 - gFonts.large:getHeight()
+  local yFinish = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() - gFonts.normal:getHeight()
 
   local sensor = {}
   sensor.body = love.physics.newBody(gWorld, WINDOW_WIDTH / 2, yStart, "dynamic")
@@ -33,7 +33,7 @@ function StartState:enter()
 
   self.instruction = {
     ["text"] = instructions[love.math.random(#instructions)],
-    ["y"] = yFinish + gFonts.large:getHeight() + 24,
+    ["y"] = yFinish + gFonts.large:getHeight(),
     ["index"] = 0
   }
 
@@ -86,9 +86,6 @@ function StartState:update(dt)
 end
 
 function StartState:render()
-  love.graphics.setColor(0, 0, 0, 0.85)
-  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
-
   love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(TITLE:upper(), 0, self.sensor.body:getY(), WINDOW_WIDTH, "center")

@@ -3,29 +3,37 @@ LandState = BaseState:new()
 function LandState:enter(params)
   self.lander = params.lander
   self.data = params.data
+
+  self.data.metrics.score.value = self.data.metrics.score.value + 100
+  self.data.metrics.fuel.value = self.data.metrics.fuel.value + 200
 end
 
 function LandState:update(dt)
-  if love.keyboard.waspressed("return") or love.keyboard.waspressed("escape") then
+  if love.keyboard.waspressed("escape") then
     self.lander.body:destroy()
 
     gTerrain = getTerrain()
+
     gStateMachine:change("start")
+  end
+
+  if love.keyboard.waspressed("return") then
+    self.lander.body:destroy()
+
+    gTerrain = getTerrain()
+
+    gStateMachine:change(
+      "play",
+      {
+        ["data"] = self.data
+      }
+    )
   end
 end
 
 function LandState:render()
-  love.graphics.setColor(0.95, 0.95, 0.95)
-  love.graphics.setFont(gFonts.small)
-  for _, data in pairs(self.data) do
-    love.graphics.print(data.format(data.value):upper(), data.x, data.y)
-  end
-
-  love.graphics.setLineWidth(2)
-  love.graphics.circle("line", self.lander.body:getX(), self.lander.body:getY(), self.lander.core.shape:getRadius())
-  for _, gear in pairs(self.lander.landingGear) do
-    love.graphics.polygon("line", self.lander.body:getWorldPoints(gear.shape:getPoints()))
-  end
+  self.data:render()
+  self.lander:render()
 
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf("Landed!", 0, WINDOW_HEIGHT / 2 - gFonts.normal:getHeight() / 2, WINDOW_WIDTH, "center")
