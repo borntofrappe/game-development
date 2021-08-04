@@ -1,15 +1,19 @@
 require "src/Dependencies"
 
+local GRAVITY = 18
+
 function love.load()
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
 
   gTerrain = getTerrain()
+  gWorld = love.physics.newWorld(0, GRAVITY)
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/font.ttf", 44),
-    ["normal"] = love.graphics.newFont("res/font.ttf", 20)
+    ["normal"] = love.graphics.newFont("res/font.ttf", 18),
+    ["small"] = love.graphics.newFont("res/font.ttf", 12)
   }
 
   gStateMachine =
@@ -57,5 +61,6 @@ function love.draw()
   love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.setLineWidth(2)
   love.graphics.line(gTerrain)
+
   gStateMachine:render()
 end

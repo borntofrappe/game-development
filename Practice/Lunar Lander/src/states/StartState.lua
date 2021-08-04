@@ -1,15 +1,29 @@
 StartState = BaseState:new()
 
 function StartState:enter()
-  self.title = {
-    ["text"] = TITLE,
-    ["y"] = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() / 2 - 36
-  }
+  local yStart = -gFonts.large:getHeight()
+  local yFinish = WINDOW_HEIGHT / 2 - gFonts.large:getHeight()
+
+  local sensor = {}
+  sensor.body = love.physics.newBody(gWorld, WINDOW_WIDTH / 2, yStart, "dynamic")
+  sensor.shape = love.physics.newCircleShape(1)
+  sensor.fixture = love.physics.newFixture(sensor.body, sensor.shape)
+  sensor.fixture:setRestitution(0.2)
+  sensor.fixture:setUserData("sensor")
+
+  self.sensor = sensor
+
+  local threshold = {}
+  threshold.body = love.physics.newBody(gWorld, 0, yFinish)
+  threshold.shape = love.physics.newChainShape(false, 0, 0, WINDOW_WIDTH, 0)
+  threshold.fixture = love.physics.newFixture(threshold.body, threshold.shape)
+  threshold.fixture:setUserData("threshold")
+
+  self.threshold = threshold
 
   local instructions = {
     "Good luck",
     "Bonne chance",
-    "Viel gluck",
     "Give it your best shot",
     "You can do this",
     "Slow and steady",
@@ -19,42 +33,53 @@ function StartState:enter()
 
   self.instruction = {
     ["text"] = instructions[love.math.random(#instructions)],
-    ["y"] = self.title.y + gFonts.large:getHeight() + 24,
+    ["y"] = yFinish + gFonts.large:getHeight() + 24,
     ["index"] = 0
   }
 
   self.interval = {
     ["duration"] = 0.12,
-    ["label"] = "typewriter"
+    ["label"] = "instruction"
   }
 
-  Timer:after(
-    0.2,
-    function()
-      Timer:every(
-        self.interval.duration,
-        function()
-          self.instruction.index = self.instruction.index + 1
-          if self.instruction.index == #self.instruction.text then
-            Timer:remove(self.interval.label)
-          end
-        end,
-        false,
-        self.interval.label
-      )
+  gWorld:setCallbacks(
+    function(fixture1, fixture2)
+      local userData = {}
+      userData[fixture1:getUserData()] = true
+      userData[fixture2:getUserData()] = true
+
+      if userData["sensor"] and userData["threshold"] then
+        gWorld:setCallbacks()
+        Timer:every(
+          self.interval.duration,
+          function()
+            self.instruction.index = self.instruction.index + 1
+            if self.instruction.index == #self.instruction.text then
+              Timer:remove(self.interval.label)
+            end
+          end,
+          false,
+          self.interval.label
+        )
+      end
     end
   )
 end
 
 function StartState:update(dt)
+  gWorld:update(dt)
+
   Timer:update(dt)
 
   if love.keyboard.waspressed("escape") then
     love.event.quit()
   end
 
-  if love.keyboard.waspressed("return") and self.instruction.index == #self.instruction.text then
+  if love.keyboard.waspressed("return") then
     Timer:remove(self.interval.label)
+    self.sensor.body:destroy()
+    self.threshold.body:destroy()
+
     gStateMachine:change("play")
   end
 end
@@ -65,7 +90,7 @@ function StartState:render()
 
   love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.setFont(gFonts.large)
-  love.graphics.printf(self.title.text, 0, self.title.y, WINDOW_WIDTH, "center")
+  love.graphics.printf(TITLE, 0, self.sensor.body:getY(), WINDOW_WIDTH, "center")
 
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(
