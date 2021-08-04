@@ -13,7 +13,7 @@ function love.load()
   gFonts = {
     ["large"] = love.graphics.newFont("res/font.ttf", 44),
     ["normal"] = love.graphics.newFont("res/font.ttf", 18),
-    ["small"] = love.graphics.newFont("res/font.ttf", 12)
+    ["small"] = love.graphics.newFont("res/font.ttf", 14)
   }
 
   gStateMachine =
@@ -24,6 +24,12 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState:new()
+      end,
+      ["land"] = function()
+        return LandState:new()
+      end,
+      ["crash"] = function()
+        return CrashState:new()
       end
     }
   )
@@ -31,7 +37,6 @@ function love.load()
   gStateMachine:change("start")
 
   love.keyboard.keypressed = {}
-  love.mouse.buttonpressed = {}
 end
 
 function love.keypressed(key)
@@ -42,19 +47,10 @@ function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
-function love.mousepressed(x, y, button)
-  love.mouse.buttonpressed[button] = true
-end
-
-function love.mouse.waspressed(button)
-  return love.mouse.buttonpressed[button]
-end
-
 function love.update(dt)
   gStateMachine:update(dt)
 
   love.keyboard.keypressed = {}
-  love.mouse.buttonpressed = {}
 end
 
 function love.draw()

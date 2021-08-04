@@ -67,21 +67,22 @@ function StartState:enter()
 end
 
 function StartState:update(dt)
-  gWorld:update(dt)
-
-  Timer:update(dt)
-
   if love.keyboard.waspressed("escape") then
     love.event.quit()
   end
 
   if love.keyboard.waspressed("return") then
     Timer:remove(self.interval.label)
+
+    gWorld:setCallbacks()
     self.sensor.body:destroy()
     self.threshold.body:destroy()
 
     gStateMachine:change("play")
   end
+
+  Timer:update(dt)
+  gWorld:update(dt)
 end
 
 function StartState:render()
