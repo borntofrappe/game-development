@@ -1,9 +1,6 @@
 PlayState = BaseState:new()
 
-local IMPULSE = 10
-local VELOCITY = 12
 local VELOCITY_THRESHOLD = 20
-local FUEL_SPEED = 20
 
 function PlayState:enter(params)
   self.lander = Lander:new(gWorld)
@@ -21,8 +18,8 @@ function PlayState:enter(params)
         Timer:reset()
 
         gWorld:setCallbacks()
-        self.lander.body:destroy()
-        self.terrain.body:destroy()
+        self.lander:destroy()
+        self.terrain:destroy()
 
         gStateMachine:change(
           "crash",
@@ -36,7 +33,7 @@ function PlayState:enter(params)
         local vx, vy = self.lander.body:getLinearVelocity()
 
         gWorld:setCallbacks()
-        self.terrain.body:destroy()
+        self.terrain:destroy()
 
         if math.abs(vx) < VELOCITY_THRESHOLD / 2 and math.abs(vy) < VELOCITY_THRESHOLD then
           Timer:reset()
@@ -51,7 +48,7 @@ function PlayState:enter(params)
         else
           Timer:reset()
 
-          self.lander.body:destroy()
+          self.lander:destroy()
           gStateMachine:change(
             "crash",
             {
@@ -66,7 +63,7 @@ function PlayState:enter(params)
   Timer:every(
     1,
     function()
-      self.data.metrics.time.value = self.data.metrics.time.value + 1
+      self.data:updateTime()
     end
   )
 end
@@ -74,35 +71,33 @@ end
 function PlayState:update(dt)
   Timer:update(dt)
 
-  self.data.metrics.altitude.value = WINDOW_HEIGHT - self.lander.body:getY()
-  local vx, vy = self.lander.body:getLinearVelocity()
-  self.data.metrics["horizontal-speed"].value = vx
-  self.data.metrics["vertical-speed"].value = vy
+  self.data:setAltitude(self.lander)
+  self.data:setVelocity(self.lander)
 
   if love.keyboard.waspressed("up") then
-    self.lander.body:applyLinearImpulse(0, -IMPULSE)
+    self.lander:applyLinearImpulse("up")
   end
 
   if love.keyboard.waspressed("right") then
-    self.lander.body:applyLinearImpulse(IMPULSE / 2, 0)
+    self.lander:applyLinearImpulse("right")
   elseif love.keyboard.waspressed("left") then
-    self.lander.body:applyLinearImpulse(-IMPULSE / 2, 0)
+    self.lander:applyLinearImpulse("left")
   end
 
   if love.keyboard.isDown("up") then
-    if self.data.metrics.fuel.value > 0 then
-      self.data.metrics.fuel.value = math.max(0, self.data.metrics.fuel.value - dt * FUEL_SPEED)
-      self.lander.body:applyForce(0, -VELOCITY)
+    if self.data.fuel.value > 0 then
+      self.lander:applyForce("up")
+      self.data:updateFuel(dt)
     end
   end
 
   if love.keyboard.isDown("right") then
-    if self.data.metrics.fuel.value > 0 then
-      self.lander.body:applyForce(VELOCITY / 2, 0)
+    if self.data.fuel.value > 0 then
+      self.lander:applyForce("right")
     end
   elseif love.keyboard.isDown("left") then
-    if self.data.metrics.fuel.value > 0 then
-      self.lander.body:applyForce(-VELOCITY / 2, 0)
+    if self.data.fuel.value > 0 then
+      self.lander:applyForce("left")
     end
   end
 
@@ -110,9 +105,12 @@ function PlayState:update(dt)
 
   if love.keyboard.waspressed("escape") then
     Timer:reset()
+
     gWorld:setCallbacks()
-    self.lander.body:destroy()
-    self.terrain.body:destroy()
+
+    self.lander:destroy()
+    self.terrain:destroy()
+
     gTerrain = getTerrain()
 
     gStateMachine:change("start")

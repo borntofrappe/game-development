@@ -2,16 +2,49 @@ CrashState = BaseState:new()
 
 function CrashState:enter(params)
   self.data = params.data
+
+  local messages = {
+    "Too bad",
+    "Better luck next time",
+    "Let's call it a practice run",
+    "Far from the perfect landing"
+  }
+
+  self.message = {
+    ["text"] = messages[love.math.random(#messages)],
+    ["y"] = WINDOW_HEIGHT / 2 - gFonts.normal:getHeight(),
+    ["index"] = 0
+  }
+
+  self.interval = {
+    ["duration"] = 0.12
+  }
+
+  Timer:every(
+    self.interval.duration,
+    function()
+      self.message.index = self.message.index + 1
+      if self.message.index == #self.message.text then
+        Timer:reset()
+      end
+    end
+  )
 end
 
 function CrashState:update(dt)
+  Timer:update(dt)
+
   if love.keyboard.waspressed("escape") then
+    Timer:reset()
+
     gTerrain = getTerrain()
 
     gStateMachine:change("start")
   end
 
   if love.keyboard.waspressed("return") then
+    Timer:reset()
+
     gTerrain = getTerrain()
 
     gStateMachine:change("play")
@@ -21,7 +54,6 @@ end
 function CrashState:render()
   self.data:render()
 
-  love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.setFont(gFonts.normal)
-  love.graphics.printf("Crashed!", 0, WINDOW_HEIGHT / 2 - gFonts.normal:getHeight() / 2, WINDOW_WIDTH, "center")
+  love.graphics.printf(self.message.text:sub(1, self.message.index), 0, self.message.y, WINDOW_WIDTH, "center")
 end

@@ -1,5 +1,8 @@
 Lander = {}
 
+local IMPULSE = 10
+local VELOCITY = 11
+
 function Lander:new(world)
   local body = love.physics.newBody(gWorld, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, "dynamic")
 
@@ -60,9 +63,31 @@ function Lander:new(world)
   return this
 end
 
+function Lander:destroy()
+  self.body:destroy()
+end
+
+function Lander:applyLinearImpulse(direction)
+  if direction == "up" then
+    self.body:applyLinearImpulse(0, -IMPULSE)
+  elseif direction == "right" then
+    self.body:applyLinearImpulse(IMPULSE / 2, 0)
+  elseif direction == "left" then
+    self.body:applyLinearImpulse(IMPULSE / 2 * -1, 0)
+  end
+end
+
+function Lander:applyForce(direction)
+  if direction == "up" then
+    self.body:applyForce(0, -VELOCITY)
+  elseif direction == "right" then
+    self.body:applyForce(VELOCITY / 2, 0)
+  elseif direction == "left" then
+    self.body:applyForce(VELOCITY / 2 * -1, 0)
+  end
+end
+
 function Lander:render()
-  love.graphics.setColor(0.95, 0.95, 0.95)
-  love.graphics.setLineWidth(2)
   love.graphics.circle("line", self.body:getX(), self.body:getY(), self.core.shape:getRadius())
 
   for _, gear in pairs(self.landingGear) do

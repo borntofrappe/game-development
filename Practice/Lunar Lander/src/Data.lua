@@ -1,6 +1,7 @@
 Data = {}
 
 local FUEL = 1000
+local FUEL_SPEED = 20
 local PADDING_X = 18
 local PADDING_Y = 8
 
@@ -9,7 +10,7 @@ function Data:new(lander)
   local yGap = gFonts.small:getHeight() * 1.5
   local widthRightColumn = gFonts.small:getWidth("Horizontal Velocity 12 →")
 
-  local metrics = {
+  local this = {
     ["score"] = {
       ["label"] = "Score",
       ["value"] = 0,
@@ -88,21 +89,42 @@ function Data:new(lander)
     }
   }
 
-  local this = {
-    ["metrics"] = metrics
-  }
-
   self.__index = self
   setmetatable(this, self)
 
   return this
 end
 
-function Data:render()
-  love.graphics.setColor(0.95, 0.95, 0.95)
+function Data:updateTime()
+  self.time.value = self.time.value + 1
+end
 
+function Data:updateFuel(dt)
+  self.fuel.value = math.max(0, self.fuel.value - dt * FUEL_SPEED)
+end
+
+function Data:setAltitude(lander)
+  self.altitude.value = WINDOW_HEIGHT - lander.body:getY()
+end
+
+function Data:setVelocity(lander)
+  local vx, vy = lander.body:getLinearVelocity()
+  self["horizontal-speed"].value = vx
+  self["vertical-speed"].value = vy
+end
+
+function Data:updateScore()
+  -- score considering the time and altitude metrics
+  self.score.value = self.score.value + 100
+end
+
+function Data:refuel()
+  self.fuel.value = self.fuel.value + 200
+end
+
+function Data:render()
   love.graphics.setFont(gFonts.small)
-  for _, metric in pairs(self.metrics) do
+  for _, metric in pairs(self) do -- it works :)
     love.graphics.print(metric.format(metric.value):upper(), metric.x, metric.y)
   end
 end

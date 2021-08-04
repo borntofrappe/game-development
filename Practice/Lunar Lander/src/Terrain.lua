@@ -17,3 +17,7 @@ function Terrain:new(world)
 
   return this
 end
+
+function Terrain:destroy()
+  self.body:destroy()
+end

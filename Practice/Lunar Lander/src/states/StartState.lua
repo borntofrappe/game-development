@@ -1,14 +1,16 @@
 StartState = BaseState:new()
 
+local VELOCITY_THRESHOLD = 5
+
 function StartState:enter()
   local yStart = -gFonts.large:getHeight()
   local yFinish = WINDOW_HEIGHT / 2 - gFonts.large:getHeight() - gFonts.normal:getHeight()
 
   local sensor = {}
   sensor.body = love.physics.newBody(gWorld, WINDOW_WIDTH / 2, yStart, "dynamic")
-  sensor.shape = love.physics.newCircleShape(1)
+  sensor.shape = love.physics.newCircleShape(0)
   sensor.fixture = love.physics.newFixture(sensor.body, sensor.shape)
-  sensor.fixture:setRestitution(0.2)
+  sensor.fixture:setRestitution(0.25)
   sensor.fixture:setUserData("sensor")
 
   self.sensor = sensor
@@ -38,8 +40,7 @@ function StartState:enter()
   }
 
   self.interval = {
-    ["duration"] = 0.12,
-    ["label"] = "instruction"
+    ["duration"] = 0.12
   }
 
   gWorld:setCallbacks(
@@ -55,11 +56,9 @@ function StartState:enter()
           function()
             self.instruction.index = self.instruction.index + 1
             if self.instruction.index == #self.instruction.text then
-              Timer:remove(self.interval.label)
+              Timer:reset()
             end
-          end,
-          false,
-          self.interval.label
+          end
         )
       end
     end
@@ -72,13 +71,16 @@ function StartState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    Timer:remove(self.interval.label)
+    local _, vy = self.sensor.body:getLinearVelocity()
+    if vy < VELOCITY_THRESHOLD then
+      Timer:reset()
 
-    gWorld:setCallbacks()
-    self.sensor.body:destroy()
-    self.threshold.body:destroy()
+      gWorld:setCallbacks()
+      self.sensor.body:destroy()
+      self.threshold.body:destroy()
 
-    gStateMachine:change("play")
+      gStateMachine:change("play")
+    end
   end
 
   Timer:update(dt)
@@ -86,7 +88,6 @@ function StartState:update(dt)
 end
 
 function StartState:render()
-  love.graphics.setColor(0.95, 0.95, 0.95)
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(TITLE:upper(), 0, self.sensor.body:getY(), WINDOW_WIDTH, "center")
 
