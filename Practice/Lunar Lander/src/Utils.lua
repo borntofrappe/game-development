@@ -11,6 +11,7 @@ local POINTS_PER_PLATFORM = math.ceil(POINTS / WINDOW_WIDTH * PLATFORM_MIN_WIDTH
 
 function getTerrain()
   local platforms = 0
+  local platformsXCoords = {}
   local platformsStart = {}
 
   repeat
@@ -31,6 +32,10 @@ function getTerrain()
 
   local pointsPlatforms = {}
   for _, platformStart in ipairs(platformsStart) do
+    local x1 = (platformStart - 1) * WINDOW_WIDTH / POINTS
+    local x2 = (platformStart + POINTS_PER_PLATFORM - 1) * WINDOW_WIDTH / POINTS
+
+    table.insert(platformsXCoords, {x1, x2})
     for point = platformStart, platformStart + POINTS_PER_PLATFORM do
       pointsPlatforms[point] = true
     end
@@ -52,5 +57,5 @@ function getTerrain()
     table.insert(points, y)
   end
 
-  return points
+  return points, platformsXCoords
 end

@@ -14,42 +14,53 @@ function PlayState:enter(params)
       userData[fixture1:getUserData()] = true
       userData[fixture2:getUserData()] = true
 
+      local hasCrashed = false
+
       if userData["core"] and userData["terrain"] then
-        Timer:reset()
-
-        gWorld:setCallbacks()
-        self.lander:destroy()
-        self.terrain:destroy()
-
-        gStateMachine:change(
-          "crash",
-          {
-            ["data"] = self.data,
-            ["contact"] = contact
-          }
-        )
+        hasCrashed = true
       end
 
-      if userData["landing-gear"] and userData["terrain"] then
+      if not hasCrashed and userData["landing-gear"] and userData["terrain"] then
         local vx, vy = self.lander.body:getLinearVelocity()
 
         gWorld:setCallbacks()
         self.terrain:destroy()
 
         if math.abs(vx) < VELOCITY_THRESHOLD / 2 and math.abs(vy) < VELOCITY_THRESHOLD then
-          Timer:reset()
+          local isOnPlatform = false
+          local x = self.lander.body:getX()
+          local size = self.lander.core.shape:getRadius()
 
-          gStateMachine:change(
-            "land",
-            {
-              ["lander"] = self.lander,
-              ["data"] = self.data
-            }
-          )
+          for i, platformXCoords in ipairs(gPlatformsXCoords) do
+            if x - size / 2 > platformXCoords[1] and x + size / 2 < platformXCoords[2] then
+              isOnPlatform = true
+              break
+            end
+          end
+
+          if isOnPlatform then
+            Timer:reset()
+
+            gStateMachine:change(
+              "land",
+              {
+                ["lander"] = self.lander,
+                ["data"] = self.data
+              }
+            )
+          else
+            hasCrashed = true
+          end
         else
+          hasCrashed = true
+        end
+
+        if hasCrashed then
           Timer:reset()
 
+          gWorld:setCallbacks()
           self.lander:destroy()
+          self.terrain:destroy()
 
           gStateMachine:change(
             "crash",
@@ -104,6 +115,22 @@ function PlayState:update(dt)
     end
   end
 
+  if self.lander.body:getX() < -self.lander.core.shape:getRadius() then
+    self.terrain:destroy()
+    gTerrain, gPlatformsXCoords = getTerrain()
+    self.terrain = Terrain:new(gWorld)
+
+    self.lander.body:setX(WINDOW_WIDTH + self.lander.core.shape:getRadius())
+  end
+
+  if self.lander.body:getX() > WINDOW_WIDTH + self.lander.core.shape:getRadius() then
+    self.terrain:destroy()
+    gTerrain, gPlatformsXCoords = getTerrain()
+    self.terrain = Terrain:new(gWorld)
+
+    self.lander.body:setX(-self.lander.core.shape:getRadius())
+  end
+
   gWorld:update(dt)
 
   if love.keyboard.waspressed("escape") then
@@ -114,7 +141,7 @@ function PlayState:update(dt)
     self.lander:destroy()
     self.terrain:destroy()
 
-    gTerrain = getTerrain()
+    gTerrain, gPlatformsXCoords = getTerrain()
 
     gStateMachine:change("start")
   end

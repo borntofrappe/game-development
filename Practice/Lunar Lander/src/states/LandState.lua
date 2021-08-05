@@ -45,7 +45,7 @@ function LandState:update(dt)
 
     self.lander:destroy()
 
-    gTerrain = getTerrain()
+    gTerrain, gPlatformsXCoords = getTerrain()
 
     gStateMachine:change("start")
   end
@@ -55,7 +55,7 @@ function LandState:update(dt)
 
     self.lander:destroy()
 
-    gTerrain = getTerrain()
+    gTerrain, gPlatformsXCoords = getTerrain()
 
     gStateMachine:change(
       "play",

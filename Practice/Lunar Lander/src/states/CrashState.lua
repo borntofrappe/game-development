@@ -50,7 +50,7 @@ function CrashState:update(dt)
   if love.keyboard.waspressed("escape") then
     Timer:reset()
 
-    gTerrain = getTerrain()
+    gTerrain, gPlatformsXCoords = getTerrain()
 
     gStateMachine:change("start")
   end
@@ -58,7 +58,7 @@ function CrashState:update(dt)
   if love.keyboard.waspressed("return") then
     Timer:reset()
 
-    gTerrain = getTerrain()
+    gTerrain, gPlatformsXCoords = getTerrain()
 
     gStateMachine:change("play")
   end

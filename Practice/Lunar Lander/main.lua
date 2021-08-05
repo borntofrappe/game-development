@@ -1,13 +1,13 @@
 require "src/Dependencies"
 
-local GRAVITY = 50
+local GRAVITY = 20
 
 function love.load()
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.1, 0.08, 0.12)
+  love.graphics.setBackgroundColor(0.11, 0.1, 0.12)
 
-  gTerrain = getTerrain()
+  gTerrain, gPlatformsXCoords = getTerrain()
   gWorld = love.physics.newWorld(0, GRAVITY)
 
   gFonts = {
@@ -58,7 +58,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0.97, 0.95, 1)
+  love.graphics.setColor(0.97, 0.96, 1)
   love.graphics.setLineWidth(2)
   love.graphics.line(gTerrain)
 
