@@ -8,7 +8,7 @@ function PlayState:enter(params)
   self.terrain = Terrain:new(gWorld)
 
   gWorld:setCallbacks(
-    function(fixture1, fixture2)
+    function(fixture1, fixture2, contact)
       local userData = {}
 
       userData[fixture1:getUserData()] = true
@@ -24,7 +24,8 @@ function PlayState:enter(params)
         gStateMachine:change(
           "crash",
           {
-            ["data"] = self.data
+            ["data"] = self.data,
+            ["contact"] = contact
           }
         )
       end
@@ -49,10 +50,12 @@ function PlayState:enter(params)
           Timer:reset()
 
           self.lander:destroy()
+
           gStateMachine:change(
             "crash",
             {
-              ["data"] = self.data
+              ["data"] = self.data,
+              ["contact"] = contact
             }
           )
         end

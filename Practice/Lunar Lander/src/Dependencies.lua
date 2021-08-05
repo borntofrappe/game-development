@@ -4,6 +4,7 @@ require "src/constants"
 
 require "src/Utils"
 
+require "src/Particles"
 require "src/Lander"
 require "src/Terrain"
 require "src/Data"

@@ -3,6 +3,18 @@ CrashState = BaseState:new()
 function CrashState:enter(params)
   self.data = params.data
 
+  local contact = params.contact
+
+  local x, y = contact:getPositions()
+  local nx, ny = contact:getNormal()
+
+  local xMin = nx > 0 and 50 or -50
+  local yMin = ny > 0 and 50 or -50
+  local xMax = xMin + nx * 20
+  local yMax = yMin + ny * 20
+
+  self.particles = Particles:new(x, y, xMin, yMin, xMax, yMax)
+
   local messages = {
     "Too bad",
     "Better luck next time",
@@ -33,6 +45,7 @@ end
 
 function CrashState:update(dt)
   Timer:update(dt)
+  self.particles:update(dt)
 
   if love.keyboard.waspressed("escape") then
     Timer:reset()
@@ -56,4 +69,6 @@ function CrashState:render()
 
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(self.message.text:sub(1, self.message.index), 0, self.message.y, WINDOW_WIDTH, "center")
+
+  self.particles:render()
 end

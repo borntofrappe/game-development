@@ -1,6 +1,6 @@
 require "src/Dependencies"
 
-local GRAVITY = 20
+local GRAVITY = 50
 
 function love.load()
   love.window.setTitle(TITLE)
@@ -14,6 +14,10 @@ function love.load()
     ["large"] = love.graphics.newFont("res/font.ttf", 44),
     ["normal"] = love.graphics.newFont("res/font.ttf", 18),
     ["small"] = love.graphics.newFont("res/font.ttf", 14)
+  }
+
+  gTextures = {
+    ["particle"] = love.graphics.newImage("res/particle.png")
   }
 
   gStateMachine =
@@ -34,7 +38,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("play")
 
   love.keyboard.keypressed = {}
 end
