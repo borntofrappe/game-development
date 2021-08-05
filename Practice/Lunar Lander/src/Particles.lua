@@ -6,9 +6,9 @@ function Particles:new(x, y, xMin, yMin, xMax, yMax)
   local particleSystem = love.graphics.newParticleSystem(gTextures["particle"], PARTICLES)
 
   particleSystem:setPosition(x, y)
-  particleSystem:setParticleLifetime(0.5, 1)
+  particleSystem:setParticleLifetime(0.4, 1.2)
   particleSystem:setLinearAcceleration(xMin, yMin, xMax, yMax)
-  particleSystem:setSizes(0, 1, 1, 1, 0)
+  particleSystem:setSizes(0, 1, 1, 0)
 
   particleSystem:emit(PARTICLES)
 

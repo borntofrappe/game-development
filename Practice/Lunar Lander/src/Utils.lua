@@ -1,61 +1,63 @@
 local POINTS = 100
+
 local Y_BASELINE = WINDOW_HEIGHT / 2
-local Y_GAP = WINDOW_HEIGHT / 2 - 15
-local Y_GAP_RANDOM = WINDOW_HEIGHT - Y_BASELINE - Y_GAP
-local OFFSET_INITIAL_MAX = 1000
-local OFFSET_INCREMENT = 0.07
+local Y_NOISE = WINDOW_HEIGHT / 2 - 15
+local Y_RANDOM = WINDOW_HEIGHT - Y_BASELINE - Y_NOISE
+
+local OFFSET_NOISE_INITIAL_MAX = 10000
+local OFFSET_NOISE_INCREMENT = 0.07
 
 local PLATFORMS = 4
-local PLATFORM_MIN_WIDTH = 20
-local POINTS_PER_PLATFORM = math.ceil(POINTS / WINDOW_WIDTH * PLATFORM_MIN_WIDTH)
+local PLATFORM_MIN_WIDTH = 22
+local PLATFORM_POINTS = math.ceil(POINTS / WINDOW_WIDTH * PLATFORM_MIN_WIDTH)
 
 function getTerrain()
-  local platforms = 0
-  local platformsXCoords = {}
-  local platformsStart = {}
+  local points = {}
+  local platforms = {}
 
+  local counter = 0
+  local platformPointsStart = {}
   repeat
-    local platformStart = love.math.random(POINTS - POINTS_PER_PLATFORM * PLATFORMS)
+    local platformPointStart = love.math.random(POINTS - PLATFORM_POINTS * PLATFORMS)
 
-    local overlapsPlatformStart = false
-    for _, point in ipairs(platformsStart) do
-      if platformStart >= point and platformStart < point + POINTS_PER_PLATFORM then
-        overlapsPlatformStart = true
+    local platformOverlaps = false
+    for _, point in ipairs(platformPointsStart) do
+      if platformPointStart >= point and platformPointStart < point + PLATFORM_POINTS then
+        platformOverlaps = true
         break
       end
     end
-    if not overlapsPlatformStart then
-      table.insert(platformsStart, platformStart)
-      platforms = platforms + 1
+
+    if not platformOverlaps then
+      table.insert(platformPointsStart, platformPointStart)
+      counter = counter + 1
     end
-  until platforms == PLATFORMS
+  until counter == PLATFORMS
 
-  local pointsPlatforms = {}
-  for _, platformStart in ipairs(platformsStart) do
-    local x1 = (platformStart - 1) * WINDOW_WIDTH / POINTS
-    local x2 = (platformStart + POINTS_PER_PLATFORM - 1) * WINDOW_WIDTH / POINTS
+  local platformPoints = {}
+  for _, platformPointStart in ipairs(platformPointsStart) do
+    local x1 = (platformPointStart - 1) * WINDOW_WIDTH / POINTS
+    local x2 = (platformPointStart + PLATFORM_POINTS - 1) * WINDOW_WIDTH / POINTS
+    table.insert(platforms, {x1, x2})
 
-    table.insert(platformsXCoords, {x1, x2})
-    for point = platformStart, platformStart + POINTS_PER_PLATFORM do
-      pointsPlatforms[point] = true
+    for point = platformPointStart, platformPointStart + PLATFORM_POINTS do
+      platformPoints[point] = true
     end
   end
 
-  local points = {}
-
-  local offset = love.math.random(OFFSET_INITIAL_MAX)
+  local offset = love.math.random(OFFSET_NOISE_INITIAL_MAX)
   for point = 1, POINTS + 1 do
     local x = (point - 1) * WINDOW_WIDTH / POINTS
-    local y = Y_BASELINE + love.math.noise(offset) * Y_GAP
+    local y = Y_BASELINE + love.math.noise(offset) * Y_NOISE
 
-    if not pointsPlatforms[point] then
-      offset = offset + OFFSET_INCREMENT
-      y = y + love.math.random(Y_GAP_RANDOM)
+    if not platformPoints[point] then
+      offset = offset + OFFSET_NOISE_INCREMENT
+      y = y + love.math.random() * Y_RANDOM
     end
 
     table.insert(points, x)
     table.insert(points, y)
   end
 
-  return points, platformsXCoords
+  return points, platforms
 end

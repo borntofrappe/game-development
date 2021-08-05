@@ -5,9 +5,9 @@ local GRAVITY = 20
 function love.load()
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.11, 0.1, 0.12)
+  love.graphics.setBackgroundColor(0.27, 0.3, 0.34)
 
-  gTerrain, gPlatformsXCoords = getTerrain()
+  gPoints, gPlatforms = getTerrain()
   gWorld = love.physics.newWorld(0, GRAVITY)
 
   gFonts = {
@@ -38,7 +38,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change("play")
+  gStateMachine:change("start")
 
   love.keyboard.keypressed = {}
 end
@@ -58,9 +58,9 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0.97, 0.96, 1)
+  love.graphics.setColor(0.94, 0.94, 0.95)
   love.graphics.setLineWidth(2)
-  love.graphics.line(gTerrain)
+  love.graphics.line(gPoints)
 
   gStateMachine:render()
 end

@@ -4,8 +4,8 @@ function LandState:enter(params)
   self.lander = params.lander
   self.data = params.data
 
-  self.data:updateScore()
-  self.data:refuel()
+  self.data["fuel"].value = self.data["fuel"].value + 200
+  self.data["score"].value = self.data["score"].value + WINDOW_HEIGHT - self.data["altitude"].value
 
   local messages = {
     "Congratulations",
@@ -43,9 +43,9 @@ function LandState:update(dt)
   if love.keyboard.waspressed("escape") then
     Timer:reset()
 
-    self.lander:destroy()
+    self.lander.body:destroy()
 
-    gTerrain, gPlatformsXCoords = getTerrain()
+    gPoints, gPlatforms = getTerrain()
 
     gStateMachine:change("start")
   end
@@ -53,9 +53,10 @@ function LandState:update(dt)
   if love.keyboard.waspressed("return") then
     Timer:reset()
 
-    self.lander:destroy()
+    self.lander.body:destroy()
+    self.data["time"].value = 0
 
-    gTerrain, gPlatformsXCoords = getTerrain()
+    gPoints, gPlatforms = getTerrain()
 
     gStateMachine:change(
       "play",

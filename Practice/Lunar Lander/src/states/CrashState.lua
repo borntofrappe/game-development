@@ -4,10 +4,9 @@ function CrashState:enter(params)
   self.data = params.data
 
   local contact = params.contact
-
   local x, y = contact:getPositions()
-  local nx, ny = contact:getNormal()
 
+  local nx, ny = contact:getNormal()
   local xMin = nx > 0 and 50 or -50
   local yMin = ny > 0 and 50 or -50
   local xMax = xMin + nx * 20
@@ -50,7 +49,7 @@ function CrashState:update(dt)
   if love.keyboard.waspressed("escape") then
     Timer:reset()
 
-    gTerrain, gPlatformsXCoords = getTerrain()
+    gPoints, gPlatforms = getTerrain()
 
     gStateMachine:change("start")
   end
@@ -58,7 +57,7 @@ function CrashState:update(dt)
   if love.keyboard.waspressed("return") then
     Timer:reset()
 
-    gTerrain, gPlatformsXCoords = getTerrain()
+    gPoints, gPlatforms = getTerrain()
 
     gStateMachine:change("play")
   end
@@ -66,9 +65,9 @@ end
 
 function CrashState:render()
   self.data:render()
+  self.particles:render()
 
+  love.graphics.setColor(0.94, 0.94, 0.95)
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(self.message.text:sub(1, self.message.index), 0, self.message.y, WINDOW_WIDTH, "center")
-
-  self.particles:render()
 end

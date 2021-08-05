@@ -1,8 +1,8 @@
 Terrain = {}
 
-function Terrain:new(world)
-  local body = love.physics.newBody(gWorld, 0, 0)
-  local shape = love.physics.newChainShape(false, gTerrain)
+function Terrain:new(world, points)
+  local body = love.physics.newBody(world, 0, 0)
+  local shape = love.physics.newChainShape(false, points)
   local fixture = love.physics.newFixture(body, shape)
   fixture:setUserData("terrain")
 
@@ -16,8 +16,4 @@ function Terrain:new(world)
   setmetatable(this, self)
 
   return this
-end
-
-function Terrain:destroy()
-  self.body:destroy()
 end
