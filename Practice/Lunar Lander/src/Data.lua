@@ -7,7 +7,7 @@ local PADDING_Y = 8
 function Data:new(lander)
   local yStart = PADDING_Y
   local yGap = gFonts.small:getHeight() * 1.5
-  local widthRightColumn = gFonts.small:getWidth("Horizontal Velocity 123 →")
+  local widthRightColumn = gFonts.small:getWidth("Horizontal Speed 123 →")
 
   local this = {
     ["score"] = {
@@ -49,7 +49,7 @@ function Data:new(lander)
       ["label"] = "Altitude",
       ["value"] = WINDOW_HEIGHT - lander.body:getY(),
       ["format"] = function(value)
-        return string.format("Altitude % 14d", value)
+        return string.format("Altitude % 13d", value)
       end,
       ["x"] = WINDOW_WIDTH - widthRightColumn - PADDING_X,
       ["y"] = yStart
@@ -65,7 +65,7 @@ function Data:new(lander)
           suffix = "←"
         end
 
-        return string.format("Horizontal Speed % 4d " .. suffix, value)
+        return string.format("Horizontal Speed % 3d " .. suffix, value)
       end,
       ["x"] = WINDOW_WIDTH - widthRightColumn - PADDING_X,
       ["y"] = yStart + yGap
@@ -81,7 +81,7 @@ function Data:new(lander)
           suffix = "↑"
         end
 
-        return string.format("Vertical Speed % 6d " .. suffix, value)
+        return string.format("Vertical Speed % 5d " .. suffix, value)
       end,
       ["x"] = WINDOW_WIDTH - widthRightColumn - PADDING_X,
       ["y"] = yStart + yGap * 2
@@ -95,6 +95,7 @@ function Data:new(lander)
 end
 
 function Data:render()
+  love.graphics.setColor(0.94, 0.94, 0.95)
   love.graphics.setFont(gFonts.small)
   for _, metric in pairs(self) do -- it works :)
     love.graphics.print(metric.format(metric.value):upper(), metric.x, metric.y)

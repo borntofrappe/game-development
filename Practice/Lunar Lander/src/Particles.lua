@@ -1,12 +1,13 @@
 Particles = {}
 
-local PARTICLES = 50
+local PARTICLES = 150
 
 function Particles:new(x, y, xMin, yMin, xMax, yMax)
   local particleSystem = love.graphics.newParticleSystem(gTextures["particle"], PARTICLES)
 
   particleSystem:setPosition(x, y)
   particleSystem:setParticleLifetime(0.4, 1.2)
+  particleSystem:setEmissionArea("uniform", 7, 7)
   particleSystem:setLinearAcceleration(xMin, yMin, xMax, yMax)
   particleSystem:setSizes(0, 1, 1, 0)
 

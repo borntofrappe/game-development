@@ -4,7 +4,7 @@ function LandState:enter(params)
   self.lander = params.lander
   self.data = params.data
 
-  self.data["fuel"].value = self.data["fuel"].value + 200
+  self.data["fuel"].value = self.data["fuel"].value + 150
   self.data["score"].value = self.data["score"].value + WINDOW_HEIGHT - self.data["altitude"].value
 
   local messages = {
@@ -13,7 +13,7 @@ function LandState:enter(params)
     "Smooth landing",
     "You did it",
     "The cargo is safe",
-    "Nice"
+    "Nice one"
   }
 
   self.message = {
@@ -71,6 +71,7 @@ function LandState:render()
   self.data:render()
   self.lander:render()
 
+  love.graphics.setColor(0.94, 0.94, 0.95)
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(self.message.text:sub(1, self.message.index), 0, self.message.y, WINDOW_WIDTH, "center")
 end

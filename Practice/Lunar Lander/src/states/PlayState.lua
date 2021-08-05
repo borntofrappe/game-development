@@ -89,7 +89,7 @@ end
 function PlayState:update(dt)
   Timer:update(dt)
 
-  self.data["altitude"].value = self.lander.body:getY()
+  self.data["altitude"].value = WINDOW_HEIGHT - self.lander.body:getY()
   local vx, vy = self.lander.body:getLinearVelocity()
   self.data["horizontal-speed"].value = vx
   self.data["vertical-speed"].value = vy
@@ -161,16 +161,15 @@ function PlayState:render()
 
   if love.keyboard.isDown("up") then
     love.graphics.setColor(0.91, 0.68, 0.34)
-
     love.graphics.polygon("fill", self.lander.body:getWorldPoints(self.lander.thrusters[1].shape:getPoints()))
     love.graphics.polygon("fill", self.lander.body:getWorldPoints(self.lander.thrusters[2].shape:getPoints()))
   end
 
   if love.keyboard.isDown("right") then
     love.graphics.setColor(0.91, 0.68, 0.34)
-
     love.graphics.polygon("fill", self.lander.body:getWorldPoints(self.lander.thrusters[3].shape:getPoints()))
   elseif love.keyboard.isDown("left") then
+    love.graphics.setColor(0.91, 0.68, 0.34)
     love.graphics.polygon("fill", self.lander.body:getWorldPoints(self.lander.thrusters[4].shape:getPoints()))
   end
 end

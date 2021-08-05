@@ -88,6 +88,8 @@ function StartState:update(dt)
 end
 
 function StartState:render()
+  love.graphics.setColor(0.94, 0.94, 0.95)
+
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(TITLE:upper(), 0, self.sensor.body:getY(), WINDOW_WIDTH, "center")
 
