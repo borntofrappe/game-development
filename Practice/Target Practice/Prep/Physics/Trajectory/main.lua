@@ -14,8 +14,6 @@ local player = {
   ["trajectory"] = {}
 }
 
-local key = "velocity"
-
 function love.load()
   love.window.setTitle("Physics - Trajectory")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -37,7 +35,7 @@ function love.keypressed(key)
     player.key = "angle"
   end
 
-  if key == "tab" or key == "t" then
+  if key == "tab" then
     player.key = player.key == "velocity" and "angle" or "velocity"
   end
 end

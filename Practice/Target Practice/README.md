@@ -65,6 +65,18 @@ if dy - y > WINDOW_HEIGHT then
 end
 ```
 
+#### Fire
+
+The demo highlights the path of the projectile through the table of points describing the trajectory. Leaning on `Timer.lua`, the idea is to set up an interval to progressively use the points in the table for the projectile's own position.
+
+```lua
+Timer:every(
+  INTERVAL,
+  function()
+  end
+)
+```
+
 ### Terrain
 
 Terrain is included with a line connecting a series of points.
