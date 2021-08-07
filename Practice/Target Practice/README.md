@@ -161,16 +161,18 @@ _Please note:_
 
 ### Terrain
 
-Terrain is included with a line connecting a series of points.
+#### Line
 
-To draw a straight line, for instance, it is enough to increment the `x` coordinate and rely on a fixed `y` value.
+Terrain is included with a line connecting a series of points. It is possible to show this immediately by incrementing the `x` coordinate and rely on a fixed `y` value.
 
 ```lua
 local points = {}
+local y = WINDOW_HEIGHT * 3 / 4
 
 for point = 1, POINTS + 1 do
-  table.insert(points, (point - 1) * WINDOW_WIDTH / POINTS)
-  table.insert(points, Y_BASELINE)
+  local x = (point - 1) * WINDOW_WIDTH / POINTS
+  table.insert(points, x)
+  table.insert(points, y)
 end
 ```
 
@@ -180,18 +182,4 @@ The table of points is enough to have `love.graphics.line` render the visual.
 love.graphics.line(points)
 ```
 
-Having a sequence of points allows to update the terrain by modifying the different coordinates. Move the cannonball with the mouse cursor and click the left button to highlight the feature.
-
-```lua
-for point = 1, #points, 2 do
-  if points[point] >= cannonball.x - cannonball.r and points[point] <= cannonball.x + cannonball.r then
-    points[point + 1] = math.min(WINDOW_HEIGHT, points[point + 1] + cannonball.r)
-  end
-end
-```
-
-- every other x coordinate
-
-- math.min
-
-For a circle???????????????????????''???????????????????????''???????????????????????''
+`Terrain.lua` is created to highlight the concept and starting from a random `y` coordinate. Press the enter key or the left button of a mouse to show a start from a different value.
