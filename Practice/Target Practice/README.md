@@ -34,7 +34,7 @@ The formula immediately relies on hard-coded values, but the demo allows to chan
 
 The movement of the projectile is simulated by having the object move in a sequence of points approximating an arc.
 
-The equations for the [projectile motion displacement](https://en.wikipedia.org/wiki/Projectile_motion#Displacement), and specifically those for the horizontal and vertical component help to find the `x` and `y` coordinates as a function of time `t`.
+The equations for the [projectile motion displacement](https://en.wikipedia.org/wiki/Projectile_motion#Displacement), and specifically those for the horizontal and vertical component, help to find the `x` and `y` coordinates as a function of time `t`.
 
 ```lua
 dx = v * t * math.cos(theta)
@@ -67,7 +67,7 @@ end
 
 #### Fire
 
-The demo highlights the path of the projectile through the table of points describing the trajectory. Leaning on `Timer.lua`, the idea is to set up an interval to progressively use the points in the table for the projectile's own position.
+The trajectory as described in the previous demo helps to move the projectile from the perspective of the player. In the demo specifically, `Timer.lua` helps to progressively move the cannonball at an interval.
 
 ```lua
 Timer:every(
@@ -77,13 +77,62 @@ Timer:every(
 )
 ```
 
+In the function, the idea is to update a counter variable to cycle through the coordinates of the trajectory.
+
+```lua
+local index = 1
+
+Timer:every(
+  INTERVAL,
+  function()
+    index = index + 2
+  end
+)
+```
+
+The projectile `x` and `y` coordinate pick up the value from the point described in `player.trajectory`, always considering how the table includes the horizontal and vertical measures in sequence.
+
+```lua
+projectile.x = player.trajectory[index]
+projectile.y = player.trajectory[index + 1]
+```
+
+_Please note:_ the interval is removed once the projectile reaches the final set of points. It is also removed immediately, before setting up the interval, in order to avoid multiple, coexisting functions.
+
+```lua
+if key == "return" then
+    Timer:reset()
+
+    -- set up the interval
+end
+```
+
 #### Collision
 
-The demo considers a collision between the moving cannonball and the terrain. It does so by checking the `y` coordinates of the cannonball as it travels on the arc describing its trajectory.
+The demo considers a collision between the projectile and the terrain. In order to detect a collision, it is helpful to have the terrain described by a sequence of points instead of a straight line.
 
-`terrain` and `trajectory` share a comparable number of points, in that each `x` coordinate is shared by the same amount, but it is still necessary to consider the offset of the player. Indeed the first point of the trajectory doesn match the first point of the terrain.
+```lua
+local terrain = {}
+for point = 1, POINTS + 1 do
+  local x = (point - 1) * WINDOW_WIDTH / POINTS
+  table.insert(terrain, x)
+  table.insert(terrain, Y_TERRAIN)
+end
+```
 
-This explains the snippet setting the value of `indexStart`.
+With this setup, it also helps to have the points in the trajectory separated horizontally by the same amount separating the terrain. This explains why `getTrajectory` updates the counter variable `t` by considering two `x` coordinates of the terrain.
+
+```lua
+local dt = (terrain[3] - terrain[1]) / (v * math.cos(theta))
+```
+
+The amount is computed considering the equation for `dx`, and rearranging the arguments.
+
+```lua
+dx = v * t * math.cos(theta)
+```
+
+`terrain` and `trajectory` share a comparable number of points, but when considering a collision it is necessary to offset the initial index considering how the player does not start at the very left edge of the window. This explains the snippet setting the value of `indexStart`.
 
 ```lua
 local indexStart
@@ -96,7 +145,7 @@ for i = 1, #terrain, 2 do
 end
 ```
 
-Knowing this offset, the comparison is between the `y` coordinates of the two tables.
+A collision is then detected comparing the `y` coordinates of the two tables, terrain and trajectory.
 
 ```lua
 if trajectory[index + 1] > terrain[indexStart + index + 2] then
@@ -104,11 +153,11 @@ if trajectory[index + 1] > terrain[indexStart + index + 2] then
 end
 ```
 
-A couple of notes on this conditional:
+_Please note:_
 
-- `+ 2` is to consier the y coordinate for the terrain, and is the result of `indexStart + 1` plus `index + 1`
+- the index in the terrain is incremented by two to consider the `y` coordinate, and is the result of `indexStart + 1` and `index + 1`
 
-- checking if the value is greater, `>` and not greater or equal is necessary to avoid signalling a collision with the first point of the trajectory
+- checking if the value is greater than, `>`, and not greater than or equal, `>=` is necessary to avoid signalling a collision with the first point of the trajectory
 
 ### Terrain
 

@@ -20,24 +20,22 @@ local player = {
   ["y"] = WINDOW_HEIGHT * 3 / 4,
   ["r"] = 15,
   ["velocity"] = 50,
-  ["angle"] = 30,
-  ["range"] = 0,
-  ["key"] = "velocity",
-  ["trajectory"] = {}
+  ["angle"] = 30
 }
 
 local projectile = {
   ["x"] = player.x,
   ["y"] = player.y,
-  ["r"] = player.r * 0.9
+  ["r"] = player.r
 }
 
 function love.load()
   love.window.setTitle("Physics - Collision")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.94, 0.97, 1)
+  love.graphics.setBackgroundColor(0, 0.08, 0.15)
 
   player.range = getRange(player.velocity, player.angle)
+  player.key = "velocity"
   player.trajectory = getTrajectory(player.x, player.y, player.velocity, player.angle)
 end
 
@@ -98,6 +96,7 @@ function love.update(dt)
     else
       player.angle = math.min(90, math.floor(player.angle + UPDATE_SPEED * dt))
     end
+
     player.range = getRange(player.velocity, player.angle)
     player.trajectory = getTrajectory(player.x, player.y, player.velocity, player.angle)
 
@@ -110,6 +109,7 @@ function love.update(dt)
     else
       player.angle = math.max(0, math.floor(player.angle - UPDATE_SPEED * dt))
     end
+
     player.range = getRange(player.velocity, player.angle)
     player.trajectory = getTrajectory(player.x, player.y, player.velocity, player.angle)
 
@@ -120,7 +120,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0, 0.05, 0.1)
+  love.graphics.setColor(0.83, 0.87, 0.92)
 
   if player.key == "velocity" then
     love.graphics.circle("fill", 8, 16, 4)
@@ -128,22 +128,22 @@ function love.draw()
     love.graphics.circle("fill", 8, 32, 4)
   end
 
-  love.graphics.print("Velocity: " .. player.velocity, 14, 8)
-  love.graphics.print("Angle: " .. player.angle, 14, 24)
-  love.graphics.print("Range: " .. player.range, 14, 40)
+  love.graphics.print("Velocity: " .. player.velocity, 16, 8)
+  love.graphics.print("Angle: " .. player.angle, 16, 24)
+  love.graphics.print("Range: " .. player.range, 16, 40)
 
-  love.graphics.setColor(0.67, 0.25, 0)
-  love.graphics.circle("fill", projectile.x, projectile.y, projectile.r)
-
-  love.graphics.setColor(0, 0.05, 0.1)
   love.graphics.setLineWidth(2)
-  love.graphics.line(terrain)
-
-  love.graphics.circle("fill", player.x, player.y, player.r)
-  love.graphics.circle("line", player.x + player.range, player.y, player.r)
+  love.graphics.line(0, player.y, WINDOW_WIDTH, player.y)
 
   love.graphics.setLineWidth(1)
   love.graphics.line(player.trajectory)
+
+  love.graphics.setColor(0.49, 0.85, 0.79)
+  love.graphics.circle("fill", projectile.x, projectile.y, projectile.r)
+
+  love.graphics.setColor(0.83, 0.87, 0.92)
+  love.graphics.circle("fill", player.x, player.y, player.r)
+  love.graphics.circle("line", player.x + player.range, player.y, player.r)
 end
 
 function getRange(v, a)

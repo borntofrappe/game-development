@@ -8,17 +8,16 @@ local player = {
   ["y"] = WINDOW_HEIGHT * 3 / 4,
   ["r"] = 15,
   ["velocity"] = 50,
-  ["angle"] = 30,
-  ["range"] = 0,
-  ["key"] = "velocity"
+  ["angle"] = 30
 }
 
 function love.load()
   love.window.setTitle("Physics - Range")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.94, 0.97, 1)
+  love.graphics.setBackgroundColor(0, 0.08, 0.15)
 
   player.range = getRange(player.velocity, player.angle)
+  player.key = "velocity"
 end
 
 function love.keypressed(key)
@@ -45,6 +44,7 @@ function love.update(dt)
     else
       player.angle = math.min(90, math.floor(player.angle + UPDATE_SPEED * dt))
     end
+
     player.range = getRange(player.velocity, player.angle)
   elseif love.keyboard.isDown("down") or love.keyboard.isDown("left") then
     if player.key == "velocity" then
@@ -52,12 +52,13 @@ function love.update(dt)
     else
       player.angle = math.max(0, math.floor(player.angle - UPDATE_SPEED * dt))
     end
+
     player.range = getRange(player.velocity, player.angle)
   end
 end
 
 function love.draw()
-  love.graphics.setColor(0, 0.05, 0.1)
+  love.graphics.setColor(0.83, 0.87, 0.92)
 
   if player.key == "velocity" then
     love.graphics.circle("fill", 8, 16, 4)
@@ -65,9 +66,9 @@ function love.draw()
     love.graphics.circle("fill", 8, 32, 4)
   end
 
-  love.graphics.print("Velocity: " .. player.velocity, 14, 8)
-  love.graphics.print("Angle: " .. player.angle, 14, 24)
-  love.graphics.print("Range: " .. player.range, 14, 40)
+  love.graphics.print("Velocity: " .. player.velocity, 16, 8)
+  love.graphics.print("Angle: " .. player.angle, 16, 24)
+  love.graphics.print("Range: " .. player.range, 16, 40)
 
   love.graphics.setLineWidth(2)
   love.graphics.line(0, player.y, WINDOW_WIDTH, player.y)
