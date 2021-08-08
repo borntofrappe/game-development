@@ -25,7 +25,6 @@ end
 
 function Cannon:render()
   love.graphics.setColor(1, 1, 1)
-  love.graphics.translate(self.x, self.y)
-  love.graphics.draw(gTextures["cannon"], 0, 0, self.angle, 1, 1, self.offsetX, self.offsetY)
-  love.graphics.draw(gTextures["wheel"], -self.offsetX, -self.offsetY)
+  love.graphics.draw(gTextures["cannon"], self.x, self.y, self.angle, 1, 1, self.offsetX, self.offsetY)
+  love.graphics.draw(gTextures["wheel"], self.x - self.offsetX, self.y - self.offsetY)
 end
