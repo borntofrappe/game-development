@@ -75,7 +75,7 @@ function Terrain:new(cannon)
 end
 
 function Terrain:render()
-  love.graphics.setColor(0.49, 0.85, 0.79)
+  love.graphics.setColor(0.46, 0.83, 0.75)
   love.graphics.setLineWidth(8)
   love.graphics.line(self.points)
 end

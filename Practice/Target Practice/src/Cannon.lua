@@ -15,7 +15,7 @@ function Cannon:new(x, y)
     ["offsetY"] = offsetY,
     ["width"] = width,
     ["height"] = height,
-    ["angle"] = -math.pi / 4,
+    ["angle"] = 45,
     ["velocity"] = 50
   }
 
@@ -25,6 +25,6 @@ end
 
 function Cannon:render()
   love.graphics.setColor(1, 1, 1)
-  love.graphics.draw(gTextures["cannon"], self.x, self.y, self.angle, 1, 1, self.offsetX, self.offsetY)
+  love.graphics.draw(gTextures["cannon"], self.x, self.y, math.rad(self.angle * -1), 1, 1, self.offsetX, self.offsetY)
   love.graphics.draw(gTextures["wheel"], self.x - self.offsetX, self.y - self.offsetY)
 end

@@ -3,11 +3,16 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(1, 1, 1)
+  love.graphics.setBackgroundColor(0.04, 0.14, 0.23)
+
+  gFonts = {
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 38),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+  }
 
   gTextures = {
-    ["ball"] = love.graphics.newImage("res/graphics/ball.png"),
     ["cannon"] = love.graphics.newImage("res/graphics/cannon.png"),
+    ["cannonball"] = love.graphics.newImage("res/graphics/cannonball.png"),
     ["wheel"] = love.graphics.newImage("res/graphics/wheel.png")
   }
 

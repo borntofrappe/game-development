@@ -1,3 +1,5 @@
+Timer = require "res/lib/Timer"
+
 require "src/constants"
 
 require "src/Cannon"
