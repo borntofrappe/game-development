@@ -45,16 +45,18 @@ function Terrain:new()
   end
 
   for point = 1, p1 do
+    local y = yStart + height1 / 2 * math.cos(angle) - height1 / 2
     table.insert(points, x)
-    table.insert(points, yStart + height1 / 2 * math.cos(angle) - height1 / 2)
+    table.insert(points, y)
 
     x = x + dx
     angle = angle + dangle1
   end
 
   for point = 1, p2 do
+    local y = yEnd + height2 / 2 * math.cos(angle) - height2 / 2
     table.insert(points, x)
-    table.insert(points, yEnd + height2 / 2 * math.cos(angle) - height2 / 2)
+    table.insert(points, y)
 
     x = x + dx
     angle = angle + dangle2

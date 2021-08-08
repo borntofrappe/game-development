@@ -33,8 +33,8 @@ function Terrain:new()
   end
 
   for point = 1, POINTS.hill do
-    -- local y = Y_START + math.sin(angle) * height / 2 - height / 2 -- update the angle to start at math.pi / 2
     local y = Y_START + math.cos(angle) * height / 2 - height / 2
+    -- local y = Y_START + math.sin(angle) * height / 2 - height / 2 -- update the angle to start at math.pi / 2
 
     table.insert(points, x)
     table.insert(points, y)
