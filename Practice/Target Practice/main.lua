@@ -3,18 +3,24 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
+  love.graphics.setBackgroundColor(1, 1, 1)
+
+  gTextures = {
+    ["ball"] = love.graphics.newImage("res/graphics/ball.png"),
+    ["cannon"] = love.graphics.newImage("res/graphics/cannon.png"),
+    ["wheel"] = love.graphics.newImage("res/graphics/wheel.png")
+  }
 
   gStateMachine =
     StateMachine:new(
     {
-      ["start"] = function()
-        return StartState:new()
+      ["play"] = function()
+        return PlayState:new()
       end
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("play")
 
   love.keyboard.keypressed = {}
 end
