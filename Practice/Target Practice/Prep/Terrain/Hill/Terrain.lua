@@ -11,17 +11,19 @@ POINTS.total = POINTS.flat * 2 + POINTS.hill
 local Y_START = WINDOW_HEIGHT * 3 / 4
 
 local HEIGHT_HILL = {
-  ["min"] = math.floor(WINDOW_HEIGHT / 10),
-  ["max"] = math.floor(WINDOW_HEIGHT / 5)
+  ["min"] = 0,
+  ["max"] = math.floor(WINDOW_HEIGHT / 2)
 }
 
 function Terrain:new()
   local points = {}
 
   local x = 0
-  local y = Y_START
-  local height = love.math.random(HEIGHT_HILL.min, HEIGHT_HILL.max)
   local dx = WINDOW_WIDTH / POINTS.total
+
+  local angle = 0 -- math.pi / 2 -- if you use the sine function instead of cosine
+  local dangle = math.pi * 2 / POINTS.hill
+  local height = love.math.random(HEIGHT_HILL.min, HEIGHT_HILL.max)
 
   for point = 1, POINTS.flat do
     table.insert(points, x)
@@ -30,20 +32,18 @@ function Terrain:new()
     x = x + dx
   end
 
-  local angle = math.pi / 2
-  local dangle = (angle + math.pi * 3 / 2) / (POINTS.hill + 1)
-
-  for point = 1, POINTS.hill + 1 do
-    local y = Y_START - height + math.sin(angle) * height
+  for point = 1, POINTS.hill do
+    -- local y = Y_START + math.sin(angle) * height / 2 - height / 2 -- update the angle to start at math.pi / 2
+    local y = Y_START + math.cos(angle) * height / 2 - height / 2
 
     table.insert(points, x)
     table.insert(points, y)
 
     x = x + dx
-    angle = math.min(angle + math.pi * 2, angle + dangle)
+    angle = angle + dangle
   end
 
-  for point = 1, POINTS.flat do
+  for point = 1, POINTS.flat + 1 do
     table.insert(points, x)
     table.insert(points, Y_START)
 

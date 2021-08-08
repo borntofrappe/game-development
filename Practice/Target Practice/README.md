@@ -183,3 +183,59 @@ love.graphics.line(points)
 ```
 
 `Terrain.lua` is created to highlight the concept and starting from a random `y` coordinate. Press the enter key or the left button of a mouse to show a start from a different value.
+
+#### Hill
+
+The idea is to include a curvature in the otherwise straight line by relying on trigonometric functions like cosine and sine. It is possible to rely on either knowing the behavior of the functions in the `[0, math.pi * 2]` range, but utimately I opted for the cosine function.
+
+The table of points is now populated with three loops: two for flat platforms and one for the hill. The goal is to draw the player and target on either side, and have the hill separate the two.
+
+For the flat surface, the loop repeats the logic introduced in previous demo: increment the `x` coordinate, rely on a fixed `y` value.
+
+For the hill, however, the logic is slightly different: do increment the `x` coordinate, rely on a `y` value considering a varying `angle` value. `angle` is incremented with each passing point to create the curve. It is initialized at `0` with the goal of looping a full rotation to `math.pi * 2`. In so doing, the idea is to have a symmetric hill, and have the two platforms at the same height level.
+
+_Please note:_ the cosine of `0` and of `math.pi * 2` is `1`, which needs it is necessary to offset the initial coordinate to have the point comparable to the surrounding platforms.
+
+```lua
+local y = Y_START + math.cos(angle) * height - height
+```
+
+As mentioned, it would be possible to also use the sine function. In this instance, however, you'd want to loop in the `[math.pi / 2, math.pi * 5 / 2]` range. Therefore, and with `math.sin`, update the angle to start at `math.pi / 2`.
+
+```lua
+local angle = math.pi / 2
+
+-- hill loop
+local y = Y_START + math.sin(angle) * height - height
+```
+
+#### Asymmetry
+
+Creating a hill with trigonometric functions helps to have more interesting terrain. What is even more interesting is having an asymmetric hill, one that doesn't always peak at the same point and ends exactly where it started.
+
+To fix the first issue, the number of points describing the hill is used to describe two halves.
+
+```lua
+local p1 = love.math.random(math.floor(POINTS.hill / 4), math.floor(POINTS.hill * 3 / 4))
+local p2 = POINTS.hill - p1
+```
+
+The idea is to then create two loops to add the necessary amount of points for the left and right section. With a different number of points, it is necessary to have different increments in terms of angle.
+
+```lua
+local dangle1 = math.pi / p1
+local dangle2 = math.pi / p2
+```
+
+Each variable accounts for half the rotation of the cosine function.
+
+To fix the second issue, it is possible to rely on a different height value.
+
+```lua
+local height1 = love.math.random(math.floor(height / 4), math.floor(height * 3 / 4))
+local height2 = height - height1
+```
+
+Here I decided to implement a similar solution to how the number of points is split, but ultimately it might be more beneficial to consider the starting `y` coordinate to contain the hill in the available height and yet guarantee enough variety.
+
+Using a different height has the effect of having the two sections cover a different vertical spread. However, the smooth line is interrupted in between the two loops. To fix this, and finally have the two flat portions at different heights, it is necessary to have the second loop start from where the first loop ends.
