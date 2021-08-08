@@ -28,6 +28,7 @@ function love.load()
   gStateMachine:change("play")
 
   love.keyboard.keypressed = {}
+  love.mouse.buttonpressed = {}
 end
 
 function love.keypressed(key)
@@ -38,10 +39,19 @@ function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
+function love.mousepressed(x, y, button)
+  love.mouse.buttonpressed[button] = true
+end
+
+function love.mouse.waspressed(button)
+  return love.mouse.buttonpressed[button]
+end
+
 function love.update(dt)
   gStateMachine:update(dt)
 
   love.keyboard.keypressed = {}
+  love.mouse.buttonpressed = {}
 end
 
 function love.draw()
