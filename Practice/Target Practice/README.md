@@ -289,3 +289,32 @@ The loops lean on the same angle, but this value is incremented by a different a
 local dangle1 = math.pi / p1
 local dangle2 = math.pi / p2
 ```
+
+### Holes
+
+The final demo in the `Prep` folder incorporates the progress achieved in the `Physics` and `Terrain` sub-folders, with the goal of showing how the projectile modifies the terrain itself. A few changes worth mentioning:
+
+- `Terrain` is modified to consider the position of the player
+
+  The class receives the player and uses its `x` coordinate to determine the number of points of the "flat" sections
+
+  ```lua
+  local POINTS = {
+    ["flat"] = math.floor(WINDOW_WIDTH / player.x) * 2,
+    ["hill"] = 120
+  }
+  ```
+
+  The `y` coordinate is then relevant to describe where the line should begin
+
+  ```lua
+  local yStart = player.y
+  ```
+
+- the velocity is modified through the left and right arrow keys, while the angle consider the up and down arrows
+
+- the logic of the trajectory is included in its own class and is updated every time the player or the terrain changes
+
+- the interval updating the position of the projectile is stopped when there are no more points to consider in the terrain
+
+For the purposes of the demo, creating holes in the terrain, refer to `main.lua` and roughly line `48`. Here the idea is to stop the interval and consider the number of points necessary to cover the projectile radius. Similarly to how the terrain uses the cosine function to draw the hill, finally, the code proceeds to modify the `y` coordinate of the terrain to create the desired gap.
