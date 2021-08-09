@@ -1,10 +1,12 @@
 Cannon = {}
 Cannon.__index = Cannon
 
--- x, y describe bottom center of the wheel
--- be sure to have cannon.x and cannon.y describe the point where the cannonball should spawn instead
-function Cannon:new(x, y)
+function Cannon:new(terrain)
   local r = 14
+
+  local x = PLATFORM_WIDTH
+  local y = terrain.points[2] -- y coordinate of the first platform
+
   local wheel = {
     ["x"] = x,
     ["y"] = y - r,
@@ -27,8 +29,8 @@ function Cannon:new(x, y)
     ["x"] = x,
     ["y"] = y - r - yOffset,
     ["offsetTerrain"] = wheel.r + yOffset,
-    ["angle"] = 45,
-    ["velocity"] = 50
+    ["angle"] = love.math.random(math.floor(ANGLE.max / ANGLE.increments)) * ANGLE.increments + ANGLE.min,
+    ["velocity"] = love.math.random(math.floor(VELOCITY.max / VELOCITY.increments)) * VELOCITY.increments + VELOCITY.min
   }
 
   setmetatable(this, self)

@@ -1,16 +1,16 @@
 Terrain = {}
 Terrain.__index = Terrain
 
-function Terrain:new(cannon)
+function Terrain:new()
   local numberPoints = {
-    ["platform"] = math.floor(WINDOW_WIDTH / cannon.x) * 2,
+    ["platform"] = 50,
     ["hill"] = 150
   }
 
   numberPoints.total = numberPoints.platform * 2 + numberPoints.hill
 
   local yPlatformHeight = {
-    ["min"] = math.floor(WINDOW_HEIGHT / 2),
+    ["min"] = math.floor(WINDOW_HEIGHT / 1.5),
     ["max"] = WINDOW_HEIGHT
   }
 
@@ -21,7 +21,7 @@ function Terrain:new(cannon)
   local x = 0
   local dx = WINDOW_WIDTH / numberPoints.total
 
-  local yStart = cannon.y + cannon.offsetTerrain
+  local yStart = love.math.random(yPlatformHeight.min, yPlatformHeight.max)
   local yEnd = love.math.random(yPlatformHeight.min, yPlatformHeight.max)
 
   local height1 = love.math.random(0, yStart - yPlatformMaxY)

@@ -1,13 +1,13 @@
 Cannonball = {}
 Cannonball.__index = Cannonball
 
-function Cannonball:new(x, y)
-  local radius = 12
+function Cannonball:new(cannon)
+  local r = 12
 
   local this = {
-    ["x"] = x,
-    ["y"] = y,
-    ["r"] = radius
+    ["x"] = cannon.x,
+    ["y"] = cannon.y,
+    ["r"] = r
   }
 
   setmetatable(this, self)

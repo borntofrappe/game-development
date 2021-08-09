@@ -1,12 +1,13 @@
 Target = {}
 Target.__index = Target
 
--- x, y describe the bottom center of the target
--- be sure to have target.x describe the left edge so that [target.x, target.x + Target.width] describe the horizontal spread
-function Target:new(x, y)
+function Target:new(terrain)
   local width = 20
   local height = 36
   local radius = 24
+
+  local x = WINDOW_WIDTH - PLATFORM_WIDTH / 2 - width
+  local y = terrain.points[#terrain.points]
 
   local legs = {
     {
@@ -59,6 +60,6 @@ function Target:render()
 
   love.graphics.setColor(0.18, 0.19, 0.26)
   love.graphics.circle("fill", self.body.x, self.body.y, self.body.radius)
-  love.graphics.setColor(0.27, 0.65, 0.92)
+  love.graphics.setColor(0.98, 0.32, 0.44)
   love.graphics.circle("fill", self.body.x, self.body.y, self.body.innerRadius)
 end
