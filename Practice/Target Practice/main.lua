@@ -18,6 +18,12 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState:new()
+      end,
+      ["victory"] = function()
+        return VictoryState:new()
+      end,
+      ["gameover"] = function()
+        return GameoverState:new()
       end
     }
   )

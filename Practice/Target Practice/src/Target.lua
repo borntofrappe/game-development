@@ -2,7 +2,7 @@ Target = {}
 Target.__index = Target
 
 function Target:new(terrain)
-  local width = 20
+  local width = 30
   local height = 36
   local radius = 24
 
@@ -17,13 +17,13 @@ function Target:new(terrain)
       ["y2"] = y - height
     },
     {
-      ["x1"] = x + width,
+      ["x1"] = x + width / 2,
       ["y1"] = y,
       ["x2"] = x,
       ["y2"] = y - height
     },
     {
-      ["x1"] = x - width,
+      ["x1"] = x - width / 2,
       ["y1"] = y,
       ["x2"] = x,
       ["y2"] = y - height

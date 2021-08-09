@@ -194,6 +194,8 @@ end
 
 function PlayState:fire()
   self.cannon.velocity = self.velocity
+  self.cannonball.x = self.cannon.x
+  self.cannonball.y = self.cannon.y
 
   Timer:reset()
 
@@ -232,20 +234,43 @@ function PlayState:fire()
                 local x1 = self.cannonball.x - r
                 local x2 = self.cannonball.x + r
 
-                self.cannonball.x = self.cannon.x
-                self.cannonball.y = self.cannon.y
+                -- check collision with cannon or target
+                if self.cannon.x > x1 and self.cannon.x < x2 then
+                  gStateMachine:change(
+                    "gameover",
+                    {
+                      ["terrain"] = self.terrain,
+                      ["target"] = self.target
+                    }
+                  )
+                elseif
+                  (x1 > self.target.x and x1 < self.target.x + self.target.width) or
+                    (x2 > self.target.x and x2 < self.target.x + self.target.width)
+                 then
+                  -- victory
+                  gStateMachine:change(
+                    "victory",
+                    {
+                      ["terrain"] = self.terrain,
+                      ["cannon"] = self.cannon
+                    }
+                  )
+                else
+                  self.cannonball.x = self.cannon.x
+                  self.cannonball.y = self.cannon.y
 
-                local angle = 0
-                local dangle = math.pi / math.floor(WINDOW_WIDTH / (r * 2) / 2)
+                  local angle = 0
+                  local dangle = math.pi / math.floor(WINDOW_WIDTH / (r * 2) / 2)
 
-                for i = 1, #self.terrain.points, 2 do
-                  if self.terrain.points[i] > x1 then
-                    self.terrain.points[i + 1] =
-                      math.min(WINDOW_HEIGHT, self.terrain.points[i + 1] + math.sin(angle) * r)
-                    angle = angle + dangle
+                  for i = 1, #self.terrain.points, 2 do
+                    if self.terrain.points[i] > x1 then
+                      self.terrain.points[i + 1] =
+                        math.min(WINDOW_HEIGHT, self.terrain.points[i + 1] + math.sin(angle) * r)
+                      angle = angle + dangle
 
-                    if angle >= math.pi then
-                      break
+                      if angle >= math.pi then
+                        break
+                      end
                     end
                   end
                 end
