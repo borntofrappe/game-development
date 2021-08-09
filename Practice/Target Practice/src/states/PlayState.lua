@@ -97,27 +97,13 @@ end
 function PlayState:update(dt)
   Timer:update(dt)
 
+  if love.mouse.waspressed(2) or love.keyboard.waspressed("escape") then
+    Timer:reset()
+    gStateMachine:change("start")
+  end
+
   for i, button in ipairs(self.buttons) do
     button:update(dt)
-  end
-
-  if love.keyboard.waspressed("escape") then
-    love.event.quit()
-  end
-
-  -- debugging
-  if love.keyboard.waspressed("tab") then
-    Timer:reset()
-
-    self.terrain = Terrain:new()
-    self.cannon = Cannon:new(self.terrain)
-    self.target = Target:new(self.terrain)
-    self.cannonball = Cannonball:new(self.cannon)
-
-    self.angle = self.cannon.angle
-    self.velocity = self.cannon.velocity
-
-    self.trajectory = {}
   end
 
   if love.keyboard.waspressed("right") then

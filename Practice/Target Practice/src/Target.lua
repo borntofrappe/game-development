@@ -6,8 +6,8 @@ function Target:new(terrain)
   local height = 36
   local radius = 24
 
-  local x = WINDOW_WIDTH - PLATFORM_WIDTH / 2 - width
-  local y = terrain.points[#terrain.points]
+  local x = WINDOW_WIDTH - PLATFORM_WIDTH / 2
+  local y = terrain and terrain.points[#terrain.points] or WINDOW_HEIGHT
 
   local legs = {
     {

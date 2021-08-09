@@ -6,19 +6,23 @@ function love.load()
   love.graphics.setBackgroundColor(0.95, 0.98, 0.98)
 
   gFonts = {
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 56),
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 20)
   }
 
   gStateMachine =
     StateMachine:new(
     {
+      ["start"] = function()
+        return StartState:new()
+      end,
       ["play"] = function()
         return PlayState:new()
       end
     }
   )
 
-  gStateMachine:change("play")
+  gStateMachine:change("start")
 
   love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}

@@ -3,11 +3,11 @@ TITLE = "Target Practice"
 WINDOW_WIDTH = 680
 WINDOW_HEIGHT = 420
 
-PLATFORM_WIDTH = 50
+PLATFORM_WIDTH = 100
 
 GRAVITY = 9.81
 VELOCITY = {
-  ["min"] = 5,
+  ["min"] = 10,
   ["max"] = 100,
   ["increments"] = 5
 }

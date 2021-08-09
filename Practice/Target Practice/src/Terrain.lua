@@ -2,10 +2,13 @@ Terrain = {}
 Terrain.__index = Terrain
 
 function Terrain:new()
+  -- 400 points
+  --
   local numberPoints = {
-    ["platform"] = 50,
-    ["hill"] = 150
+    ["total"] = 200
   }
+  numberPoints.platform = math.floor(numberPoints.total / WINDOW_WIDTH * PLATFORM_WIDTH)
+  numberPoints.hill = numberPoints.total - numberPoints.platform * 2
 
   numberPoints.total = numberPoints.platform * 2 + numberPoints.hill
 

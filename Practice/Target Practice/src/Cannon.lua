@@ -4,8 +4,8 @@ Cannon.__index = Cannon
 function Cannon:new(terrain)
   local r = 14
 
-  local x = PLATFORM_WIDTH
-  local y = terrain.points[2] -- y coordinate of the first platform
+  local x = PLATFORM_WIDTH / 2
+  local y = terrain and terrain.points[2] or WINDOW_HEIGHT -- y coordinate of the first platform
 
   local wheel = {
     ["x"] = x,
@@ -28,7 +28,7 @@ function Cannon:new(terrain)
     ["body"] = body,
     ["x"] = x,
     ["y"] = y - r - yOffset,
-    ["offsetTerrain"] = wheel.r + yOffset,
+    ["offsetTerrain"] = r + yOffset,
     ["angle"] = love.math.random(math.floor(ANGLE.max / ANGLE.increments)) * ANGLE.increments + ANGLE.min,
     ["velocity"] = love.math.random(math.floor(VELOCITY.max / VELOCITY.increments)) * VELOCITY.increments + VELOCITY.min
   }
