@@ -21,7 +21,7 @@ function Terrain:new(cannon)
   local x = 0
   local dx = WINDOW_WIDTH / numberPoints.total
 
-  local yStart = cannon.y + cannon.height - cannon.offsetY
+  local yStart = cannon.y + cannon.offsetTerrain
   local yEnd = love.math.random(yPlatformHeight.min, yPlatformHeight.max)
 
   local height1 = love.math.random(0, yStart - yPlatformMaxY)
@@ -75,7 +75,7 @@ function Terrain:new(cannon)
 end
 
 function Terrain:render()
-  love.graphics.setColor(0.46, 0.83, 0.75)
+  love.graphics.setColor(0.67, 0.8, 0.88)
   love.graphics.setLineWidth(8)
   love.graphics.line(self.points)
 end

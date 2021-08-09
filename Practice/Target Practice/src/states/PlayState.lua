@@ -4,17 +4,17 @@ local GRAVITY = 9
 local TWEEN_DURATION = 0.25
 local INTERVAL_DURATION = 0.02
 
-local WHITESPACE = 10
-local PADDING = 12
-local BUTTON_SIZE = 42
+local WHITESPACE = 8
+local PADDING = 10
+local BUTTON_SIZE = 38
 
 function PlayState:enter()
   -- x for the position of the wheel/rotation point
   -- y for the bottom
   self.cannon = Cannon:new(34 + 20, WINDOW_HEIGHT - 20)
   self.terrain = Terrain:new(self.cannon)
-  self.target = Target:new(WINDOW_WIDTH - 50 - 20, self.terrain.points[#self.terrain.points])
-  self.cannonball = Cannonball:new(self.cannon.x, self.cannon.y - self.cannon.offsetHeight)
+  self.target = Target:new(WINDOW_WIDTH - 20 - 20, self.terrain.points[#self.terrain.points])
+  self.cannonball = Cannonball:new(self.cannon.x, self.cannon.y)
 
   self.angle = self.cannon.angle
   self.velocity = self.cannon.velocity
@@ -167,7 +167,7 @@ function PlayState:update(dt)
             self.cannonball.x = self.trajectory[index]
             self.cannonball.y = self.trajectory[index + 1]
 
-            local r = self.cannonball.size / 2
+            local r = self.cannonball.r
             if self.trajectory[index + 1] + r > self.terrain.points[indexStart + index + 2] then
               Timer:reset()
 
@@ -175,7 +175,7 @@ function PlayState:update(dt)
               local x2 = self.cannonball.x + r
 
               self.cannonball.x = self.cannon.x
-              self.cannonball.y = self.cannon.y - self.cannon.offsetHeight
+              self.cannonball.y = self.cannon.y
 
               local angle = 0
               -- *2 to consider the diameter, *2 given the x y sequence
@@ -198,7 +198,7 @@ function PlayState:update(dt)
               Timer:reset()
 
               self.cannonball.x = self.cannon.x
-              self.cannonball.y = self.cannon.y - self.cannon.offsetHeight
+              self.cannonball.y = self.cannon.y
             end
           end
         )
@@ -213,7 +213,7 @@ function PlayState:render()
     button:render()
   end
 
-  love.graphics.setColor(0.83, 0.87, 0.92)
+  love.graphics.setColor(0.18, 0.19, 0.26)
   love.graphics.printf(
     string.format("Velocity %d", self.velocity),
     self.xVelocity,
@@ -252,7 +252,7 @@ function PlayState:getTrajectory()
     dy = v * t * math.sin(theta) - 1 / 2 * GRAVITY * t ^ 2
 
     table.insert(points, self.cannon.x + dx)
-    table.insert(points, self.cannon.y - self.cannon.offsetHeight - dy)
+    table.insert(points, self.cannon.y - dy)
 
     t = t + dt
 

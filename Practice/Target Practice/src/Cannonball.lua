@@ -2,12 +2,12 @@ Cannonball = {}
 Cannonball.__index = Cannonball
 
 function Cannonball:new(x, y)
-  local size = 36
+  local radius = 12
 
   local this = {
     ["x"] = x,
     ["y"] = y,
-    ["size"] = size
+    ["r"] = radius
   }
 
   setmetatable(this, self)
@@ -15,6 +15,6 @@ function Cannonball:new(x, y)
 end
 
 function Cannonball:render()
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.draw(gTextures["cannonball"], self.x, self.y, 0, 1, 1, self.size / 2, self.size / 2)
+  love.graphics.setColor(0.99, 0.76, 0.33)
+  love.graphics.circle("fill", self.x, self.y, self.r)
 end
