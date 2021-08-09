@@ -7,15 +7,19 @@ function Cannon:new(x, y)
 
   local offsetX = 34
   local offsetY = 66
+  local offsetWidth = 19
+  local offsetHeight = 10
 
   local this = {
     ["x"] = x,
     ["y"] = y - height + offsetY,
     ["offsetX"] = offsetX,
     ["offsetY"] = offsetY,
+    ["offsetWidth"] = offsetWidth,
+    ["offsetHeight"] = offsetHeight,
     ["width"] = width,
     ["height"] = height,
-    ["angle"] = 45,
+    ["angle"] = 0,
     ["velocity"] = 50
   }
 

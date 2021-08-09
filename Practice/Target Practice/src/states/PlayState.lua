@@ -3,12 +3,20 @@ PlayState = BaseState:new()
 local TWEEN_DURATION = 0.25
 
 local WHITESPACE = 10
+local PADDING = 12
+local BUTTON_SIZE = 42
 
 function PlayState:enter()
   -- x for the position of the wheel/rotation point
   -- y for the bottom
   self.cannon = Cannon:new(34 + 20, WINDOW_HEIGHT - 20)
   self.terrain = Terrain:new(self.cannon)
+  self.target = Target:new(WINDOW_WIDTH - 50 - 20, self.terrain.points[#self.terrain.points])
+  self.cannonball =
+    Cannonball:new(
+    self.cannon.x + self.cannon.width - self.cannon.offsetX - self.cannon.offsetWidth,
+    self.cannon.y - self.cannon.offsetHeight
+  )
 
   self.angle = self.cannon.angle
   self.velocity = self.cannon.velocity
@@ -17,10 +25,10 @@ function PlayState:enter()
 
   local buttonVelocityDown =
     Button:new(
-    8,
-    8,
-    42,
-    42,
+    PADDING,
+    PADDING,
+    BUTTON_SIZE,
+    BUTTON_SIZE,
     "-",
     function()
       self.velocity = math.max(5, self.velocity - 5)
@@ -30,9 +38,9 @@ function PlayState:enter()
   local buttonVelocityUp =
     Button:new(
     buttonVelocityDown.x + buttonVelocityDown.width + WHITESPACE * 2 + self.maxWidth,
-    8,
-    42,
-    42,
+    buttonVelocityDown.y,
+    BUTTON_SIZE,
+    BUTTON_SIZE,
     "+",
     function()
       self.velocity = math.min(90, self.velocity + 5)
@@ -43,8 +51,8 @@ function PlayState:enter()
     Button:new(
     buttonVelocityDown.x,
     buttonVelocityDown.y + buttonVelocityDown.height + WHITESPACE,
-    42,
-    42,
+    BUTTON_SIZE,
+    BUTTON_SIZE,
     "-",
     function()
       self.angle = math.max(0, self.angle - 5)
@@ -55,8 +63,8 @@ function PlayState:enter()
     Button:new(
     buttonVelocityUp.x,
     buttonVelocityDown.y + buttonVelocityDown.height + WHITESPACE,
-    42,
-    42,
+    BUTTON_SIZE,
+    BUTTON_SIZE,
     "+",
     function()
       self.angle = math.min(90, self.angle + 5)
@@ -68,8 +76,8 @@ function PlayState:enter()
     buttonAngleDown.x,
     buttonAngleDown.y + buttonAngleDown.height + WHITESPACE,
     buttonAngleDown.width * 2 + WHITESPACE * 2 + self.maxWidth,
-    42,
-    string.upper("Fire"),
+    BUTTON_SIZE,
+    string.upper("Fire!"),
     function()
       self.cannon.velocity = self.velocity
       Timer:tween(
@@ -110,6 +118,7 @@ function PlayState:update(dt)
   -- debugging
   if love.keyboard.waspressed("tab") then
     self.terrain = Terrain:new(self.cannon)
+    self.target = Target:new(WINDOW_WIDTH - 50 - 20, self.terrain.points[#self.terrain.points])
   end
 
   if love.keyboard.waspressed("up") then
@@ -156,6 +165,8 @@ function PlayState:render()
   )
   love.graphics.printf(string.format("Angle %02d", self.angle), self.xAngle, self.yAngle, self.maxWidth, "center")
 
+  self.cannonball:render()
   self.cannon:render()
+  self.target:render()
   self.terrain:render()
 end
