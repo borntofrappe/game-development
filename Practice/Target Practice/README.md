@@ -2,6 +2,8 @@
 
 Set velocity, angle, and fire a cannonball toward a distant target.
 
+![Target Practice in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/target-practice.gif)
+
 ## Prep
 
 In the `Prep` folder I try to develop the building blocks for the final project.
@@ -336,4 +338,67 @@ The number of points describing the radius of the projectile, or rather its diam
 ```lua
 local pointsProjectile = math.floor(#gTerrain.points / WINDOW_WIDTH * r * 2)
 local dangle = math.pi / (pointsProjectile / 2)
+```
+
+## Game
+
+The game is divided in three states — start, play and gameover — with the idea of generating new levels with a terrain, cannon and target.
+
+### Controls
+
+The game is equipped to work with keyboard or mouse input. With a keyboard, it is possible to move between states by pressing the `enter` or `escape` keys. With a cursor, the script sets up a series of buttons. In both instances, the gameover state is accessed when the cannon or target are actually destroyed.
+
+Each `Button` instance is created with a few arguments describing its position, dimension and text. Most importantly, each instance receives a callback, a function which is executed following a mouse click.
+
+### Cannon
+
+The cannon is rendered through two visual: `body` and `wheel`. The first visual includes a circle and a polygon, creating the chute of the cannon with a series of points. The second visual includes a basic circle. It is important to notice the `x` and `y` coordinates of the different components, detailing the center of the respective circles; these values are essential when considering where to spawn the cannonball, at the end of the chute and when to check a collision, considering the wheel.
+
+### Cannonball
+
+The play state introduces a cannonball setting the variable to `nil`. When the player then presses the fire button, or the enter key, the idea is to spawn a new instance relative to the cannon.
+
+```lua
+function Cannonball:new(cannon)
+  local x = cannon.body.x + cannon.body.width * math.cos(math.rad(cannon.angle))
+  local y = cannon.body.y - cannon.body.width * math.sin(math.rad(cannon.angle))
+end
+```
+
+Using the trigonometric functions cosine and sine the ball is included where the cannon is aiming. The position is then updated in the play state relative to the cannon's trajectory.
+
+### Target
+
+The target is rendered on the platform opposing the cannon. The visual is once more rendered through two different tables: `legs` and `body`. For the legs table, the idea is to include a few lines, pegs, by specifing their `x` and `y` coordinate. For the body, the game relies on two overlapping circles above the legs themselves.
+
+### Collision
+
+The only job of the `Collision` class is to render two polygons at specific `x` and `y` coordinates.
+
+### Terrain
+
+From the `Prep` folder the `Terrain` class is updated to render a line and also a fill. For the fill, `love.graphics.polygon` could work with the table of points and two additional vertices: the bottom left and bottom right of the window.
+
+```lua
+love.graphics.polygon("fill", pointsPolygon)
+```
+
+This solution would however create an annoying artifact with convex shapes. To fix this, and following the suggestion of the [love2D wiki](https://love2d.org/wiki/love.graphics.polygon), the table of points is used to create a table of triangles.
+
+```lua
+self.polygons = love.math.triangulate(pointsPolygon)
+```
+
+The `love.graphics` function then renders the individual shapes.
+
+```lua
+for i, polygon in ipairs(self.polygons) do
+  love.graphics.polygon("fill", polygon)
+end
+```
+
+_Please note:_ it seems that Love2D raises an error when the table of points describe a `y` coordinate equal to `WINDOW_HEIGHT`. This explains line `285` in the play state, limiting the value to just one pixel above the threshold.
+
+```lua
+math.min(WINDOW_HEIGHT - 1, self.terrain.points[i + 1] + math.sin(angle) * r)
 ```

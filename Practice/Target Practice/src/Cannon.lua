@@ -25,9 +25,7 @@ function Cannon:new(terrain)
     ["x"] = x,
     ["y"] = yBody,
     ["r"] = radiusBody,
-    ["offset"] = offsetBody,
     ["width"] = width,
-    ["inset"] = inset,
     ["points"] = {0, -radiusBody, width, -radiusBody + inset, width, radiusBody - inset, 0, radiusBody}
   }
 

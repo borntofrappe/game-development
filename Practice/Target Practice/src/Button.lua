@@ -5,6 +5,7 @@ function Button:new(x, y, width, height, text, callback)
   local this = {
     ["x"] = x,
     ["y"] = y,
+    ["yText"] = y + height / 2 - gFonts.normal:getHeight() / 2,
     ["width"] = width,
     ["height"] = height,
     ["text"] = text,
@@ -29,11 +30,5 @@ function Button:render()
   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height, 4)
 
   love.graphics.setColor(1, 1, 1)
-  love.graphics.printf(
-    self.text,
-    self.x,
-    self.y + self.height / 2 - gFonts.normal:getHeight() / 2,
-    self.width,
-    "center"
-  )
+  love.graphics.printf(self.text, self.x, self.yText, self.width, "center")
 end

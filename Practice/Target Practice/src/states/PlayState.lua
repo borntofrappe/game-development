@@ -177,7 +177,6 @@ function PlayState:updateAngle(direction)
 end
 
 function PlayState:getTrajectory()
-  -- from the end of the cannon
   local a = self.cannon.angle
   local v = self.cannon.velocity
   local x = self.cannon.body.x + self.cannon.body.width * math.cos(math.rad(self.cannon.angle))
@@ -213,8 +212,6 @@ function PlayState:fire()
   Timer:reset()
 
   local tweenAngle = self.cannon.angle == self.angle and 0 or TWEEN_ANGLE
-  -- have the interval dependant on the number of points in the trajectory
-  -- from start to collision
 
   Timer:tween(
     tweenAngle,
@@ -251,7 +248,6 @@ function PlayState:fire()
 
             self.cannonball = nil
 
-            -- aabb test considering the wheel
             if
               (x1 > self.cannon.wheel.x - self.cannon.wheel.r and x1 < self.cannon.wheel.x + self.cannon.wheel.r) or
                 (x2 > self.cannon.wheel.x - self.cannon.wheel.r and x2 < self.cannon.wheel.x + self.cannon.wheel.r)

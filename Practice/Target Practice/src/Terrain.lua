@@ -2,8 +2,6 @@ Terrain = {}
 Terrain.__index = Terrain
 
 function Terrain:new()
-  -- 400 points
-  --
   local numberPoints = {
     ["total"] = 250
   }
