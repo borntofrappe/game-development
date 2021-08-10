@@ -38,7 +38,7 @@ function Target:new(terrain)
   }
 
   local this = {
-    ["x"] = x - width / 2,
+    ["x"] = x,
     ["y"] = y,
     ["width"] = width,
     ["height"] = height,

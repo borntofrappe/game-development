@@ -1,11 +1,9 @@
 StartState = BaseState:new()
 
 function StartState:enter(params)
-  if params and params.reset then
-    gTerrain = Terrain:new()
-    gCannon = Cannon:new(gTerrain)
-    gTarget = Target:new(gTerrain)
-  end
+  self.terrain = params and params.terrain or Terrain:new()
+  self.cannon = params and params.cannon or Cannon:new(self.terrain)
+  self.target = params and params.target or Target:new(self.terrain)
 
   local instruction = string.upper("Play")
   local width = gFonts.normal:getWidth(instruction) * 2
@@ -19,14 +17,28 @@ function StartState:enter(params)
     height,
     instruction,
     function()
-      gStateMachine:change("play")
+      gStateMachine:change(
+        "play",
+        {
+          ["terrain"] = self.terrain,
+          ["cannon"] = self.cannon,
+          ["target"] = self.target
+        }
+      )
     end
   )
 end
 
 function StartState:update(dt)
   if love.keyboard.waspressed("return") then
-    gStateMachine:change("play")
+    gStateMachine:change(
+      "play",
+      {
+        ["terrain"] = self.terrain,
+        ["cannon"] = self.cannon,
+        ["target"] = self.target
+      }
+    )
   end
 
   if love.mouse.waspressed(2) or love.keyboard.waspressed("escape") then
@@ -37,12 +49,16 @@ function StartState:update(dt)
 end
 
 function StartState:render()
-  love.graphics.setColor(1, 1, 1, 0.5)
+  self.cannon:render()
+  self.target:render()
+  self.terrain:render()
+
+  love.graphics.setColor(1, 1, 1, OVERLAY_OPACITY)
   love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
   love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.setFont(gFonts.large)
-  love.graphics.printf(TITLE:upper(), 0, WINDOW_HEIGHT / 2 - gFonts.large:getHeight(), WINDOW_WIDTH, "center")
+  love.graphics.printf(TITLE:upper(), 0, WINDOW_HEIGHT / 2 - gFonts.large:getHeight() - 24, WINDOW_WIDTH, "center")
 
   love.graphics.setFont(gFonts.normal)
   self.button:render()

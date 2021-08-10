@@ -109,6 +109,6 @@ function Terrain:render()
   end
 
   love.graphics.setLineWidth(5)
-  love.graphics.setColor(0.31, 0.28, 0.31)
+  love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.line(self.points)
 end

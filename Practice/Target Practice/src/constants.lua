@@ -17,3 +17,5 @@ ANGLE = {
   ["max"] = 90,
   ["increments"] = 5
 }
+
+OVERLAY_OPACITY = 0.5

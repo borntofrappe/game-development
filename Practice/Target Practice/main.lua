@@ -10,10 +10,6 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 20)
   }
 
-  gTerrain = Terrain:new()
-  gCannon = Cannon:new(gTerrain)
-  gTarget = Target:new(gTerrain)
-
   gStateMachine =
     StateMachine:new(
     {
@@ -22,9 +18,6 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState:new()
-      end,
-      ["victory"] = function()
-        return VictoryState:new()
       end,
       ["gameover"] = function()
         return GameoverState:new()
@@ -62,9 +55,5 @@ function love.update(dt)
 end
 
 function love.draw()
-  gCannon:render()
-  gTarget:render()
-  gTerrain:render()
-
   gStateMachine:render()
 end
