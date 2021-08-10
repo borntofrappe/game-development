@@ -2,10 +2,7 @@ VictoryState = BaseState:new()
 
 local TWEEN_OPACITY = 0.2
 
-function VictoryState:enter(params)
-  self.terrain = params.terrain
-  self.cannon = params.cannon
-
+function VictoryState:enter()
   local instruction = "Continue"
   local width = gFonts.normal:getWidth(instruction) * 2
   local height = gFonts.normal:getHeight() * 2
@@ -24,26 +21,30 @@ function VictoryState:enter(params)
 end
 
 function VictoryState:update(dt)
-  local x, y = love.mouse:getPosition()
-  if x > self.cannon.x and x < WINDOW_WIDTH and y > 0 and y < self.cannon.y then
-    local angle = math.atan((self.cannon.y - y) / (x - self.cannon.x))
-    self.cannon.angle = math.max(math.min(ANGLE.max, angle * 180 / math.pi), ANGLE.min)
-  end
-
   if love.keyboard.waspressed("return") then
-    gStateMachine:change("play")
+    gStateMachine:change(
+      "play",
+      {
+        ["reset"] = true
+      }
+    )
   end
 
   if love.mouse.waspressed(2) or love.keyboard.waspressed("escape") then
-    gStateMachine:change("start")
+    gStateMachine:change(
+      "start",
+      {
+        ["reset"] = true
+      }
+    )
   end
 
   self.button:update()
 end
 
 function VictoryState:render()
-  self.cannon:render()
-  self.terrain:render()
+  love.graphics.setColor(1, 1, 1, 0.5)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
   love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.setFont(gFonts.large)

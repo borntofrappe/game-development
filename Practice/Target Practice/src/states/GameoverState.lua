@@ -2,10 +2,7 @@ GameoverState = BaseState:new()
 
 local TWEEN_OPACITY = 0.2
 
-function GameoverState:enter(params)
-  self.terrain = params.terrain
-  self.target = params.target
-
+function GameoverState:enter()
   local instruction = "Try again"
   local width = gFonts.normal:getWidth(instruction) * 2
   local height = gFonts.normal:getHeight() * 2
@@ -25,19 +22,29 @@ end
 
 function GameoverState:update(dt)
   if love.keyboard.waspressed("return") then
-    gStateMachine:change("play")
+    gStateMachine:change(
+      "play",
+      {
+        ["reset"] = true
+      }
+    )
   end
 
   if love.mouse.waspressed(2) or love.keyboard.waspressed("escape") then
-    gStateMachine:change("start")
+    gStateMachine:change(
+      "start",
+      {
+        ["reset"] = true
+      }
+    )
   end
 
   self.button:update()
 end
 
 function GameoverState:render()
-  self.target:render()
-  self.terrain:render()
+  love.graphics.setColor(1, 1, 1, 0.5)
+  love.graphics.rectangle("fill", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
   love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.setFont(gFonts.large)

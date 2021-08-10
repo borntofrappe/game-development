@@ -2,11 +2,14 @@ Cannonball = {}
 Cannonball.__index = Cannonball
 
 function Cannonball:new(cannon)
+  local x = cannon.body.x + cannon.body.width * math.cos(math.rad(cannon.angle))
+  local y = cannon.body.y - cannon.body.width * math.sin(math.rad(cannon.angle))
+
   local r = 12
 
   local this = {
-    ["x"] = cannon.x,
-    ["y"] = cannon.y,
+    ["x"] = x,
+    ["y"] = y,
     ["r"] = r
   }
 

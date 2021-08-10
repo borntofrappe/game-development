@@ -2,33 +2,38 @@ Cannon = {}
 Cannon.__index = Cannon
 
 function Cannon:new(terrain)
+  local radiusWheel = 14
+
   local r = 14
 
   local x = PLATFORM_WIDTH / 2
-  local y = terrain and terrain.points[2] or WINDOW_HEIGHT -- y coordinate of the first platform
+  local y = terrain and terrain.points[2] or WINDOW_HEIGHT
 
   local wheel = {
     ["x"] = x,
-    ["y"] = y - r,
-    ["r"] = r
+    ["y"] = y - radiusWheel,
+    ["r"] = radiusWheel
   }
 
-  local rBody = r * 1.4
-  local yOffset = 10
-  local yBody = y - r - yOffset
+  local radiusBody = 20
+  local offsetBody = 10
+  local yBody = y - radiusWheel - offsetBody
+  local width = 30
+  local inset = 5
+
   local body = {
     ["x"] = x,
     ["y"] = yBody,
-    ["r"] = rBody,
-    ["points"] = {0, -rBody, 30, -rBody * 0.75, 30, rBody * 0.75, 0, rBody}
+    ["r"] = radiusBody,
+    ["offset"] = offsetBody,
+    ["width"] = width,
+    ["inset"] = inset,
+    ["points"] = {0, -radiusBody, width, -radiusBody + inset, width, radiusBody - inset, 0, radiusBody}
   }
 
   local this = {
     ["wheel"] = wheel,
     ["body"] = body,
-    ["x"] = x,
-    ["y"] = y - r - yOffset,
-    ["offsetTerrain"] = r + yOffset,
     ["angle"] = love.math.random(math.floor(ANGLE.max / ANGLE.increments)) * ANGLE.increments + ANGLE.min,
     ["velocity"] = love.math.random(math.floor(VELOCITY.max / VELOCITY.increments)) * VELOCITY.increments + VELOCITY.min
   }

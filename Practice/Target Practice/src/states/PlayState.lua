@@ -1,21 +1,23 @@
 PlayState = BaseState:new()
 
 local TWEEN_ANGLE = 0.25
-local DELAY_FIRE = 0.1
 local INTERVAL_CANNONBALL = 0.01
 
 local GUI_WHITESPACE = 8
 local GUI_PADDING = 10
 local GUI_BUTTON_SIZE = 38
 
-function PlayState:enter()
-  self.terrain = Terrain:new()
-  self.cannon = Cannon:new(self.terrain)
-  self.target = Target:new(self.terrain)
-  self.cannonball = Cannonball:new(self.cannon)
+function PlayState:enter(params)
+  if params and params.reset then
+    gTerrain = Terrain:new()
+    gCannon = Cannon:new(gTerrain)
+    gTarget = Target:new(gTerrain)
+  end
 
-  self.angle = self.cannon.angle
-  self.velocity = self.cannon.velocity
+  self.cannonball = nil
+
+  self.angle = gCannon.angle
+  self.velocity = gCannon.velocity
 
   self.trajectory = {}
 
@@ -99,7 +101,12 @@ function PlayState:update(dt)
 
   if love.mouse.waspressed(2) or love.keyboard.waspressed("escape") then
     Timer:reset()
-    gStateMachine:change("start")
+    gStateMachine:change(
+      "start",
+      {
+        ["reset"] = true
+      }
+    )
   end
 
   for i, button in ipairs(self.buttons) do
@@ -143,10 +150,12 @@ function PlayState:render()
   )
   love.graphics.printf(string.format("Angle %d", self.angle), self.xAngle, self.yAngle, self.maxWidth, "center")
 
-  self.cannonball:render()
-  self.cannon:render()
-  self.target:render()
-  self.terrain:render()
+  if self.cannonball then
+    self.cannonball:render()
+  end
+
+  gCannon:render()
+  gTerrain:render()
 end
 
 function PlayState:updateVelocity(direction)
@@ -166,25 +175,28 @@ function PlayState:updateAngle(direction)
 end
 
 function PlayState:getTrajectory()
-  local a = self.cannon.angle
-  local v = self.cannon.velocity
+  -- from the end of the cannon
+  local a = gCannon.angle
+  local v = gCannon.velocity
+  local x = gCannon.body.x + gCannon.body.width * math.cos(math.rad(gCannon.angle))
+  local y = gCannon.body.y - gCannon.body.width * math.sin(math.rad(gCannon.angle))
 
   local points = {}
   local theta = math.rad(a)
 
   local t = 0
-  local dt = (self.terrain.points[3] - self.terrain.points[1]) / (v * math.cos(theta))
+  local dt = (gTerrain.points[3] - gTerrain.points[1]) / (v * math.cos(theta))
 
   while true do
     dx = v * t * math.cos(theta)
     dy = v * t * math.sin(theta) - 1 / 2 * GRAVITY * t ^ 2
 
-    table.insert(points, self.cannon.x + dx)
-    table.insert(points, self.cannon.y - dy)
+    table.insert(points, x + dx)
+    table.insert(points, y - dy)
 
     t = t + dt
 
-    if self.cannon.y - dy > WINDOW_HEIGHT then
+    if y - dy > WINDOW_HEIGHT then
       break
     end
   end
@@ -193,99 +205,80 @@ function PlayState:getTrajectory()
 end
 
 function PlayState:fire()
-  self.cannon.velocity = self.velocity
-  self.cannonball.x = self.cannon.x
-  self.cannonball.y = self.cannon.y
+  gCannon.velocity = self.velocity
 
+  self.cannonball = nil
   Timer:reset()
 
+  local tweenAngle = gCannon.angle == self.angle and 0 or TWEEN_ANGLE
+
   Timer:tween(
-    TWEEN_ANGLE,
+    tweenAngle,
     {
-      [self.cannon] = {["angle"] = self.angle}
+      [gCannon] = {["angle"] = self.angle}
     },
     function()
       self.trajectory = self:getTrajectory()
+      self.cannonball = Cannonball:new(gCannon)
 
       local index = 1
 
       local indexStart
-      for i = 1, #self.terrain.points, 2 do
-        if self.terrain.points[i] >= self.trajectory[1] then
+      for i = 1, #gTerrain.points, 2 do
+        if gTerrain.points[i] >= self.trajectory[1] then
           indexStart = i
           break
         end
       end
 
-      Timer:after(
-        DELAY_FIRE,
+      Timer:every(
+        INTERVAL_CANNONBALL,
         function()
-          Timer:every(
-            INTERVAL_CANNONBALL,
-            function()
-              index = index + 2
-              self.cannonball.x = self.trajectory[index]
-              self.cannonball.y = self.trajectory[index + 1]
+          index = index + 2
+          self.cannonball.x = self.trajectory[index]
+          self.cannonball.y = self.trajectory[index + 1]
 
-              local r = self.cannonball.r
-              if self.trajectory[index + 1] + r > self.terrain.points[indexStart + index + 2] then
-                Timer:reset()
+          local r = self.cannonball.r
+          if self.trajectory[index + 1] + r > gTerrain.points[indexStart + index + 2] then
+            Timer:reset()
 
-                local x1 = self.cannonball.x - r
-                local x2 = self.cannonball.x + r
+            local x1 = self.cannonball.x - r
+            local x2 = self.cannonball.x + r
 
-                -- check collision with cannon or target
-                if self.cannon.x > x1 and self.cannon.x < x2 then
-                  gStateMachine:change(
-                    "gameover",
-                    {
-                      ["terrain"] = self.terrain,
-                      ["target"] = self.target
-                    }
-                  )
-                elseif
-                  (x1 > self.target.x and x1 < self.target.x + self.target.width) or
-                    (x2 > self.target.x and x2 < self.target.x + self.target.width)
-                 then
-                  -- victory
-                  gStateMachine:change(
-                    "victory",
-                    {
-                      ["terrain"] = self.terrain,
-                      ["cannon"] = self.cannon
-                    }
-                  )
-                else
-                  self.cannonball.x = self.cannon.x
-                  self.cannonball.y = self.cannon.y
+            self.cannonball = nil
 
-                  local angle = 0
-                  local dangle = math.pi / math.floor(WINDOW_WIDTH / (r * 2) / 2)
+            if gCannon.wheel.x > x1 and gCannon.wheel.x < x2 then
+              gStateMachine:change("gameover")
+            elseif
+              (x1 > gTarget.x and x1 < gTarget.x + gTarget.width) or (x2 > gTarget.x and x2 < gTarget.x + gTarget.width)
+             then
+              gStateMachine:change("victory")
+            else
+              local angle = 0
+              local dangle = math.pi / math.floor(WINDOW_WIDTH / (r * 2) / 2)
 
-                  for i = 1, #self.terrain.points, 2 do
-                    if self.terrain.points[i] > x1 then
-                      self.terrain.points[i + 1] =
-                        math.min(WINDOW_HEIGHT, self.terrain.points[i + 1] + math.sin(angle) * r)
-                      angle = angle + dangle
+              for i = 1, #gTerrain.points, 2 do
+                if gTerrain.points[i] > x1 then
+                  -- - 1 to work with love.math.triangulate
+                  gTerrain.points[i + 1] = math.min(WINDOW_HEIGHT - 1, gTerrain.points[i + 1] + math.sin(angle) * r)
+                  angle = angle + dangle
 
-                      if angle >= math.pi then
-                        self.terrain:updatePolygon()
-                        break
-                      end
-                    end
+                  if angle >= math.pi then
+                    gTerrain:updatePolygon()
+                    break
                   end
                 end
               end
-
-              if index + 2 >= #self.trajectory or indexStart + index + 2 >= #self.terrain.points then
-                Timer:reset()
-
-                self.cannonball.x = self.cannon.x
-                self.cannonball.y = self.cannon.y
-              end
             end
-          )
-        end
+          end
+
+          if index + 2 >= #self.trajectory or indexStart + index + 2 >= #gTerrain.points then
+            Timer:reset()
+
+            self.cannonball = nil
+          end
+        end,
+        true
       )
     end
   )
