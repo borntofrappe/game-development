@@ -25,10 +25,10 @@ function Button:update(dt)
 end
 
 function Button:render()
-  love.graphics.setColor(0.18, 0.19, 0.26)
+  love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height, 4)
 
-  love.graphics.setColor(0.95, 0.98, 0.98)
+  love.graphics.setColor(1, 1, 1)
   love.graphics.printf(
     self.text,
     self.x,

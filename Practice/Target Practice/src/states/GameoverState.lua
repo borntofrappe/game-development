@@ -24,8 +24,6 @@ function GameoverState:enter(params)
 end
 
 function GameoverState:update(dt)
-  Timer:update(dt)
-
   if love.keyboard.waspressed("return") then
     gStateMachine:change("play")
   end
@@ -41,7 +39,7 @@ function GameoverState:render()
   self.target:render()
   self.terrain:render()
 
-  love.graphics.setColor(0.18, 0.19, 0.26)
+  love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(
     string.upper("Not even close"),

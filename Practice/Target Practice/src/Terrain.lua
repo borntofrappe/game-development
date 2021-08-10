@@ -5,7 +5,7 @@ function Terrain:new()
   -- 400 points
   --
   local numberPoints = {
-    ["total"] = 200
+    ["total"] = 250
   }
   numberPoints.platform = math.floor(numberPoints.total / WINDOW_WIDTH * PLATFORM_WIDTH)
   numberPoints.hill = numberPoints.total - numberPoints.platform * 2
@@ -69,16 +69,46 @@ function Terrain:new()
     x = x + dx
   end
 
+  local pointsPolygon = {0, WINDOW_HEIGHT}
+  for p, point in ipairs(points) do
+    table.insert(pointsPolygon, point)
+  end
+
+  table.insert(pointsPolygon, WINDOW_WIDTH)
+  table.insert(pointsPolygon, WINDOW_HEIGHT)
+  table.insert(pointsPolygon, 0)
+  table.insert(pointsPolygon, WINDOW_HEIGHT)
+
   local this = {
-    ["points"] = points
+    ["points"] = points,
+    ["polygons"] = love.math.triangulate(pointsPolygon)
   }
 
   setmetatable(this, self)
   return this
 end
 
+function Terrain:updatePolygon()
+  local pointsPolygon = {0, WINDOW_HEIGHT}
+  for p, point in ipairs(self.points) do
+    table.insert(pointsPolygon, point)
+  end
+
+  table.insert(pointsPolygon, WINDOW_WIDTH)
+  table.insert(pointsPolygon, WINDOW_HEIGHT)
+  table.insert(pointsPolygon, 0)
+  table.insert(pointsPolygon, WINDOW_HEIGHT)
+
+  self.polygons = love.math.triangulate(pointsPolygon)
+end
+
 function Terrain:render()
-  love.graphics.setColor(0.67, 0.8, 0.88)
-  love.graphics.setLineWidth(8)
+  love.graphics.setColor(0.63, 0.92, 0.45)
+  for i, polygon in ipairs(self.polygons) do
+    love.graphics.polygon("fill", polygon)
+  end
+
+  love.graphics.setLineWidth(5)
+  love.graphics.setColor(0.31, 0.28, 0.31)
   love.graphics.line(self.points)
 end

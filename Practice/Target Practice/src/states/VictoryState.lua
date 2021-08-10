@@ -45,7 +45,7 @@ function VictoryState:render()
   self.cannon:render()
   self.terrain:render()
 
-  love.graphics.setColor(0.18, 0.19, 0.26)
+  love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(
     string.upper("Congrats"),

@@ -38,7 +38,7 @@ function Cannon:new(terrain)
 end
 
 function Cannon:render()
-  love.graphics.setColor(0.18, 0.19, 0.26)
+  love.graphics.setColor(0.15, 0.16, 0.22)
 
   love.graphics.push()
   love.graphics.translate(self.body.x, self.body.y)
@@ -47,6 +47,6 @@ function Cannon:render()
   love.graphics.polygon("fill", self.body.points)
   love.graphics.pop()
 
-  love.graphics.setColor(0.51, 0.27, 0.25)
+  love.graphics.setColor(0.71, 0.44, 0.24)
   love.graphics.circle("fill", self.wheel.x, self.wheel.y, self.wheel.r)
 end

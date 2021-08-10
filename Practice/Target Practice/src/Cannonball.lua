@@ -15,6 +15,6 @@ function Cannonball:new(cannon)
 end
 
 function Cannonball:render()
-  love.graphics.setColor(0.99, 0.76, 0.33)
+  love.graphics.setColor(0.6, 0.62, 0.72)
   love.graphics.circle("fill", self.x, self.y, self.r)
 end

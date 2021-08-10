@@ -133,7 +133,7 @@ function PlayState:render()
     button:render()
   end
 
-  love.graphics.setColor(0.18, 0.19, 0.26)
+  love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.printf(
     string.format("Velocity %d", self.velocity),
     self.xVelocity,
@@ -269,6 +269,7 @@ function PlayState:fire()
                       angle = angle + dangle
 
                       if angle >= math.pi then
+                        self.terrain:updatePolygon()
                         break
                       end
                     end

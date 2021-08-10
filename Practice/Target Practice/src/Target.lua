@@ -51,15 +51,15 @@ function Target:new(terrain)
 end
 
 function Target:render()
-  love.graphics.setColor(0.51, 0.27, 0.25)
   love.graphics.setLineWidth(8)
+  love.graphics.setColor(0.71, 0.44, 0.24)
 
   for i, leg in ipairs(self.legs) do
     love.graphics.line(leg.x1, leg.y1, leg.x2, leg.y2)
   end
 
-  love.graphics.setColor(0.18, 0.19, 0.26)
+  love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.circle("fill", self.body.x, self.body.y, self.body.radius)
-  love.graphics.setColor(0.98, 0.32, 0.44)
+  love.graphics.setColor(0.96, 0.64, 0.33)
   love.graphics.circle("fill", self.body.x, self.body.y, self.body.innerRadius)
 end

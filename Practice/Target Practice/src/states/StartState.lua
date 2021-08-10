@@ -41,7 +41,7 @@ function StartState:update(dt)
 end
 
 function StartState:render()
-  love.graphics.setColor(0.18, 0.19, 0.26)
+  love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(TITLE:upper(), 0, WINDOW_HEIGHT / 2 - gFonts.large:getHeight(), WINDOW_WIDTH, "center")
 

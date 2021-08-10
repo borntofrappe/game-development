@@ -3,7 +3,7 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0.95, 0.98, 0.98)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
   gFonts = {
     ["large"] = love.graphics.newFont("res/fonts/font.ttf", 56),
