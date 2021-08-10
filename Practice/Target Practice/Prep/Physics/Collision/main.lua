@@ -32,27 +32,15 @@ local projectile = {
 function love.load()
   love.window.setTitle("Physics - Collision")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0, 0.08, 0.15)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
   player.range = getRange(player.velocity, player.angle)
-  player.key = "velocity"
   player.trajectory = getTrajectory(player.x, player.y, player.velocity, player.angle)
 end
 
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
-  end
-
-  if key == "v" then
-    player.key = "velocity"
-  end
-  if key == "a" then
-    player.key = "angle"
-  end
-
-  if key == "tab" then
-    player.key = player.key == "velocity" and "angle" or "velocity"
   end
 
   if key == "return" then
@@ -90,12 +78,8 @@ end
 function love.update(dt)
   Timer:update(dt)
 
-  if love.keyboard.isDown("up") or love.keyboard.isDown("right") then
-    if player.key == "velocity" then
-      player.velocity = math.min(100, math.floor(player.velocity + UPDATE_SPEED * dt))
-    else
-      player.angle = math.min(90, math.floor(player.angle + UPDATE_SPEED * dt))
-    end
+  if love.keyboard.isDown("up") then
+    player.angle = math.min(90, math.floor(player.angle + UPDATE_SPEED * dt))
 
     player.range = getRange(player.velocity, player.angle)
     player.trajectory = getTrajectory(player.x, player.y, player.velocity, player.angle)
@@ -103,12 +87,28 @@ function love.update(dt)
     Timer:reset()
     projectile.x = player.x
     projectile.y = player.y
-  elseif love.keyboard.isDown("down") or love.keyboard.isDown("left") then
-    if player.key == "velocity" then
-      player.velocity = math.max(0, math.floor(player.velocity - UPDATE_SPEED * dt))
-    else
-      player.angle = math.max(0, math.floor(player.angle - UPDATE_SPEED * dt))
-    end
+  elseif love.keyboard.isDown("down") then
+    player.angle = math.max(0, math.floor(player.angle - UPDATE_SPEED * dt))
+
+    player.range = getRange(player.velocity, player.angle)
+    player.trajectory = getTrajectory(player.x, player.y, player.velocity, player.angle)
+
+    Timer:reset()
+    projectile.x = player.x
+    projectile.y = player.y
+  end
+
+  if love.keyboard.isDown("right") then
+    player.velocity = math.min(100, math.floor(player.velocity + UPDATE_SPEED * dt))
+
+    player.range = getRange(player.velocity, player.angle)
+    player.trajectory = getTrajectory(player.x, player.y, player.velocity, player.angle)
+
+    Timer:reset()
+    projectile.x = player.x
+    projectile.y = player.y
+  elseif love.keyboard.isDown("left") then
+    player.velocity = math.max(0, math.floor(player.velocity - UPDATE_SPEED * dt))
 
     player.range = getRange(player.velocity, player.angle)
     player.trajectory = getTrajectory(player.x, player.y, player.velocity, player.angle)
@@ -120,28 +120,19 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0.83, 0.87, 0.92)
+  love.graphics.setColor(0.15, 0.16, 0.22)
 
-  if player.key == "velocity" then
-    love.graphics.circle("fill", 8, 16, 4)
-  else
-    love.graphics.circle("fill", 8, 32, 4)
-  end
-
-  love.graphics.print("Velocity: " .. player.velocity, 16, 8)
-  love.graphics.print("Angle: " .. player.angle, 16, 24)
-  love.graphics.print("Range: " .. player.range, 16, 40)
-
+  love.graphics.print("Velocity: " .. player.velocity, 8, 8)
+  love.graphics.print("Angle: " .. player.angle, 8, 24)
+  love.graphics.print("Range: " .. player.range, 8, 40)
   love.graphics.setLineWidth(2)
   love.graphics.line(0, player.y, WINDOW_WIDTH, player.y)
 
   love.graphics.setLineWidth(1)
   love.graphics.line(player.trajectory)
 
-  love.graphics.setColor(0.49, 0.85, 0.79)
   love.graphics.circle("fill", projectile.x, projectile.y, projectile.r)
 
-  love.graphics.setColor(0.83, 0.87, 0.92)
   love.graphics.circle("fill", player.x, player.y, player.r)
   love.graphics.circle("line", player.x + player.range, player.y, player.r)
 end

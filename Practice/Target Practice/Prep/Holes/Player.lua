@@ -1,8 +1,8 @@
 Player = {}
 Player.__index = Player
 
-function Player:new()
-  local y = love.math.random(math.floor(WINDOW_HEIGHT / 2), WINDOW_HEIGHT)
+function Player:new(terrain)
+  local y = terrain.points[2]
 
   local this = {
     ["x"] = 40,
@@ -23,9 +23,6 @@ function Player:new()
 end
 
 function Player:render()
-  love.graphics.setColor(0.49, 0.85, 0.79)
   love.graphics.circle("fill", self.projectile.x, self.projectile.y, self.projectile.r)
-
-  love.graphics.setColor(0.83, 0.87, 0.92)
   love.graphics.circle("fill", self.x, self.y, self.r)
 end

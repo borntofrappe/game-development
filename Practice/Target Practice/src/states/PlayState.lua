@@ -1,7 +1,7 @@
 PlayState = BaseState:new()
 
 local TWEEN_ANGLE = 0.25
-local INTERVAL_CANNONBALL = 0.01
+local DURATION_CANNONBALL = 1
 
 local GUI_WHITESPACE = 8
 local GUI_PADDING = 10
@@ -236,7 +236,7 @@ function PlayState:fire()
       end
 
       Timer:every(
-        INTERVAL_CANNONBALL,
+        DURATION_CANNONBALL / #self.trajectory / 2,
         function()
           index = index + 2
           self.cannonball.x = self.trajectory[index]
@@ -279,10 +279,11 @@ function PlayState:fire()
               )
             else
               local angle = 0
-              local dangle = math.pi / math.floor(WINDOW_WIDTH / (r * 2) / 2)
+              local pointsCannonball = math.floor(#self.terrain.points / WINDOW_WIDTH * r * 2.5) -- .5 to slightly extend the impact area
+              local dangle = math.pi / (pointsCannonball / 2)
 
               for i = 1, #self.terrain.points, 2 do
-                if self.terrain.points[i] > x1 then
+                if self.terrain.points[i] >= x1 then
                   -- - 1 to work with love.math.triangulate
                   self.terrain.points[i + 1] =
                     math.min(WINDOW_HEIGHT - 1, self.terrain.points[i + 1] + math.sin(angle) * r)

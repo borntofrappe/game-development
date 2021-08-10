@@ -34,8 +34,6 @@ function Trajectory:new(terrain, player)
 end
 
 function Trajectory:render()
-  love.graphics.setColor(0.83, 0.87, 0.92)
-
   love.graphics.setLineWidth(1)
   love.graphics.line(self.points)
 end

@@ -6,7 +6,7 @@ require "Terrain"
 function love.load()
   love.window.setTitle("Terrain - Line")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0, 0.08, 0.15)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
   gTerrain = Terrain:new()
 end

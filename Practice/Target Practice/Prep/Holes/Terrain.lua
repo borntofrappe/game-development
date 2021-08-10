@@ -1,21 +1,21 @@
 Terrain = {}
 Terrain.__index = Terrain
 
-function Terrain:new(player)
-  local POINTS = {
-    ["flat"] = math.floor(WINDOW_WIDTH / player.x) * 2,
-    ["hill"] = 120
-  }
+local POINTS = {
+  ["flat"] = 30,
+  ["hill"] = 120
+}
 
-  POINTS.total = POINTS.flat * 2 + POINTS.hill
+POINTS.total = POINTS.flat * 2 + POINTS.hill
 
-  local Y_FLAT = {
-    ["min"] = math.floor(WINDOW_HEIGHT / 2),
-    ["max"] = WINDOW_HEIGHT
-  }
+local Y_FLAT = {
+  ["min"] = math.floor(WINDOW_HEIGHT / 2),
+  ["max"] = WINDOW_HEIGHT
+}
 
-  local Y_UPPER_THRESHOLD = math.floor(WINDOW_HEIGHT / 2.5)
+local Y_UPPER_THRESHOLD = math.floor(WINDOW_HEIGHT / 2.5)
 
+function Terrain:new()
   local points = {}
 
   local x = 0
@@ -24,7 +24,7 @@ function Terrain:new(player)
   local angle = 0
   local dangle = math.pi * 2 / POINTS.hill
 
-  local yStart = player.y
+  local yStart = love.math.random(Y_FLAT.min, Y_FLAT.max)
   local yEnd = love.math.random(Y_FLAT.min, Y_FLAT.max)
 
   local height1 = love.math.random(0, yStart - Y_UPPER_THRESHOLD)
@@ -78,7 +78,6 @@ function Terrain:new(player)
 end
 
 function Terrain:render()
-  love.graphics.setColor(0.49, 0.85, 0.79)
   love.graphics.setLineWidth(2)
   love.graphics.line(self.points)
 end

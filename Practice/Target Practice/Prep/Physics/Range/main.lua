@@ -14,61 +14,45 @@ local player = {
 function love.load()
   love.window.setTitle("Physics - Range")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0, 0.08, 0.15)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
   player.range = getRange(player.velocity, player.angle)
-  player.key = "velocity"
 end
 
 function love.keypressed(key)
   if key == "escape" then
     love.event.quit()
   end
-
-  if key == "v" then
-    player.key = "velocity"
-  end
-  if key == "a" then
-    player.key = "angle"
-  end
-
-  if key == "tab" then
-    player.key = player.key == "velocity" and "angle" or "velocity"
-  end
 end
 
 function love.update(dt)
-  if love.keyboard.isDown("up") or love.keyboard.isDown("right") then
-    if player.key == "velocity" then
-      player.velocity = math.min(100, math.floor(player.velocity + UPDATE_SPEED * dt))
-    else
-      player.angle = math.min(90, math.floor(player.angle + UPDATE_SPEED * dt))
-    end
+  if love.keyboard.isDown("up") then
+    player.angle = math.min(90, math.floor(player.angle + UPDATE_SPEED * dt))
 
     player.range = getRange(player.velocity, player.angle)
-  elseif love.keyboard.isDown("down") or love.keyboard.isDown("left") then
-    if player.key == "velocity" then
-      player.velocity = math.max(0, math.floor(player.velocity - UPDATE_SPEED * dt))
-    else
-      player.angle = math.max(0, math.floor(player.angle - UPDATE_SPEED * dt))
-    end
+  elseif love.keyboard.isDown("down") then
+    player.angle = math.max(0, math.floor(player.angle - UPDATE_SPEED * dt))
+
+    player.range = getRange(player.velocity, player.angle)
+  end
+
+  if love.keyboard.isDown("right") then
+    player.velocity = math.min(100, math.floor(player.velocity + UPDATE_SPEED * dt))
+
+    player.range = getRange(player.velocity, player.angle)
+  elseif love.keyboard.isDown("left") then
+    player.velocity = math.max(0, math.floor(player.velocity - UPDATE_SPEED * dt))
 
     player.range = getRange(player.velocity, player.angle)
   end
 end
 
 function love.draw()
-  love.graphics.setColor(0.83, 0.87, 0.92)
+  love.graphics.setColor(0.15, 0.16, 0.22)
 
-  if player.key == "velocity" then
-    love.graphics.circle("fill", 8, 16, 4)
-  else
-    love.graphics.circle("fill", 8, 32, 4)
-  end
-
-  love.graphics.print("Velocity: " .. player.velocity, 16, 8)
-  love.graphics.print("Angle: " .. player.angle, 16, 24)
-  love.graphics.print("Range: " .. player.range, 16, 40)
+  love.graphics.print("Velocity: " .. player.velocity, 8, 8)
+  love.graphics.print("Angle: " .. player.angle, 8, 24)
+  love.graphics.print("Range: " .. player.range, 8, 40)
 
   love.graphics.setLineWidth(2)
   love.graphics.line(0, player.y, WINDOW_WIDTH, player.y)

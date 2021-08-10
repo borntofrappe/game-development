@@ -1,10 +1,11 @@
+WINDOW_WIDTH = 540
+WINDOW_HEIGHT = 400
 Timer = require("Timer")
+
 require "Terrain"
 require "Player"
 require "Trajectory"
 
-WINDOW_WIDTH = 540
-WINDOW_HEIGHT = 400
 GRAVITY = 9.81
 
 local UPDATE_SPEED = 100
@@ -13,10 +14,10 @@ local INTERVAL = 0.02
 function love.load()
   love.window.setTitle("Holes")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0, 0.08, 0.15)
+  love.graphics.setBackgroundColor(1, 1, 1)
 
-  gPlayer = Player:new()
-  gTerrain = Terrain:new(gPlayer)
+  gTerrain = Terrain:new()
+  gPlayer = Player:new(gTerrain)
   gTrajectory = Trajectory:new(gTerrain, gPlayer)
 end
 
@@ -48,18 +49,22 @@ function love.keypressed(key)
         if gTrajectory.points[index + 1] > gTerrain.points[indexStart + index + 2] then
           Timer:reset()
           local r = gPlayer.projectile.r
-
-          local pointsProjectile = math.floor(WINDOW_WIDTH / (r * 2) / 3)
-
-          local p1 = indexStart + index - pointsProjectile
-          local p2 = indexStart + index + pointsProjectile
+          local x1 = gPlayer.projectile.x - r
+          local x2 = gPlayer.projectile.x - r
 
           local angle = 0
-          local dangle = math.pi / pointsProjectile
+          local pointsProjectile = math.floor(#gTerrain.points / WINDOW_WIDTH * r * 2)
+          local dangle = math.pi / (pointsProjectile / 2)
 
-          for p = p1, p2, 2 do
-            gTerrain.points[p + 1] = gTerrain.points[p + 1] + r * math.sin(angle)
-            angle = angle + dangle
+          for p = 1, #gTerrain.points, 2 do
+            if gTerrain.points[p] >= x1 then
+              gTerrain.points[p + 1] = gTerrain.points[p + 1] + math.sin(angle) * r
+              angle = angle + dangle
+
+              if angle > math.pi then
+                break
+              end
+            end
           end
         end
 
@@ -71,8 +76,10 @@ function love.keypressed(key)
   end
 
   if key == "tab" then
-    gPlayer = Player:new()
-    gTerrain = Terrain:new(gPlayer)
+    Timer:reset()
+
+    gTerrain = Terrain:new()
+    gPlayer = Player:new(gTerrain)
     gTrajectory = Trajectory:new(gTerrain, gPlayer)
   end
 end
@@ -114,7 +121,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(0.83, 0.87, 0.92)
+  love.graphics.setColor(0.15, 0.16, 0.22)
   love.graphics.print("Velocity: " .. gPlayer.velocity, 8, 8)
   love.graphics.print("Angle: " .. gPlayer.angle, 8, 24)
 

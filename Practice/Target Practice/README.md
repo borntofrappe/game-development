@@ -1,6 +1,6 @@
 # Target Practice
 
-A two-player game with a simple task: destroy your opponent before it destroys you.
+Set velocity, angle, and fire a cannonball toward a distant target.
 
 ## Prep
 
@@ -8,7 +8,9 @@ In the `Prep` folder I try to develop the building blocks for the final project.
 
 - `Physics` considers projectile motion
 
-- `Terrain` explores how to render the game's terrain and cannoball holes
+- `Terrain` explores how to create the terrain
+
+- `Holes` merges the two sub-folders to consider how the projectile should modify the terrain
 
 ### Physics
 
@@ -16,7 +18,7 @@ In the `Prep` folder I try to develop the building blocks for the final project.
 
 In the game the player fires a cannonball on the basis of two values: a velocity `v` and and angle `a`.
 
-The demo shows how to use the values to compute [range of the projectile](https://en.wikipedia.org/wiki/Projectile_motion#Maximum_distance_of_projectile).
+The demo shows how to use the values to compute the [range of the projectile](https://en.wikipedia.org/wiki/Projectile_motion#Maximum_distance_of_projectile).
 
 ```lua
 range = (v ^ 2 * math.sin(2 * theta)) / g
@@ -28,13 +30,13 @@ range = (v ^ 2 * math.sin(2 * theta)) / g
 local theta = math.rad(a)
 ```
 
-The formula immediately relies on hard-coded values, but the demo allows to change the velocity and angle by pressing the arrow keys. To choose a specific metric it is further possible to press the `v`, `a` or `tab` keys.
+The formula immediately relies on hard-coded values, but the demo allows to change the velocity and angle by pressing the arrow keys.
 
 #### Trajectory
 
 The movement of the projectile is simulated by having the object move in a sequence of points approximating an arc.
 
-The equations for the [projectile motion displacement](https://en.wikipedia.org/wiki/Projectile_motion#Displacement), and specifically those for the horizontal and vertical component, help to find the `x` and `y` coordinates as a function of time `t`.
+The equations for the [projectile motion displacement](https://en.wikipedia.org/wiki/Projectile_motion#Displacement), and specifically those for the horizontal and vertical components, help to find the `x` and `y` coordinates as a function of time `t`.
 
 ```lua
 dx = v * t * math.cos(theta)
@@ -234,7 +236,7 @@ In so doing, the loop creates a curve which begins and ends at the same `y` coor
 
 #### Asymmetry
 
-Creating a hill with trigonometric functions helps to have more interesting terrain. What is even more interesting is having an asymmetric hill, one that doesn't always peak at the same point and ends exactly where it started. In the demo, I accomplish this feat by first re-imagining the structure of the line.
+Creating a hill with trigonometric functions helps to have a more interesting surface. What is even more interesting is having an asymmetric terrain, a hill which doesn't always peak at the same point and ends exactly where it started. In the demo, I accomplish this feat by first re-imagining the structure of the line.
 
 The idea is to immediately decide the `y` coordinate of the two platforms.
 
@@ -292,29 +294,46 @@ local dangle2 = math.pi / p2
 
 ### Holes
 
-The final demo in the `Prep` folder incorporates the progress achieved in the `Physics` and `Terrain` sub-folders, with the goal of showing how the projectile modifies the terrain itself. A few changes worth mentioning:
+The demo merging the logic of the `Physics` and `Terrain` sub-folders creates different classes to manage the individual components: player, terrain and trajectory.
 
-- `Terrain` is modified to consider the position of the player
+Past this reconfiguration, the logic is also updated to have the player positioned relative to the terrain.
 
-  The class receives the player and uses its `x` coordinate to determine the number of points of the "flat" sections
+```lua
+function Player:new(terrain)
+  local y = terrain.points[2]
+end
+```
 
-  ```lua
-  local POINTS = {
-    ["flat"] = math.floor(WINDOW_WIDTH / player.x) * 2,
-    ["hill"] = 120
-  }
-  ```
+Moreover, the interval updating the position of the projectile is removed when the projectile exceeds the available width, and there are no more points in the terrain to consider.
 
-  The `y` coordinate is then relevant to describe where the line should begin
+```lua
+if indexStart + index + 2 >= #gTerrain.points then
+  Timer:reset()
+end
+```
 
-  ```lua
-  local yStart = player.y
-  ```
+Past these changes, the demo modifies the terrain, or rather the table of points making up the terrain, roughly starting from line `50`. The idea is to loop through the points making up the terrain to consider those points that are after where the projectile begins and before where the projectile ends. Relying on the sine function, each successive point is modified to create a counter-clockwise arc.
 
-- the velocity is modified through the left and right arrow keys, while the angle consider the up and down arrows
+```lua
+for p = 1, #gTerrain.points, 2 do
+  if gTerrain.points[p] >= x1 then
+    gTerrain.points[p + 1] = gTerrain.points[p + 1] + math.sin(angle) * r
+    angle = angle + dangle
+  end
+end
+```
 
-- the logic of the trajectory is included in its own class and is updated every time the player or the terrain changes
+`dangle` is computed dividing `math.pi` by the number of points covered by the size of the projectile. As the angle starts at `0`, the idea is to end at `math.pi` completing the semicircle.
 
-- the interval updating the position of the projectile is stopped when there are no more points to consider in the terrain
+```lua
+if angle > math.pi then
+  break
+end
+```
 
-For the purposes of the demo, creating holes in the terrain, refer to `main.lua` and roughly line `48`. Here the idea is to stop the interval and consider the number of points necessary to cover the projectile radius. Similarly to how the terrain uses the cosine function to draw the hill, finally, the code proceeds to modify the `y` coordinate of the terrain to create the desired gap.
+The number of points describing the radius of the projectile, or rather its diameter, depends on the width of the window and the number of points in the terrain.
+
+```lua
+local pointsProjectile = math.floor(#gTerrain.points / WINDOW_WIDTH * r * 2)
+local dangle = math.pi / (pointsProjectile / 2)
+```
