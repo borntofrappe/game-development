@@ -1,4 +1,4 @@
-Move the sprite for the character.
+# Character 1
 
 ## Movement
 

@@ -1,18 +1,20 @@
-Animate the character by looping through a series of sprites.
+# Character 3
 
 ## Spritesheet
 
-From _character.png_, the idea is to use the tenth and eleventh sprites in rapid succession. These allow to animate the character as it moves rightwards, but through the additional arguments of `love.graphics.draw` it's possible to flip the visual to also consider the opposite direction.
+From `character.png`, the idea is to use the tenth and eleventh sprites in rapid succession. The two sprites allow to animate the character as it moves rightwards, but through the additional arguments of `love.graphics.draw` it's possible to flip the visual to also consider the opposite direction.
 
-## Animation.lua
+## Animation
 
-The library is created by the lecturer and it consists of a class with three methods:
+The lecturer introduces `Animation.lua` as a small library to loop through a series of input frames.
+
+`Animation` is defined with three methods:
 
 - `init` initializes a series of variables to keep track of the passing of time. It also considers an input table, `def`, to detail the frames being looped through and the interval at which to change the individual frame
 
 - `update` considers `dt` to rapidly loop through the table of frames
 
-- `getCurrentFrame` works more as a utility function, to provide the frame currently in use
+- `getCurrentFrame` returns the current frame
 
 To use the library, you need to:
 
@@ -68,3 +70,16 @@ love.graphics.draw(
 ```
 
 This works, but the flip occurs from the top left corner. In light of this, it's necessary to modify the `x` coordinate and to offset the sprite by the character's width. This explains the purpose of the variable `direction`.
+
+```lua
+love.graphics.draw(
+  image,
+  quad,
+  -- x
+  direction == "right" and math.floor(characterX) or math.floor(characterX + CHARACTER_WIDTH),
+  y,
+  rotation,
+  -- scale
+  direction == "right" and 1 or -1,
+)
+```

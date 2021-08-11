@@ -30,6 +30,16 @@ The game is introduced by a series of demos discussing specific topics. These ar
 
 - `Character`, how to render, move, jump and animate the sprite making up the character
 
+    0. render and move the sprite for the character
+
+    1. move the sprite for the character
+
+    2. track the character position to have the camera follow its movement
+
+    3. animate the character by looping through a series of sprites
+
+    4. allow the character to jump by modifying the `y` coordinate
+
 - `Level`, how to generate a level with different features
 
 From these demos, there is a considerable learning curve to develop the full game, and the different `Super Mario Bros \*` demos are my attempt at building the game in increments.
