@@ -1,34 +1,42 @@
-The fifth video covers a 2D platformer inspired by Super Mario Bros.
+## 04 Super Mario Bros
+
+The fifth lecture covers a 2D platformer inspired by Super Mario Bros.
+
+<!-- ![A few frames from the assignment for "Super Mario Bros"](https://github.com/borntofrappe/game-development/blob/master/04%20Super%20Mario%20%Bros/super-mario-bros.gif) -->
 
 ## Topics
 
-- tile maps
+- tile maps, turning a series of IDs into a game world. The idea is to render individual tiles giving the illusion of a world
 
-- 2D animation
+- 2D animation, specifically a frame animation alternating rapidly between different frames
 
-- procedural level generation
+- procedural level generation, creating levels with a certain degree of randomness
 
-- platformer physics
+- basics of platformer physics, considering individual tiles and their IDs for a possible collision 
 
-- basic AI
+- basics of AI, with a snail chasing the player
 
-- powerups
+- powerups, game objects for the player to pick up and modify the game
 
 ## Project structure
 
-The game is introduced by a series of demos discussing specific topics. These are developed in the "Prep" folder:
+The game is introduced by a series of demos discussing specific topics. These are developed in the `Prep` folder:
 
-1. _Tiles_, how to render tiles and fake movement with horizontal scroll
+- `Tiles`, how to render tiles and simulate movement with horizontal scroll
 
-2. _Character_, how to render, move, jump and animate the sprite making up the character
+    0. render static tiles
 
-3. _Level_, how to generate a level with different features
+    1. horizontal scroll the window to simulate movement
 
-From these demos, there is a considerable learning curve to develop the full game, and the different _Super Mario Bros \*_ demos are my way to build the game in increments.
+- `Character`, how to render, move, jump and animate the sprite making up the character
 
-In _Super Mario Bros — Final_ find the version of the game most closely resembling the one introduced in the video.
+- `Level`, how to generate a level with different features
 
-In _Super Mario Bros — Assignment_ find the final version of the game, incorporating the assignment as well.
+From these demos, there is a considerable learning curve to develop the full game, and the different `Super Mario Bros \*` demos are my attempt at building the game in increments.
+
+<!-- 0. -->
+
+Past the increments, `Super Mario Bros — Final` deescribes the version of the game most closely resembling the one introduced in the video. `Super Mario Bros — Assignment` finally includes the features requested in the assignment.
 
 ## Resources
 
