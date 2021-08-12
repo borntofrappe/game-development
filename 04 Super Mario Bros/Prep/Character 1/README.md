@@ -1,5 +1,7 @@
 # Character 1
 
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
+
 ## Movement
 
 For the movement, the script removes the logic for the camera scroll and in its place changes the `x` coordinate of the sprite.

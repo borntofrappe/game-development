@@ -1,10 +1,6 @@
-Incorporate changes from the lecturer's code:
+# Super Mario Bros 4
 
-- game object
-
-- bushes and cacti
-
-- level maker
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 The `GameObject` class is used to describe aesthetic objects, like bushes and cati, as well as interactable objects, like gems and jump blocks. In this specific update however, I am solely interested in the first kind, and how objects are included in the logic of the `LevelMaker` class.
 

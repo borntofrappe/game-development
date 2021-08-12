@@ -1,5 +1,7 @@
 # Level 1
 
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
+
 ## Procedural generation
 
 The idea is to loop through the level column by column and, depending on the value of a flag, include a specific set of tiles. For instance:

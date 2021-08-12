@@ -1,5 +1,7 @@
 # Level 2
 
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
+
 ## Skip
 
 The idea is to populate an entire column with the tile representing the sky — an empty tile. The lecturer introduces a `goto` statement, but I implemented the feature with a different solution.

@@ -1,5 +1,7 @@
 # Character 3
 
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
+
 ## Spritesheet
 
 From `character.png`, the idea is to use the tenth and eleventh sprites in rapid succession. The two sprites allow to animate the character as it moves rightwards, but through the additional arguments of `love.graphics.draw` it's possible to flip the visual to also consider the opposite direction.

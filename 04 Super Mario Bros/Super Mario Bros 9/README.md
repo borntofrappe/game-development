@@ -1,6 +1,6 @@
-Incorporate changes from the lecturer's code:
+# Super Mario Bros 9
 
-- creature state
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 The creatures are scheduled to have three states: idle, moving, and chasing. By default, they are meant to be idle, to stand still. Only when visible then, they are meant to move. Finally, and only when the player is within reach, they are meant to chase.
 

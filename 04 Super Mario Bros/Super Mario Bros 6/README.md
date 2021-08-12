@@ -1,8 +1,6 @@
-Incorporate changes from the lecturer's code:
+# Super Mario Bros 6
 
-- score
-
-- jump blocks
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 ## Score
 

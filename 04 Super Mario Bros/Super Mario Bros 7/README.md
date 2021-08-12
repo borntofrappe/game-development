@@ -1,8 +1,7 @@
+# Super Mario Bros 7
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 Incorporate changes from the lecturer's code:
-
-- callback functions
-
-- gems
 
 ## Quads
 

@@ -1,10 +1,10 @@
-Incorporate changes from the lecturer's code:
+# Super Mario Bros 1
 
-- entity class
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 ## Entity
 
-The lecturer organizes the code to have _entities_, a helper structure to accommodate both the player and snails. With this update, I create the `Entity` class to have the player inherit its functionality only. I am also interested in only implementing the features developed so far, which means having the player move, jump, but not react to its surrounding environment; this last feat will be the topic of a future update.
+The lecturer organizes the code to have _entities_, a helper structure to accommodate both the player and snails. With this update, I create the `Entity` class to have the player inherit its functionality. I am also interested in only implementing the features developed so far, which means having the player move, jump, but not react to its surrounding environment; this last feat will be the topic of a future update.
 
 ### init
 
@@ -16,7 +16,7 @@ The class is initialized with a `def` table, which contains the necessary inform
 
 - `texture`; a string describing the png image in the global `gTexture` and `gFrames`
 
-- `stateMachine`; a state machine describing the player. This is actually important to warrant a separate section, see below
+- `stateMachine`; a state machine describing the player. This is actually important to warrant a separate section (see below).
 
 ### update
 
@@ -42,7 +42,7 @@ end
 
 ### render
 
-With the `render` function the entity uses the texture described in `self.texture` to target the specific image. For the actual quad, it uses the same value, which means the tables must have matching keys, and the current animation.
+With the `render` function the entity uses the texture described in `self.texture` to target the specific image. For the actual quad, it uses the same value, meaning the tables must have matching keys, and the current animation.
 
 ```lua
 function Entity:render()
@@ -54,15 +54,7 @@ Less relevant for the update, the direction is also used to flip the sprite when
 
 ### currentAnimation
 
-In the lecturer's code, the `Entity` class does not introduce a variable for `currentAnimation`.
-
-```lua
-function Entity:init(def)
-  self.currentAnimation = def.animation
-end
-```
-
-The value is however included in the separate states, like for the falling state.
+In the lecturer's code, the `Entity` class does not introduce a variable for `currentAnimation`. The value is however included in the separate states, like for the falling state.
 
 ```lua
 function PlayerFallingState:init(player)
@@ -74,11 +66,11 @@ function PlayerFallingState:init(player)
 end
 ```
 
-This is reasonable as the animation makes sense only in the context of the individual states. It is slightly strange to see that the value is used even if not defined in the same class.
+This is reasonable as the animation makes sense only in the context of the individual states.
 
 ## State machines
 
-As prefaced in the previous section, the game introduces additional state machines, and this time for the entities of the game; the idea is similar to the state machine for the entire game however.
+As prefaced in a previous section, the game introduces additional state machines, and this time for the entities of the game; the idea is similar to the state machine for the entire game however.
 
 The goal is to have dedicated files, like `PlayerWalkingState` and `PlayerIdleState`, in which to develop how the entity behaves, like what kind of input produces which kind of effect. Taking for example `PlayerWalkingState`:
 
@@ -134,17 +126,6 @@ The different states seems to share a few commonalities:
   end
   ```
 
-`PlayerJumpState` also describes the `:enter` function, but this seems superfluous.
-
-```lua
-function PlayerJumpState:enter(params)
-    gSounds['jump']:play()
-    self.player.dy = PLAYER_JUMP_VELOCITY
-end
-```
-
-The instructions can be moved in the `init` function since they don't depend on the `params` argument.
-
 ### IdleState
 
 In the idle state:
@@ -165,7 +146,7 @@ In the walking state:
 
 - update the player to move left or right, depending on the actual key
 
-**Please note**: the horizontal movement is limited to the beginning/end of the level in the `PlayState`,
+Note that the horizontal movement is limited to the beginning/end of the level in the `PlayState`,
 
 ```lua
 if self.player.x <= 0 then
@@ -230,8 +211,8 @@ function Player:init(def)
 end
 ```
 
-It does not use `Entity:init(def)`, because in this instance `self` would refer to `Entity`, not `Player`. It is necessary to explicitly use the argument in the `.init` function.
+The player does not use `Entity:init(def)`, because in this instance `self` would refer to `Entity`, not `Player`. It is necessary to explicitly use the argument in the `.init` function.
 
 ### Order
 
-In the list of dependencies included in "Dependency.lua". be sure to require the entity class _before_ the player class. In the wrong order the player doesn't have a class from which to inherit.
+In the list of dependencies included in `Dependency.lua`. be sure to require the entity class _before_ the player class. In the wrong order the player doesn't have a class from which to inherit.

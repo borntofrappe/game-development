@@ -1,5 +1,7 @@
 # Character 2
 
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
+
 ## Movement
 
 The idea is to have the camera focused on the character. To this end, the script reintroduces `cameraScroll` with a value dependant on `characterX`.
