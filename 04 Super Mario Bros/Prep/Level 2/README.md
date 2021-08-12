@@ -1,19 +1,21 @@
-Add variety in the form of chasm.
+# Level 2
 
 ## Skip
 
-The idea is to populate an entire column with the tile representing the sky — an empty tile. The lecturer introduces a `goto` statement, but in the version of this update, such a construct is necessary. In the lecturer's version:
+The idea is to populate an entire column with the tile representing the sky — an empty tile. The lecturer introduces a `goto` statement, but I implemented the feature with a different solution.
+
+In the lecturer's version:
 
 - populate the table with sky tiles only
 
 - loop through the table column by column
 
-- depending on the value of certain flags, add bricks, or skip columns altogether.
+- depending on the value of a few flags add bricks at a precise `y` coordinate or skip columns altogether
 
-In this version however:
+Here instead:
 
 - loop through the table column by column
 
-- set a height for the sky tiles
+- set a height for the sky tiles, changing the value depending on the value of a few flags
 
-- change the height depending on the value of the flags
+- populate the column with the necessary sky and ground ids

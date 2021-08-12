@@ -1,4 +1,4 @@
-Add variety in the form of pillars.
+# Level 1
 
 ## Procedural generation
 
@@ -38,7 +38,7 @@ if tile.topper then
 end
 ```
 
-The update extends this utility to provide more variety.
+The update extends this utility to add more variety.
 
 ## GenerateLevel
 

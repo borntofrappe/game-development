@@ -1,7 +1,7 @@
 require "src/Dependencies"
 
 function love.load()
-  love.window.setTitle("Character")
+  love.window.setTitle("Level")
   math.randomseed(os.time())
 
   love.graphics.setDefaultFilter("nearest", "nearest")
@@ -52,7 +52,7 @@ function love.load()
     Animation(
     {
       frames = {3},
-      interval = 0.3
+      interval = 1
     }
   )
 

@@ -42,6 +42,12 @@ The game is introduced by a series of demos discussing specific topics. These ar
 
 - `Level`, how to generate a level with different features
 
+    0. generate a level with a random backgrounds, tiles and tile tops
+
+    1. add pillars
+
+    2. add chasms
+
 From these demos, there is a considerable learning curve to develop the full game, and the different `Super Mario Bros \*` demos are my attempt at building the game in increments.
 
 <!-- 0. -->
