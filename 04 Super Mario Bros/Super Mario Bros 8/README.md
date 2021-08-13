@@ -2,11 +2,11 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
-_Please note_: the movement of the creatures is the subject of the next update. In this increment, the game populates the game with creatures, and has the player reacts a collision with their static version.
+_Please note_: the movement of the creatures is the subject of the next update. This increment populates the game with creatures, and has the player reacts a collision with their static version.
 
 ## Utils
 
-"creatures.png" is modified to have every creature in three variants. The first two show the "alive" states, and are alternated as the creature moves. The latter shows the "hit" state, and is perhaps meant to be shown right before the game removes the entity.
+`creatures.png` is modified to have every creature in three variants. The first two show the "alive" states, and are alternated as the creature moves. The latter shows the "hit" state, and is perhaps meant to be shown right before the game removes the entity.
 
 The `GenerateQuadsCreatures` function is specified to build a 2D table, where each nested table describes a creature through its different states. This means the `render` function is inherently different from that of the player — a class in which the sprites are provided in a one dimensional table.
 
@@ -106,7 +106,7 @@ else
 end
 ```
 
-For the specific update, I decided to use a creature from the first 6 variants, have the creature spawn above solid ground, and looking toward the player.
+For the specific update, I decided to use a creature from the first 6 variants, have the creature spawn above solid ground looking toward the player.
 
 ```lua
 local type = math.random(6)
@@ -150,7 +150,7 @@ This is because the player and creatures share the same coordinate system, unlik
 
 From this starting point, the idea is to consider entities in the different states of the player. Depending on the state, the behavior is indeed different:
 
-- in the falling state, remove the entity — and award a certain number of points
+- in the falling state, remove the entity — and award an arbitrary amount of points
 
   ```lua
   for k, entity in pairs(self.player.level.entities) do

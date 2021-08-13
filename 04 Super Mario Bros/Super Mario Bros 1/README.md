@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## Entity
 
-The lecturer organizes the code to have _entities_, a helper structure to accommodate both the player and snails. With this update, I create the `Entity` class to have the player inherit its functionality. I am also interested in only implementing the features developed so far, which means having the player move, jump, but not react to its surrounding environment; this last feat will be the topic of a future update.
+The lecturer organizes the code to have _entities_, a helper structure to accommodate both the player and snails. With this update, I create the `Entity` class to have the player inherit its functionality. I am only interested in implementing the features developed so far, which means having the player move, jump, but not react to the surrounding environment; this last feat will be the topic of a future update.
 
 ### init
 
@@ -16,7 +16,9 @@ The class is initialized with a `def` table, which contains the necessary inform
 
 - `texture`; a string describing the png image in the global `gTexture` and `gFrames`
 
-- `stateMachine`; a state machine describing the player. This is actually important to warrant a separate section (see below).
+- `stateMachine`; a state machine describing the player. This is actually important to warrant a separate section (see below)
+
+- `map`; the table describing the structure of the level
 
 ### update
 
@@ -54,7 +56,7 @@ Less relevant for the update, the direction is also used to flip the sprite when
 
 ### currentAnimation
 
-In the lecturer's code, the `Entity` class does not introduce a variable for `currentAnimation`. The value is however included in the separate states, like for the falling state.
+The `render` method uses a specific quad through the variable `self.currentAnimation`, but its value is not set in the `Entity` class. Each state sets up the animation in the `init` method.
 
 ```lua
 function PlayerFallingState:init(player)
@@ -70,17 +72,17 @@ This is reasonable as the animation makes sense only in the context of the indiv
 
 ## State machines
 
-As prefaced in a previous section, the game introduces additional state machines, and this time for the entities of the game; the idea is similar to the state machine for the entire game however.
+As prefaced in a previous section, the logic of the entities is managed with a state machine. The process is quite similar to the state machine for the entire game.
 
-The goal is to have dedicated files, like `PlayerWalkingState` and `PlayerIdleState`, in which to develop how the entity behaves, like what kind of input produces which kind of effect. Taking for example `PlayerWalkingState`:
+Dedicated files, like `PlayerWalkingState` and `PlayerIdleState`, describe how the entity behaves, what kind of input produces which kind of effect. Taking for example `PlayerWalkingState`:
 
 - have the player move in the direction described by the `self.direction`
 
 - move to the idle state when the left and right keys are released
 
-### Player
+## Player
 
-By looking at how the player is first initialized, it's possible to see how the individual states consider an input in the form of the player itself.
+By looking at how the player is first initialized, it's possible to see how the individual states consider as input the player itself.
 
 ```lua
 StateMachine {
@@ -89,9 +91,7 @@ StateMachine {
 }
 ```
 
-This is ultimately to give access to the player in the state, and modify its position, appearance _from_ the state.
-
-### states
+This is to give access to the player in the state, and modify its position, appearance _from_ the state itself.
 
 The different states seems to share a few commonalities:
 
@@ -99,7 +99,7 @@ The different states seems to share a few commonalities:
 
   ```lua
   function PlayerWalkingState:init(player)
-  self.player = player
+    self.player = player
   end
   ```
 
@@ -107,15 +107,14 @@ The different states seems to share a few commonalities:
 
   ```lua
   function PlayerWalkingState:init(player)
-  self.animation =
+    self.animation =
       Animation(
-      {
-      frames = {10, 11},
-      interval = 0.1
-      }
-  )
-
-  self.player.currentAnimation = self.animation
+        {
+          frames = {10, 11},
+          interval = 0.1
+        }
+    )
+    self.player.currentAnimation = self.animation
   end
   ```
 
@@ -150,9 +149,9 @@ Note that the horizontal movement is limited to the beginning/end of the level i
 
 ```lua
 if self.player.x <= 0 then
-    self.player.x = 0
+  self.player.x = 0
 elseif self.player.x >= self.width * TILE_SIZE - self.player.width then
-    self.player.x = self.width * TILE_SIZE - self.player.width
+  self.player.x = self.width * TILE_SIZE - self.player.width
 end
 ```
 
@@ -160,25 +159,27 @@ end
 
 In the jump state:
 
+- keep updating the horizontal movement if either the left or right key is being pressed
+
 - change `self.player.dy` to have the player move upwards
 
 - update `dy` and `y` to have the player move vertically and as subject to gravity
-
-- keep updating the horizontal movement if the left or right key is being pressed
 
 - move to the falling state in the moment `dy` becomes positive
 
 ### FallingState
 
-In the fall state (most similar to the jump state):
+In the falling state (most similar to the jump state):
+
+- keep updating the player horizontally
 
 - update `dy` and `y` to have the player move vertically and as subject to gravity
 
-- keep updating the horizontal movement if the left or right key is being pressed
-
 - move to the idle or walking state in the moment the player finds the coordinate of the ground
 
-## player and Player
+Differentiating between jumping and falling state seems trivial, but it is actually most important in terms of gameplay. Consider how the interaction with game object changes as the player is moving upwards, for instance to hit a block, or downwards, for instance to stomp an enemy.
+
+## Inheritance and self
 
 In terms of implementation, it's important to note that the player is initialized in the play state describing the values in the `def` table.
 
@@ -213,6 +214,4 @@ end
 
 The player does not use `Entity:init(def)`, because in this instance `self` would refer to `Entity`, not `Player`. It is necessary to explicitly use the argument in the `.init` function.
 
-### Order
-
-In the list of dependencies included in `Dependency.lua`. be sure to require the entity class _before_ the player class. In the wrong order the player doesn't have a class from which to inherit.
+In the list of dependencies included in `Dependency.lua`, be sure to require the entity class _before_ the player class. In the wrong order the player doesn't have a class from which to inherit.

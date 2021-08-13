@@ -3,7 +3,7 @@ StartState = Class({__includes = BaseState})
 function StartState:init()
   self.width = 100
   self.height = 10
-  self.level = LevelMaker.generate(self.width, self.height)
+  self.level, self.objects = LevelMaker.generate(self.width, self.height)
 
   self.background = math.random(#gFrames.backgrounds)
 end
@@ -21,6 +21,10 @@ function StartState:render()
   love.graphics.draw(gTextures["backgrounds"], gFrames["backgrounds"][self.background], 0, 0)
 
   self.level:render()
+
+  for k, object in pairs(self.objects) do
+    object:render()
+  end
 
   love.graphics.setFont(gFonts["large"])
   love.graphics.setColor(0, 0, 0, 1)

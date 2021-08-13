@@ -36,7 +36,7 @@ The function compares the `id` with the values collected in a constant to descri
 
 ### def
 
-Similarly to the way the player and entity are initialized, I decided to modify the `Tile` class to accept a table, and use the table's own values to initialize the coordinates, dimensions and so on. This makes it easier to avoid issues with the order arguments are specified.
+Similarly to the way the player and entity are initialized, I decided to modify the `Tile` class to accept a table, and use the table's own values to initialize the coordinates, dimensions and so on. This makes it easier to avoid issues with the order in which the arguments are specified.
 
 ## LevelMaker
 
@@ -71,9 +71,9 @@ local tile =
 
 ## TileMap
 
-`LevelMaker` doesn't return the table of tiles, but instead a `map` created with the `TileMap` class. (there is actually a wrapper class in the form of `GameLevel`, but as mentioned earlier, this will be discussed in a future update)
+`LevelMaker` doesn't return the table of tiles, but instead a `map` created with the `TileMap` class (there is actually a wrapper class in the form of `GameLevel`, but as mentioned earlier, this will be discussed in a future update).
 
-`TileMap` is used to take the tiles and provide two helper functions: `pointToTile` and `render`. With these functions, the game is able to render the level by using `level:render()`, and is further able to pinpoint a specific tile with `level:pointToTile(x, y)`. This last one is the topic of the next update, describing tile collision.
+`TileMap` is used to take the tiles and provide two helper functions. With `render`, the game is able to render the level by using `level:render()`. With `pointToTile`, the game is further able to pinpoint a specific tile matching the input coordinates. Consider the next update for more details.
 
 ### init
 

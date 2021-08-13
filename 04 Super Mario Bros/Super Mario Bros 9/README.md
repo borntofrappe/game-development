@@ -2,11 +2,9 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
-The creatures are scheduled to have three states: idle, moving, and chasing. By default, they are meant to be idle, to stand still. Only when visible then, they are meant to move. Finally, and only when the player is within reach, they are meant to chase.
+## Creature look
 
-## Bug report — creature
-
-Following the example of the player, I've rendered the sprite for the creature with the same values in terms of position and scale.
+Following the example of the player, I've rendered the sprite for the creature with the same logic of position and scale.
 
 ```lua
 function Creature:render()
@@ -60,7 +58,9 @@ function Creature:init(def)
 end
 ```
 
-## States
+## Creature states
+
+The creatures are scheduled to have three states: idle, moving, and chasing. By default, they are meant to be idle, to stand still. Only when visible then, they are meant to move. Finally, and only when the player is within reach, they are meant to chase.
 
 The three states share a few commonalities. In the way they are first initialized, all consider the following arguments:
 
@@ -68,7 +68,7 @@ The three states share a few commonalities. In the way they are first initialize
 
 - player, to consider the distance between creature and the player itself
 
-- creature, to change the state and the animation of the individual creature. This is similar to the player
+- creature, to change the state and the animation of the individual creature. This is similar to the player's own states
 
 Every instance also defines an animation, and this is exactly the same as with the player. Keep in mind that the creatures are rendered with a table of three sprites, the first two of which show the creature moving.
 
@@ -202,7 +202,7 @@ In terms of movement, the logic is the same described for the move state:
 
 - update `self.creature.x` considering the arbitrary speed
 
-- consider the tiles on the side of the player
+- consider the tiles on the side of the creature
 
 There is a small difference with respect to the tiles however. When the creature finds a pillar or a chasm, the idea is to fix the position of the creature, instead of changing its movement toward the opposite side. This is a bit of a judgment call, but is motivated by the fact that the creature should keep its direction toward the chased player.
 
@@ -250,7 +250,7 @@ function GameLevel:update(dt)
 end
 ```
 
-And the function is ultimately called on the instance of the level in the `PlayState`.
+The function is ultimately called on the instance of the level in the `PlayState`.
 
 ```lua
 function PlayState:update(dt)

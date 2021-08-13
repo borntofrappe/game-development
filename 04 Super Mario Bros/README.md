@@ -48,7 +48,7 @@ The game is introduced by a series of demos discussing specific topics. These ar
 
   2. add chasms
 
-From these demos, there is a considerable learning curve to develop the full game, and the different `Super Mario Bros \*` demos are my attempt at building the game in increments.
+From these demos, there is a considerable learning curve to develop the full game, and the different `Super Mario Bros *` demos are my attempt at building the game in increments:
 
 0. include a state machine, render and move the player from the play state
 
