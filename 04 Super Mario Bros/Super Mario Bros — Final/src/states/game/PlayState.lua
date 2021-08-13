@@ -8,7 +8,6 @@ function PlayState:init()
   self.background = math.random(#gFrames.backgrounds)
 
   self.camX = 0
-  self.camY = 0
 
   self.player =
     Player(
@@ -93,6 +92,9 @@ function PlayState:addCreaturesState()
         end,
         ["chasing"] = function()
           return CreatureChasingState(self.level.tileMap, self.player, entity)
+        end,
+        ["stucked"] = function()
+          return CreatureStuckedState(self.player, entity)
         end
       }
     )

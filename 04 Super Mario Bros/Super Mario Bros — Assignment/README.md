@@ -1,4 +1,6 @@
-# [Assignment](https://docs.cs50.net/ocw/games/assignments/4/assignment4.html)
+# Super Mario Bros — Assignment
+
+Consider the [assignment for Super Mario Bros](https://docs.cs50.net/ocw/games/assignments/4/assignment4.html).
 
 ## Solid ground
 

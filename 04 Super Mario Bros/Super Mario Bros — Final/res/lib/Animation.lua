@@ -2,7 +2,7 @@
   Author: Colton Ogden
   cogden@cs50.harvard.edu
 
-  -- comments of my own to try and understand the library
+  -- comments @borntofrappe to try and understand the library
 ]]
 Animation = Class {}
 
