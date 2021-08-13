@@ -1,7 +1,6 @@
-TILE_SIZE = 16
-
 local WINDOW_WIDTH = 500
 local WINDOW_HEIGHT = 360
+local TILE_SIZE = 16
 local SCALE = 5
 local ANIMATION_INTERVAL = 0.15
 
@@ -20,25 +19,20 @@ function love.load()
   }
 
   gQuads = {
-    ["player"] = GenerateQuadsPlayer(gTextures["spritesheet"]),
-    ["dog"] = GenerateQuadsDog(gTextures["spritesheet"])
+    ["player"] = GenerateQuads(gTextures["spritesheet"], 0, 0, TILE_SIZE),
+    ["dog"] = GenerateQuads(gTextures["spritesheet"], 0, 16, TILE_SIZE)
   }
-
-  local playerFrames = {}
-  for i = 1, #gQuads["player"] do
-    table.insert(playerFrames, i)
-  end
-
-  idleAnimation = Animation:new({1}, 1)
-  walkingAnimation = Animation:new(playerFrames, ANIMATION_INTERVAL)
-
-  playerAnimation = idleAnimation
 
   local dogFrames = {}
   for i = 1, #gQuads["dog"] do
     table.insert(dogFrames, i)
   end
   dogAnimation = Animation:new(dogFrames, ANIMATION_INTERVAL)
+
+  idleAnimation = Animation:new({1}, 1)
+  walkingAnimation = Animation:new({2, 3}, ANIMATION_INTERVAL)
+
+  playerAnimation = idleAnimation
 end
 
 function love.keypressed(key)

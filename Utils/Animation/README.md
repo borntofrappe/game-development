@@ -4,52 +4,46 @@
 
 ## Notes
 
-The library is created by the lecturer and it consists of a class with three methods:
-
-- `init` initializes a series of variables to keep track of the passing of time. It also considers an input table, `def`, to detail the frames being looped through and the interval at which to change the individual frame
-
-- `update` considers `dt` to rapidly loop through the table of frames
-
-- `getCurrentFrame` works more as a utility function, to provide the frame currently in use
-
-To use the library, you need to:
-
-1. define the animation(s)
-
-   ```lua
-   idleAnimation =
-    Animation(
-    {
-      frames = {1},
-      interval = 1
-    }
-   )
-
-   movingAnimation =
-    Animation(
-    {
-      frames = {10, 11},
-      interval = 0.2
-    }
-   )
-   ```
-
-   The class `Animation` allows to rapidly loop through the frames described in the table bearing the same name.
-
-   In the demo, an additional variable `currentAnimation` allows to keep track of one of the two. By default this refers to the idle animation, but when pressing the arrow keys, it's updated with the moving alternative.
-
-2. update the animation
-
-   ```lua
-   currentAnimation:update(dt)
-   ```
-
-With these two steps, the animation keeps looping through `self.frames`, and updates `self.currentFrame` to match. Through `getCurrentFrame` you can finally retrieve this value and use it to render the appropriate sprite.
+The animation library works by describing a table of frames and an interval.
 
 ```lua
-gFrames["character"][currentAnimation:getCurrentFrame()],
+dogAnimation = Animation:new(
+  {1,2,3},
+  0.2
+)
+```
+
+The idea is to set up a timer, keep track of delta time and when the timer exceeds the input interval, cycle through the table.
+
+```lua
+function Animation:new(frames, interval)
+  local this = {
+    ["frames"] = frames,
+    ["interval"] = interval,
+    ["timer"] = 0,
+    ["currentFrame"] = 1
+  }
+end
+```
+
+`index` is updated to describe the index in the `frames` array.
+
+The `update` function updates this value when `timer` exceeds the input `interval`.
+
+```lua
+if self.index == #self.frames then
+  self.index = 1
+else
+  self.index = self.index + 1
+end
+```
+
+The `getCurrentFrame` function returns the frame at the current index.
+
+```lua
+return self.frames[self.index]
 ```
 
 ## Demo
 
-`main.lua` demos the library consider two basic animations. `spritesheet.png` provides the images divvied up in quads.
+`main.lua` demos the library with two animations: one looping indefinitely in the bottom right corner and one running only when the `down` arrow key is continuously being pressed.

@@ -5,7 +5,7 @@ function Animation:new(frames, interval)
     ["frames"] = frames,
     ["interval"] = interval,
     ["timer"] = 0,
-    ["currentFrame"] = 1
+    ["index"] = 1
   }
 
   self.__index = self
@@ -19,15 +19,15 @@ function Animation:update(dt)
     self.timer = self.timer + dt
     if self.timer >= self.interval then
       self.timer = self.timer % self.interval
-      if self.currentFrame == #self.frames then
-        self.currentFrame = 1
+      if self.index == #self.frames then
+        self.index = 1
       else
-        self.currentFrame = self.currentFrame + 1
+        self.index = self.index + 1
       end
     end
   end
 end
 
 function Animation:getCurrentFrame()
-  return self.currentFrame
+  return self.frames[self.index]
 end
