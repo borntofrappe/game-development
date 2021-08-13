@@ -1,4 +1,6 @@
-Add variety in the form of pillars.
+# Level 1
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 ## Procedural generation
 
@@ -38,7 +40,7 @@ if tile.topper then
 end
 ```
 
-The update extends this utility to provide more variety.
+The update extends this utility to add more variety.
 
 ## GenerateLevel
 

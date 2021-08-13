@@ -1,6 +1,6 @@
-Incorporate changes from the lecturer's code:
+# Super Mario Bros 3
 
-- tile collision
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 ## pointToTile
 
@@ -39,7 +39,7 @@ return self.tiles[column][row]
 
 ## Player
 
-With `pointToTile`, it's possible to have the player — and later other entities — aware of the surrounding environment. Once this entity includes the instance of the `TileMap` class.
+With `pointToTile`, it's possible to have the player — and later other entities — aware of the surrounding environment.
 
 ```diff
 self.player =
@@ -56,7 +56,7 @@ self.player =
   )
 ```
 
-It's then possible to have the player move, stop, fall, and all according to the created level. The tilemap is accessible from the player class and its individual states.
+It's then possible to have the player move, stop, fall, and all according to the level. The tilemap is accessible from the player class and its individual states.
 
 ## Walking
 
@@ -125,7 +125,7 @@ In the falling state, consider the tiles right below the player. This not only t
   self.player.y = (tileBottomLeft.y - 1) * TILE_SIZE - self.player.height
   ```
 
-## check[Left|Right]Collision
+## Collision
 
 In the walking state, but also when jumping or falling, the game needs to consider horizontal movement when the `left` or `right` keys are being pressed.
 

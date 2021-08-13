@@ -1,16 +1,14 @@
-Incorporate changes from the lecturer's code:
+# Super Mario Bros 4
 
-- game object
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
-- bushes and cacti
+## Game objects
 
-- level maker
-
-The `GameObject` class is used to describe aesthetic objects, like bushes and cati, as well as interactable objects, like gems and jump blocks. In this specific update however, I am solely interested in the first kind, and how objects are included in the logic of the `LevelMaker` class.
+The `GameObject` class is used to describe decorative objects, like bushes and cati, as well as interactable objects, like gems and jump blocks. In this specific update however, I am solely interested in the first kind, and how objects are included in the `LevelMaker` class.
 
 ## Quads
 
-The quads for the bushes and cacti are incorporated through the `GenerateQuads` function, knowing that each asset covers a 16x16 square of the "bushes_and_cacti" texture. The same is true for the gems and jump blocks — something to consider for future updates.
+The quads for the bushes and cacti are incorporated through the `GenerateQuads` function, knowing that each asset covers a 16x16 square of the `bushes_and_cacti` texture. The same is true for the gems and jump blocks — something to consider for future updates.
 
 ```lua
 gFrames = {
@@ -18,7 +16,7 @@ gFrames = {
 }
 ```
 
-With `GenerateQuads` you obtain a one dimensional table, however. Since the visuals are created in rows of similar colors, a more refined solution is to create two dimensional table, whereby each nested table describes a set. This is ultimately what I accomplished with the `GenerateQuadsObject` function, in "Utils.lua"
+With `GenerateQuads`,however, you obtain a one dimensional table. Since the visuals are created in rows of similar colors, a more refined solution is to create two-dimensional table, whereby each nested table describes a set. This is ultimately what I accomplished with the `GenerateQuadsObject` function, in "Utils.lua"
 
 ```lua
 function GenerateQuadsObjects(atlas, width, height)
@@ -36,7 +34,7 @@ end
 
 ## GameObject
 
-The class works similarly to `Entity`, in that it sets its position, dimension, and texture considering as input a `def` table.
+The class works similarly to `Entity`, in that it sets the position, dimension, and texture considering as input a `def` table.
 
 ```lua
 function GameObject:init(def)
@@ -60,7 +58,7 @@ There are a considerable number of attributes describing objects with which the 
 
 ## Objects
 
-It is in the `LevelMaker` class, and the body of the `generate` function, that game objects are included. In the next update, I will cover how the tilemap, objects and entities are included in a `GameLevel` class, but here I decided to have the `generate` function return the objects alongside the tilemap.
+The objects are included in the `LevelMaker` class, and specifically the body of the `generate` function. In a future update, I will cover how the tilemap, objects and entities are included in a `GameLevel` class, but here I decided to have the `generate` function return the objects alongside the tilemap.
 
 ```lua
 return map, objects
@@ -105,7 +103,7 @@ Before creating the level, the function also initializes a variable to describe 
 local colorBushesAndCacti = math.random(#gFrames["bushes_and_cacti"])
 ```
 
-Later, when the loop is in the process of adding ground tiles, the idea is to initialize an object with certain odds.
+When the loop is in the process of adding ground tiles, the idea is to then initialize an object with certain odds.
 
 ```lua
 if isChasm then

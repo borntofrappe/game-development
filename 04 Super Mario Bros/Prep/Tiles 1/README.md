@@ -1,4 +1,6 @@
-Fake horizontal scroll by moving the tiles with the left and right arrow keys.
+# Tiles 1
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 ## Translate
 
@@ -26,4 +28,4 @@ cameraScroll = math.max(0, cameraScroll - CAMERA_SCROLL_SPEED * dt)
 
 ## math.floor
 
-The lecturer explains how the `math.floor` is necessary to have the game render correctly. This to maintain the pixelated artwork and resolution allowed by the _push_ library.
+The lecturer explains how the `math.floor` is necessary to have the game render correctly. This to maintain the pixelated artwork and resolution allowed by the `push` library.

@@ -1,4 +1,6 @@
-Finalize the progress achieved with "Super Mario Bros 9" with minor changes.
+# Super Mario Bros — Final
+
+Wrap up the project developed in increments up.
 
 ## Bounce
 
@@ -8,7 +10,7 @@ The idea is to have the player jump when falling above a creature.
 if entity:collides(self.player) then
   self.player.score = self.player.score + 100
   table.remove(self.player.level.entities, k)
-  self.player:changeState("jump", true)
+  self.player:changeState("jump")
 end
 ```
 
@@ -45,3 +47,17 @@ if self.player.y + self.player.height >= VIRTUAL_HEIGHT then
   gStateMachine:change("start")
 end
 ```
+
+## Stucked
+
+It is possible for a creature to continuously flip its direction left and right. Consider for instance a situation in which the entity is between two pillars, or again between a pillar and a chasm. The end result is that the texture is flips frame after frame creating a rather annoying effect. To fix this, the moving state checks that, when the creature finds an obstacle and tries to change its direction, it is actually possible to move to the opposite side.
+
+```lua
+if not tileBottomLeft or (tileBottomLeft and tileBottomLeft.id == TILE_SKY) then
+  self.creature:changeState("stucked")
+end
+
+-- similarly for the bottom right tile, when moving left
+```
+
+Checking the bottom left tile when moving right, or the bottom right one when moving left, the creature moves to the `stucked` state. Here the logic mirrors that of the idle state, in that the creature does not move, but also that of the moving state, in that the creature chases the player within the prescribed range.

@@ -30,6 +30,7 @@ require("src/states/entities/player/PlayerFallingState")
 require("src/states/entities/creature/CreatureIdleState")
 require("src/states/entities/creature/CreatureMovingState")
 require("src/states/entities/creature/CreatureChasingState")
+require("src/states/entities/creature/CreatureStuckedState")
 
 gFonts = {
   ["small"] = love.graphics.newFont("res/fonts/font.ttf", 8),

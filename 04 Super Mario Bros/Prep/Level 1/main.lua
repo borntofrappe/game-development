@@ -52,7 +52,7 @@ function love.load()
     Animation(
     {
       frames = {3},
-      interval = 0.3
+      interval = 1
     }
   )
 

@@ -1,12 +1,10 @@
-Incorporate changes from the lecturer's code:
+# Super Mario Bros 0
 
-- include a state machine for the game
-
-- render and move the player in the play state
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 ## Depencencies
 
-The file requires the libraries and other `lua` files developing the game, but it also includes global variables previously defined in the body of `love.load`.
+The file requires the libraries and other `.lua` files developing the game, but it also includes global variables previously defined in the body of `love.load`.
 
 ```lua
 gFonts = {}
@@ -62,8 +60,8 @@ In `PlayState`, the game renders a different level, but always using the `LevelM
 
 ## LevelMaker.lua
 
-The class includes the logic previously developed in the "Prep" folders and specifically the "Level 2" demo. In a future update, it will be modified to build a more complex table, and one which will include a tilemap as well as instances of a `Tile` class.
+The class includes the logic previously developed in the `Prep` folders and specifically the `Level 2` demo. In a future update, it will be modified to build a more complex table, and one which will include a tilemap as well as instances of a `Tile` class.
 
 ## Player.lua
 
-Similarly to the level maker, the class includes the logic developed in the "Prep" folders, and considers the code describing how the player is defined and rendered. The lecturer's code has a more complex implementation, and one that contemplates a more general class from which the player inherits — `Entity`. This will be however the topic of a future update.
+Similarly to the level maker, the class includes the logic developed in the `Prep` folders, and considers the code describing how the player is defined and rendered. The lecturer's code has a more complex implementation, and one that contemplates a more general class from which the player inherits — `Entity`. This will be however the topic of a future update.

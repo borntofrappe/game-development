@@ -33,11 +33,3 @@ function TileMap:render()
     end
   end
 end
-
-function TileMap:render()
-  for x = 1, self.width do
-    for y = 1, self.height do
-      self.tiles[x][y]:render()
-    end
-  end
-end

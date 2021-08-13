@@ -1,8 +1,10 @@
-Allow the character to jump by modifying the `y` coordinate.
+# Character 4
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 ## Gravity
 
-The logic is similar to _Flappy Bird_: Have a variable describe the gravity, and have this variable modify the y coordinate with an increasing influence. The difference is that the gravity is reset when the character reaches the level of the bricks.
+The logic is similar to `Flappy Bird`: initialize a variable describe the gravity, and have this variable modify the `y` coordinate with an increasing influence. The difference is that the gravity is reset when the character reaches the row of the bricks.
 
 ```lua
 if characterY > TILE_SIZE * (ROWS_SKY - 1) - CHARACTER_HEIGHT then
@@ -33,14 +35,14 @@ end
 
 ## Animation
 
-The animation is included to loop through the second and third sprite. This animation is included as the `space` key is pressed, and is replaced by the previous two — moving and idle — when the character stops jumping.
+The jumping state relies on a single frame, included through a specific animation.
 
 ```lua
 jumpingAnimation =
   Animation(
   {
-    frames = {3, 2},
-    interval = 0.3
+    frames = {3},
+    interval = 1
   }
 )
 ```

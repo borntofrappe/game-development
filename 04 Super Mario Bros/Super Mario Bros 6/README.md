@@ -1,8 +1,6 @@
-Incorporate changes from the lecturer's code:
+# Super Mario Bros 6
 
-- score
-
-- jump blocks
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Super Mario Bros — Final`.
 
 ## Score
 
@@ -15,7 +13,7 @@ function Player:init(def)
 end
 ```
 
-And it is rendered in the context of `PlayState`. This to have the score visible in the top left corner regardless of camera scroll.
+The value is then rendered in the context of `PlayState` before the horizontal translation. This to have the score visible in the top left corner regardless of camera scroll.
 
 ```lua
 function PlayState:render()
@@ -66,10 +64,7 @@ This is similar to the bushes and cacti, but I decided to:
 - use a color at random
 
   ```lua
-  -- -- previously
-  -- local colorJumpBlocks = math.random(#gFrames["jump_blocks"])
-
-  color = colorJumpBlocks,
+  local colorJumpBlocks = math.random(#gFrames["jump_blocks"])
   ```
 
 - use a fixed variety in the first sprite of each set
@@ -93,17 +88,13 @@ The object for the jump block is updated to have an additional boolean: `isSolid
 ```lua
 GameObject(
   {
-    x = x,
-    y = rows_sky - 3,
-    texture = "jump_blocks",
-    color = colorJumpBlocks,
-    variety = 1,
+    -- previous fields
     isSolid = true
   }
 )
 ```
 
-This boolean is used in the logic of the player, and by giving the player class knowledge about the level itself.
+The boolean is used in the logic of the player, and by giving the player class knowledge about the level itself.
 
 ```lua
 self.player =
@@ -179,7 +170,7 @@ end
 
 This works to have the player stop when jumping or falling on an object. In terms of gameplay however, it is necessary to consider objects when moving horizontally.
 
-### left and right collision
+### Collision
 
 The idea is to prevent the player from moving left and right, when a solid block is found in the respective direction. This is achieved by having the game literally offset the horizontal movement. For the function checking a collision on the left side, for instance, the game first moves the player left.
 
@@ -231,9 +222,9 @@ end
 
 ### Walking state
 
-While the change in the horizontal dimension is considered with the `Player` class and the functions checking for a collision, it is finally necessary to update the walking state. The class is modified in two instances:
+While the change in the horizontal dimension is considered in the `Player` class, it is necessary to update the movement in the walking state. The class is modified in two instances:
 
-- move to the falling state if the player is above solid tiles — as earlier — but also if the player is above solid objects
+- move to the falling state if the player is above solid tiles — as earlier — but also if the player doesn't collide with solid objects
 
   ```lua
   local collidedObjects = self.player:checkObjectCollision()
@@ -261,7 +252,7 @@ While the change in the horizontal dimension is considered with the `Player` cla
   self.player.y = self.player.y + 1
   ```
 
-  And ultimately, it is a necessary shift to allow for horizontal movement when the player is above a solid object. Without this shift, the player would find the object underneath, and this would prevent the player from moving altogether.
+  It is a necessary to shift the player to allow for horizontal movement when the player is above a solid object. Without this shift, the player would find the object underneath, and this would prevent the player from moving altogether.
 
 ### 1px shifts
 

@@ -27,9 +27,15 @@ function CreatureMovingState:update(dt)
       self.tileMap:pointToTile(self.creature.x + self.creature.width, self.creature.y + self.creature.height + 1)
 
     if (tileTopRight and tileBottomRight) and (tileTopRight.id == TILE_GROUND or tileBottomRight.id == TILE_SKY) then
-      self.creature.x = (tileBottomRight.x - 1) * TILE_SIZE - self.creature.width
-      self.direction = "left"
-      self.creature.direction = self.direction
+      local tileBottomLeft = self.tileMap:pointToTile(self.creature.x - 1, self.creature.y + self.creature.height + 1)
+
+      if not tileBottomLeft or (tileBottomLeft and tileBottomLeft.id == TILE_SKY) then
+        self.creature:changeState("stucked")
+      else
+        self.creature.x = (tileBottomRight.x - 1) * TILE_SIZE - self.creature.width
+        self.direction = "left"
+        self.creature.direction = self.direction
+      end
     end
   else
     self.creature.x = self.creature.x - CREATURE_MOVE_SPEED * dt
@@ -41,9 +47,16 @@ function CreatureMovingState:update(dt)
       ((tileTopLeft and tileBottomLeft) and (tileTopLeft.id == TILE_GROUND or tileBottomLeft.id == TILE_SKY) or
         self.creature.x < 0)
      then
-      self.creature.x = tileBottomLeft and (tileBottomLeft.x - 1) * TILE_SIZE + tileBottomLeft.width or 0
-      self.direction = "right"
-      self.creature.direction = self.direction
+      local tileBottomRight =
+        self.tileMap:pointToTile(self.creature.x + self.creature.width + 1, self.creature.y + self.creature.height + 1)
+
+      if not tileBottomRight or (tileBottomRight and tileBottomRight.id == TILE_SKY) then
+        self.creature:changeState("stucked")
+      else
+        self.creature.x = tileBottomLeft and (tileBottomLeft.x - 1) * TILE_SIZE + tileBottomLeft.width or 0
+        self.direction = "right"
+        self.creature.direction = self.direction
+      end
     end
   end
 

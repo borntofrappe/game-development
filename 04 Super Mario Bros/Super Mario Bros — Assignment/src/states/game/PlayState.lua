@@ -98,6 +98,9 @@ function PlayState:addCreaturesState()
         end,
         ["chasing"] = function()
           return CreatureChasingState(self.level.tileMap, self.player, entity)
+        end,
+        ["stucked"] = function()
+          return CreatureStuckedState(self.player, entity)
         end
       }
     )
