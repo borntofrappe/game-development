@@ -55,7 +55,7 @@ self.player =
 )
 ```
 
-### Bug report — safe chasm
+### Safe chasm
 
 An issue emerges when the player looks for a safe tile and finds a chasm. This is because in the `LevelMaker` class, the column describing a chasm have one ground tile still.
 
@@ -89,7 +89,7 @@ gFrames["keys_and_locks"][1][1] -- yellow key
 gFrames["keys_and_locks"][1][2] -- yellow lock
 ```
 
-### LevelMaker 
+### LevelMaker
 
 #### booleans
 
@@ -107,25 +107,18 @@ local showLock = math.random(50) == 1 or x > width * 2 / 5
 local showKey = math.random(50) == 1 or x > width * 3 / 5
 ```
 
-In this fashion, a lock will be spawned, at most after two fifths of the level. A key will be spawned, at most after three fifths.
+In this fashion, a lock will spawn, at most after two fifths of the level. A key will spawn, at most after three fifths.
 
 #### GameObject
 
-The lock is included in the `objects` table in the same fashion as jump blocks: a game object with `isSolid` and an `onCollide` function. This last one is used to simply play the empty block sound — although a different sound byte might be preferable.
+The lock is included in the `objects` table in the same fashion as jump blocks: a game object with `isSolid` and an empty `onCollide` function. I've also decided to include a boolean to differentiate the lock. This is useful in the moment the player consumes a key, and the game needs to remove the specific object.
 
 ```lua
-onCollide = function(obj)
-  gSounds["empty-block"]:play()
-end
-```
-
-I've also decided to include a boolean to differentiate the lock. This is useful in the moment the player consumes a key, and the game needs to remove the specific object.
-
-```lua
-isLock = true,
-onCollide = function(obj)
-  gSounds["empty-block"]:play()
-end
+GameObject(
+{
+  -- other fields
+  isLock = true
+}
 ```
 
 The key is included in the `objects` table similarly to a gem. The `onConsume` function is modified to provide a bigger number of points, but the two share much of their logic.
@@ -183,7 +176,7 @@ end
 
 ### GameObject
 
-This is something that tricked me considerably. The new boolean `isLock` or `isKey` mean nothing if they are not themselves set in the definition of the game object.
+The new boolean `isLock` or `isKey` mean nothing if they are not themselves set in the definition of the game object.
 
 ```lua
 function GameObject:init(def)
@@ -194,7 +187,7 @@ end
 
 ### Bonus
 
-This is not expected from the assignment, but I've decided to experiment further with the way the key is provided to the player. Picking up from the way gems are included, by hitting a block, the idea is to have a jump block which exclusively spawns the key.
+This is not expected from the assignment, but I've decided to experiment further with the way the key is provided to the player. Picking up from the way gems are included by hitting a block, the idea is to have a jump block which exclusively spawns the key.
 
 ```lua
 local isKeyHidden = math.random(2) == 1
@@ -203,7 +196,7 @@ if isKeyHidden then
 end
 ```
 
-The difference is that the block spawns the key without any doubt.
+The difference with respect to the gem is that the keyed block always spawns the key.
 
 ```lua
 onCollide = function(obj)
@@ -249,12 +242,6 @@ Since the goal post is shown only after the lock has disappeared, it makes sense
 +y = rows_sky - 1,
 ```
 
-In this situation, the `onCollide` function becomes superfluous, but I decided to keep its logic. This to avoid a situation in which the function is called, but is not available.
-
-```lua
-onCollide = function() end
-```
-
 With a different anonymous function, the idea is to have the goal post spawn with two game objects.
 
 ```lua
@@ -293,7 +280,7 @@ local pole =
   }
 ```
 
-For the flag however, the horizontal coordinate is incremented by half. This to have the flag centered in the pole.
+For the flag however, the horizontal coordinate is incremented by half, to have the flag centered in the pole.
 
 ```lua
 local pole =
