@@ -19,13 +19,13 @@ self.player =
 )
 ```
 
-Just be sure to initialize the player in its falling state, to have the sprite plummet toward the `tileMap`
+Just be sure to initialize the player in its falling state, to have the sprite plummet toward the `tileMap`.
 
 ```lua
 self.player:changeState("falling")
 ```
 
-From this starting point, finding a safe coordinate is a matter of looping through the `tileMap` object and return the coordinate for the first column providing ground tiles. This is achieved with a function, which loops through the columns, and then through the tiles.
+From this starting point, finding a safe coordinate is a matter of looping through the `tileMap` object and return the coordinate of the first column with ground tiles. This is achieved with a function, which loops through the columns, and then through the tiles.
 
 ```lua
 function PlayState:getSafeTile()
@@ -89,7 +89,9 @@ gFrames["keys_and_locks"][1][1] -- yellow key
 gFrames["keys_and_locks"][1][2] -- yellow lock
 ```
 
-### LevelMaker — booleans
+### LevelMaker 
+
+#### booleans
 
 The idea is to include only one lock and key per level. This is achieved by having a boolean refer to whether or not the level already has a lock, whether or not it has a key.
 
@@ -107,7 +109,7 @@ local showKey = math.random(50) == 1 or x > width * 3 / 5
 
 In this fashion, a lock will be spawned, at most after two fifths of the level. A key will be spawned, at most after three fifths.
 
-### LevelMaker — GameObject
+#### GameObject
 
 The lock is included in the `objects` table in the same fashion as jump blocks: a game object with `isSolid` and an `onCollide` function. This last one is used to simply play the empty block sound — although a different sound byte might be preferable.
 
