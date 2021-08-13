@@ -1,0 +1,4 @@
+TITLE = "Missile Command"
+
+WINDOW_WIDTH = 580
+WINDOW_HEIGHT = 525
