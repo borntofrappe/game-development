@@ -20,27 +20,32 @@ function StartState:enter()
     ["x"] = self.title.x - overlayWidth - 2,
     ["y"] = self.title.y + gapOffsetY + gapHeight / 2 - overlayHeight / 2,
     ["width"] = overlayWidth,
-    ["height"] = overlayHeight
+    ["height"] = overlayHeight,
+    ["delay"] = 1,
+    ["tween"] = 3
   }
 
   self.overlay = overlay
 
-  self.showInstruction = false
+  self.instruction = {
+    ["opacity"] = 0,
+    ["tween"] = 1
+  }
 
   Timer:after(
-    1,
+    self.overlay.delay,
     function()
       Timer:tween(
-        3,
+        self.overlay.tween,
         {
           [self.overlay] = {["x"] = self.title.x + gapOffsetX}
         },
         function()
-          Timer:after(
-            0.75,
-            function()
-              self.showInstruction = true
-            end
+          Timer:tween(
+            self.instruction.tween,
+            {
+              [self.instruction] = {["opacity"] = 1}
+            }
           )
         end
       )
@@ -56,9 +61,8 @@ function StartState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    if self.showInstruction then
-      gStateMachine:change("play")
-    end
+    Timer:reset()
+    gStateMachine:change("serve")
   end
 end
 
@@ -69,8 +73,7 @@ function StartState:render()
   love.graphics.setColor(0, 0, 0)
   love.graphics.rectangle("fill", self.overlay.x, self.overlay.y, self.overlay.width, self.overlay.height)
 
-  if self.showInstruction then
-    love.graphics.setFont(gFonts.normal)
-    love.graphics.printf("Play", 0, WINDOW_HEIGHT / 2 + 48, WINDOW_WIDTH, "center")
-  end
+  love.graphics.setColor(0, 0, 0, self.instruction.opacity)
+  love.graphics.setFont(gFonts.normal)
+  love.graphics.printf("Play", 0, WINDOW_HEIGHT / 2 + 64, WINDOW_WIDTH, "center")
 end

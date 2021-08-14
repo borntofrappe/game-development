@@ -21,6 +21,9 @@ function love.load()
       ["start"] = function()
         return StartState:new()
       end,
+      ["serve"] = function()
+        return ServeState:new()
+      end,
       ["play"] = function()
         return PlayState:new()
       end
