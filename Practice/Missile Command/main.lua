@@ -6,11 +6,19 @@ function love.load()
   love.graphics.setBackgroundColor(1, 1, 1)
 
   gTextures = {
-    ["title"] = love.graphics.newImage("res/graphics/title.png")
+    ["background"] = love.graphics.newImage("res/graphics/background.png"),
+    ["title"] = love.graphics.newImage("res/graphics/title.png"),
+    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
+  }
+
+  gQuads = {
+    ["structures"] = GenerateQuadsStructures(gTextures.spritesheet),
+    ["missile"] = GenerateQuadMissile(gTextures.spritesheet)
   }
 
   gFonts = {
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 32)
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 32),
+    ["small"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
   love.graphics.setFont(gFonts.normal)
@@ -30,7 +38,12 @@ function love.load()
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change(
+    "play",
+    {
+      ["data"] = Data:new()
+    }
+  )
 
   love.keyboard.keypressed = {}
 end

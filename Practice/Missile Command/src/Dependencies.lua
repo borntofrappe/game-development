@@ -1,8 +1,12 @@
 Timer = require "res/lib/Timer"
 
 require "src/constants"
+require "src/Utils"
 
 require "src/Data"
+
+require "src/Town"
+require "src/LaunchPad"
 
 require "src/StateMachine"
 require "src/states/BaseState"
