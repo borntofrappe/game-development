@@ -29,10 +29,37 @@ function PlayState:enter(params)
   self.towns = towns
   self.launchPads = launchPads
 
+  self.missiles = {}
+  local numberMissiles = love.math.random(MISSILES_NUMBER[1], MISSILES_NUMBER[2])
+
+  for i = 1, numberMissiles do
+    local x1 = love.math.random(0, WINDOW_WIDTH)
+    local y1 = 0
+    local delay = love.math.random(MISSILES_DELAY_MAX)
+
+    local shootLaunchPad = love.math.random(MISSILE_LAUNCH_PAD_ODDS) == 1
+    local target
+    if shootLaunchPad then
+      target = self.launchPads[love.math.random(#self.launchPads)]
+    else
+      target = self.towns[love.math.random(#self.towns)]
+    end
+
+    local x2 = target.x + target.width / 2
+    local y2 = target.y
+
+    local missile = Missile:new(x1, y1, x2, y2)
+    Timer:after(
+      delay,
+      function()
+        missile:launch(MISSILE_TIME)
+        table.insert(self.missiles, missile)
+      end
+    )
+  end
+
   self.trackball = Trackball:new()
   self.antiMissiles = {}
-
-  -- self.missiles = {}
 
   self.background = {
     ["y"] = WINDOW_HEIGHT - self.data.background.height - gTextures.background:getHeight()
@@ -41,6 +68,13 @@ end
 
 function PlayState:update(dt)
   Timer:update(dt)
+
+  for i, missile in ipairs(self.missiles) do
+    if not missile.inPlay then
+      Timer:remove(missile.label)
+      table.remove(self.missiles, i)
+    end
+  end
 
   for i, antiMissile in ipairs(self.antiMissiles) do
     if not antiMissile.inPlay then
@@ -105,6 +139,10 @@ function PlayState:render()
 
   for i, launchPad in ipairs(self.launchPads) do
     launchPad:render()
+  end
+
+  for i, missile in ipairs(self.missiles) do
+    missile:render()
   end
 
   for i, antiMissile in ipairs(self.antiMissiles) do
