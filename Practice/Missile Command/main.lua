@@ -63,5 +63,6 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.print(#Timer.intervals, 8, 8)
   gStateMachine:render()
 end

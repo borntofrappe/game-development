@@ -9,6 +9,7 @@ require "src/Town"
 require "src/LaunchPad"
 require "src/Trackball"
 require "src/Missile"
+require "src/Explosion"
 
 require "src/StateMachine"
 require "src/states/BaseState"

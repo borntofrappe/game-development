@@ -23,7 +23,8 @@ function Missile:new(x1, y1, x2, y2, label)
     ["points"] = points,
     ["currentPoints"] = {},
     ["label"] = label,
-    ["inPlay"] = true
+    ["inPlay"] = true,
+    ["d"] = (dx ^ 2 + dy ^ 2) ^ 0.5
   }
 
   self.__index = self
@@ -32,11 +33,11 @@ function Missile:new(x1, y1, x2, y2, label)
   return this
 end
 
-function Missile:launch(time)
+function Missile:launch(updateSpeed)
   local index = 0
 
   Timer:every(
-    time / (#self.points / 2),
+    updateSpeed * self.d,
     function()
       index = index + 2
 

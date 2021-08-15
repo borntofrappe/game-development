@@ -52,7 +52,7 @@ function PlayState:enter(params)
     Timer:after(
       delay,
       function()
-        missile:launch(MISSILE_TIME)
+        missile:launch(MISSILE_UPDATE_SPEED)
         table.insert(self.missiles, missile)
       end
     )
@@ -61,6 +61,8 @@ function PlayState:enter(params)
   self.trackball = Trackball:new()
   self.antiMissiles = {}
 
+  self.explosions = {}
+
   self.background = {
     ["y"] = WINDOW_HEIGHT - self.data.background.height - gTextures.background:getHeight()
   }
@@ -68,6 +70,19 @@ end
 
 function PlayState:update(dt)
   Timer:update(dt)
+
+  for i, explosion in ipairs(self.explosions) do
+    for j, missile in ipairs(self.missiles) do
+      if explosion:withinRange(missile) then
+        missile.inPlay = false
+      end
+    end
+
+    if not explosion.inPlay then
+      Timer:remove(explosion.label)
+      table.remove(self.explosions, i)
+    end
+  end
 
   for i, missile in ipairs(self.missiles) do
     if not missile.inPlay then
@@ -78,6 +93,12 @@ function PlayState:update(dt)
 
   for i, antiMissile in ipairs(self.antiMissiles) do
     if not antiMissile.inPlay then
+      local label = antiMissile.label .. "-explosion"
+      local explosion =
+        Explosion:new(antiMissile.points[#antiMissile.points - 1], antiMissile.points[#antiMissile.points], label)
+      explosion:trigger()
+      table.insert(self.explosions, explosion)
+
       Timer:remove(antiMissile.label)
       table.remove(self.antiMissiles, i)
     end
@@ -122,7 +143,7 @@ function PlayState:update(dt)
         label
       )
 
-      missile:launch(ANTI_MISSILE_TIME)
+      missile:launch(ANTIMISSILE_UPDATE_SPEED)
       table.insert(self.antiMissiles, missile)
     end
   end
@@ -139,6 +160,10 @@ function PlayState:render()
 
   for i, launchPad in ipairs(self.launchPads) do
     launchPad:render()
+  end
+
+  for i, explosion in ipairs(self.explosions) do
+    explosion:render()
   end
 
   for i, missile in ipairs(self.missiles) do
