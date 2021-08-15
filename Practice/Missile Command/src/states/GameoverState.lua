@@ -3,6 +3,8 @@ GameoverState = BaseState:new()
 local START_STATE_DELAY = 2.5
 
 function GameoverState:enter(params)
+  self.data = params.data
+
   Timer:after(
     START_STATE_DELAY,
     function()
@@ -24,9 +26,9 @@ function GameoverState:render()
   love.graphics.setColor(0, 0, 0)
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(
-    string.upper("The end"),
+    string.upper("Gameover\n" .. self.data.points .. " points"),
     0,
-    WINDOW_HEIGHT / 2 - gFonts.normal:getHeight() / 2,
+    WINDOW_HEIGHT / 2 - gFonts.normal:getHeight(),
     WINDOW_WIDTH,
     "center"
   )

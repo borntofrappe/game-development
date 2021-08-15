@@ -1,40 +1,19 @@
 PlayState = BaseState:new()
 
 function PlayState:enter(params)
+  self.isGameOver = false
   self.data = params.data
-
-  local level = "xoxxxxox"
-  local towns = {}
-  local launchPads = {}
-
-  local widthStructures = #level * STRUCTURE_WIDTH
-  local heightStructures = STRUCTURE_HEIGHT
-  local x = WINDOW_WIDTH / 2 - widthStructures / 2
-  local y = WINDOW_HEIGHT - self.data.background.height - STRUCTURE_HEIGHT
-
-  for i = 1, #level do
-    local structure = level:sub(i, i) == "x" and "town" or "launch-pad"
-    if structure == "town" then
-      table.insert(towns, Town:new(x, y))
-    else
-      table.insert(launchPads, LaunchPad:new(x, y))
-    end
-
-    x = x + STRUCTURE_WIDTH
-  end
-
-  self.towns = towns
-  self.launchPads = launchPads
 
   self.missiles = {}
 
-  for i = 1, MISSILES.number do
+  for i = 1, love.math.random(MISSILES["number"][1], MISSILES["number"][2]) do
     local x1 = love.math.random(0, WINDOW_WIDTH)
     local y1 = 0
-    local delay = love.math.random(MISSILES["delay-max"])
+    local delayMax = love.math.random(MISSILES["delay-max"][1], MISSILES["delay-max"][2])
+    local delay = love.math.random(delayMax)
 
     local launchPads = {}
-    for j, launchPad in ipairs(self.launchPads) do
+    for j, launchPad in ipairs(self.data.launchPads) do
       if launchPad.inPlay then
         table.insert(launchPads, launchPad)
       end
@@ -45,7 +24,7 @@ function PlayState:enter(params)
     if shootLaunchPad then
       target = launchPads[love.math.random(#launchPads)]
     else
-      target = self.towns[love.math.random(#self.towns)]
+      target = self.data.towns[love.math.random(#self.data.towns)]
     end
 
     local x2 = target.x + target.width / 2
@@ -106,16 +85,16 @@ function PlayState:update(dt)
       if destroysStructure then
         local destroysTown = false
 
-        for j, town in ipairs(self.towns) do
+        for j, town in ipairs(self.data.towns) do
           if missile.points[#missile.points - 1] > town.x and missile.points[#missile.points - 1] < town.x + town.width then
-            table.remove(self.towns, j)
+            table.remove(self.data.towns, j)
             destroysTown = true
             break
           end
         end
 
         if not destroysTown then
-          for j, launchPad in ipairs(self.launchPads) do
+          for j, launchPad in ipairs(self.data.launchPads) do
             if
               launchPad.inPlay and missile.points[#missile.points - 1] > launchPad.x and
                 missile.points[#missile.points - 1] < launchPad.x + launchPad.width
@@ -134,14 +113,17 @@ function PlayState:update(dt)
         explosion:trigger()
         table.insert(self.explosions, explosion)
 
-        if #self.towns == 0 then
-          Timer:reset()
-          gStateMachine:change("gameover")
+        if #self.data.towns == 0 then
+          self.isGameOver = true
         end
       end
 
       Timer:remove(missile.label)
       table.remove(self.missiles, i)
+
+      if #self.missiles == 0 then
+        self.isGameOver = true
+      end
     end
   end
 
@@ -161,6 +143,7 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("escape") then
+    Timer:reset()
     gStateMachine:change("start")
   end
 
@@ -176,29 +159,42 @@ function PlayState:update(dt)
     self.trackball.x = math.max(0, self.trackball.x - TRACKBALL_UPDATE_SPEED * dt)
   end
 
-  if love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("return") and not self.isGameOver then
     local x2 = self.trackball.x
     local index = x2 < WINDOW_WIDTH / 2 and 1 or 2
-    if not self.launchPads[index].inPlay or self.launchPads[index].missiles == 0 then
+    if not self.data.launchPads[index].inPlay or self.data.launchPads[index].missiles == 0 then
       index = index == 1 and 2 or 1
-      if not self.launchPads[index].inPlay or self.launchPads[index].missiles == 0 then
+      if not self.data.launchPads[index].inPlay or self.data.launchPads[index].missiles == 0 then
         index = nil
       end
     end
 
     if index then
-      local launchPad = self.launchPads[index]
+      local launchPad = self.data.launchPads[index]
 
       local x1 = launchPad.x + launchPad.width / 2
       local y1 = launchPad.y
       local y2 = self.trackball.y
-      local label = "launchPad-" .. index .. "-missile-" .. self.launchPads[index].missiles
+      local label = "launchPad-" .. index .. "-missile-" .. self.data.launchPads[index].missiles
       launchPad.missiles = launchPad.missiles - 1
 
       local missile = Missile:new(x1, y1, x2, y2, label)
 
       missile:launch(ANTI_MISSILE_UPDATE_SPEED)
       table.insert(self.antiMissiles, missile)
+    end
+  end
+
+  if self.isGameOver and #Timer.intervals == 0 then
+    if #self.data.towns == 0 then
+      gStateMachine:change("gameover")
+    else
+      gStateMachine:change(
+        "victory",
+        {
+          ["data"] = self.data
+        }
+      )
     end
   end
 end
@@ -208,11 +204,11 @@ function PlayState:render()
   love.graphics.setColor(1, 1, 1, 0.3)
   love.graphics.draw(gTextures.background, 0, self.background.y)
 
-  for i, town in ipairs(self.towns) do
+  for i, town in ipairs(self.data.towns) do
     town:render()
   end
 
-  for i, launchPad in ipairs(self.launchPads) do
+  for i, launchPad in ipairs(self.data.launchPads) do
     launchPad:render()
   end
 

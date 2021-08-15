@@ -10,8 +10,30 @@ function Data:new()
     ["height"] = backgroundHeight
   }
 
+  local level = "xoxxxxox"
+  local towns = {}
+  local launchPads = {}
+
+  local widthStructures = #level * STRUCTURE_WIDTH
+  local heightStructures = STRUCTURE_HEIGHT
+  local x = WINDOW_WIDTH / 2 - widthStructures / 2
+  local y = WINDOW_HEIGHT - background.height - STRUCTURE_HEIGHT
+
+  for i = 1, #level do
+    local structure = level:sub(i, i) == "x" and "town" or "launch-pad"
+    if structure == "town" then
+      table.insert(towns, Town:new(x, y))
+    else
+      table.insert(launchPads, LaunchPad:new(x, y))
+    end
+
+    x = x + STRUCTURE_WIDTH
+  end
+
   local this = {
     ["points"] = 0,
+    ["towns"] = towns,
+    ["launchPads"] = launchPads,
     ["background"] = background
   }
 

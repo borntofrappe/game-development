@@ -43,6 +43,6 @@ function Explosion:destroys(missile)
 end
 
 function Explosion:render()
-  love.graphics.setColor(0, 0, 0, 0.35)
+  love.graphics.setColor(0, 0, 0, 0.2)
   love.graphics.circle("fill", self.x, self.y, self.r)
 end

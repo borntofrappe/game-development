@@ -13,11 +13,14 @@ TRACKBALL_UPDATE_SPEED = 120
 LINE_RESOLUTION = 5
 
 ANTI_MISSILE_UPDATE_SPEED = 0.0001
-MISSILE_UPDATE_SPEED = 0.0009
+ANTI_MISSILES = {
+  ["number"] = 15
+}
 
+MISSILE_UPDATE_SPEED = 0.0009
 MISSILES = {
-  ["number"] = 10,
-  ["delay-max"] = 20,
+  ["number"] = {10, 20},
+  ["delay-max"] = {10, 20},
   ["launch-pad-odds"] = 5
 }
 

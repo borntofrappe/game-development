@@ -1,12 +1,12 @@
 LaunchPad = {}
 
-function LaunchPad:new(x, y, missiles)
+function LaunchPad:new(x, y)
   local this = {
     ["x"] = x,
     ["y"] = y,
     ["width"] = STRUCTURE_WIDTH,
     ["height"] = STRUCTURE_HEIGHT,
-    ["missiles"] = missiles or 15,
+    ["missiles"] = ANTI_MISSILES.number,
     ["inPlay"] = true
   }
 
@@ -14,6 +14,10 @@ function LaunchPad:new(x, y, missiles)
   setmetatable(this, self)
 
   return this
+end
+
+function LaunchPad:restock()
+  self.missiles = ANTI_MISSILES.number
 end
 
 function LaunchPad:render()
