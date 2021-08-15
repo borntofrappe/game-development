@@ -1,6 +1,7 @@
 PlayState = BaseState:new()
 
 local WHITESPACE = 0
+local UPDATE_SPEED = 100
 
 function PlayState:enter(params)
   self.data = params.data
@@ -28,8 +29,12 @@ function PlayState:enter(params)
   self.towns = towns
   self.launchPads = launchPads
 
+  self.trackball = Trackball:new()
+  self.missiles = {}
+  self.antiMissiles = {}
+
   self.background = {
-    ["y"] = WINDOW_HEIGHT - self.data.background.height - 70
+    ["y"] = WINDOW_HEIGHT - self.data.background.height - gTextures.background:getHeight()
   }
 end
 
@@ -37,11 +42,46 @@ function PlayState:update(dt)
   if love.keyboard.waspressed("escape") then
     gStateMachine:change("start")
   end
+
+  if love.keyboard.isDown("up") then
+    self.trackball.y = math.max(0, self.trackball.y - UPDATE_SPEED * dt)
+  elseif love.keyboard.isDown("down") then
+    self.trackball.y = math.min(self.data.background.y, self.trackball.y + UPDATE_SPEED * dt)
+  end
+
+  if love.keyboard.isDown("right") then
+    self.trackball.x = math.min(WINDOW_WIDTH, self.trackball.x + UPDATE_SPEED * dt)
+  elseif love.keyboard.isDown("left") then
+    self.trackball.x = math.max(0, self.trackball.x - UPDATE_SPEED * dt)
+  end
+
+  if love.keyboard.waspressed("return") then
+    local x2 = self.trackball.x
+    local index = x2 < WINDOW_WIDTH / 2 and 1 or 2
+    if self.launchPads[index].missiles == 0 then
+      index = index == 1 and 2 or 1
+      if self.launchPads[index].missiles == 0 then
+        index = nil
+      end
+    end
+
+    if index then
+      self.launchPads[index].missiles = self.launchPads[index].missiles - 1
+      local missile =
+        Missile:new(
+        self.launchPads[index].x + self.launchPads[index].width / 2,
+        self.launchPads[index].y,
+        self.trackball.x,
+        self.trackball.y
+      )
+      table.insert(self.antiMissiles, missile)
+    end
+  end
 end
 
 function PlayState:render()
   self.data:render()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(1, 1, 1, 0.3)
   love.graphics.draw(gTextures.background, 0, self.background.y)
 
   for i, town in ipairs(self.towns) do
@@ -51,4 +91,14 @@ function PlayState:render()
   for i, launchPad in ipairs(self.launchPads) do
     launchPad:render()
   end
+
+  for i, missile in ipairs(self.missiles) do
+    missile:render()
+  end
+
+  for i, antiMissile in ipairs(self.antiMissiles) do
+    antiMissile:render()
+  end
+
+  self.trackball:render()
 end
