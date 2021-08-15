@@ -8,7 +8,6 @@ function ServeState:enter(params)
   Timer:after(
     PLAY_STATE_DELAY,
     function()
-      Timer:reset()
       gStateMachine:change(
         "play",
         {
@@ -31,11 +30,5 @@ end
 function ServeState:render()
   love.graphics.setColor(0, 0, 0)
   love.graphics.setFont(gFonts.normal)
-  love.graphics.printf(
-    "Player x" .. self.data.lives .. "\nDefend Cairo",
-    0,
-    WINDOW_HEIGHT / 2 - gFonts.normal:getHeight(),
-    WINDOW_WIDTH,
-    "center"
-  )
+  love.graphics.printf("Defend Cairo", 0, WINDOW_HEIGHT / 2 - gFonts.normal:getHeight() / 2, WINDOW_WIDTH, "center")
 end

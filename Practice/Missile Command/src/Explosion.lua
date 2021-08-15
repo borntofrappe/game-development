@@ -35,11 +35,11 @@ function Explosion:trigger()
   )
 end
 
-function Explosion:withinRange(missile)
+function Explosion:destroys(missile)
   local x = missile.currentPoints[#missile.currentPoints - 1]
   local y = missile.currentPoints[#missile.currentPoints]
 
-  return (self.x - x) ^ 2 + (self.y - y) ^ 2 < self.r ^ 2
+  return (self.x - x) ^ 2 + (self.y - y) ^ 2 < self.r ^ 2 and self.direction == 1
 end
 
 function Explosion:render()

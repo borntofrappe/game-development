@@ -12,7 +12,6 @@ function Data:new()
 
   local this = {
     ["points"] = 0,
-    ["lives"] = 3,
     ["background"] = background
   }
 

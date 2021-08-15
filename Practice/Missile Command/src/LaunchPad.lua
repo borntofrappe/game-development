@@ -6,7 +6,8 @@ function LaunchPad:new(x, y, missiles)
     ["y"] = y,
     ["width"] = STRUCTURE_SIZE,
     ["height"] = STRUCTURE_SIZE,
-    ["missiles"] = missiles or 15
+    ["missiles"] = missiles or 15,
+    ["inPlay"] = true
   }
 
   self.__index = self
@@ -16,10 +17,12 @@ function LaunchPad:new(x, y, missiles)
 end
 
 function LaunchPad:render()
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.draw(gTextures.spritesheet, gQuads.structures[2], self.x, self.y)
+  if self.inPlay then
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(gTextures.spritesheet, gQuads.structures[2], self.x, self.y)
 
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.setFont(gFonts.small)
-  love.graphics.printf(self.missiles, self.x, self.y + self.height - gFonts.small:getHeight(), self.width, "center")
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.setFont(gFonts.small)
+    love.graphics.printf(self.missiles, self.x, self.y + self.height - gFonts.small:getHeight(), self.width, "center")
+  end
 end
