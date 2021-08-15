@@ -37,15 +37,12 @@ function love.keypressed(key)
 
     local pts = {}
 
-    local x = source.x
-    local y = source.y
-
     table.insert(pts, source.x)
     table.insert(pts, source.y)
 
     for i = 1, nPts, RESOLUTION do
-      table.insert(pts, x + math.floor(i * dx) / nPts)
-      table.insert(pts, y + math.floor(i * dy) / nPts)
+      table.insert(pts, source.x + math.floor(i * dx) / nPts)
+      table.insert(pts, source.y + math.floor(i * dy) / nPts)
     end
 
     table.insert(pts, target.x)

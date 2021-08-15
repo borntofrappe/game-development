@@ -30,8 +30,9 @@ function PlayState:enter(params)
   self.launchPads = launchPads
 
   self.trackball = Trackball:new()
-  self.missiles = {}
   self.antiMissiles = {}
+
+  -- self.missiles = {}
 
   self.background = {
     ["y"] = WINDOW_HEIGHT - self.data.background.height - gTextures.background:getHeight()
@@ -39,6 +40,15 @@ function PlayState:enter(params)
 end
 
 function PlayState:update(dt)
+  Timer:update(dt)
+
+  for i, antiMissile in ipairs(self.antiMissiles) do
+    if not antiMissile.inPlay then
+      Timer:remove(antiMissile.label)
+      table.remove(self.antiMissiles, i)
+    end
+  end
+
   if love.keyboard.waspressed("escape") then
     gStateMachine:change("start")
   end
@@ -66,14 +76,19 @@ function PlayState:update(dt)
     end
 
     if index then
+      local label = "launchPad-" .. index .. "-missile-" .. self.launchPads[index].missiles
       self.launchPads[index].missiles = self.launchPads[index].missiles - 1
+
       local missile =
         Missile:new(
         self.launchPads[index].x + self.launchPads[index].width / 2,
         self.launchPads[index].y,
         self.trackball.x,
-        self.trackball.y
+        self.trackball.y,
+        label
       )
+
+      missile:launch(ANTI_MISSILE_TIME)
       table.insert(self.antiMissiles, missile)
     end
   end
@@ -92,12 +107,14 @@ function PlayState:render()
     launchPad:render()
   end
 
-  for i, missile in ipairs(self.missiles) do
-    missile:render()
-  end
-
   for i, antiMissile in ipairs(self.antiMissiles) do
     antiMissile:render()
+
+    love.graphics.setLineWidth(0.25)
+    local x = antiMissile.points[#antiMissile.points - 1]
+    local y = antiMissile.points[#antiMissile.points]
+    love.graphics.line(x - TARGET_SIZE, y - TARGET_SIZE, x + TARGET_SIZE, y + TARGET_SIZE)
+    love.graphics.line(x - TARGET_SIZE, y + TARGET_SIZE, x + TARGET_SIZE, y - TARGET_SIZE)
   end
 
   self.trackball:render()

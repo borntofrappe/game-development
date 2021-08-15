@@ -4,7 +4,7 @@ function Trackball:new()
   local this = {
     ["x"] = WINDOW_WIDTH / 2,
     ["y"] = WINDOW_HEIGHT / 2,
-    ["size"] = 12
+    ["size"] = TRACKBALL_SIZE
   }
 
   self.__index = self
