@@ -10,7 +10,7 @@ local source = {
 local target = {
   ["x"] = WINDOW_WIDTH / 2,
   ["y"] = WINDOW_HEIGHT / 2,
-  ["size"] = 12
+  ["size"] = 10
 }
 
 local points = {}
@@ -49,9 +49,33 @@ function love.draw()
   love.graphics.setColor(0, 0, 0)
   love.graphics.circle("fill", source.x, source.y, 10)
 
-  love.graphics.setLineWidth(2)
+  love.graphics.setLineWidth(1)
   love.graphics.line(target.x - target.size, target.y, target.x + target.size, target.y)
   love.graphics.line(target.x, target.y - target.size, target.x, target.y + target.size)
+  love.graphics.line(
+    target.x - target.size / 2,
+    target.y - target.size,
+    target.x + target.size / 2,
+    target.y - target.size
+  )
+  love.graphics.line(
+    target.x - target.size / 2,
+    target.y + target.size,
+    target.x + target.size / 2,
+    target.y + target.size
+  )
+  love.graphics.line(
+    target.x - target.size,
+    target.y - target.size / 2,
+    target.x - target.size,
+    target.y + target.size / 2
+  )
+  love.graphics.line(
+    target.x + target.size,
+    target.y - target.size / 2,
+    target.x + target.size,
+    target.y + target.size / 2
+  )
 
   if #points > 2 then
     love.graphics.setLineWidth(0.5)

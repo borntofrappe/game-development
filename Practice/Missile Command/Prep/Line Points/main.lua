@@ -13,7 +13,7 @@ local source = {
 local target = {
   ["x"] = WINDOW_WIDTH / 2,
   ["y"] = WINDOW_HEIGHT / 2,
-  ["size"] = 12
+  ["size"] = 10
 }
 
 local points = {}
@@ -30,8 +30,8 @@ function love.keypressed(key)
   end
 
   if key == "return" then
-    local dx = (target.x - source.x) / RESOLUTION
-    local dy = (target.y - source.y) / RESOLUTION
+    local dx = (target.x - source.x)
+    local dy = (target.y - source.y)
 
     local nPts = math.max(math.abs(dx), math.abs(dy))
 
@@ -40,18 +40,24 @@ function love.keypressed(key)
     local x = source.x
     local y = source.y
 
-    for i = 1, nPts + 1 do
-      table.insert(pts, x + math.floor(i * dx) / nPts * RESOLUTION)
-      table.insert(pts, y + math.floor(i * dy) / nPts * RESOLUTION)
+    table.insert(pts, source.x)
+    table.insert(pts, source.y)
+
+    for i = 1, nPts, RESOLUTION do
+      table.insert(pts, x + math.floor(i * dx) / nPts)
+      table.insert(pts, y + math.floor(i * dy) / nPts)
     end
+
+    table.insert(pts, target.x)
+    table.insert(pts, target.y)
 
     Timer:reset()
     local index = 0
     Timer:every(
-      1 / nPts,
+      1 / #pts,
       function()
         index = index + 2
-        if index >= #pts then
+        if index > #pts then
           Timer:reset()
         else
           points = {}
@@ -83,9 +89,33 @@ function love.draw()
   love.graphics.setColor(0, 0, 0)
   love.graphics.circle("fill", source.x, source.y, 10)
 
-  love.graphics.setLineWidth(2)
+  love.graphics.setLineWidth(1)
   love.graphics.line(target.x - target.size, target.y, target.x + target.size, target.y)
   love.graphics.line(target.x, target.y - target.size, target.x, target.y + target.size)
+  love.graphics.line(
+    target.x - target.size / 2,
+    target.y - target.size,
+    target.x + target.size / 2,
+    target.y - target.size
+  )
+  love.graphics.line(
+    target.x - target.size / 2,
+    target.y + target.size,
+    target.x + target.size / 2,
+    target.y + target.size
+  )
+  love.graphics.line(
+    target.x - target.size,
+    target.y - target.size / 2,
+    target.x - target.size,
+    target.y + target.size / 2
+  )
+  love.graphics.line(
+    target.x + target.size,
+    target.y - target.size / 2,
+    target.x + target.size,
+    target.y + target.size / 2
+  )
 
   if #points > 2 then
     -- love.graphics.print(#points, 8, 8)
