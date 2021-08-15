@@ -7,10 +7,10 @@ function PlayState:enter(params)
   local towns = {}
   local launchPads = {}
 
-  local widthStructures = #level * STRUCTURE_SIZE
-  local heightStructures = STRUCTURE_SIZE
+  local widthStructures = #level * STRUCTURE_WIDTH
+  local heightStructures = STRUCTURE_HEIGHT
   local x = WINDOW_WIDTH / 2 - widthStructures / 2
-  local y = WINDOW_HEIGHT - self.data.background.height - STRUCTURE_SIZE
+  local y = WINDOW_HEIGHT - self.data.background.height - STRUCTURE_HEIGHT
 
   for i = 1, #level do
     local structure = level:sub(i, i) == "x" and "town" or "launch-pad"
@@ -20,7 +20,7 @@ function PlayState:enter(params)
       table.insert(launchPads, LaunchPad:new(x, y))
     end
 
-    x = x + STRUCTURE_SIZE
+    x = x + STRUCTURE_WIDTH
   end
 
   self.towns = towns

@@ -1,10 +1,10 @@
 function GenerateQuadsStructures(atlas)
   local quads = {}
 
-  for i = 1, math.floor(atlas:getWidth() / STRUCTURE_SIZE) do
+  for i = 1, math.floor(atlas:getWidth() / STRUCTURE_WIDTH) do
     table.insert(
       quads,
-      love.graphics.newQuad((i - 1) * STRUCTURE_SIZE, 0, STRUCTURE_SIZE, STRUCTURE_SIZE, atlas:getDimensions())
+      love.graphics.newQuad((i - 1) * STRUCTURE_WIDTH, 0, STRUCTURE_WIDTH, STRUCTURE_HEIGHT, atlas:getDimensions())
     )
   end
 
@@ -12,5 +12,5 @@ function GenerateQuadsStructures(atlas)
 end
 
 function GenerateQuadMissile(atlas)
-  return love.graphics.newQuad(67, 0, 16, 13, atlas:getDimensions())
+  return love.graphics.newQuad(77, 0, 16, 13, atlas:getDimensions())
 end

@@ -3,9 +3,9 @@ StartState = BaseState:new()
 function StartState:enter()
   local titleWidth = gTextures.title:getWidth()
   local titleHeight = gTextures.title:getHeight()
-  local gapHeight = 8 -- size of the gap
-  local gapOffsetY = 30 -- where the title is split in two
-  local gapOffsetX = 329 -- where the letter e in missile begins
+  local gapHeight = 6 -- size of the gap
+  local gapOffsetY = 24 -- where the title is split in two
+  local gapOffsetX = 256 -- where the letter e in missile begins
 
   local title = {
     ["x"] = math.floor(WINDOW_WIDTH / 2 - titleWidth / 2),
@@ -14,7 +14,7 @@ function StartState:enter()
 
   self.title = title
 
-  local missileWidth = 22
+  local missileWidth = 18
   local missileHeight = 4
   local missile = {
     ["x"] = self.title.x - missileWidth - 2,

@@ -4,8 +4,8 @@ function Town:new(x, y)
   local this = {
     ["x"] = x,
     ["y"] = y,
-    ["width"] = STRUCTURE_SIZE,
-    ["height"] = STRUCTURE_SIZE
+    ["width"] = STRUCTURE_WIDTH,
+    ["height"] = STRUCTURE_HEIGHT
   }
 
   self.__index = self

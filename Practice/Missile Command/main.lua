@@ -17,7 +17,7 @@ function love.load()
   }
 
   gFonts = {
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 32),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 30),
     ["small"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
