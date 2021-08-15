@@ -1,8 +1,5 @@
 PlayState = BaseState:new()
 
-local WHITESPACE = 0
-local UPDATE_SPEED = 100
-
 function PlayState:enter(params)
   self.data = params.data
 
@@ -10,7 +7,7 @@ function PlayState:enter(params)
   local towns = {}
   local launchPads = {}
 
-  local widthStructures = #level * STRUCTURE_SIZE + (#level - 1) * WHITESPACE
+  local widthStructures = #level * STRUCTURE_SIZE
   local heightStructures = STRUCTURE_SIZE
   local x = WINDOW_WIDTH / 2 - widthStructures / 2
   local y = WINDOW_HEIGHT - self.data.background.height - STRUCTURE_SIZE
@@ -23,21 +20,21 @@ function PlayState:enter(params)
       table.insert(launchPads, LaunchPad:new(x, y))
     end
 
-    x = x + STRUCTURE_SIZE + WHITESPACE
+    x = x + STRUCTURE_SIZE
   end
 
   self.towns = towns
   self.launchPads = launchPads
 
   self.missiles = {}
-  local numberMissiles = love.math.random(MISSILES_NUMBER[1], MISSILES_NUMBER[2])
 
-  for i = 1, numberMissiles do
+  for i = 1, MISSILES.number do
     local x1 = love.math.random(0, WINDOW_WIDTH)
     local y1 = 0
-    local delay = love.math.random(MISSILES_DELAY_MAX)
+    local delay = love.math.random(MISSILES["delay-max"])
 
-    local shootLaunchPad = love.math.random(MISSILE_LAUNCH_PAD_ODDS) == 1
+    local shootLaunchPad = love.math.random(MISSILES["launch-pad-odds"]) == 1
+
     local target
     if shootLaunchPad then
       target = self.launchPads[love.math.random(#self.launchPads)]
@@ -48,7 +45,9 @@ function PlayState:enter(params)
     local x2 = target.x + target.width / 2
     local y2 = target.y
 
-    local missile = Missile:new(x1, y1, x2, y2)
+    local label = "missile-" .. i
+    local missile = Missile:new(x1, y1, x2, y2, label)
+
     Timer:after(
       delay,
       function()
@@ -59,6 +58,7 @@ function PlayState:enter(params)
   end
 
   self.trackball = Trackball:new()
+
   self.antiMissiles = {}
 
   self.explosions = {}
@@ -75,6 +75,7 @@ function PlayState:update(dt)
     for j, missile in ipairs(self.missiles) do
       if explosion:withinRange(missile) then
         missile.inPlay = false
+        break
       end
     end
 
@@ -93,9 +94,11 @@ function PlayState:update(dt)
 
   for i, antiMissile in ipairs(self.antiMissiles) do
     if not antiMissile.inPlay then
+      local x = antiMissile.points[#antiMissile.points - 1]
+      local y = antiMissile.points[#antiMissile.points]
       local label = antiMissile.label .. "-explosion"
-      local explosion =
-        Explosion:new(antiMissile.points[#antiMissile.points - 1], antiMissile.points[#antiMissile.points], label)
+      local explosion = Explosion:new(x, y, label)
+
       explosion:trigger()
       table.insert(self.explosions, explosion)
 
@@ -109,15 +112,15 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.isDown("up") then
-    self.trackball.y = math.max(0, self.trackball.y - UPDATE_SPEED * dt)
+    self.trackball.y = math.max(0, self.trackball.y - TRACKBALL_UPDATE_SPEED * dt)
   elseif love.keyboard.isDown("down") then
-    self.trackball.y = math.min(self.data.background.y, self.trackball.y + UPDATE_SPEED * dt)
+    self.trackball.y = math.min(self.data.background.y, self.trackball.y + TRACKBALL_UPDATE_SPEED * dt)
   end
 
   if love.keyboard.isDown("right") then
-    self.trackball.x = math.min(WINDOW_WIDTH, self.trackball.x + UPDATE_SPEED * dt)
+    self.trackball.x = math.min(WINDOW_WIDTH, self.trackball.x + TRACKBALL_UPDATE_SPEED * dt)
   elseif love.keyboard.isDown("left") then
-    self.trackball.x = math.max(0, self.trackball.x - UPDATE_SPEED * dt)
+    self.trackball.x = math.max(0, self.trackball.x - TRACKBALL_UPDATE_SPEED * dt)
   end
 
   if love.keyboard.waspressed("return") then
@@ -131,19 +134,17 @@ function PlayState:update(dt)
     end
 
     if index then
+      local launchPad = self.launchPads[index]
+
+      local x1 = launchPad.x + launchPad.width / 2
+      local y1 = launchPad.y
+      local y2 = self.trackball.y
       local label = "launchPad-" .. index .. "-missile-" .. self.launchPads[index].missiles
-      self.launchPads[index].missiles = self.launchPads[index].missiles - 1
+      launchPad.missiles = launchPad.missiles - 1
 
-      local missile =
-        Missile:new(
-        self.launchPads[index].x + self.launchPads[index].width / 2,
-        self.launchPads[index].y,
-        self.trackball.x,
-        self.trackball.y,
-        label
-      )
+      local missile = Missile:new(x1, y1, x2, y2, label)
 
-      missile:launch(ANTIMISSILE_UPDATE_SPEED)
+      missile:launch(ANTI_MISSILE_UPDATE_SPEED)
       table.insert(self.antiMissiles, missile)
     end
   end

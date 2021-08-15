@@ -18,15 +18,15 @@ end
 
 function Explosion:trigger()
   Timer:every(
-    EXPLOSION_INTERVAL,
+    EXPLOSION.interval,
     function()
-      self.r = self.r + EXPLOSION_RADIUS_INCREMENT * self.direction
-      if self.r >= EXPLOSION_RADIUS_MAX then
-        self.r = EXPLOSION_RADIUS_MAX
+      self.r = self.r + 1 * self.direction
+      if self.r >= EXPLOSION.radius then
+        self.r = EXPLOSION.radius
         self.direction = self.direction * -1
       end
 
-      if self.r == 0 then
+      if self.r <= 0 then
         self.inPlay = false
       end
     end,

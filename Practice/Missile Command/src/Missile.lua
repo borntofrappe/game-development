@@ -11,7 +11,7 @@ function Missile:new(x1, y1, x2, y2, label)
   table.insert(points, x1)
   table.insert(points, y1)
 
-  for i = 1, numberPoints, RESOLUTION do
+  for i = 1, numberPoints, LINE_RESOLUTION do
     table.insert(points, x1 + math.floor(i * dx) / numberPoints)
     table.insert(points, y1 + math.floor(i * dy) / numberPoints)
   end

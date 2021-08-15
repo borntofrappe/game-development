@@ -2,8 +2,8 @@ ServeState = BaseState:new()
 
 local PLAY_STATE_DELAY = 2.5
 
-function ServeState:enter()
-  self.data = Data:new()
+function ServeState:enter(params)
+  self.data = params and params.data or Data:new()
 
   Timer:after(
     PLAY_STATE_DELAY,
@@ -29,8 +29,6 @@ function ServeState:update(dt)
 end
 
 function ServeState:render()
-  self.data:render()
-
   love.graphics.setColor(0, 0, 0)
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(

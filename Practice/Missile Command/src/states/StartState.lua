@@ -3,9 +3,9 @@ StartState = BaseState:new()
 function StartState:enter()
   local titleWidth = gTextures.title:getWidth()
   local titleHeight = gTextures.title:getHeight()
-  local gapOffsetY = 30
-  local gapOffsetX = 329
-  local gapHeight = 8
+  local gapHeight = 8 -- size of the gap
+  local gapOffsetY = 30 -- where the title is split in two
+  local gapOffsetX = 329 -- where the letter e in missile begins
 
   local title = {
     ["x"] = math.floor(WINDOW_WIDTH / 2 - titleWidth / 2),
@@ -14,38 +14,38 @@ function StartState:enter()
 
   self.title = title
 
-  local overlayWidth = 20
-  local overlayHeight = 4
-  local overlay = {
-    ["x"] = self.title.x - overlayWidth - 2,
-    ["y"] = self.title.y + gapOffsetY + gapHeight / 2 - overlayHeight / 2,
-    ["width"] = overlayWidth,
-    ["height"] = overlayHeight,
+  local missileWidth = 22
+  local missileHeight = 4
+  local missile = {
+    ["x"] = self.title.x - missileWidth - 2,
+    ["y"] = self.title.y + gapOffsetY + gapHeight / 2 - missileHeight / 2,
+    ["width"] = missileWidth,
+    ["height"] = missileHeight,
     ["delay"] = 1,
     ["tween"] = 3
   }
 
-  self.overlay = overlay
+  self.missile = missile
 
   self.instruction = {
-    ["opacity"] = 0,
-    ["tween"] = 1
+    ["isVisibile"] = false,
+    ["delay"] = 0.8
   }
 
   Timer:after(
-    self.overlay.delay,
+    self.missile.delay,
     function()
       Timer:tween(
-        self.overlay.tween,
+        self.missile.tween,
         {
-          [self.overlay] = {["x"] = self.title.x + gapOffsetX}
+          [self.missile] = {["x"] = self.title.x + gapOffsetX}
         },
         function()
-          Timer:tween(
-            self.instruction.tween,
-            {
-              [self.instruction] = {["opacity"] = 1}
-            }
+          Timer:after(
+            self.instruction.delay,
+            function()
+              self.instruction.isVisibile = true
+            end
           )
         end
       )
@@ -71,9 +71,11 @@ function StartState:render()
   love.graphics.draw(gTextures.title, self.title.x, self.title.y)
 
   love.graphics.setColor(0, 0, 0)
-  love.graphics.rectangle("fill", self.overlay.x, self.overlay.y, self.overlay.width, self.overlay.height)
+  love.graphics.rectangle("fill", self.missile.x, self.missile.y, self.missile.width, self.missile.height)
 
-  love.graphics.setColor(0, 0, 0, self.instruction.opacity)
-  love.graphics.setFont(gFonts.normal)
-  love.graphics.printf("Play", 0, WINDOW_HEIGHT / 2 + 64, WINDOW_WIDTH, "center")
+  if self.instruction.isVisibile then
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.setFont(gFonts.normal)
+    love.graphics.printf("Play", 0, WINDOW_HEIGHT * 3 / 4 - gFonts.normal:getHeight() / 2, WINDOW_WIDTH, "center")
+  end
 end
