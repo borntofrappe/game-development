@@ -12,5 +12,7 @@ function GenerateQuadsStructures(atlas)
 end
 
 function GenerateQuadMissile(atlas)
-  return love.graphics.newQuad(77, 0, MISSILE_WIDTH, MISSILE_HEIGHT, atlas:getDimensions())
+  local x = 77
+  local y = 0
+  return love.graphics.newQuad(x, y, MISSILE_WIDTH, MISSILE_HEIGHT, atlas:getDimensions())
 end

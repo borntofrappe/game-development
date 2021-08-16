@@ -25,6 +25,16 @@ function ServeState:update(dt)
     Timer:reset()
     gStateMachine:change("start")
   end
+
+  if love.keyboard.waspressed("return") then
+    Timer:reset()
+    gStateMachine:change(
+      "play",
+      {
+        ["data"] = self.data
+      }
+    )
+  end
 end
 
 function ServeState:render()
