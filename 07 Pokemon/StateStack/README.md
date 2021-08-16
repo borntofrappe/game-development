@@ -1,14 +1,14 @@
-Introduce the concept of a statestack.
+# State dtack
 
-## Theory
+Unlike a state machine, a state stack allows to move from state to state _without_ creating new instances. Consider how in previous games the `gStateMachine:change()` function essentially destroyed a state before moving on to the new one.
 
-Unlike a state machine, the concept of a statestack allows to move from state to state without creating new instances. Consider how in previous games the `gStateMachine:change()` function essentially destroyed the current state before moving on to the new one.
+## Notes
 
 With a state stack it is possible to render multiple states, which makes it possible to render panels and textbox above the scenery.
 
 ### Stack
 
-Taking inspiration from the data structure, a state stack has several layers of states.
+Taking inspiration from the data structure of a stack, a state stack has several layers of states.
 
 ```text
  ---------
@@ -21,7 +21,7 @@ Taking inspiration from the data structure, a state stack has several layers of 
 
 You _push_ (add) and _pop_ (remove) a state on the stack as needed, for instance to show or dismiss the dialogue following a specific event. You update the topmost state.
 
-### Init, update, render
+### Initialize
 
 Dissecting the code, the `StateStack` class is initialized with a table of states.
 
@@ -33,7 +33,9 @@ end
 
 The empty table `{}` is used as a precaution, in the moment the stack is initialized without arguments.
 
-In the `update` function, the class updates the topmost state, as mentioned above.
+### Update
+
+In the `update` function, the class updates the topmost state.
 
 ```lua
 function StateStack:update(dt)
@@ -41,7 +43,9 @@ function StateStack:update(dt)
 end
 ```
 
-In the `render` logic then, it renders _every_ state in the stack. This is exactly what differentiates the concept from the state machine.
+### Render
+
+In the `render` logic then, the class renders _every_ state in the stack. This is fundamentally different from a state machine, devoted to update _and_ render only the current state.
 
 ```lua
 function StateStack:render()
@@ -53,15 +57,15 @@ end
 
 Notice how the code uses `ipairs`, to guarantee the order described in the stack.
 
-### Push, pop
+### Push and pop
 
 To add and remove states from the stack, the class defines two additional functions:
 
-1. `:push(state)` adds the input state as the last element of the states' table
+1. `:push(state)` adds the input state as the last element of the stack
 
 2. `:pop()` removes the last element from the states' table
 
-In addition to the addition/removal of a state, the functions are also responsible to call the necessary functions describing the lifecycle of individual states. Consider how the individual states go through a series of phases:
+Beyond adding or removing a state, the functions are also responsible to call the functions describing the lifecycle of individual states. Consider how the individual states go through a series of phases:
 
 - init
 
@@ -71,7 +75,7 @@ In addition to the addition/removal of a state, the functions are also responsib
 
 - exit
 
-In light of this structure, the push operation needs to introduce the new state.
+In light of this structure, the push operation needs to introduce the new state through its `enter` method.
 
 ```lua
 function StateStack:push(state)
@@ -80,7 +84,7 @@ function StateStack:push(state)
 end
 ```
 
-The pop operation needs to then exit the state. This before the state is actually removed.
+The pop operation needs to then exit the state through the `exit` function. Notice that the function is called before the state is actually removed.
 
 ```lua
 function StateStack:pop()
@@ -101,66 +105,38 @@ end
 
 This might be useful in the moment the game is initialized anew.
 
-## Practice
+## Demo
 
-In the demo, the code shows the concept of a stack experimenting with two layered states: play and dialogue. The idea is to show how the two coexist in terms of visual, and also how the stack updates the state at the top of the stack.
-
-### main.lua
+`main.lua` highlights the state stack with two layered states: play and dialogue. The idea is to show how the two coexist in terms of visual, and also how the stack updates the state at the top of the stack.
 
 `main.lua` sets up the instance of the `StateStack` class.
 
-- initialize the state stack in `love.load()`
+```lua
+gStateStack =
+  StateStack(
+  {
+    PlayState(),
+  }
+)
+```
 
-  ```lua
-  gStateStack =
-    StateStack(
-    {
-      PlayState(),
-      DialogueState()
-    }
-  )
-  ```
+It is here equivalent to initialize the stack without passing any arguments, and then push the state afterwards.
 
-  It is here equivalent to initialize the stack without passing any arguments, and then pushing the individual states afterwards.
+```lua
+gStateStack = StateStack()
+gStateStack:push(PlayState())
+```
 
-  ```lua
-  gStateStack = StateStack()
-  gStateStack:push(PlayState())
-  gStateStack:push(DialogueState())
-  ```
+In the update and draw functions then, the stack calls the matching functions.
 
-- update and render the stack in `love.update` and `love.draw` respectively.
+```lua
+function love.update(dt)
+  gStateStack:update(dt)
+end
 
-  ```lua
-  function love.update(dt)
-    gStateStack:update(dt)
-  end
+function love.draw()
+  gStateStack:render()
+end
+```
 
-  function love.draw()
-    gStateStack:render()
-  end
-  ```
-
-### Individual states
-
-In the individual states, the push and pop operations are conditioned to a particular key press, in order to dismiss/show the dialogue state.
-
-- in the play state, push the dialogue counterpart when pressing `enter`.
-
-  ```lua
-  function PlayState:update(dt)
-    if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
-      gStateStack:push(DialogueState())
-    end
-  end
-  ```
-
-- in the dialogue state, remove the topmost state (itself), when pressing the same key.
-
-  ```lua
-  function DialogueState:update(dt)
-    if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") or love.keyboard.wasPressed("escape") then
-      gStateStack:pop()
-    end
-  end
-  ```
+The individual states show the layered structure by moving the player in the play state and highlight a message in the dialogue state. Notice that the player is allowed to move only in the play state.

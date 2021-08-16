@@ -1,18 +1,40 @@
 PlayState = Class({__includes = BaseState})
 
+local UPDATE_SPEED = 100
+
+function PlayState:init()
+  local playerSize = 20
+  self.player = {
+    ["x"] = WINDOW_WIDTH / 2 - playerSize / 2,
+    ["y"] = WINDOW_HEIGHT / 2 - playerSize / 2,
+    ["size"] = playerSize
+  }
+end
+
 function PlayState:update(dt)
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
-    gStateStack:push(DialogueState())
+    gStateStack:push(DialogueState(self.player))
   end
 
   if love.keyboard.wasPressed("escape") then
     love.event.quit()
   end
+
+  if love.keyboard.isDown("up") then
+    self.player.y = math.max(0, self.player.y - UPDATE_SPEED * dt)
+  elseif love.keyboard.isDown("down") then
+    self.player.y = math.min(WINDOW_HEIGHT - self.player.size, self.player.y + UPDATE_SPEED * dt)
+  end
+
+  if love.keyboard.isDown("right") then
+    self.player.x = math.min(WINDOW_WIDTH - self.player.size, self.player.x + UPDATE_SPEED * dt)
+  elseif love.keyboard.isDown("left") then
+    self.player.x = math.max(0, self.player.x - UPDATE_SPEED * dt)
+  end
 end
 
 function PlayState:render()
-  love.graphics.setColor(0, 0, 0, 0.7)
-  love.graphics.rectangle("fill", WINDOW_WIDTH / 2 - 45, WINDOW_HEIGHT / 2 + 48 - 12, 90, 40, 5)
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.printf("PlayState", 0, WINDOW_HEIGHT / 2 + 48, WINDOW_WIDTH, "center")
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.rectangle("fill", self.player.x, self.player.y, self.player.size, self.player.size)
+  love.graphics.print("PlayState", 0, WINDOW_HEIGHT - 16)
 end

@@ -1,5 +1,5 @@
-WINDOW_WIDTH = 720
-WINDOW_HEIGHT = 580
+WINDOW_WIDTH = 580
+WINDOW_HEIGHT = 460
 OPTIONS = {
   fullscreen = false,
   resizable = false,

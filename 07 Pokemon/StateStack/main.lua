@@ -7,8 +7,7 @@ function love.load()
   gStateStack =
     StateStack(
     {
-      PlayState(),
-      DialogueState()
+      PlayState()
     }
   )
 

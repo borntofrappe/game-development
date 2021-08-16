@@ -1,4 +1,6 @@
-The eight title in the course introduces the genre of RPGs by looking at the Pokemon series.
+## 07 Pokemon
+
+The eight title in the course introduces role-playing games with a demo inspired by the Pokemon series.
 
 ## Topics
 
