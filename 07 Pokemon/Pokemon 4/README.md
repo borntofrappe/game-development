@@ -2,7 +2,7 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
 
-_Please note_: the technique used to introduce the player class was first introduced in "Super Mario Bros" and the update `Super Mario Bros 1`. Refer to that folder for more information.
+_Please note_: the technique used to introduce the player class was first introduced in the Super Mario Bros. project and specifically the `Super Mario Bros 1` update. Refer to that folder for more information.
 
 ## Player
 
@@ -28,7 +28,7 @@ function Player:render()
 end
 ```
 
-To update the player, instead of describing the logic in `Player:update(dt)`, the class also benefits from a state machine. Here the goal is to delegate to different states how the player behaves.
+To update the player, and instead of describing the logic in `Player:update(dt)`, the class also benefits from a state machine. Here the goal is to delegate to different states how the player behaves.
 
 ```lua
 function Player:init(def)
@@ -46,7 +46,7 @@ This means the game uses both a state stack and a state machine. The stack is us
 
 ## States
 
-The update includes two states: idle and walking. Picking up from the `Super Mario Bros` episode, they both initialize a player and an animation. This animation is included with the `Animation` class, to loop through a series of frames at a given interval. For instance and for the idle state, the idea is to show only the second frame.
+The update includes two states: idle and walking. Both initialize a player and an animation, included with the `Animation` class to loop through a series of frames at a given interval. For instance and for the idle state, the idea is to show only the second frame.
 
 ```lua
 function PlayerIdleState:init(player)
@@ -55,6 +55,8 @@ function PlayerIdleState:init(player)
   self.player.currentAnimation = self.animation
 end
 ```
+
+For the `Animation` class once again refer to the Super Mario Bros project, specifically the `Character` demos.
 
 In the `update` function of the individual states, the idea is to then map how the player behaves in the particular state.
 
@@ -97,14 +99,12 @@ In the moment the `render` function uses `x` and `y`, we are able to update the 
 - update the `row` value of the player
 
   ```lua
-  function PlayerWalkingState:update(dt)
-    if self.player.direction == "up" then
-      self.player.row = math.max(1, self.player.row - 1)
-    end
+  if self.player.direction == "up" then
+    self.player.row = math.max(1, self.player.row - 1)
   end
   ```
 
-  `math.max` is used to ensure that the movement is restrained to the available rows.
+  `math.max` is used to ensure that the movement is limited to the available rows.
 
 - update the `y` coordinate with `Timer.tween`
 
@@ -118,26 +118,6 @@ In the moment the `render` function uses `x` and `y`, we are able to update the 
   ```
 
 The same logic is used for the other arrow keys, updating the columns and rows, and only afterwards the actual coordinates.
-
-### isMoving
-
-A boolean is necessary to ensure that the player moves one cell at a time. This is because the `update()` function is called continuously.
-
-The idea is to switch the boolean to `true` when first modifying the `row` and `column` value.
-
-```lua
-function PlayerWalkingState:init(player)
-  -- previous attributes
-  self.isMoving = false
-end
-
-function PlayerWalkingState:update(dt)
-  if not self.isMoving then
-    self.isMoving = true
-    -- update column, row, x, y
-  end
-end
-```
 
 ### finish
 
@@ -161,8 +141,6 @@ Timer.tween():finish(function()
     self.player:changeState("idle")
 end)
 ```
-
-By re-initializing the walking state, the booelean `isMoving` allows to move in the desired direction.
 
 ### update
 
@@ -193,7 +171,7 @@ end
 
 Consider a situation in which the library is used to transition from the play state to the battle state.
 
-## y offset
+## Vertical offset
 
 This is but a minor change, but important in the context of game development. The player is rendered slightly above the current cell.
 
@@ -207,4 +185,4 @@ function Player:render()
 end
 ```
 
-This allows for a more credible movement, especially as the sprite overlaps with the tall grass.
+This allows for a more credible movement, especially as the sprite is rendered above the tall grass.

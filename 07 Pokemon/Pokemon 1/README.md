@@ -11,11 +11,11 @@ VIRTUAL_WIDTH = 400
 VIRTUAL_HEIGHT = 224
 ```
 
-This means the window has effectively 25 rows and 14 columns. To avoid black bars on the sides of the window, the non-virtual variables are also updated. This to keep the same ratio (scaling up with a factor of 3).
+This means the window has effectively 25 rows and 14 columns. To avoid black bars on the sides of the window, the non-virtual variables are also updated. This to keep the same ratio (scaling up with a factor of 2).
 
 ```lua
-WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 672
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 448
 ```
 
 ## PlayState
@@ -49,15 +49,11 @@ love.graphics.draw(
 
 _Please note_: the logic behind the tile is moved to a `Tile` class.
 
-## Dialogue
-
-The dialogue state is used to display a short message above a solid overlay.
-
 ## Stack
 
 ### StartState
 
-The game moves to the play state by pressing enter. In terms of the stack, the script removes the start state before pushing both the play and dialog counterparts.
+The game moves to the play state by pressing enter. In terms of stack, the script removes the start state before pushing both the play and dialog counterparts.
 
 ```lua
 if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
@@ -81,9 +77,11 @@ The interval is then removed using the `:remove` function.
 self.tween:remove()
 ```
 
-This is useful since the timer logic is no longer useful. Moreover, once the game returns to the start state, it is essential to avoid duplicating the timer logic.
+The timer logic is no longer necessary. Moreover, once the game returns to the start state, it is essential to avoid duplicating the interval.
 
 ### DialogueState
+
+The dialogue state is used to display a short message above a solid overlay.
 
 The state dismisses the dialogue by pressing enter, or again the escape key.
 

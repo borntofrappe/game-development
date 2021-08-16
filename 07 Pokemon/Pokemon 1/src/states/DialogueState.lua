@@ -1,8 +1,5 @@
 DialogueState = Class({__includes = BaseState})
 
-function DialogueState:init()
-end
-
 function DialogueState:update(dt)
   if love.keyboard.wasPressed("escape") or love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
     gStateStack:pop()

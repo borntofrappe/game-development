@@ -24,7 +24,7 @@ end
 
 ### height
 
-One issue with the dialogue state accepting text is that the height of the rectangle making up the backdrop depends on the length of the message. In actuality, there is no concept of a line break, and the text needs new line characters `\n` to have the text on multiple lines. Consider the text passed from the start state.
+One issue with the dialogue state accepting text is that the height of the rectangle making up the backdrop depends on the length of the message. As there is no concept of a line break, the text needs new line characters `\n` to have describe multiple lines. Consider the text passed from the start state.
 
 ```lua
 DialogueState(
@@ -33,25 +33,32 @@ DialogueState(
 )
 ```
 
-It is therefore possible to change the height of the box knowing the number of `\n` escape sequences. Knowing that each line requires roughly `16` pixels, plus `8` pixels of padding (`4` on the top and the bottom), the height is therfore computed in the `init` function.
+With this setup it i possible to change the height of the box knowing the number of `\n` escape sequences. Knowing that each line requires roughly `16` pixels, plus `8` pixels of padding (`4` on the top and the bottom), the height is therfore computed in the `init` function.
 
 ```lua
 self.height = 16 * lines + 8
 ```
 
-To find the number of times the sequence `\n` appears, the string library provides the `gmatch` function. This one returns a function which iterates over all the occurrences of the input string.
+One way to find the number of new line characters it through the `gsub` function. While technically useful to replace a sequence from a string, the function returns as a second value the number of times the sequence has been replaced.
 
 ```lua
-for match in string.gmatch(input, pattern) do
-
-end
+local _, lines = self.text:gsub("\n", "")
 ```
 
-It is used in the dialogue state to increment the counter describing the lines.
+Just be cautious to consider that the number of lines is one more than the number of characters, so to consider the first line.
 
 ```lua
-local lines = 1
-for n in string.gmatch(self.text, "\n") do
-  lines = lines + 1
-end
+self.height = 16 * (lines + 1) + 8
+```
+
+_Update:_ the hard-coded values of `16` and `8` are replaced by variables. `16` is actually and better described as the height of the small font.
+
+```lua
+gFonts["small"]:getHeight() -- 16
+```
+
+`8` is twice an arbitrary value chosen for the padding. This one is set above the script as a constant.
+
+```lua
+local PADDING = 4
 ```

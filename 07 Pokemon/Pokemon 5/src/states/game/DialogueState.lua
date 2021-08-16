@@ -1,14 +1,13 @@
 DialogueState = Class({__includes = BaseState})
 
+local PADDING = 4
+
 function DialogueState:init(text)
   self.text = text
 
-  local lines = 1
-  for n in string.gmatch(self.text, "\n") do
-    lines = lines + 1
-  end
+  local _, lines = self.text:gsub("\n", "")
 
-  self.height = 16 * lines + 8
+  self.height = gFonts["small"]:getHeight() * (lines + 1) + PADDING * 2
 end
 
 function DialogueState:update(dt)
@@ -20,9 +19,9 @@ end
 function DialogueState:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.setLineWidth(4)
-  love.graphics.rectangle("line", 4, 4, VIRTUAL_WIDTH - 8, self.height, 5)
+  love.graphics.rectangle("line", PADDING, PADDING, VIRTUAL_WIDTH - 8, self.height, 5)
   love.graphics.setColor(0.15, 0.2, 0.6)
-  love.graphics.rectangle("fill", 4, 4, VIRTUAL_WIDTH - 8, self.height, 5)
+  love.graphics.rectangle("fill", PADDING, PADDING, VIRTUAL_WIDTH - 8, self.height, 5)
 
   love.graphics.setFont(gFonts["small"])
   love.graphics.setColor(1, 1, 1)

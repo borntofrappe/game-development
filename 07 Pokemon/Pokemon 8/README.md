@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## GUI
 
-Graphical user interfaces are useful to provide a reusable interface, a reusable component for the game's world. Consider for instance, a textbox describing multiple pages of text, above a solid background. Or again a selection, providing a way to pick between different options.
+Graphical user interfaces are useful to provide reusable interfaces, reusable components for the game's world. Consider for instance a textbox describing multiple pages of text, above a solid background. Or again a selection, providing a way to pick between different options.
 
 With this update, the goal is to build such interfaces.
 
@@ -168,13 +168,13 @@ These are useful in the moment the bar need to change in how much they are fille
 
 This is perhaps the most complex of the GUIs introduced in the game, but its functionality is fully elaborated in the next update.
 
-Here, the goal is to show an instance of the panel class, and overlay different options one above the other. Next to the option being selected, the idea is to also show a cursor as provided in the raster image `res/graphics/cursor.png`.
+Here, the goal is to show an instance of the panel class, and overlay different options one above the other. Next to the option being selected, the idea is to also show a cursor as provided in the raster image `cursor.png`.
 
 The options are initialized with a table of strings.
 
 ```lua
 function Selection:init(def)
-  local options = def.options or {"Fight", "Run"}
+  local options = def.options or {"if", "else"}
 end
 ```
 
@@ -244,7 +244,7 @@ function TextBox:render()
 end
 ```
 
-The textbox is used in the dialogue state, and I've actually opted to use a convenient feature of lua in the form of variadic functions.
+The textbox is used in the dialogue state, and I've actually opted to use a convenient feature of lua in the form of _variadic_ functions.
 
 ```lua
 function DialogueState:init(...)

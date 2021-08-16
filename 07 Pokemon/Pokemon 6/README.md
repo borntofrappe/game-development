@@ -44,8 +44,6 @@ function Player:init(def)
 end
 ```
 
-The value is however used in te walking state, as the position of the player is updated.
-
 ### PlayerWalkingState
 
 In the video, the lecturer introduces the battle state as the player starts walking, but I found it easier to consider the encounter following the `Timer.tween` animation.
@@ -53,9 +51,9 @@ In the video, the lecturer introduces the battle state as the player starts walk
 Pending a boolean, the state is invoked through the `gStateStack`, passing the instance of the player to have the battle state work with the player's pokemon.
 
 ```lua
-local foundEncounter = self.player.row > ROWS - ROWS_GRASS and math.random(10) == 1
+local pokemonEncounter = self.player.row > ROWS - ROWS_GRASS and math.random(10) == 1
 
-if foundEncounter then
+if pokemonEncounter then
    gStateStack:push(BattleState(self.player))
 end
 ```

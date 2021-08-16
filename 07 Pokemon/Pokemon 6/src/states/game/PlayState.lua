@@ -55,7 +55,7 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.wasPressed("h") or love.keyboard.wasPressed("H") then
-    gStateStack:push(DialogueState("Your pokemon has been healed.\nAssuming you have one."))
+    gStateStack:push(DialogueState("Your pokemon has been healed.\nAssuming you have one..."))
   end
 
   self.player:update(dt)

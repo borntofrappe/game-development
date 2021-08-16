@@ -10,26 +10,26 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 - variant: `1`, `2`, `3`
 
-The goal is to ulimately have the game pick an entity:
+The goal is to ulimately have the script pick an entity:
 
-    ```lua
-    -- first female character
-    gFrames["entities"][1]
-    ```
+```lua
+-- first female character
+gFrames["entities"][1]
+```
 
-Pick a direction:
+A direction:
 
-    ```lua
-    -- looking down
-    gFrames["entities"][1]["down"]
-    ```
+```lua
+-- looking down
+gFrames["entities"][1]["down"]
+```
 
-Pick one of the available three variants:
+One of the available three variants:
 
-    ```lua
-    -- standing still
-    gFrames["entities"][1]["down"][2]
-    ```
+```lua
+-- standing still
+gFrames["entities"][1]["down"][2]
+```
 
 ## PlayState
 

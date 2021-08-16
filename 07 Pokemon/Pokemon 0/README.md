@@ -53,7 +53,7 @@ gTextures = {
 }
 ```
 
-This structure allows the start state to pick a pokemon from the `POKEDEX` constants, and use the graphics in the `gTexture` function accessing the desired variant.
+This structure allows the start state to pick a pokemon from the `POKEDEX` variable, and use the graphics in the `gTexture` function accessing the desired variant.
 
 ```lua
 function StartState:init()
@@ -71,23 +71,23 @@ function StartState:render()
 end
 ```
 
-## Timer
+## timer
 
-To move the sprite from side to side, the update re-introduces the `timer` library, first used in the game _Match Three_.
+To move the sprite from side to side, the update re-introduces the `timer` library, first used in the game `03 Match Three`.
 
-The idea is to animate the sprite to change in its `x` coordinate, and it is therefore necessary to have a variable keep track of this position.
+The idea is to animate the sprite to change its `x` coordinate, and it is therefore necessary to have a variable keep track of this position.
 
 ```lua
 function StartState:init()
   self.pokemon = {
       ["sprite"] = POKEDEX[math.random(#POKEDEX)],
       x = VIRTUAL_WIDTH / 2 - POKEMON_WIDTH / 2,
-      y = VIRTUAL_WIDTH / 2 - POKEMON_WIDTH / 2,
+      y = VIRTUAL_HEIGHT / 2 - POKEMON_HEIGHT / 2,
   }
 end
 ```
 
-The variable is updated with the timer library, and used in the logic of the render function.
+The variable is updated with the `timer` library, and used in the logic of the render function.
 
 ```lua
 function StartState:render()
@@ -99,7 +99,7 @@ function StartState:render()
 end
 ```
 
-In terms of how the variable is updated at an interval, and with the following structure:
+In terms of _how_, the variable is updated at an interval with the following logic:
 
 - move the sprite from the center of the screen to the left of the window, out of sight
 
@@ -128,12 +128,12 @@ To animate the position, use `Timer.tween`, modifying the `x` field of `self.pok
 Timer.tween(
   0.25,
   {
-    [self.pokemon] = {x = - POKEMON_WIDTH}
+    [self.pokemon] = {x = -POKEMON_WIDTH}
   }
 )
 ```
 
-To chain the operations one after the other then, benefit from the `:finish` function.
+To chain the operations one after the other, lean on the `:finish` function.
 
 ```lua
 Timer.tween():finish(function()
@@ -141,4 +141,4 @@ Timer.tween():finish(function()
 end)
 ```
 
-This is available on the `Timer` functions and is called as the animation is complete.
+`:finish` is available on the `Timer` functions and is called as the animation is complete.

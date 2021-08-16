@@ -8,13 +8,13 @@ The class is used to initialize a pokemon, so that ultimately the game renders a
 
 It is initialized with a table, describing the following fields:
 
-- name, the name of the creature, also used in the textures's table
+- `name`, the name of the creature, also used in the textures's table
 
-- type, front or back to describe which sprite to actually use
+- `type`, front or back to describe which sprite to actually use
 
-- x and y, coordinates describing the pokemon position
+- `x` and `y`, coordinates describing the pokemon position
 
-Based on this value, `Player:render` uses the graphics module as previously done in the start state, and in the battle state, and anywhere else the game would need to render the pokemon.
+Based on these value, `Player:render` uses the graphics module as previously done in the start state, in the battle state, and anywhere else the game would need to render the pokemon.
 
 ```lua
 function Pokemon:render()

@@ -9,7 +9,6 @@ function DialogueState:init(...)
       ["y"] = 4,
       ["padding"] = 4,
       ["width"] = VIRTUAL_WIDTH - 8,
-      ["height"] = self.height,
       ["callback"] = function()
         gStateStack:pop()
       end
