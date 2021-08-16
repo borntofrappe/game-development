@@ -187,7 +187,12 @@ function PlayState:update(dt)
 
   if self.isGameOver and #Timer.intervals == 0 then
     if #self.data.towns == 0 then
-      gStateMachine:change("gameover")
+      gStateMachine:change(
+        "gameover",
+        {
+          ["data"] = self.data
+        }
+      )
     else
       gStateMachine:change(
         "victory",

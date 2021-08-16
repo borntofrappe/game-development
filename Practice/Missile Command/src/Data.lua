@@ -49,5 +49,5 @@ function Data:render()
 
   love.graphics.setColor(0, 0, 0)
   love.graphics.setFont(gFonts.normal)
-  love.graphics.print("P1\t" .. self.points, 8, self.background.y)
+  love.graphics.print("Points " .. self.points, 8, self.background.y)
 end

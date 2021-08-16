@@ -17,7 +17,8 @@ function love.load()
   }
 
   gFonts = {
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 30),
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 28),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 22),
     ["small"] = love.graphics.newFont("res/fonts/font.ttf", 16)
   }
 
@@ -44,12 +45,7 @@ function love.load()
     }
   )
 
-  gStateMachine:change(
-    "play",
-    {
-      ["data"] = Data:new()
-    }
-  )
+  gStateMachine:change("start")
 
   love.keyboard.keypressed = {}
 end
