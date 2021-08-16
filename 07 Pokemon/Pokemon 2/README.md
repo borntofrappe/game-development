@@ -1,4 +1,6 @@
-Introduce the `FadeState` to transition between states.
+# Pokemon 2
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
 
 _Please note_: taking inspiration from the suggestion of the lecturer, the update creates a single class for both a fade-in and a fade-out operation.
 

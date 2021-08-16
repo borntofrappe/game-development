@@ -1,4 +1,8 @@
-Add GUIs.
+# Pokemon 8
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
+
+## GUI
 
 Graphical user interfaces are useful to provide a reusable interface, a reusable component for the game's world. Consider for instance, a textbox describing multiple pages of text, above a solid background. Or again a selection, providing a way to pick between different options.
 

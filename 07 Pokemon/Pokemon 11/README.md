@@ -1,4 +1,6 @@
-Update battle dynamics.
+# Pokemon 11
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
 
 ## Battle states
 

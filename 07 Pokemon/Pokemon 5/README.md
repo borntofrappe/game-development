@@ -1,4 +1,6 @@
-Generalize the dialogue state.
+# Pokemon 5
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
 
 _Please note_: an additional dialogue is shown when pressing `h` in the play state, but the text is purely aesthetic. With the current update, there is no feature associated with the key press.
 

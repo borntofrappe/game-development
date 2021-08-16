@@ -1,4 +1,4 @@
-# [Assignment](https://docs.cs50.net/ocw/games/assignments/7/assignment7.html)
+# Pokemon — Assignment
 
 The assignment asks to provide an interface to shows the change in the stats of a pokemon as it levels up. This is relevant as the player pokemon gains experience, and eventually reaches the `expToLevel` threshold, in `BattleTurnState`.
 

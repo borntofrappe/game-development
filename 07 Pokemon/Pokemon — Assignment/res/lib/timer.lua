@@ -2,7 +2,7 @@ local Timer = {}
 
 -- group management
 
-local function detach (group, item)
+local function detach(group, item)
     local index = item.index
 
     group[index] = group[#group]
@@ -11,9 +11,9 @@ local function detach (group, item)
     item.groupField = nil
 end
 
-local function attach (group, item)
+local function attach(group, item)
     if item.groupField then
-        detach (item.groupField, item)
+        detach(item.groupField, item)
     end
 
     local index = #group + 1
@@ -26,7 +26,7 @@ end
 
 -- instance update methods
 
-local function updateContinuous (self, dt)
+local function updateContinuous(self, dt)
     local cutoff = self.cutoff
     local elapsed = self.elapsed + dt
 
@@ -42,7 +42,7 @@ local function updateContinuous (self, dt)
     return
 end
 
-local function updateIntermittent (self, dt)
+local function updateIntermittent(self, dt)
     local duration = self.delay or self.interval
     local elapsed = self.elapsed + dt
 
@@ -51,8 +51,7 @@ local function updateIntermittent (self, dt)
         if self.limitField then
             self.limitField = self.limitField - 1
         end
-        if self:callback(elapsed) == false
-        or self.delay or self.limitField == 0 then
+        if self:callback(elapsed) == false or self.delay or self.limitField == 0 then
             if self.finishField then
                 self:finishField(elapsed)
             end
@@ -64,7 +63,7 @@ local function updateIntermittent (self, dt)
     self.elapsed = elapsed
 end
 
-local function updateTween (self, dt)
+local function updateTween(self, dt)
     local elapsed = self.elapsed + dt
     local plan = self.plan
     local duration = self.duration
@@ -93,14 +92,13 @@ local function updateTween (self, dt)
 
         target[key] = ease(elapsed, initial, change, duration)
     end
-
 end
 
 -- shared instance methods
 
 local defaultGroup = {}
 
-local function group (self, group)
+local function group(self, group)
     if not group then
         group = defaultGroup
     end
@@ -110,7 +108,7 @@ local function group (self, group)
     return self
 end
 
-local function remove (self)
+local function remove(self)
     if self.groupField then
         detach(self.groupField, self)
     end
@@ -118,25 +116,25 @@ local function remove (self)
     return self
 end
 
-local function register (self)
+local function register(self)
     attach(self.lastGroup, self)
 
     return self
 end
 
-local function limit (self, limitField)
+local function limit(self, limitField)
     self.limitField = limitField
 
     return self
 end
 
-local function finish (self, finishField)
+local function finish(self, finishField)
     self.finishField = finishField
 
     return self
 end
 
-local function ease (self, easeField)
+local function ease(self, easeField)
     self.easeField = easeField
 
     return self
@@ -144,7 +142,7 @@ end
 
 -- tweening helper functions
 
-local function planTween (definition)
+local function planTween(definition)
     local plan = {}
 
     for target, values in pairs(definition) do
@@ -156,7 +154,7 @@ local function planTween (definition)
                 key = key,
                 initial = initial,
                 final = final,
-                change = final - initial,
+                change = final - initial
             }
         end
     end
@@ -164,13 +162,13 @@ local function planTween (definition)
     return plan
 end
 
-local function easeLinear (elapsed, initial, change, duration)
+local function easeLinear(elapsed, initial, change, duration)
     return change * elapsed / duration + initial
 end
 
 -- instance initializer
 
-local function initialize (timer)
+local function initialize(timer)
     timer.elapsed = 0
     timer.group = group
     timer.remove = remove
@@ -183,45 +181,45 @@ end
 
 -- static api
 
-function Timer.after (delay, callback)
+function Timer.after(delay, callback)
     return initialize {
         delay = delay,
         callback = callback,
-        update = updateIntermittent,
+        update = updateIntermittent
     }
 end
 
-function Timer.every (interval, callback)
+function Timer.every(interval, callback)
     return initialize {
         interval = interval,
         callback = callback,
         update = updateIntermittent,
         limit = limit,
-        finish = finish,
-     }
+        finish = finish
+    }
 end
 
-function Timer.prior (cutoff, callback)
+function Timer.prior(cutoff, callback)
     return initialize {
         cutoff = cutoff,
         callback = callback,
         update = updateContinuous,
-        finish = finish,
+        finish = finish
     }
 end
 
-function Timer.tween (duration, definition)
+function Timer.tween(duration, definition)
     return initialize {
         duration = duration,
         plan = planTween(definition),
         update = updateTween,
         easeField = easeLinear,
         ease = ease,
-        finish = finish,
+        finish = finish
     }
 end
 
-function Timer.update (dt, group)
+function Timer.update(dt, group)
     if not group then
         group = defaultGroup
     end
@@ -230,7 +228,7 @@ function Timer.update (dt, group)
     end
 end
 
-function Timer.clear (group)
+function Timer.clear(group)
     if not group then
         group = defaultGroup
     end

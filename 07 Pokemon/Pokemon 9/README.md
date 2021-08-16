@@ -1,4 +1,6 @@
-Incorporate GUIs in the logic of the individual states.
+# Pokemon 9
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
 
 When it comes to presenting different dialogues and menus in the game, it is important to consider how the GUIs are updated. For instance and for the selection, it is important to have the choice between the options affect the game.
 

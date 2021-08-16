@@ -1,4 +1,6 @@
-Create a start state with a title and a looping animation.
+# Pokemon 0
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
 
 ## Text
 

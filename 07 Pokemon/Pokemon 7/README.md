@@ -1,10 +1,6 @@
-Incremental updates:
+# Pokemon 7
 
-- add a pokemon class
-
-- add a level class
-
-- consider grass tiles in the walking state
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
 
 ## Pokemon
 

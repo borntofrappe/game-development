@@ -1,4 +1,6 @@
-Add experience, react to a pokemon reaching zero health points.
+# Pokemon 12
+
+_Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Pokemon — Final`.
 
 ## Experience
 
