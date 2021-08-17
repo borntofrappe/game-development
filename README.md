@@ -13,3 +13,15 @@ The repository of an aspiring game developer, starting from [CS50's Intro to Gam
 - in the `Practice` folder I create additional demos to rehearse the concepts introduced in the course — and learn plenty more. I've managed 15+ titles so far, and I'm proud of at least half of them
 
 - in the `Utils` folder I introduce a few helper projects. How to work with object-oriented programming, how to manage game state, how to benefit from a timer library. The `Practice` folder ows a lot to these utilities
+
+## How to contribute
+
+[File an issue](https://github.com/borntofrappe/game-development/issues/new).
+
+Any contribution is welcome, no matter how small:
+
+- [found a typo](https://github.com/borntofrappe/game-development/issues/new?title=Found%20a%20typo)
+
+- [found a bug](https://github.com/borntofrappe/game-development/issues/new?title=Bug%20Report&labels=bug)
+
+- [have an idea for a practice game](https://github.com/borntofrappe/game-development/issues/new?title=Practice%20game&labels=project)
