@@ -42,7 +42,7 @@ Start from `StateStack`, which describes the concept of the stack used throughou
 
 10. add pokemon statistics
 
-11. update battle dynamics
+11. refactor battle states
 
 12. add experience, react to a pokemon reaching zero health points
 

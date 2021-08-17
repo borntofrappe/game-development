@@ -41,10 +41,10 @@ function TextBox:init(def)
   self.panel =
     Panel(
     {
-      x = self.x,
-      y = self.y,
-      width = self.width,
-      height = self.height
+      ["x"] = self.x,
+      ["y"] = self.y,
+      ["width"] = self.width,
+      ["height"] = self.height
     }
   )
 

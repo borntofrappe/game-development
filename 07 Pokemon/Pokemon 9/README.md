@@ -6,7 +6,7 @@ When it comes to presenting different dialogues and menus in the game, it is imp
 
 ## Textbox and dialogues
 
-Especially in the context of the battle, it is important to have the textbox and its contents to block the normal flow of the game. Consider for instance the beginning of the battle; here, looping through the player should loop through some introductory text, and then be presented with the selection. In the logic of the update function, it is possible to condition the GUIs with a series of booleans.
+Especially in the context of the battle, it is important to have the textbox and its contents to block the normal flow of the game. Consider for instance the beginning of the battle, where you loop through some introductory text, and then show the selection. In the logic of the update function, it is possible to condition the GUIs with a series of booleans.
 
 ```lua
 function BattleState:init(player)
@@ -15,7 +15,7 @@ function BattleState:init(player)
 end
 ```
 
-In the moment the game displays a more complex flow, however, this proves to be rather unmanageable. The idea is to here take advantage of the dialogue state, and update the textbox through this state's logic:
+In the moment the game displays a more complex flow, however, this proves to be rather unsustainable. The idea is to here take advantage of the dialogue state, and update the textbox through this state's logic:
 
 - animate the pokemon to slide in
 
@@ -64,7 +64,7 @@ gStateStack:push(
 
 To mirror the idea introduced for the textbox, the game includes an additional state dedicated to render and update a selection.
 
-It is initialized with a callback function.
+`BattleMenuState` is first initialized with a callback function.
 
 ```lua
 function BattleMenuState:init(def)
@@ -119,7 +119,7 @@ function Selection:update(dt)
 end
 ```
 
-And it is always the selection which executes the code by way of calling the callback function associated to the chosen option.
+It is always the selection which executes the code through the associated callback function.
 
 ```lua
 function Selection:update(dt)
@@ -129,7 +129,7 @@ function Selection:update(dt)
 end
 ```
 
-_Please note_: the selection GUI is evidently updated to have `self.options` consider a table which describes the options through text and callback functions alike.
+_Please note_: the selection GUI is updated to have `self.options` consider a table which describes the options through text and callback functions alike.
 
 ```lua
 self.options =
@@ -150,14 +150,14 @@ self.options =
 
 ## Flow
 
-The battle state introduces a considerable change from `Pokemon 8`. To sum up, the game is made to flow by:
+The battle state introduces a considerable change from `Pokemon 8`. To sum up, logic of the battle goes through the following:
 
-- introducing a dialogue for the game's introduction
+- introduce a dialogue for the game's introduction
 
-- introducing a menu when the first dialogue is dismissed
+- introduce a menu when the first dialogue is dismissed
 
-- depending on the selection
+- according to the selection
 
-  - introduce an additional dialogue (in place of the eventual turn-based battle)
+  - introduce an additional dialogue (a future update will consider the battle mechanics)
 
   - go back to the play state

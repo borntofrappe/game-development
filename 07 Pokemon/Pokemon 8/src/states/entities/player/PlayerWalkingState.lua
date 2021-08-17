@@ -22,10 +22,10 @@ function PlayerWalkingState:init(player)
     }
   ):finish(
     function()
-      local foundEncounter =
+      local pokemonEncounter =
         self.player.level.tallGrassTiles[self.player.column][self.player.row].id == TILE_IDS["tall-grass"] and
         math.random(10) == 1
-      if foundEncounter then
+      if pokemonEncounter then
         gStateStack:push(
           FadeState(
             {

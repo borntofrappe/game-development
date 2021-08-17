@@ -2,9 +2,9 @@ Selection = Class {}
 
 function Selection:init(def)
   local def = def or {}
-  self.x = def.x or VIRTUAL_WIDTH - 8 - 72
+  self.x = def.x or VIRTUAL_WIDTH - 4 - 72
   self.y = def.y or VIRTUAL_HEIGHT - 56 - 4
-  self.width = def.width or 72 + 4
+  self.width = def.width or 72
   self.height = def.height or 56
 
   self.options =
@@ -41,10 +41,10 @@ function Selection:init(def)
   self.panel =
     Panel(
     {
-      ["x"] = self.x,
-      ["y"] = self.y,
-      ["width"] = self.width,
-      ["height"] = self.height
+      x = self.x,
+      y = self.y,
+      width = self.width,
+      height = self.height
     }
   )
 end

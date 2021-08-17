@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## Stats
 
-`constants.lua` is updated so to have `POKEDEX` describe the pokemons in tables. The idea is to have each entry describe the creature with its name and statistics. For instance and for the first pokemon.
+`constants.lua` is updated so to have `POKEDEX` describe the pokemons in tables. The idea is to have each entry describe the creature through its name and statistics. For instance and for the first pokemon.
 
 ```lua
 entry = {
@@ -22,7 +22,7 @@ entry = {
 }
 ```
 
-Each creature is distinguished by a set of base stats, describing the starting point, and a set of individual values, IV, useful when the pokemon levels up — more on this in a future update. You can distinguish the two sets on the basis of the name of each field; consider for instance `baseHp` and `hpIV`.
+Each creature has its own set of base stats, describing the starting value, and a set of individual values, IV, useful when the pokemon levels up — more on this in a future update. You can distinguish the two sets on the basis of the name of each field; consider for instance `baseHp` and `hpIV`.
 
 Starting from the described data, the idea is to have the `Pokemon` class initialize three tables:
 
@@ -75,7 +75,7 @@ IVs = {
 }
 ```
 
-This approach is considerably different from the one proposed in the course, but I found it more sensible than having each stat described in a different variable.
+This approach is considerably different from the one proposed in the course, but I found it more sensible than having each stat stored in a variable.
 
 What's more convenient is that the three tables are built with a for loop, looping through the stats of each entry and using pattern-matching functions available from the `string` library:
 
@@ -130,8 +130,6 @@ In the selection GUI then, the boolean and the stats are used once more to reduc
 
 - when selecting the first option — describing the string `fight` — compute the damage as the difference between the attack of one pokemon and the defense of the other
 
-  For instance and for the first
-
   ```lua
   local damage = math.max(1, self.playerPokemon.stats.attack - self.wildPokemon.stats.defense)
   ```
@@ -140,22 +138,22 @@ In the selection GUI then, the boolean and the stats are used once more to reduc
 
 - reduce the health of the side receiving the damage by modifying the health point stats
 
-```lua
-self.wildPokemon.stats.hp = math.max(0, self.wildPokemon.stats.hp - damage)
-```
+  ```lua
+  self.wildPokemon.stats.hp = math.max(0, self.wildPokemon.stats.hp - damage)
+  ```
 
-`math.max` is to ensure that the health doesn't go into negative values.
+  `math.max` is to ensure that the health doesn't go into negative values.
 
 - update the associated health bar by modifying its value, and visually the width of its rectangle
 
-```lua
-self.wildPokemonHealth:setValue(self.wildPokemon.stats.hp)
-self.wildPokemonHealth.fillWidth = self.wildPokemonHealth.width / self.wildPokemonHealth.max * self.wildPokemonHealth.value
-```
+  ```lua
+  self.wildPokemonHealth:setValue(self.wildPokemon.stats.hp)
+  self.wildPokemonHealth.fillWidth = self.wildPokemonHealth.width / self.wildPokemonHealth.max * self.wildPokemonHealth.value
+  ```
 
 The operation is repeated for both sides, and in the order described by `self.isPlayerFaster`.
 
-_Please note_: remember to update the code setting up the health bars to use the `hp` of the `stats` and `baseStats` tables in the `value` and `max` fields.
+_Please note_: remember to update the code setting up the health bars to use the `hp` of the `stats` and `baseStats` tables in the `value` and `max` fields respectively.
 
 _Please also note_: the code in the battle menu state is modified to animate the health bars through the `Timer` library, and to describe which sides attack with an instance of the `TextBox` GUI. This is however not connected to the use of the stats introduced with this update.
 
@@ -167,7 +165,7 @@ When pressing the letter `h` in the play state, the pokemon can finally be heale
 self.player.pokemon.stats.hp = self.player.pokemon.baseStats.hp
 ```
 
-## Live demo
+## Pattern matching
 
 I've created the following script to test out the validity of the for loop and pattern-matching functions. For a hard-coded sets of stats, it allows to print out the values in the desired structure.
 

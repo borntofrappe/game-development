@@ -21,7 +21,7 @@ love.graphics.print(
 )
 ```
 
-Experience is added in the `BattleTurnState`, more on this later, and ultimately allows to level up through the `levelUp` function. This is defined on the pokemon class, to increment the level and re-compute the threshold.
+Experience is added in the `BattleTurnState` — more on this later — and ultimately allows to level up through the `levelUp` function. This is defined on the pokemon class, to increment the level and re-compute the threshold.
 
 ```lua
 function Pokemon:levelUp()
@@ -212,7 +212,7 @@ The `break` statement is to break out the for loop rolling the dice, so that the
 
 ### Update
 
-Incrementing the stats work for the attack, defense and speed values, but not for the health points `hp`. In this instance, the idea is to increment the base value, so that the pokemon has a higher maximum value for its health.
+Incrementing the stats works for the attack, defense and speed values, but not for the health points `hp`. In this instance, the idea is to increment the base value, so that the pokemon has a higher maximum value for its health.
 
 ```lua
 if IV > diceRoll then
