@@ -1,6 +1,6 @@
 # Pokemon — Assignment
 
-The assignment asks to provide an interface to shows the change in the stats of a pokemon as it levels up. This is relevant as the player pokemon gains experience, and eventually reaches the `expToLevel` threshold, in `BattleTurnState`.
+[The assignment](https://docs.cs50.net/ocw/games/assignments/7/assignment7.html) asks to provide an interface to shows the change in the stats of a pokemon as it levels up. The feature is included as the player pokemon gains experience, and eventually reaches the `expToLevel` threshold in `BattleTurnState`.
 
 ## Planning
 
@@ -18,15 +18,13 @@ Instead of showing a single textbox, I decided to rely on the logic of `BattleMe
 
 - pass the table of string to an instance of `BattleMessageState`
 
-The individual state is then already equipped to show the text. What changes is that the callback function popping the player back to the field needs to consider an additional layer, and an additional `pop` operation.
+The individual state is then already equipped to show the text. What changes is that the callback function popping the player back to the field needs to consider an additional layer, an additional `pop` operation.
 
 ## levelUp
 
-The `levelUp` function is responsible for changing the stats in `self.baseStats` and `self.Stats` tables (remember that the health points need to change in their maximum value, and therefore in the first table).
+The `levelUp` function is responsible for changing the stats in `self.baseStats` and `self.stats` tables (remember that the health points need to change in their maximum value, and therefore in the first table).
 
-To collect the increments achieved in the logic of the for loop, I decided to build a table `increments`, and describe the value for each stat. `0` by default, `1` in the moment the dice roll identifies an increase.
-
-The first plan was to use a table in which the name of the statistic would be used as a key.
+To collect the increments I decided to create a table `increments`, detailing the increment for each stat. At first I considered to use the statistics as the keys in the table.
 
 ```lua
 increments = {}
@@ -79,7 +77,7 @@ increments = {
 }
 ```
 
-And with this structure, the `ipairs` iterator is able to loop through the stats in order.
+With this structure, the `ipairs` iterator is able to loop through the stats in order.
 
 ```lua
 for i, increment in ipairs(increments) do
@@ -103,7 +101,7 @@ Ultimately, I opted to incorporate the uppercase version of the stat, and as fol
 stat:upper() .. ": " .. valueStat - valueIncrement .. " + " .. valueIncrement .. " = " .. valueStat
 ```
 
-This concatenation sequence allows to print, taking for instance the `hp` stat for the pokemon aardart, the following:
+This concatenation sequence allows to print the following:
 
 ```text
 HP: 14 + 1 = 15
@@ -119,7 +117,7 @@ for i, levelUpIncrement in ipairs(levelUpIncrements) do
 end
 ```
 
-Notice the use of the `ipairs` iterator. As detailed in the previous section, it guarantees the order detailed in the table through the counter variable.
+Notice the use of the `ipairs` iterator, again to guarantee the order detailed in the table through the counter variable.
 
 The table is finally used in an instance of `BattleMessageState`, which allows the game to show the formula, stat after stat.
 

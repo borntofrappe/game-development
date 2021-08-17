@@ -14,11 +14,7 @@ function BattleMessageState:init(def)
       ["y"] = VIRTUAL_HEIGHT - 56 - 4,
       ["padding"] = 4,
       ["width"] = VIRTUAL_WIDTH - 8,
-      ["height"] = 56,
-      ["callback"] = function()
-        self.interval:remove()
-        self.callback()
-      end
+      ["height"] = 56
     }
   )
 
@@ -29,6 +25,11 @@ function BattleMessageState:init(def)
       self.textBox:next()
     end
   )
+
+  self.textBox.callback = function()
+    self.interval:remove()
+    self.callback()
+  end
 end
 
 function BattleMessageState:update(dt)

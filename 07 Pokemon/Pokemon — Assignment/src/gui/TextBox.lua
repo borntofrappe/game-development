@@ -20,15 +20,13 @@ function TextBox:init(def)
   if not self.height then
     local maxLines = 1
     for i, t in ipairs(self.chunks) do
-      local lines = 1
-      for n in string.gmatch(t, "\n") do
-        lines = lines + 1
-      end
-      if lines > maxLines then
-        maxLines = lines
+      local _, lines = t:gsub("\n", "")
+
+      if (lines + 1) > maxLines then
+        maxLines = (lines + 1)
       end
     end
-    self.height = 16 * maxLines + 8
+    self.height = gFonts["small"]:getHeight() * maxLines + 8
   end
 
   self.font = def.font or gFonts["small"]
