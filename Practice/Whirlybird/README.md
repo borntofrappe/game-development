@@ -2,7 +2,7 @@
 
 Recreate the pixelated game available in the "Play Games" application developed by Google.
 
-![Whirlybird in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/whirlybird.gif)
+![Whirlybird in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Whirlybird/whirlybird.gif)
 
 ## Resources
 

@@ -2,7 +2,7 @@
 
 A game for two players and in split screen. Each side fills the white background with a distinct color and the game ends as one of the two sides collides with a trail or exits the world.
 
-![Surround in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/surround.gif)
+![Surround in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Surround/surround.gif)
 
 ## Canvas
 

@@ -2,7 +2,7 @@
 
 A puzzle game in which the player fills a grid based on the instructions given on the side of the rows and columns. The goal is to ultimately draw a stylized picture based on the pixelated structure.
 
-![Picross](https://github.com/borntofrappe/game-development/blob/master/Showcase/picross.gif)
+![Picross](https://github.com/borntofrappe/game-development/blob/master/Practice/Picross/picross.gif)
 
 ## Resources
 

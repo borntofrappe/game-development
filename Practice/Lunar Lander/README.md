@@ -2,7 +2,7 @@
 
 Safely land a module on one of the platforms interspersed in the jagged terrain.
 
-![Lunar Lander in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/lunar-lander.gif)
+![Lunar Lander in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Lunar%20Lander/lunar-lander.gif)
 
 ## Prep
 

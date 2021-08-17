@@ -1,6 +1,6 @@
 # Missile Command
 
-![A few frames from the demo "Missile Command"](https://github.com/borntofrappe/game-development/blob/master/Showcase/missile-command.gif)
+![A few frames from the demo "Missile Command"](https://github.com/borntofrappe/game-development/blob/master/Practice/Missile%20Command/missile-command.gif)
 
 ## Notes
 

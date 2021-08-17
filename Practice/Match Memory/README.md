@@ -2,7 +2,7 @@
 
 Ask the player to match cards in pairs.
 
-![A few frames from the demo "Match Memory"](https://github.com/borntofrappe/game-development/blob/master/Showcase/match-memory.gif)
+![A few frames from the demo "Match Memory"](https://github.com/borntofrappe/game-development/blob/master/Practice/Match%20Memory/match-memory.gif)
 
 ## Resources
 

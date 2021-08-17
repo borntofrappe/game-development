@@ -2,7 +2,7 @@
 
 The goal of this project is to create the game pong with touch controls and basic shapes. Consider it a follow-up of `00 Pong`, and a good excuse to practice with `love.mousepressed` and functions from the `love.graphics` module.
 
-![Touch Pong in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/touch-pong.gif)
+![Touch Pong in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Touch%20Pong/touch-pong.gif)
 
 ## Gameplay
 

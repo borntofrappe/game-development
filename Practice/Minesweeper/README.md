@@ -2,7 +2,7 @@
 
 [The Coding Train](https://youtu.be/LFU5ZlrR21E) explains the game's logic of the game Minesweeper with the p5.js library. Here I try to take the lessons learned in the video and implement the game with Lua, Love2D, touch controls, and the UI of Minesweeper from the android application _Google Play Games_.
 
-![Minesweeper in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/minesweeper.gif)
+![Minesweeper in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Minesweeper/minesweeper.gif)
 
 ## Dimensions
 

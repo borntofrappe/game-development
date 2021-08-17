@@ -2,7 +2,7 @@
 
 Recreate Tetris inspired by the Game Boy version.
 
-![Tetris in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/tetris.gif)
+![Tetris in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Tetris/tetris.gif)
 
 ## Resources
 

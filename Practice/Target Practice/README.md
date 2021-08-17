@@ -2,7 +2,7 @@
 
 Set velocity, angle, and fire a cannonball toward a distant target.
 
-![Target Practice in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/target-practice.gif)
+![Target Practice in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Target%20Practice/target-practice.gif)
 
 ## Prep
 

@@ -2,7 +2,7 @@
 
 Lift a spaceship vertically to avoid incoming debris.
 
-![Space Debris in a few frames](https://github.com/borntofrappe/game-development/blob/master/Showcase/space-debris.gif)
+![Space Debris in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Space%20Debris/space-debris.gif)
 
 ## Resources
 

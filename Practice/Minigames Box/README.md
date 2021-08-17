@@ -2,7 +2,7 @@
 
 Practice with Box2D with a series of time-sensitive minigames.
 
-![Minigames Box](https://github.com/borntofrappe/game-development/blob/master/Showcase/minigames-box.gif)
+![Minigames Box](https://github.com/borntofrappe/game-development/blob/master/Practice/Minigames%20Box/minigames-box.gif)
 
 ## Prep
 
