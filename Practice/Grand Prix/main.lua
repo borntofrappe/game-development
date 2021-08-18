@@ -2,15 +2,23 @@ require "src/Dependencies"
 
 function love.load()
   love.window.setTitle(TITLE)
-  math.randomseed(os.time())
+  -- math.randomseed(os.time())
 
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
   gFonts = {
-    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 32),
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16),
     ["small"] = love.graphics.newFont("res/fonts/font.ttf", 8)
+  }
+
+  gTextures = {
+    ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
+  }
+
+  gQuads = {
+    ["cars"] = GenerateQuadsCars(gTextures.spritesheet),
+    ["textures"] = GenerateQuadsTextures(gTextures.spritesheet)
   }
 
   gStateMachine =
