@@ -1,65 +1,21 @@
 StartState = BaseState:new()
 
 local DELAY_ANIMATION = 1
-local TWEEN_ANIMATION = 1
+local TWEEN_ANIMATION = 1.5
 local DELAY_READY = 0.5
 
-local OFFSET_SPEED = 50
+local OFFSET_SPEED = 40
 
 function StartState:enter()
-  local columns = COLUMNS * 2 + 1
-  local rows = ROWS
-
-  local tiles = {}
-  local tilesBackground = 1
-  local tilesEdge = 1
-  local tilesRoaROWSd = rows - tilesBackground * 2 - tilesEdge * 2
-
-  local tileSize = TILE_SIZE.texture
-
-  for column = 1, columns do
-    for row = 1, rows do
-      local x = (column - 1) * tileSize
-      local y = (row - 1) * tileSize
-      local id = 2
-      if row == 1 or row == rows then
-        id = 1
-      elseif row == 2 or row == rows - 1 then
-        id = 4
-      end
-
-      table.insert(
-        tiles,
-        {
-          ["x"] = x,
-          ["y"] = y,
-          ["id"] = id
-        }
-      )
-    end
-  end
-
-  self.tiles = tiles
-
   self.title = {
     ["text"] = string.upper("Grand Prix"),
     ["y"] = VIRTUAL_HEIGHT / 4 - gFonts.large:getHeight() / 2
   }
 
-  local carSize = TILE_SIZE.car
-  local car = {
-    ["x"] = -carSize,
-    ["y"] = VIRTUAL_HEIGHT / 2 - carSize / 2,
-    ["color"] = 1
-  }
-
-  local frames = {}
-  for i = 1, #gQuads.cars[1] do
-    table.insert(frames, i)
-  end
-  car.animation = Animation:new(frames, 0.1)
-
-  self.car = car
+  self.tiles = Tiles:new()
+  self.car = Car:new(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, 1)
+  self.car.x = -self.car.size
+  self.car.y = VIRTUAL_HEIGHT / 2 - self.car.size / 2
 
   self.tilesOffset = 0
   self.isReady = false
@@ -70,7 +26,7 @@ function StartState:enter()
       Timer:tween(
         TWEEN_ANIMATION,
         {
-          [self.car] = {["x"] = VIRTUAL_WIDTH / 2 - carSize / 2}
+          [self.car] = {["x"] = VIRTUAL_WIDTH / 2 - self.car.size / 2}
         },
         function()
           Timer:after(
@@ -92,7 +48,8 @@ function StartState:update(dt)
   if self.tilesOffset >= VIRTUAL_WIDTH then
     self.tilesOffset = self.tilesOffset % VIRTUAL_WIDTH
   end
-  self.car.animation:update(dt)
+
+  self.car:update(dt)
 
   if love.keyboard.waspressed("escape") then
     love.event.quit()
@@ -126,17 +83,10 @@ function StartState:render()
 
   love.graphics.push()
   love.graphics.translate(self.tilesOffset * -1, 0)
-  for k, tile in pairs(self.tiles) do
-    love.graphics.draw(gTextures["spritesheet"], gQuads["textures"][tile.id], tile.x, tile.y)
-  end
+  self.tiles:render()
   love.graphics.pop()
 
-  love.graphics.draw(
-    gTextures["spritesheet"],
-    gQuads["cars"][self.car.color][self.car.animation:getCurrentFrame()],
-    self.car.x,
-    self.car.y
-  )
+  self.car:render()
 
   love.graphics.setFont(gFonts.large)
   love.graphics.setColor(0.06, 0.07, 0.19)

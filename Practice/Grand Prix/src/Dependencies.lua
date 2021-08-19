@@ -5,6 +5,10 @@ require "res/lib/Animation"
 require "src/constants"
 require "src/Utils"
 
+require "src/Car"
+require "src/Tile"
+require "src/Tiles"
+
 require "src/StateMachine"
 require "src/states/BaseState"
 require "src/states/StartState"
