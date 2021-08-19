@@ -1,10 +1,10 @@
 StartState = BaseState:new()
 
 local DELAY_ANIMATION = 1
-local TWEEN_ANIMATION = 1.2
-local DELAY_READY = 0.2
+local TWEEN_ANIMATION = 1
+local DELAY_READY = 0.5
 
-local OFFSET_UPDATE_SPEED = 50
+local OFFSET_SPEED = 50
 
 function StartState:enter()
   local columns = COLUMNS * 2 + 1
@@ -88,7 +88,7 @@ end
 function StartState:update(dt)
   Timer:update(dt)
 
-  self.tilesOffset = self.tilesOffset + OFFSET_UPDATE_SPEED * dt
+  self.tilesOffset = self.tilesOffset + OFFSET_SPEED * dt
   if self.tilesOffset >= VIRTUAL_WIDTH then
     self.tilesOffset = self.tilesOffset % VIRTUAL_WIDTH
   end
@@ -107,7 +107,17 @@ function StartState:update(dt)
   end
 
   if love.keyboard.waspressed("return") and self.isReady then
-    gStateMachine:change("play")
+    gStateMachine:change(
+      "set",
+      {
+        ["tiles"] = self.tiles,
+        ["car"] = self.car,
+        ["tilesOffset"] = {
+          ["value"] = self.tilesOffset,
+          ["speed"] = OFFSET_SPEED
+        }
+      }
+    )
   end
 end
 
