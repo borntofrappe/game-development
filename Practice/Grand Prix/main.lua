@@ -3,13 +3,14 @@ require "src/Dependencies"
 function love.load()
   love.window.setTitle(TITLE)
   -- math.randomseed(os.time())
+  -- love.graphics.setColor(0.2, 0.21, 0.36)
 
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
   gFonts = {
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 16),
-    ["small"] = love.graphics.newFont("res/fonts/font.ttf", 8)
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 16),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
   }
 
   gTextures = {
