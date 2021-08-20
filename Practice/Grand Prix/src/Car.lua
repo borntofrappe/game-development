@@ -24,6 +24,14 @@ function Car:new(x, y, color)
   return this
 end
 
+function Car:collides(car)
+  if self.x + self.size < car.x or self.x > car.x + car.size or self.y + self.size < car.y or self.y > car.y + car.size then
+    return false
+  end
+
+  return true
+end
+
 function Car:update(dt)
   self.animation:update(dt)
 end

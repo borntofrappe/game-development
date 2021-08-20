@@ -7,7 +7,6 @@ function Tiles:new()
   local tiles = {}
   local tilesBackground = 1
   local tilesEdge = 1
-  local tilesRoaROWSd = rows - tilesBackground * 2 - tilesEdge * 2
 
   local tileSize = TILE_SIZE.texture
 
