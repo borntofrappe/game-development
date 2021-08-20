@@ -131,7 +131,4 @@ function PlayState:render()
   end
 
   self.car:render()
-
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.print(self.counter, 6, 6)
 end

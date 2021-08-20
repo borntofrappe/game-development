@@ -30,3 +30,11 @@ function GenerateQuadsTextures(atlas)
 
   return quads
 end
+
+function formatTimer(timer)
+  local seconds = math.floor(timer)
+  local minutes = math.floor(seconds / 60)
+  seconds = seconds - minutes * 60
+
+  return string.format("%02d:%02d", minutes, seconds)
+end

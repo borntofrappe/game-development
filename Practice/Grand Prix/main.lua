@@ -34,6 +34,9 @@ function love.load()
       end,
       ["finish"] = function()
         return FinishState:new()
+      end,
+      ["stop"] = function()
+        return StopState:new()
       end
     }
   )
