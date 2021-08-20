@@ -20,3 +20,7 @@ OPTIONS = {
   vsync = true,
   resizable = true
 }
+
+CAR_SPEED_Y = 70
+OFFSET_UPDATE_SPEED = 50
+OFFSET_SLOWDOWN_SPEED = 200

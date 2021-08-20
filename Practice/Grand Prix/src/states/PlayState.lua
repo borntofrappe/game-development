@@ -1,11 +1,9 @@
 PlayState = BaseState:new()
 
-local CAR_SPEED_Y = 70
-local OFFSET_UPDATE_SPEED = 50
-local OFFSET_SLOWDOWN_SPEED = 200
 local OFFSET_SPEED_MIN = 0.5
 local OFFSET_SPEED_MAX = 2
 local CAR_SPAWN_ODDS = 3
+local COUNTER_THRESHOLD = 5
 
 function PlayState:enter(params)
   self.y = {
@@ -38,6 +36,8 @@ function PlayState:enter(params)
   local speed = self.initialSpeed
   car.speed = speed
   table.insert(self.cars, car)
+
+  self.counter = 0
 end
 
 function PlayState:update(dt)
@@ -58,6 +58,21 @@ function PlayState:update(dt)
       local speed = love.math.random() * (self.speed.max * 0.8 - self.speed.min) + self.speed.min
       car.speed = speed
       table.insert(self.cars, car)
+    end
+
+    self.counter = self.counter + 1
+    if self.counter >= COUNTER_THRESHOLD then
+      gStateMachine:change(
+        "finish",
+        {
+          ["tiles"] = self.tiles,
+          ["tilesOffset"] = self.tilesOffset,
+          ["car"] = self.car,
+          ["cars"] = self.cars,
+          ["y"] = self.y,
+          ["speed"] = self.speed
+        }
+      )
     end
   end
 
@@ -117,6 +132,6 @@ function PlayState:render()
 
   self.car:render()
 
-  -- love.graphics.setColor(0, 0, 0)
-  -- love.graphics.print(self.counter, 6, 6)
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.print(self.counter, 6, 6)
 end

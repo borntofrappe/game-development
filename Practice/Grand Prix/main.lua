@@ -31,6 +31,9 @@ function love.load()
       end,
       ["play"] = function()
         return PlayState:new()
+      end,
+      ["finish"] = function()
+        return FinishState:new()
       end
     }
   )
