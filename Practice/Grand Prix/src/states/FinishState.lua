@@ -31,6 +31,7 @@ function FinishState:enter(params)
   self.cars = params.cars
   self.y = params.y
   self.speed = params.speed
+  self.timer = params.timer
 end
 
 function FinishState:update(dt)
@@ -43,7 +44,8 @@ function FinishState:update(dt)
         ["tilesBonus"] = self.tilesBonus,
         ["tilesOffset"] = self.tilesOffset,
         ["car"] = self.car,
-        ["cars"] = self.cars
+        ["cars"] = self.cars,
+        ["timer"] = self.timer
       }
     )
   end

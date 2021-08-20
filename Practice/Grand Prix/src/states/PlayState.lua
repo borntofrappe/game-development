@@ -38,9 +38,11 @@ function PlayState:enter(params)
   table.insert(self.cars, car)
 
   self.counter = 0
+  self.timer = 0
 end
 
 function PlayState:update(dt)
+  self.timer = self.timer + dt
   if love.keyboard.waspressed("escape") then
     gStateMachine:change("start")
   end
@@ -70,7 +72,8 @@ function PlayState:update(dt)
           ["car"] = self.car,
           ["cars"] = self.cars,
           ["y"] = self.y,
-          ["speed"] = self.speed
+          ["speed"] = self.speed,
+          ["timer"] = self.timer
         }
       )
     end

@@ -1,6 +1,7 @@
 StopState = BaseState:new()
 
 local TWEEN_ANIMATION = 2
+local DELAY_GAMEOVER = 1
 
 function StopState:enter(params)
   self.tilesBonus = params.tilesBonus
@@ -8,6 +9,7 @@ function StopState:enter(params)
   self.tilesOffset = params.tilesOffset
   self.car = params.car
   self.cars = params.cars
+  self.timer = params.timer
 
   Timer:tween(
     TWEEN_ANIMATION,
@@ -21,7 +23,24 @@ function StopState:enter(params)
       TWEEN_ANIMATION,
       {
         [car] = {["speed"] = 0}
-      }
+      },
+      function()
+        Timer:after(
+          DELAY_GAMEOVER,
+          function()
+            gStateMachine:change(
+              "gameover",
+              {
+                ["tilesBonus"] = self.tilesBonus,
+                ["tilesOffset"] = self.tilesOffset,
+                ["car"] = self.car,
+                ["cars"] = self.cars,
+                ["timer"] = self.timer
+              }
+            )
+          end
+        )
+      end
     )
   end
 end
@@ -35,11 +54,6 @@ function StopState:update(dt)
     for k, car in pairs(self.cars) do
       car.x = car.x + (car.speed - self.tilesOffset.speed) * dt
     end
-  end
-
-  if love.keyboard.waspressed("escape") then
-    Timer:reset()
-    gStateMachine:change("start")
   end
 end
 

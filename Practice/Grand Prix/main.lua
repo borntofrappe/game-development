@@ -37,6 +37,9 @@ function love.load()
       end,
       ["stop"] = function()
         return StopState:new()
+      end,
+      ["gameover"] = function()
+        return GameoverState:new()
       end
     }
   )
