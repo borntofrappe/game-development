@@ -31,6 +31,9 @@ function love.load()
       end,
       ["set"] = function()
         return SetState:new()
+      end,
+      ["go"] = function()
+        return GoState:new()
       end
     }
   )

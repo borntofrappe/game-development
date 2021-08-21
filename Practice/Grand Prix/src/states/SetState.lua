@@ -2,6 +2,7 @@ SetState = BaseState:new()
 
 local PADDING = 6
 local TWEEN_ANIMATION = 2
+local DELAY_TWEEN_ANIMATION = 0.25
 local DELAY_GO_STATE = 1.5
 
 function SetState:enter(params)
@@ -33,40 +34,54 @@ function SetState:enter(params)
           [self.message] = {["x"] = 0}
         },
         function()
-          Timer:tween(
-            TWEEN_ANIMATION,
-            {
-              [self.car] = {["x"] = PADDING},
-              [self.tilesOffset] = {["speed"] = OFFSET_SPEED_SET}
-            },
+          Timer:after(
+            DELAY_TWEEN_ANIMATION,
             function()
               Timer:tween(
-                TWEEN_OUT,
+                TWEEN_ANIMATION,
                 {
-                  [self.message] = {["x"] = VIRTUAL_WIDTH}
+                  [self.car] = {["x"] = PADDING},
+                  [self.tilesOffset] = {["speed"] = OFFSET_SPEED_SET}
                 },
                 function()
-                  self.message.text = "Go"
-                  self.message.x = -VIRTUAL_WIDTH
                   Timer:tween(
-                    TWEEN_IN,
+                    TWEEN_OUT,
                     {
-                      [self.message] = {["x"] = 0}
+                      [self.message] = {["x"] = VIRTUAL_WIDTH}
                     },
                     function()
+                      self.message.text = "Go"
+                      self.message.x = -VIRTUAL_WIDTH
                       Timer:tween(
-                        DELAY_GO_STATE,
+                        TWEEN_IN,
                         {
-                          [self.tilesOffset] = {["speed"] = OFFSET_SPEED_GO}
+                          [self.message] = {["x"] = 0}
                         },
                         function()
                           Timer:tween(
-                            TWEEN_OUT,
+                            DELAY_GO_STATE,
                             {
-                              [self.message] = {["x"] = VIRTUAL_WIDTH}
-                            }
+                              [self.tilesOffset] = {["speed"] = OFFSET_SPEED_GO}
+                            },
+                            function()
+                              Timer:tween(
+                                TWEEN_OUT,
+                                {
+                                  [self.message] = {["x"] = VIRTUAL_WIDTH}
+                                },
+                                function()
+                                  gStateMachine:change(
+                                    "go",
+                                    {
+                                      ["tiles"] = self.tiles,
+                                      ["tilesOffset"] = self.tilesOffset,
+                                      ["car"] = self.car
+                                    }
+                                  )
+                                end
+                              )
+                            end
                           )
-                          -- go
                         end
                       )
                     end

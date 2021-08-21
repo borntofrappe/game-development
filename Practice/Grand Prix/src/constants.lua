@@ -23,5 +23,19 @@ OFFSET_SPEED = 40
 OFFSET_SPEED_SET = 20
 OFFSET_SPEED_GO = 80
 
+OFFSET_SPEED_CAR = {
+  ["min"] = 40,
+  ["max"] = 180
+}
+
+OFFSET_SPEED_CARS = {
+  ["min"] = 40,
+  ["max"] = 140
+}
+
+X_SPEED = 50
+Y_SPEED = 70
+SLOWDOWN_SPEED = 200
+
 TWEEN_IN = 0.12
 TWEEN_OUT = 0.08

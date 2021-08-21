@@ -1,25 +1,17 @@
 GoState = BaseState:new()
 
-local OFFSET_SPEED_MIN = 0.5
-local OFFSET_SPEED_MAX = 2
-local CAR_SPAWN_ODDS = 3
-local COUNTER_THRESHOLD = 5
+local CARS_SPAWN_ODDS = 3
+local FINISH_COUNTER = 10
 
 function GoState:enter(params)
-  self.y = {
-    ["min"] = TILE_SIZE.texture,
-    ["max"] = VIRTUAL_HEIGHT - TILE_SIZE.texture - TILE_SIZE.car
+  self.yThreshold = {
+    ["min"] = TEXTURE_SIZE,
+    ["max"] = VIRTUAL_HEIGHT - TEXTURE_SIZE - CAR_SIZE
   }
 
   self.tiles = params.tiles
-  self.car = params.car
   self.tilesOffset = params.tilesOffset
-
-  self.initialSpeed = params.tilesOffset.speed
-  self.speed = {
-    ["min"] = self.initialSpeed * OFFSET_SPEED_MIN,
-    ["max"] = self.initialSpeed * OFFSET_SPEED_MAX
-  }
+  self.car = params.car
 
   self.colors = {}
   for color = 1, #gQuads["cars"] do
@@ -29,13 +21,6 @@ function GoState:enter(params)
   end
 
   self.cars = {}
-  local x = VIRTUAL_WIDTH
-  local y = love.math.random(self.y.min, self.y.max)
-  local color = self.colors[love.math.random(#self.colors)]
-  local car = Car:new(x, y, color)
-  local speed = self.initialSpeed
-  car.speed = speed
-  table.insert(self.cars, car)
 
   self.counter = 0
   self.timer = 0
@@ -43,56 +28,55 @@ end
 
 function GoState:update(dt)
   self.timer = self.timer + dt
+
   if love.keyboard.waspressed("escape") then
-    gStateMachine:change("start")
+    gStateMachine:change("title")
   end
 
   self.tilesOffset.value = self.tilesOffset.value + self.tilesOffset.speed * dt
   if self.tilesOffset.value >= VIRTUAL_WIDTH then
     self.tilesOffset.value = self.tilesOffset.value % VIRTUAL_WIDTH
 
-    if love.math.random(CAR_SPAWN_ODDS) == 1 then
-      local xStart = self.cars[#self.cars].x > 0 and self.cars[#self.cars].x or 0
-      local x = xStart + VIRTUAL_WIDTH
-      local y = love.math.random(self.y.min, self.y.max)
+    if love.math.random(CARS_SPAWN_ODDS) == 1 then
+      local x = self.car.x + VIRTUAL_WIDTH
+      local y = love.math.random(self.yThreshold.min, self.yThreshold.max)
       local color = self.colors[love.math.random(#self.colors)]
       local car = Car:new(x, y, color)
-      local speed = love.math.random() * (self.speed.max * 0.8 - self.speed.min) + self.speed.min
+      local speed = love.math.random() * (OFFSET_SPEED_CARS.max - OFFSET_SPEED_CARS.min) + OFFSET_SPEED_CARS.min
       car.speed = speed
       table.insert(self.cars, car)
     end
 
     self.counter = self.counter + 1
-    if self.counter >= COUNTER_THRESHOLD then
-      gStateMachine:change(
-        "finish",
-        {
-          ["tiles"] = self.tiles,
-          ["tilesOffset"] = self.tilesOffset,
-          ["car"] = self.car,
-          ["cars"] = self.cars,
-          ["y"] = self.y,
-          ["speed"] = self.speed,
-          ["timer"] = self.timer
-        }
-      )
+    if self.counter >= FINISH_COUNTER then
+    -- gStateMachine:change(
+    --   "finish",
+    --   {
+    --     ["tiles"] = self.tiles,
+    --     ["tilesOffset"] = self.tilesOffset,
+    --     ["car"] = self.car,
+    --     ["cars"] = self.cars,
+    --     ["y"] = self.y,
+    --     ["timer"] = self.timer
+    --   }
+    -- )
     end
   end
 
   if love.keyboard.isDown("up") then
-    self.car.y = math.max(0, self.car.y - CAR_SPEED_Y * dt)
+    self.car.y = math.max(0, self.car.y - Y_SPEED * dt)
   elseif love.keyboard.isDown("down") then
-    self.car.y = math.min(VIRTUAL_HEIGHT - self.car.size, self.car.y + CAR_SPEED_Y * dt)
+    self.car.y = math.min(VIRTUAL_HEIGHT - self.car.size, self.car.y + Y_SPEED * dt)
   end
 
-  if self.car.y < self.y.min or self.car.y > self.y.max then
-    self.tilesOffset.speed = math.max(self.speed.min, self.tilesOffset.speed - OFFSET_SLOWDOWN_SPEED * dt)
+  if self.car.y < self.yThreshold.min or self.car.y > self.yThreshold.max then
+    self.tilesOffset.speed = math.max(OFFSET_SPEED_CAR.min, self.tilesOffset.speed - SLOWDOWN_SPEED * dt)
   end
 
   if love.keyboard.isDown("right") then
-    self.tilesOffset.speed = math.min(self.speed.max, self.tilesOffset.speed + OFFSET_UPDATE_SPEED * dt)
+    self.tilesOffset.speed = math.min(OFFSET_SPEED_CAR.max, self.tilesOffset.speed + X_SPEED * dt)
   elseif love.keyboard.isDown("left") then
-    self.tilesOffset.speed = math.max(self.speed.min, self.tilesOffset.speed - OFFSET_UPDATE_SPEED * dt)
+    self.tilesOffset.speed = math.max(OFFSET_SPEED_CAR.min, self.tilesOffset.speed - X_SPEED * dt)
   end
 
   for k, car in pairs(self.cars) do
@@ -101,24 +85,24 @@ function GoState:update(dt)
 
     if car:collides(self.car) then
       if car.x > self.car.x then
-        self.tilesOffset.speed = self.speed.min
+        self.tilesOffset.speed = OFFSET_SPEED_CAR.min
       else
-        car.speed = self.speed.min
+        car.speed = OFFSET_SPEED_CARS.min
       end
     end
 
     for j, c in pairs(self.cars) do
       if j ~= k and car:collides(c) then
         if car.x > c.x then
-          c.speed = self.speed.min
+          c.speed = OFFSET_SPEED_CARS.min
         else
-          car.speed = self.speed.min
+          car.speed = OFFSET_SPEED_CARS.min
         end
       end
     end
   end
 
-  self.car.animation:update(dt)
+  self.car:update(dt)
 end
 
 function GoState:render()
@@ -132,6 +116,5 @@ function GoState:render()
   for k, car in pairs(self.cars) do
     car:render()
   end
-
   self.car:render()
 end
