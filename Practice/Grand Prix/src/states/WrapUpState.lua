@@ -1,6 +1,6 @@
-GameoverState = BaseState:new()
+WrapUpState = BaseState:new()
 
-function GameoverState:enter(params)
+function WrapUpState:enter(params)
   self.tilesBonus = params.tilesBonus
   self.tilesOffset = params.tilesOffset
   self.car = params.car
@@ -8,13 +8,13 @@ function GameoverState:enter(params)
   self.timer = params.timer
 end
 
-function GameoverState:update(dt)
+function WrapUpState:update(dt)
   if love.keyboard.waspressed("escape") or love.keyboard.waspressed("return") then
     gStateMachine:change("start")
   end
 end
 
-function GameoverState:render()
+function WrapUpState:render()
   love.graphics.setColor(1, 1, 1)
 
   love.graphics.push()

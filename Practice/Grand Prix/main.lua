@@ -23,28 +23,16 @@ function love.load()
   gStateMachine =
     StateMachine:new(
     {
-      ["start"] = function()
-        return StartState:new()
+      ["title"] = function()
+        return TitleState:new()
       end,
-      ["set"] = function()
-        return SetState:new()
-      end,
-      ["play"] = function()
-        return PlayState:new()
-      end,
-      ["finish"] = function()
-        return FinishState:new()
-      end,
-      ["stop"] = function()
-        return StopState:new()
-      end,
-      ["gameover"] = function()
-        return GameoverState:new()
+      ["ready"] = function()
+        return ReadyState:new()
       end
     }
   )
 
-  gStateMachine:change("start")
+  gStateMachine:change("title")
 
   love.keyboard.keypressed = {}
 end

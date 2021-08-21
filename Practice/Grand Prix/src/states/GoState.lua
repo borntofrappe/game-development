@@ -1,11 +1,11 @@
-PlayState = BaseState:new()
+GoState = BaseState:new()
 
 local OFFSET_SPEED_MIN = 0.5
 local OFFSET_SPEED_MAX = 2
 local CAR_SPAWN_ODDS = 3
 local COUNTER_THRESHOLD = 5
 
-function PlayState:enter(params)
+function GoState:enter(params)
   self.y = {
     ["min"] = TILE_SIZE.texture,
     ["max"] = VIRTUAL_HEIGHT - TILE_SIZE.texture - TILE_SIZE.car
@@ -41,7 +41,7 @@ function PlayState:enter(params)
   self.timer = 0
 end
 
-function PlayState:update(dt)
+function GoState:update(dt)
   self.timer = self.timer + dt
   if love.keyboard.waspressed("escape") then
     gStateMachine:change("start")
@@ -121,7 +121,7 @@ function PlayState:update(dt)
   self.car.animation:update(dt)
 end
 
-function PlayState:render()
+function GoState:render()
   love.graphics.setColor(1, 1, 1)
 
   love.graphics.push()

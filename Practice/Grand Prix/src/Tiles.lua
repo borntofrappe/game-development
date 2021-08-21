@@ -8,7 +8,7 @@ function Tiles:new()
   local tilesBackground = 1
   local tilesEdge = 1
 
-  local tileSize = TILE_SIZE.texture
+  local tileSize = TEXTURE_SIZE
 
   for column = 1, columns do
     for row = 1, rows do

@@ -1,7 +1,7 @@
 Car = {}
 
 function Car:new(x, y, color)
-  local size = TILE_SIZE.car
+  local size = CAR_SIZE
 
   local frames = {}
   for i = 1, #gQuads.cars[color] do

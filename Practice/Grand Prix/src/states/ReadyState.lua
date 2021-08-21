@@ -1,47 +1,38 @@
-StartState = BaseState:new()
+ReadyState = BaseState:new()
 
-local DELAY_ANIMATION = 1
 local TWEEN_ANIMATION = 1.5
-local DELAY_READY = 0.5
+local DELAY_READY_STATE = 1
 
-local OFFSET_SPEED = 40
+function ReadyState:enter(params)
+  self.title = params.title
 
-function StartState:enter()
-  self.title = {
-    ["text"] = string.upper("Grand Prix"),
-    ["y"] = VIRTUAL_HEIGHT / 4 - gFonts.large:getHeight() / 2
-  }
+  self.tiles = params.tiles
+  self.tilesOffset = params.tilesOffset
 
-  self.tiles = Tiles:new()
   self.car = Car:new(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, 1)
   self.car.x = -self.car.size
   self.car.y = VIRTUAL_HEIGHT / 2 - self.car.size / 2
 
-  self.tilesOffset = 0
   self.isReady = false
 
-  Timer:after(
-    DELAY_ANIMATION,
+  Timer:tween(
+    TWEEN_ANIMATION,
+    {
+      [self.title] = {["y"] = VIRTUAL_HEIGHT / 4 - gFonts.large:getHeight() / 2},
+      [self.car] = {["x"] = VIRTUAL_WIDTH / 2 - self.car.size / 2}
+    },
     function()
-      Timer:tween(
-        TWEEN_ANIMATION,
-        {
-          [self.car] = {["x"] = VIRTUAL_WIDTH / 2 - self.car.size / 2}
-        },
+      Timer:after(
+        DELAY_READY_STATE,
         function()
-          Timer:after(
-            DELAY_READY,
-            function()
-              self.isReady = true
-            end
-          )
+          self.isReady = true
         end
       )
     end
   )
 end
 
-function StartState:update(dt)
+function ReadyState:update(dt)
   Timer:update(dt)
 
   self.tilesOffset = self.tilesOffset + OFFSET_SPEED * dt
@@ -51,7 +42,7 @@ function StartState:update(dt)
 
   self.car:update(dt)
 
-  if love.keyboard.waspressed("escape") then
+  if love.keyboard.waspressed("escape") and self.isReady then
     love.event.quit()
   end
 
@@ -64,21 +55,11 @@ function StartState:update(dt)
   end
 
   if love.keyboard.waspressed("return") and self.isReady then
-    gStateMachine:change(
-      "set",
-      {
-        ["tiles"] = self.tiles,
-        ["car"] = self.car,
-        ["tilesOffset"] = {
-          ["value"] = self.tilesOffset,
-          ["speed"] = OFFSET_SPEED
-        }
-      }
-    )
+  -- gStateMachine:change("set")
   end
 end
 
-function StartState:render()
+function ReadyState:render()
   love.graphics.setColor(1, 1, 1)
 
   love.graphics.push()
