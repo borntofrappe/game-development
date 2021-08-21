@@ -7,7 +7,8 @@ function ReadyState:enter(params)
   self.title = params.title
   self.message = {
     ["text"] = "Ready",
-    ["x"] = -VIRTUAL_WIDTH
+    ["x"] = -VIRTUAL_WIDTH,
+    ["y"] = VIRTUAL_HEIGHT * 3 / 4 - gFonts.normal:getHeight()
   }
 
   self.tiles = params.tiles
@@ -18,6 +19,7 @@ function ReadyState:enter(params)
   self.car.y = VIRTUAL_HEIGHT / 2 - self.car.size / 2
 
   self.isReady = false
+  self.isExiting = false
 
   Timer:tween(
     TWEEN_ANIMATION,
@@ -54,10 +56,6 @@ function ReadyState:update(dt)
 
   self.car:update(dt)
 
-  if love.keyboard.waspressed("escape") and self.isReady then
-    love.event.quit()
-  end
-
   if love.keyboard.waspressed("right") then
     self.car.color = self.car.color == #gQuads["cars"] and 1 or self.car.color + 1
   end
@@ -66,16 +64,31 @@ function ReadyState:update(dt)
     self.car.color = self.car.color == 1 and #gQuads["cars"] or self.car.color - 1
   end
 
-  if love.keyboard.waspressed("return") and self.isReady then
-    gStateMachine:change(
-      "set",
+  if love.keyboard.waspressed("return") and self.isReady and not self.isExiting then
+    self.isExiting = true
+    Timer:tween(
+      TWEEN_OUT,
       {
-        ["title"] = self.title,
-        ["message"] = self.message,
-        ["tiles"] = self.tiles,
-        ["tilesOffset"] = self.tilesOffset,
-        ["car"] = self.car
-      }
+        [self.title] = {["x"] = VIRTUAL_WIDTH}
+      },
+      function()
+        Timer:tween(
+          TWEEN_OUT,
+          {
+            [self.message] = {["x"] = VIRTUAL_WIDTH}
+          },
+          function()
+            gStateMachine:change(
+              "set",
+              {
+                ["tiles"] = self.tiles,
+                ["tilesOffset"] = self.tilesOffset,
+                ["car"] = self.car
+              }
+            )
+          end
+        )
+      end
     )
   end
 end
@@ -92,14 +105,8 @@ function ReadyState:render()
 
   love.graphics.setFont(gFonts.large)
   love.graphics.setColor(0.06, 0.07, 0.19)
-  love.graphics.printf(self.title.text, 0, self.title.y, VIRTUAL_WIDTH, "center")
+  love.graphics.printf(self.title.text, self.title.x, self.title.y, VIRTUAL_WIDTH, "center")
 
   love.graphics.setFont(gFonts.normal)
-  love.graphics.printf(
-    self.message.text,
-    self.message.x,
-    VIRTUAL_HEIGHT * 3 / 4 - gFonts.normal:getHeight(),
-    VIRTUAL_WIDTH,
-    "center"
-  )
+  love.graphics.printf(self.message.text, self.message.x, self.message.y, VIRTUAL_WIDTH, "center")
 end

@@ -5,6 +5,7 @@ local DELAY_READY_STATE = 2
 function TitleState:enter()
   self.title = {
     ["text"] = string.upper("Grand Prix"),
+    ["x"] = 0,
     ["y"] = VIRTUAL_HEIGHT / 2 - gFonts.large:getHeight() / 2
   }
 
@@ -34,10 +35,6 @@ function TitleState:update(dt)
     self.tilesOffset = self.tilesOffset % VIRTUAL_WIDTH
   end
 
-  if love.keyboard.waspressed("escape") then
-    love.event.quit()
-  end
-
   if love.keyboard.waspressed("return") then
     Timer:reset()
     gStateMachine:change(
@@ -61,5 +58,5 @@ function TitleState:render()
 
   love.graphics.setFont(gFonts.large)
   love.graphics.setColor(0.06, 0.07, 0.19)
-  love.graphics.printf(self.title.text, 0, self.title.y, VIRTUAL_WIDTH, "center")
+  love.graphics.printf(self.title.text, self.title.x, self.title.y, VIRTUAL_WIDTH, "center")
 end

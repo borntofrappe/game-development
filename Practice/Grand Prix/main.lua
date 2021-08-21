@@ -35,6 +35,9 @@ function love.load()
       ["go"] = function()
         return GoState:new()
       end,
+      ["drive"] = function()
+        return DriveState:new()
+      end,
       ["finish"] = function()
         return FinishState:new()
       end,
@@ -57,6 +60,9 @@ function love.resize(width, height)
 end
 
 function love.keypressed(key)
+  if key == "escape" then
+    love.event.quit()
+  end
   love.keyboard.keypressed[key] = true
 end
 

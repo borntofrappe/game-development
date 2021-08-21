@@ -1,6 +1,6 @@
 WrapUpState = BaseState:new()
 
-local TWEEN_ANIMATION = 1.5
+local TWEEN_ANIMATION = 2
 
 function WrapUpState:enter(params)
   self.tilesBonus = params.tilesBonus
@@ -34,7 +34,7 @@ function WrapUpState:enter(params)
   }
 
   self.isWrappedUp = false
-  self.isContinuing = false
+  self.isExiting = false
 
   Timer:tween(
     TWEEN_IN,
@@ -66,25 +66,37 @@ end
 function WrapUpState:update(dt)
   Timer:update(dt)
 
-  if love.keyboard.waspressed("escape") or love.keyboard.waspressed("return") then
-    if self.isWrappedUp and not self.isContinuing then
-      self.isContinuing = true
+  if love.keyboard.waspressed("return") then
+    if self.isWrappedUp and not self.isExiting then
+      self.isExiting = true
       Timer:tween(
-        TWEEN_IN,
+        TWEEN_OUT,
         {
           [self.timer] = {["x"] = VIRTUAL_WIDTH}
         },
         function()
           Timer:tween(
-            TWEEN_IN,
+            TWEEN_OUT,
             {
               [self.collisions] = {["x"] = VIRTUAL_WIDTH}
             },
             function()
+              for k, car in pairs(self.cars) do
+                if car.x > 0 then
+                  Timer:tween(
+                    TWEEN_ANIMATION,
+                    {
+                      [car] = {["x"] = car.x + VIRTUAL_WIDTH}
+                    }
+                  )
+                end
+              end
               Timer:tween(
                 TWEEN_ANIMATION,
                 {
-                  [self.title] = {["y"] = VIRTUAL_HEIGHT / 2 - gFonts.large:getHeight() / 2}
+                  [self.title] = {["y"] = VIRTUAL_HEIGHT / 2 - gFonts.large:getHeight() / 2},
+                  [self.car] = {["x"] = self.car.x + VIRTUAL_WIDTH},
+                  [self.tilesOffset] = {["value"] = VIRTUAL_WIDTH}
                 },
                 function()
                   gStateMachine:change("title")
