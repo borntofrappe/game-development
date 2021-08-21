@@ -28,6 +28,9 @@ function love.load()
       end,
       ["ready"] = function()
         return ReadyState:new()
+      end,
+      ["set"] = function()
+        return SetState:new()
       end
     }
   )

@@ -5,6 +5,10 @@ local DELAY_READY_STATE = 1
 
 function ReadyState:enter(params)
   self.title = params.title
+  self.message = {
+    ["text"] = "Ready",
+    ["x"] = -VIRTUAL_WIDTH
+  }
 
   self.tiles = params.tiles
   self.tilesOffset = params.tilesOffset
@@ -25,7 +29,15 @@ function ReadyState:enter(params)
       Timer:after(
         DELAY_READY_STATE,
         function()
-          self.isReady = true
+          Timer:tween(
+            TWEEN_IN,
+            {
+              [self.message] = {["x"] = 0}
+            },
+            function()
+              self.isReady = true
+            end
+          )
         end
       )
     end
@@ -55,7 +67,16 @@ function ReadyState:update(dt)
   end
 
   if love.keyboard.waspressed("return") and self.isReady then
-  -- gStateMachine:change("set")
+    gStateMachine:change(
+      "set",
+      {
+        ["title"] = self.title,
+        ["message"] = self.message,
+        ["tiles"] = self.tiles,
+        ["tilesOffset"] = self.tilesOffset,
+        ["car"] = self.car
+      }
+    )
   end
 end
 
@@ -73,8 +94,12 @@ function ReadyState:render()
   love.graphics.setColor(0.06, 0.07, 0.19)
   love.graphics.printf(self.title.text, 0, self.title.y, VIRTUAL_WIDTH, "center")
 
-  if self.isReady then
-    love.graphics.setFont(gFonts.normal)
-    love.graphics.printf("Ready", 0, VIRTUAL_HEIGHT * 3 / 4 - gFonts.normal:getHeight(), VIRTUAL_WIDTH, "center")
-  end
+  love.graphics.setFont(gFonts.normal)
+  love.graphics.printf(
+    self.message.text,
+    self.message.x,
+    VIRTUAL_HEIGHT * 3 / 4 - gFonts.normal:getHeight(),
+    VIRTUAL_WIDTH,
+    "center"
+  )
 end

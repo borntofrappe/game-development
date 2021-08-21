@@ -1,6 +1,6 @@
 TitleState = BaseState:new()
 
-local DELAY_READY_STATE = 1.5
+local DELAY_READY_STATE = 2
 
 function TitleState:enter()
   self.title = {

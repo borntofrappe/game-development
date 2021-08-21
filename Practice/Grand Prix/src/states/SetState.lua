@@ -1,46 +1,79 @@
 SetState = BaseState:new()
 
 local PADDING = 6
-local TWEEN_ANIMATION = 1.5
-local OFFSET_SPEED_SET = 0.5
-local OFFSET_SPEED_PLAY = 2.5
-local ANIMATION_INTERVAL_SET = 0.3
-local ANIMATION_INTERVAL_PLAY = 0.08
-local DELAY_PLAY = 1.5
+local TWEEN_ANIMATION = 2
+local DELAY_GO_STATE = 1.5
 
 function SetState:enter(params)
+  self.title = params.title
+  self.title.x = 0
+  self.message = params.message
+
   self.tiles = params.tiles
   self.car = params.car
   self.tilesOffset = {
-    ["value"] = params.tilesOffset.value,
-    ["speed"] = params.tilesOffset.speed
+    ["value"] = params.tilesOffset,
+    ["speed"] = OFFSET_SPEED
   }
 
   self.isSet = false
-  self.message = string.upper("Go!")
 
   Timer:tween(
-    TWEEN_ANIMATION,
+    TWEEN_OUT,
     {
-      [self.car] = {["x"] = PADDING},
-      [self.tilesOffset] = {["speed"] = params.tilesOffset.speed * OFFSET_SPEED_SET}
+      [self.title] = {["x"] = VIRTUAL_WIDTH},
+      [self.message] = {["x"] = VIRTUAL_WIDTH}
     },
     function()
-      self.isSet = true
-
+      self.message.text = "Set"
+      self.message.x = -VIRTUAL_WIDTH
       Timer:tween(
-        DELAY_PLAY,
+        TWEEN_IN,
         {
-          [self.tilesOffset] = {["speed"] = params.tilesOffset.speed * OFFSET_SPEED_PLAY}
+          [self.message] = {["x"] = 0}
         },
         function()
-          gStateMachine:change(
-            "play",
+          Timer:tween(
+            TWEEN_ANIMATION,
             {
-              ["tiles"] = self.tiles,
-              ["car"] = self.car,
-              ["tilesOffset"] = self.tilesOffset
-            }
+              [self.car] = {["x"] = PADDING},
+              [self.tilesOffset] = {["speed"] = OFFSET_SPEED_SET}
+            },
+            function()
+              Timer:tween(
+                TWEEN_OUT,
+                {
+                  [self.message] = {["x"] = VIRTUAL_WIDTH}
+                },
+                function()
+                  self.message.text = "Go"
+                  self.message.x = -VIRTUAL_WIDTH
+                  Timer:tween(
+                    TWEEN_IN,
+                    {
+                      [self.message] = {["x"] = 0}
+                    },
+                    function()
+                      Timer:tween(
+                        DELAY_GO_STATE,
+                        {
+                          [self.tilesOffset] = {["speed"] = OFFSET_SPEED_GO}
+                        },
+                        function()
+                          Timer:tween(
+                            TWEEN_OUT,
+                            {
+                              [self.message] = {["x"] = VIRTUAL_WIDTH}
+                            }
+                          )
+                          -- go
+                        end
+                      )
+                    end
+                  )
+                end
+              )
+            end
           )
         end
       )
@@ -56,7 +89,12 @@ function SetState:update(dt)
     self.tilesOffset.value = self.tilesOffset.value % VIRTUAL_WIDTH
   end
 
-  self.car.animation:update(dt)
+  self.car:update(dt)
+
+  if love.keyboard.waspressed("escape") then
+    Timer:reset()
+    gStateMachine:change("title")
+  end
 end
 
 function SetState:render()
@@ -69,12 +107,18 @@ function SetState:render()
 
   self.car:render()
 
+  love.graphics.setFont(gFonts.large)
+  love.graphics.setColor(0.06, 0.07, 0.19)
+  love.graphics.printf(self.title.text, self.title.x, self.title.y, VIRTUAL_WIDTH, "center")
+
   love.graphics.setFont(gFonts.normal)
   love.graphics.setColor(0.06, 0.07, 0.19)
 
-  if self.isSet then
-    love.graphics.printf(self.message, 0, VIRTUAL_HEIGHT * 3 / 4 - gFonts.normal:getHeight(), VIRTUAL_WIDTH, "center")
-  else
-    love.graphics.printf("Set", 0, VIRTUAL_HEIGHT * 3 / 4 - gFonts.normal:getHeight(), VIRTUAL_WIDTH, "center")
-  end
+  love.graphics.printf(
+    self.message.text,
+    self.message.x,
+    VIRTUAL_HEIGHT * 3 / 4 - gFonts.normal:getHeight(),
+    VIRTUAL_WIDTH,
+    "center"
+  )
 end
