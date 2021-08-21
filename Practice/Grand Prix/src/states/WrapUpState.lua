@@ -118,7 +118,7 @@ function WrapUpState:render()
 
   love.graphics.setFont(gFonts.normal)
   love.graphics.printf(self.timer.text, self.timer.x, self.timer.y, self.timer.width, "left")
-  love.graphics.printf(formatTimer(self.timer.value), self.timer.x, self.timer.y, self.timer.width, "right")
+  love.graphics.printf(string.format("%ds", self.timer.value), self.timer.x, self.timer.y, self.timer.width, "right")
   love.graphics.printf(self.collisions.text, self.collisions.x, self.collisions.y, self.collisions.width, "left")
   love.graphics.printf(self.collisions.value, self.collisions.x, self.collisions.y, self.collisions.width, "right")
 end

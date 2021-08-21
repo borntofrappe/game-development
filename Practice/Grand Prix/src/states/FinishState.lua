@@ -9,17 +9,7 @@ function FinishState:enter(params)
   self.timer = params.timer
   self.collisions = params.collisions
 
-  self.tilesFinishLine =
-    Tiles:new(
-    2,
-    ROWS,
-    {
-      ["inner"] = 4,
-      ["outer"] = 2,
-      ["outermost"] = 3
-    }
-  )
-
+  self.tilesFinishLine = Tiles:new("finish-line")
   self.tilesBonus = Tiles:new()
 end
 
