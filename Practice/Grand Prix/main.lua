@@ -40,6 +40,9 @@ function love.load()
       end,
       ["stop"] = function()
         return StopState:new()
+      end,
+      ["wrap-up"] = function()
+        return WrapUpState:new()
       end
     }
   )

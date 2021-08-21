@@ -7,6 +7,7 @@ function FinishState:enter(params)
   self.cars = params.cars
   self.yThreshold = params.yThreshold
   self.timer = params.timer
+  self.collisions = params.collisions
 
   self.tilesFinishLine =
     Tiles:new(
@@ -35,7 +36,8 @@ function FinishState:update(dt)
         ["tilesOffset"] = self.tilesOffset,
         ["car"] = self.car,
         ["cars"] = self.cars,
-        ["timer"] = self.timer
+        ["timer"] = self.timer,
+        ["collisions"] = self.collisions
       }
     )
   end

@@ -1,9 +1,9 @@
 SetState = BaseState:new()
 
 local PADDING = 6
-local TWEEN_ANIMATION = 2
-local DELAY_TWEEN_ANIMATION = 0.75
-local DELAY_GO_STATE = 1.5
+local TWEEN_ANIMATION = 1.5
+local DELAY_TWEEN_ANIMATION = 0.1
+local DELAY_GO_STATE = 1
 
 function SetState:enter(params)
   self.title = params.title
@@ -14,7 +14,7 @@ function SetState:enter(params)
   self.car = params.car
   self.tilesOffset = {
     ["value"] = params.tilesOffset,
-    ["speed"] = OFFSET_SPEED
+    ["speed"] = OFFSET_SPEED_DEFAULT
   }
 
   self.isSet = false

@@ -47,7 +47,7 @@ end
 function ReadyState:update(dt)
   Timer:update(dt)
 
-  self.tilesOffset = self.tilesOffset + OFFSET_SPEED * dt
+  self.tilesOffset = self.tilesOffset + OFFSET_SPEED_DEFAULT * dt
   if self.tilesOffset >= VIRTUAL_WIDTH then
     self.tilesOffset = self.tilesOffset % VIRTUAL_WIDTH
   end

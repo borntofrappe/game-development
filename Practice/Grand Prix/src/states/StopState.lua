@@ -10,6 +10,7 @@ function StopState:enter(params)
   self.car = params.car
   self.cars = params.cars
   self.timer = params.timer
+  self.collisions = params.collisions
 
   Timer:tween(
     TWEEN_ANIMATION,
@@ -20,16 +21,17 @@ function StopState:enter(params)
       Timer:after(
         DELAY_WRAP_UP_STATE,
         function()
-          -- gStateMachine:change(
-          --   "wrap-up",
-          --   {
-          --     ["tilesBonus"] = self.tilesBonus,
-          --     ["tilesOffset"] = self.tilesOffset,
-          --     ["car"] = self.car,
-          --     ["cars"] = self.cars,
-          --     ["timer"] = self.timer
-          --   }
-          -- )
+          gStateMachine:change(
+            "wrap-up",
+            {
+              ["tilesBonus"] = self.tilesBonus,
+              ["tilesOffset"] = self.tilesOffset,
+              ["car"] = self.car,
+              ["cars"] = self.cars,
+              ["timer"] = self.timer,
+              ["collisions"] = self.collisions
+            }
+          )
         end
       )
     end

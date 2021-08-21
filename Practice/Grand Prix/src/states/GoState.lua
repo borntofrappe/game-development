@@ -23,6 +23,7 @@ function GoState:enter(params)
 
   self.counter = 0
   self.timer = 0
+  self.collisions = 0
 end
 
 function GoState:update(dt)
@@ -37,7 +38,7 @@ function GoState:update(dt)
     self.counter = self.counter + 1
     self.tilesOffset.value = self.tilesOffset.value % VIRTUAL_WIDTH
 
-    if couter % 2 == 0 then
+    if self.counter % 2 == 0 then
       local x = self.car.x + VIRTUAL_WIDTH
       local y = love.math.random(self.yThreshold.min, self.yThreshold.max)
       local color = self.colors[love.math.random(#self.colors)]
@@ -56,7 +57,8 @@ function GoState:update(dt)
           ["car"] = self.car,
           ["cars"] = self.cars,
           ["yThreshold"] = self.yThreshold,
-          ["timer"] = self.timer
+          ["timer"] = self.timer,
+          ["collisions"] = self.collisions
         }
       )
     end
@@ -84,6 +86,7 @@ function GoState:update(dt)
 
     if car:collides(self.car) then
       if car.x > self.car.x then
+        self.collisions = self.collisions + 1
         self.tilesOffset.speed = OFFSET_SPEED_CAR.min
       else
         car.speed = OFFSET_SPEED_CARS.min
