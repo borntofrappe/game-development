@@ -1,12 +1,16 @@
 Tiles = {}
 
-function Tiles:new()
-  local columns = COLUMNS * 2 + 1
-  local rows = ROWS
-
+function Tiles:new(columns, rows, ids)
+  local columns = columns or COLUMNS * 2 + 1
+  local rows = rows or ROWS
+  local ids =
+    ids or
+    {
+      ["inner"] = 1,
+      ["outer"] = 2,
+      ["outermost"] = 3
+    }
   local tiles = {}
-  local tilesBackground = 1
-  local tilesEdge = 1
 
   local tileSize = TEXTURE_SIZE
 
@@ -14,11 +18,11 @@ function Tiles:new()
     for row = 1, rows do
       local x = (column - 1) * tileSize
       local y = (row - 1) * tileSize
-      local id = 2
+      local id = ids.inner
       if row == 1 or row == rows then
-        id = 1
+        id = ids.outermost
       elseif row == 2 or row == rows - 1 then
-        id = 4
+        id = ids.outer
       end
 
       local tile = Tile:new(x, y, id)

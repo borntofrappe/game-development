@@ -2,7 +2,7 @@ SetState = BaseState:new()
 
 local PADDING = 6
 local TWEEN_ANIMATION = 2
-local DELAY_TWEEN_ANIMATION = 0.25
+local DELAY_TWEEN_ANIMATION = 0.75
 local DELAY_GO_STATE = 1.5
 
 function SetState:enter(params)

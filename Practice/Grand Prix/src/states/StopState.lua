@@ -1,7 +1,7 @@
 StopState = BaseState:new()
 
 local TWEEN_ANIMATION = 2
-local DELAY_GAMEOVER = 1
+local DELAY_WRAP_UP_STATE = 1
 
 function StopState:enter(params)
   self.tilesBonus = params.tilesBonus
@@ -15,7 +15,24 @@ function StopState:enter(params)
     TWEEN_ANIMATION,
     {
       [self.tilesOffset] = {["speed"] = 0}
-    }
+    },
+    function()
+      Timer:after(
+        DELAY_WRAP_UP_STATE,
+        function()
+          -- gStateMachine:change(
+          --   "wrap-up",
+          --   {
+          --     ["tilesBonus"] = self.tilesBonus,
+          --     ["tilesOffset"] = self.tilesOffset,
+          --     ["car"] = self.car,
+          --     ["cars"] = self.cars,
+          --     ["timer"] = self.timer
+          --   }
+          -- )
+        end
+      )
+    end
   )
 
   for k, car in pairs(self.cars) do
@@ -23,24 +40,7 @@ function StopState:enter(params)
       TWEEN_ANIMATION,
       {
         [car] = {["speed"] = 0}
-      },
-      function()
-        Timer:after(
-          DELAY_GAMEOVER,
-          function()
-            gStateMachine:change(
-              "gameover",
-              {
-                ["tilesBonus"] = self.tilesBonus,
-                ["tilesOffset"] = self.tilesOffset,
-                ["car"] = self.car,
-                ["cars"] = self.cars,
-                ["timer"] = self.timer
-              }
-            )
-          end
-        )
-      end
+      }
     )
   end
 end
@@ -61,16 +61,14 @@ function StopState:render()
   love.graphics.setColor(1, 1, 1)
 
   love.graphics.push()
-  love.graphics.translate(self.tilesOffset.value * -1 + VIRTUAL_WIDTH, 0)
+  love.graphics.translate(self.tilesOffset.value * -1, 0)
+  love.graphics.translate(VIRTUAL_WIDTH, 0)
   self.tilesBonus:render()
-  for k, tile in pairs(self.tilesFinishLine) do
-    tile:render()
-  end
+  self.tilesFinishLine:render()
   love.graphics.pop()
 
   for k, car in pairs(self.cars) do
     car:render()
   end
-
   self.car:render()
 end

@@ -1,7 +1,6 @@
 GoState = BaseState:new()
 
-local CARS_SPAWN_ODDS = 3
-local FINISH_COUNTER = 10
+local FINISH_COUNTER = 20
 
 function GoState:enter(params)
   self.yThreshold = {
@@ -35,9 +34,10 @@ function GoState:update(dt)
 
   self.tilesOffset.value = self.tilesOffset.value + self.tilesOffset.speed * dt
   if self.tilesOffset.value >= VIRTUAL_WIDTH then
+    self.counter = self.counter + 1
     self.tilesOffset.value = self.tilesOffset.value % VIRTUAL_WIDTH
 
-    if love.math.random(CARS_SPAWN_ODDS) == 1 then
+    if couter % 2 == 0 then
       local x = self.car.x + VIRTUAL_WIDTH
       local y = love.math.random(self.yThreshold.min, self.yThreshold.max)
       local color = self.colors[love.math.random(#self.colors)]
@@ -47,19 +47,18 @@ function GoState:update(dt)
       table.insert(self.cars, car)
     end
 
-    self.counter = self.counter + 1
-    if self.counter >= FINISH_COUNTER then
-    -- gStateMachine:change(
-    --   "finish",
-    --   {
-    --     ["tiles"] = self.tiles,
-    --     ["tilesOffset"] = self.tilesOffset,
-    --     ["car"] = self.car,
-    --     ["cars"] = self.cars,
-    --     ["y"] = self.y,
-    --     ["timer"] = self.timer
-    --   }
-    -- )
+    if self.counter > FINISH_COUNTER then
+      gStateMachine:change(
+        "finish",
+        {
+          ["tiles"] = self.tiles,
+          ["tilesOffset"] = self.tilesOffset,
+          ["car"] = self.car,
+          ["cars"] = self.cars,
+          ["yThreshold"] = self.yThreshold,
+          ["timer"] = self.timer
+        }
+      )
     end
   end
 
