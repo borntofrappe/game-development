@@ -1,6 +1,6 @@
 TitleState = BaseState:new()
 
-function TitleState:enter()
+function TitleState:enter(params)
   self.title = {
     ["text"] = string.upper(TITLE),
     ["x"] = 0,
@@ -9,6 +9,10 @@ function TitleState:enter()
 
   self.tiles = Tiles:new()
   self.tilesOffset = 0
+
+  self.car = params and params.car or Car:new(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, 1)
+  self.car.x = -self.car.size
+  self.car.y = VIRTUAL_HEIGHT / 2 - self.car.size / 2
 end
 
 function TitleState:update(dt)
@@ -25,7 +29,8 @@ function TitleState:update(dt)
       {
         ["title"] = self.title,
         ["tiles"] = self.tiles,
-        ["tilesOffset"] = self.tilesOffset
+        ["tilesOffset"] = self.tilesOffset,
+        ["car"] = self.car
       }
     )
   end

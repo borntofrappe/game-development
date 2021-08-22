@@ -13,10 +13,7 @@ function ReadyState:enter(params)
 
   self.tiles = params.tiles
   self.tilesOffset = params.tilesOffset
-
-  self.car = Car:new(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, 1)
-  self.car.x = -self.car.size
-  self.car.y = VIRTUAL_HEIGHT / 2 - self.car.size / 2
+  self.car = params.car
 
   self.isReady = false
   self.isExiting = false

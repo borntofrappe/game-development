@@ -89,8 +89,19 @@ function WrapUpState:update(dt)
             [self.collisions] = {["x"] = VIRTUAL_WIDTH}
           },
           function()
+            -- animate the car(s) to zap to the right of the screen
+            for k, car in pairs(self.cars) do
+              if car.x > 0 then
+                Timer:tween(
+                  TWEEN_ANIMATION,
+                  {
+                    [car] = {["x"] = car.x + VIRTUAL_WIDTH}
+                  }
+                )
+              end
+            end
+
             -- animate the offset to reach the end of the current set and match the new set introduced by the title state
-            -- not necessary to animate the cars as they scroll left with the tiles
             Timer:tween(
               TWEEN_ANIMATION,
               {
@@ -99,7 +110,12 @@ function WrapUpState:update(dt)
                 [self.tilesOffset] = {["value"] = VIRTUAL_WIDTH}
               },
               function()
-                gStateMachine:change("title")
+                gStateMachine:change(
+                  "title",
+                  {
+                    ["car"] = self.car
+                  }
+                )
               end
             )
           end
