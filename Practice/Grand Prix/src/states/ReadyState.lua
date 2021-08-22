@@ -1,7 +1,7 @@
 ReadyState = BaseState:new()
 
 local TWEEN_ANIMATION = 1.5
-local DELAY_READY_STATE = 1
+local DELAY_READY_MESSAGE = 1
 
 function ReadyState:enter(params)
   self.title = params.title
@@ -29,7 +29,7 @@ function ReadyState:enter(params)
     },
     function()
       Timer:after(
-        DELAY_READY_STATE,
+        DELAY_READY_MESSAGE,
         function()
           Timer:tween(
             TWEEN_IN,
@@ -69,24 +69,17 @@ function ReadyState:update(dt)
     Timer:tween(
       TWEEN_OUT,
       {
-        [self.title] = {["x"] = VIRTUAL_WIDTH}
+        [self.title] = {["x"] = -VIRTUAL_WIDTH},
+        [self.message] = {["x"] = VIRTUAL_WIDTH}
       },
       function()
-        Timer:tween(
-          TWEEN_OUT,
+        gStateMachine:change(
+          "set",
           {
-            [self.message] = {["x"] = VIRTUAL_WIDTH}
-          },
-          function()
-            gStateMachine:change(
-              "set",
-              {
-                ["tiles"] = self.tiles,
-                ["tilesOffset"] = self.tilesOffset,
-                ["car"] = self.car
-              }
-            )
-          end
+            ["tiles"] = self.tiles,
+            ["tilesOffset"] = self.tilesOffset,
+            ["car"] = self.car
+          }
         )
       end
     )

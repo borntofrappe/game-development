@@ -1,10 +1,15 @@
 DriveState = BaseState:new()
 
+-- in a counter keep track of the number of times the tiles are reset horizontally
 local FINISH_COUNTER = 20
-local CARS_COUNTER = 19
-local CONCURRENT_CARS_THRESHOLD = 3
+-- do not spawn car in the last segment
+local CARS_COUNTER = FINISH_COUNTER - 1
+-- limit the number of cars ahead of the player
+local CARS_AHEAD_THRESHOLD = 3
 
 function DriveState:enter(params)
+  -- limit the area in which cars spawn
+  -- outside of the threshold slow down the player
   self.yThreshold = {
     ["min"] = TEXTURE_SIZE,
     ["max"] = VIRTUAL_HEIGHT - TEXTURE_SIZE - CAR_SIZE
@@ -14,6 +19,7 @@ function DriveState:enter(params)
   self.tilesOffset = params.tilesOffset
   self.car = params.car
 
+  -- store the colors different from the one describing the player to avoid conflicting hues
   local colors = {}
   for color = 1, #gQuads["cars"] do
     if color ~= self.car.color then
@@ -26,6 +32,8 @@ function DriveState:enter(params)
   self.cars = {}
 
   self.counter = 0
+
+  -- keep track of the time and front collisions
   self.timer = 0
   self.collisions = 0
 end
@@ -39,15 +47,18 @@ function DriveState:update(dt)
     self.tilesOffset.value = self.tilesOffset.value % VIRTUAL_WIDTH
 
     if self.counter < CARS_COUNTER then
-      local concurrentCars = 0
+      local carsAhead = 0
       for k, car in pairs(self.cars) do
-        if car.x > VIRTUAL_WIDTH and car.x < VIRTUAL_WIDTH * 2 then
-          concurrentCars = concurrentCars + 1
+        if car.x > VIRTUAL_WIDTH then
+          carsAhead = carsAhead + 1
+          if carsAhead >= CARS_AHEAD_THRESHOLD then
+            break
+          end
         end
       end
 
-      if concurrentCars < CONCURRENT_CARS_THRESHOLD then
-        local x = self.car.x + VIRTUAL_WIDTH
+      if carsAhead < CARS_AHEAD_THRESHOLD then
+        local x = self.car.x + VIRTUAL_WIDTH + love.math.random() * VIRTUAL_WIDTH
         local y = love.math.random(self.yThreshold.min, self.yThreshold.max)
         local color = self.colors[love.math.random(#self.colors)]
         local car = Car:new(x, y, color)
@@ -91,6 +102,7 @@ function DriveState:update(dt)
 
   for k, car in pairs(self.cars) do
     car:update(dt)
+
     car.x = car.x + (car.speed - self.tilesOffset.speed) * dt
 
     if car:collides(self.car) then

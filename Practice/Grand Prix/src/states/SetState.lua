@@ -1,12 +1,14 @@
 SetState = BaseState:new()
 
-local PADDING = 6
+local CAR_PADDING = 6
 local TWEEN_ANIMATION = 1.25
 local DELAY_GO_STATE = 1.25
 
 function SetState:enter(params)
   self.tiles = params.tiles
   self.car = params.car
+
+  -- store the offset speed in a variable to animate the value
   self.tilesOffset = {
     ["value"] = params.tilesOffset,
     ["speed"] = OFFSET_SPEED_DEFAULT
@@ -24,7 +26,7 @@ function SetState:enter(params)
   Timer:tween(
     TWEEN_ANIMATION,
     {
-      [self.car] = {["x"] = PADDING},
+      [self.car] = {["x"] = CAR_PADDING},
       [self.tilesOffset] = {["speed"] = OFFSET_SPEED_SET}
     },
     function()
@@ -74,8 +76,9 @@ function SetState:update(dt)
   self.car:update(dt)
 
   if love.keyboard.waspressed("return") and self.isSet and not self.isExiting then
-    Timer:reset()
     self.isExiting = true
+    -- remove the delay automatically moving to the go state
+    Timer:reset()
     Timer:tween(
       TWEEN_OUT,
       {

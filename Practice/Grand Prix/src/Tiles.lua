@@ -1,5 +1,6 @@
 Tiles = {}
 
+-- build a grid from the textures introduced in constants.lua
 function Tiles:new(type)
   local type = type or "default"
   local texture = TEXTURES[type]

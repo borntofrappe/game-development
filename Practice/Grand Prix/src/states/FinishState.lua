@@ -1,5 +1,6 @@
 FinishState = BaseState:new()
 
+-- repeat the logic of the drive state until the finish line tiles
 function FinishState:enter(params)
   self.tiles = params.tiles
   self.tilesOffset = params.tilesOffset
@@ -50,10 +51,12 @@ function FinishState:update(dt)
 
   for k, car in pairs(self.cars) do
     car:update(dt)
+
     car.x = car.x + (car.speed - self.tilesOffset.speed) * dt
 
     if car:collides(self.car) then
       if car.x > self.car.x then
+        self.collisions = self.collisions + 1
         self.tilesOffset.speed = OFFSET_SPEED_CAR.min
       else
         car.speed = OFFSET_SPEED_CARS.min

@@ -1,5 +1,7 @@
 Car = {}
 
+local ANIMATION_INTERVAL = 0.1
+
 function Car:new(x, y, color)
   local size = CAR_SIZE
 
@@ -8,7 +10,7 @@ function Car:new(x, y, color)
     table.insert(frames, i)
   end
 
-  local animation = Animation:new(frames, 0.1)
+  local animation = Animation:new(frames, ANIMATION_INTERVAL)
 
   local this = {
     ["x"] = x,

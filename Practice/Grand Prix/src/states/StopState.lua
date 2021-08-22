@@ -1,5 +1,6 @@
 StopState = BaseState:new()
 
+-- move to the wrap up state after stopping horizontal scroll and the cars
 local TWEEN_ANIMATION = 2
 local DELAY_WRAP_UP_STATE = 1
 
@@ -55,7 +56,10 @@ function StopState:update(dt)
 
     for k, car in pairs(self.cars) do
       car.x = car.x + (car.speed - self.tilesOffset.speed) * dt
+      car:update(dt)
     end
+
+    self.car:update(dt)
   end
 end
 

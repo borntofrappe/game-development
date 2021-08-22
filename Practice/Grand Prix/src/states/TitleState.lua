@@ -1,30 +1,14 @@
 TitleState = BaseState:new()
 
-local DELAY_READY_STATE = 2
-
 function TitleState:enter()
   self.title = {
-    ["text"] = string.upper("Grand Prix"),
+    ["text"] = string.upper(TITLE),
     ["x"] = 0,
     ["y"] = VIRTUAL_HEIGHT / 2 - gFonts.large:getHeight() / 2
   }
 
   self.tiles = Tiles:new()
   self.tilesOffset = 0
-
-  Timer:after(
-    DELAY_READY_STATE,
-    function()
-      gStateMachine:change(
-        "ready",
-        {
-          ["title"] = self.title,
-          ["tiles"] = self.tiles,
-          ["tilesOffset"] = self.tilesOffset
-        }
-      )
-    end
-  )
 end
 
 function TitleState:update(dt)
@@ -36,7 +20,6 @@ function TitleState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    Timer:reset()
     gStateMachine:change(
       "ready",
       {

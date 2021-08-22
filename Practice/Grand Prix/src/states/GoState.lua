@@ -69,8 +69,9 @@ function GoState:update(dt)
   self.car:update(dt)
 
   if love.keyboard.waspressed("return") and self.isGone and not self.isExiting then
-    Timer:reset()
     self.isExiting = true
+    -- remove the delay automatically moving to the drive state
+    Timer:reset()
     Timer:tween(
       TWEEN_OUT,
       {

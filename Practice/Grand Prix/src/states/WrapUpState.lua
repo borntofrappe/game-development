@@ -14,6 +14,7 @@ function WrapUpState:enter(params)
     ["y"] = VIRTUAL_HEIGHT / 4 - gFonts.large:getHeight() / 2
   }
 
+  -- align the key-value pairs to the left and right of the title
   local width = gFonts.large:getWidth(self.title.text)
   local x = VIRTUAL_WIDTH / 2 - width / 2
 
@@ -66,47 +67,45 @@ end
 function WrapUpState:update(dt)
   Timer:update(dt)
 
-  if love.keyboard.waspressed("return") then
-    if self.isWrappedUp and not self.isExiting then
-      self.isExiting = true
-      Timer:tween(
-        TWEEN_OUT,
-        {
-          [self.timer] = {["x"] = VIRTUAL_WIDTH}
-        },
-        function()
-          Timer:tween(
-            TWEEN_OUT,
-            {
-              [self.collisions] = {["x"] = VIRTUAL_WIDTH}
-            },
-            function()
-              for k, car in pairs(self.cars) do
-                if car.x > 0 then
-                  Timer:tween(
-                    TWEEN_ANIMATION,
-                    {
-                      [car] = {["x"] = car.x + VIRTUAL_WIDTH}
-                    }
-                  )
-                end
-              end
-              Timer:tween(
-                TWEEN_ANIMATION,
-                {
-                  [self.title] = {["y"] = VIRTUAL_HEIGHT / 2 - gFonts.large:getHeight() / 2},
-                  [self.car] = {["x"] = self.car.x + VIRTUAL_WIDTH},
-                  [self.tilesOffset] = {["value"] = VIRTUAL_WIDTH}
-                },
-                function()
-                  gStateMachine:change("title")
-                end
-              )
-            end
-          )
-        end
-      )
+  if self.isExiting then
+    self.car:update(dt)
+
+    for k, car in pairs(self.cars) do
+      car:update(dt)
     end
+  end
+
+  if love.keyboard.waspressed("return") and self.isWrappedUp and not self.isExiting then
+    self.isExiting = true
+    Timer:tween(
+      TWEEN_OUT,
+      {
+        [self.timer] = {["x"] = VIRTUAL_WIDTH}
+      },
+      function()
+        Timer:tween(
+          TWEEN_OUT,
+          {
+            [self.collisions] = {["x"] = VIRTUAL_WIDTH}
+          },
+          function()
+            -- animate the offset to reach the end of the current set and match the new set introduced by the title state
+            -- not necessary to animate the cars as they scroll left with the tiles
+            Timer:tween(
+              TWEEN_ANIMATION,
+              {
+                [self.title] = {["y"] = VIRTUAL_HEIGHT / 2 - gFonts.large:getHeight() / 2},
+                [self.car] = {["x"] = self.car.x + VIRTUAL_WIDTH},
+                [self.tilesOffset] = {["value"] = VIRTUAL_WIDTH}
+              },
+              function()
+                gStateMachine:change("title")
+              end
+            )
+          end
+        )
+      end
+    )
   end
 end
 

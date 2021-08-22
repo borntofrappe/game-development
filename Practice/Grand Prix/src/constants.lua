@@ -1,8 +1,8 @@
 TITLE = "Grand Prix"
 
 CAR_SIZE = 16
-TEXTURE_SIZE = 8
 
+TEXTURE_SIZE = 8
 TEXTURES = {
   ["default"] = [[
     3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
@@ -39,24 +39,6 @@ TEXTURES = {
     4 4 4
     2 2 2
     3 3 3
-  ]],
-  ["water-hazard"] = [[
-    5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6
-    6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5
-    5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6
-    6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5
-    7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
-    7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
-    7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
-    7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
-    7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
-    7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
-    7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
-    7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
-    5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6
-    6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5
-    5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6
-    6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5 6 5
   ]]
 }
 
@@ -67,7 +49,7 @@ ROWS = newLineCharacters
 VIRTUAL_WIDTH = COLUMNS * TEXTURE_SIZE
 VIRTUAL_HEIGHT = ROWS * TEXTURE_SIZE
 
-WINDOW_SCALE = 3
+WINDOW_SCALE = 2.5
 WINDOW_WIDTH = VIRTUAL_WIDTH * WINDOW_SCALE
 WINDOW_HEIGHT = VIRTUAL_HEIGHT * WINDOW_SCALE
 
@@ -88,7 +70,7 @@ OFFSET_SPEED_CAR = {
 
 OFFSET_SPEED_CARS = {
   ["min"] = 40,
-  ["max"] = 140
+  ["max"] = 160
 }
 
 X_SPEED = 50

@@ -20,7 +20,7 @@ function GenerateQuadsTextures(atlas)
   local size = TEXTURE_SIZE
   local x = 0
   local y = 64
-  local textures = 7
+  local textures = 4
 
   local quads = {}
   for i = 1, textures do
@@ -28,16 +28,4 @@ function GenerateQuadsTextures(atlas)
   end
 
   return quads
-end
-
-function formatTimer(timer)
-  local seconds = math.floor(timer)
-  local minutes = math.floor(seconds / 60)
-  seconds = seconds - minutes * 60
-
-  if minutes > 0 then
-    return string.format("%d:%02d", minutes, seconds)
-  end
-
-  return seconds
 end
