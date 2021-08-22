@@ -267,3 +267,20 @@ for j, definition in ipairs(tween.def) do
 end
 -- remove tween
 ```
+
+## Updates
+
+- `Timer:tween()` is updated to receive a callback function
+
+  ```diff
+  function Timer:tween(dt, def, label)
+  +function Timer:tween(dt, def, callback, label)
+  ```
+
+  The idea is to execute the code as the animation is completed, and before removing the individual tween.
+
+  ```lua
+  if tween.callback then
+    tween.callback()
+  end
+  ```
