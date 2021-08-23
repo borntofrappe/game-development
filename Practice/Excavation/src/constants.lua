@@ -1,0 +1,16 @@
+TITLE = "Excavation"
+
+TEXTURE_SIZE = 8
+
+VIRTUAL_WIDTH = 264
+VIRTUAL_HEIGHT = 168
+
+WINDOW_SCALE = 2
+WINDOW_WIDTH = VIRTUAL_WIDTH * WINDOW_SCALE
+WINDOW_HEIGHT = VIRTUAL_HEIGHT * WINDOW_SCALE
+
+OPTIONS = {
+  fullscreen = false,
+  vsync = true,
+  resizable = true
+}

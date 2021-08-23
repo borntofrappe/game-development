@@ -69,3 +69,16 @@ Reddish:
 - 0.91, 0.361, 0.333
 
 - 0.714, 0.443, 0.388
+<!--  -->
+
+## Libraries
+
+`res/lib` includes two libraries:
+
+1. `push` helps to scale the window while preserving the pixelated art style chosen in the spritesheet
+
+2. `Timer` helps to manage time events, like delays and tweens
+
+## Input
+
+The goal of the game is to support both keyboard and mouse input.
