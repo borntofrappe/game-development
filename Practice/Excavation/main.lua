@@ -16,13 +16,12 @@ function love.load()
     ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
   }
 
-  --[[
-    gQuads = {
-      ["textures"] = GenerateQuadsTextures(gTextures.spritesheet),
-      ["gems"] = GenerateQuadsGems(gTextures.spritesheet),
-      ["tools"] = GenerateQuadsTools(gTextures.spritesheet),
-    }
-  ]]
+  gQuads = {
+    ["textures"] = GenerateQuadsTextures(gTextures.spritesheet),
+    ["gems"] = GenerateQuadsGems(gTextures.spritesheet),
+    ["tools"] = GenerateQuadsTools(gTextures.spritesheet)
+  }
+
   gStateMachine =
     StateMachine:new(
     {
@@ -70,6 +69,8 @@ end
 
 function love.draw()
   push:start()
+  love.graphics.setColor(0.192, 0.137, 0.094)
+  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   gStateMachine:render()
 

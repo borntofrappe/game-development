@@ -1,11 +1,51 @@
 function GenerateQuadsTextures(atlas)
-  return {}
+  local quads = {}
+  local types = TEXTURE_TYPES
+  local size = TEXTURE_SIZE
+
+  for i = 1, types do
+    table.insert(quads, love.graphics.newQuad((i - 1) * size, 0, size, size, atlas:getDimensions()))
+  end
+
+  return quads
 end
 
 function GenerateQuadsGems(atlas)
-  return {}
+  local quads = {}
+
+  local maxSize = GEM_SIZES[#GEM_SIZES]
+  local x = 0
+  local y = 8
+
+  for i, color in ipairs(GEM_COLORS) do
+    quads[color] = {}
+    for j, size in ipairs(GEM_SIZES) do
+      table.insert(quads[color], love.graphics.newQuad(x, y, size, size, atlas:getDimensions()))
+      x = x + size
+    end
+    x = 0
+    y = y + maxSize
+  end
+
+  return quads
 end
 
 function GenerateQuadsTools(atlas)
-  return {}
+  local x = 0
+  local y = 136
+  local width = TOOLS_WIDTH
+  local height = TOOLS_HEIGHT
+
+  local quads = {}
+  for i, tool in ipairs(TOOLS) do
+    quads[tool] = {}
+    for j, type in ipairs(TOOLS_TYPE) do
+      quads[tool][type] = love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
+      x = x + width
+    end
+    x = 0
+    y = y + height
+  end
+
+  return quads
 end
