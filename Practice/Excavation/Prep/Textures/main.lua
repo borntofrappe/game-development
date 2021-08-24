@@ -15,11 +15,7 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(1, 1, 1)
 
-  textures = getTextures()
-end
-
-function love.resize(width, height)
-  push:resize(width, height)
+  gTextures = getTextures()
 end
 
 function love.keypressed(key)
@@ -28,12 +24,12 @@ function love.keypressed(key)
   end
 
   if key == "r" then
-    textures = getTextures()
+    gTextures = getTextures()
   end
 end
 
 function love.draw()
-  for k, texture in pairs(textures) do
+  for k, texture in pairs(gTextures) do
     love.graphics.setColor(0, 0, 0, texture.alpha)
     love.graphics.rectangle("fill", texture.x, texture.y, CELL_SIZE, CELL_SIZE)
 

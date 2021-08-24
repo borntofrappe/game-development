@@ -145,6 +145,8 @@ local value = math.floor(alpha * VALUE_MAX / ALPHA_MAX) + 1
 
 Adding `1` means that the grid is populated with integers in the `[1,5]` range.
 
+### Gems
+
 ## Input
 
 The goal of the game is to support both keyboard and mouse input.
