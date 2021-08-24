@@ -73,11 +73,77 @@ Reddish:
 
 ## Libraries
 
-`res/lib` includes two libraries:
+The game benefits from two libraries:
 
-1. `push` helps to scale the window while preserving the pixelated art style chosen in the spritesheet
+1. `push` to scale the window while preserving the pixelated art style chosen in the spritesheet
 
-2. `Timer` helps to manage time events, like delays and tweens
+2. `Timer` to manage time events, like delays and tweens
+
+## Prep
+
+In the `Prep` folder I tackle two of the main challenges behind the game:
+
+1. how to generate varied values for the textures used to tile the game. Varied, but not absolutely random
+
+2. how to position gems of different sizes without overlap
+
+### Textures
+
+The idea is to benefit from a noise function in two dimensions, so to create values which change over time, but are inherently connected. In the demo, the smooth change is highlighted with a series of rectangle of different opacity _and_ a grid of integers. Ultimately the idea is to map the noise value to one of the types of textures, so that this integer value is used to pick exactly which type.
+
+`getTextures` builds a two-dimensional table where each individual cell describes a number in the `[0,1]` range.
+
+```lua
+for column = 1, columns do
+  for row = 1, rows + 1 do
+    local noise = love.math.noise(offsetColumn, offsetRow)
+  end
+end
+```
+
+The arguments describe the offset for the column and row, and are updated according to the specific loop:
+
+- in the innermost loop update `offsetRow`
+
+  ```lua
+  for row = 1, rows + 1 do
+    offsetRow = offsetRow + OFFSET_INCREMENT
+  end
+  ```
+
+- after the nested loop increment `offsetColumn`
+
+  ```lua
+  for column = 1, columns do
+    for row = 1, rows + 1 do
+      -- update offset row
+    end
+    offsetColumn = offsetColumn + OFFSET_INCREMENT
+  end
+  ```
+
+This works, but creates a connection between columns, where the last cell in one column is connected to the first cell in the column which follows. To fix this, and before the nested loop, reset the value of `offsetRow`.
+
+```lua
+for column = 1, columns do
+  offsetRow = 0
+  -- update offset values
+end
+```
+
+`noise` provides a value in the `[0,1]` range. In the demo, the measure is used for the opacity of the rectangles. Notice that the value is limited to avoid having the noise field overpower the integers which follow.
+
+```lua
+local alpha = noise * ALPHA_MAX
+```
+
+The integer is finally computed weighing this opacity against the maximum possible value.
+
+```lua
+local value = math.floor(alpha * VALUE_MAX / ALPHA_MAX) + 1
+```
+
+Adding `1` means that the grid is populated with integers in the `[1,5]` range.
 
 ## Input
 
