@@ -11,11 +11,11 @@ local WINDOW_WIDTH = COLUMNS * CELL_SIZE
 local WINDOW_HEIGHT = ROWS * CELL_SIZE
 
 function love.load()
-  love.window.setTitle("Texture")
+  love.window.setTitle("Noise Field")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(1, 1, 1)
 
-  gTextures = getTextures()
+  gNoiseField = getNoiseField()
 end
 
 function love.keypressed(key)
@@ -24,21 +24,21 @@ function love.keypressed(key)
   end
 
   if key == "r" then
-    gTextures = getTextures()
+    gNoiseField = getNoiseField()
   end
 end
 
 function love.draw()
-  for k, texture in pairs(gTextures) do
-    love.graphics.setColor(0, 0, 0, texture.alpha)
-    love.graphics.rectangle("fill", texture.x, texture.y, CELL_SIZE, CELL_SIZE)
+  for k, noise in pairs(gNoiseField) do
+    love.graphics.setColor(0, 0, 0, noise.alpha)
+    love.graphics.rectangle("fill", noise.x, noise.y, CELL_SIZE, CELL_SIZE)
 
     love.graphics.setColor(0, 0, 0)
-    love.graphics.printf(texture.value, texture.x, texture.y + CELL_SIZE / 2 - 8, CELL_SIZE, "center")
+    love.graphics.printf(noise.value, noise.x, noise.y + CELL_SIZE / 2 - 8, CELL_SIZE, "center")
   end
 end
 
-function getTextures()
+function getNoiseField()
   local textures = {}
   local offsetStartColumn = love.math.random(OFFSET_START_MAX)
   local offsetStartRow = love.math.random(OFFSET_START_MAX)

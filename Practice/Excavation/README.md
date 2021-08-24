@@ -69,29 +69,20 @@ Reddish:
 - 0.91, 0.361, 0.333
 
 - 0.714, 0.443, 0.388
-<!--  -->
-
-## Libraries
-
-The game benefits from two libraries:
-
-1. `push` to scale the window while preserving the pixelated art style chosen in the spritesheet
-
-2. `Timer` to manage time events, like delays and tweens
 
 ## Prep
 
-In the `Prep` folder I tackle two of the main challenges behind the game:
+In the `Prep` folder I tackle two of the main challenges:
 
-1. how to generate varied values for the textures used to tile the game. Varied, but not absolutely random
+1. how to populate a grid with a series of random, but connected values
 
 2. how to position gems of different sizes without overlap
 
-### Textures
+### Noise Field
 
-The idea is to benefit from a noise function in two dimensions, so to create values which change over time, but are inherently connected. In the demo, the smooth change is highlighted with a series of rectangle of different opacity _and_ a grid of integers. Ultimately the idea is to map the noise value to one of the types of textures, so that this integer value is used to pick exactly which type.
+The idea is to benefit from a noise function in two dimensions, so to create values which change over time, but are inherently connected. In the demo, the smooth change is highlighted with a series of rectangle of different opacity and a grid of integers. Ultimately the idea is to map the noise value to one of the types of textures, so that this integer value is used to pick exactly which type.
 
-`getTextures` builds a two-dimensional table where each individual cell describes a number in the `[0,1]` range.
+`getNoiseField` builds a two-dimensional table where each individual cell describes a number in the `[0,1]` range.
 
 ```lua
 for column = 1, columns do
@@ -146,6 +137,58 @@ local value = math.floor(alpha * VALUE_MAX / ALPHA_MAX) + 1
 Adding `1` means that the grid is populated with integers in the `[1,5]` range.
 
 ### Gems
+
+The demo highlights how to position an arbitrary number of cells while ensuring that each entity is separate from the other.
+
+The process begins with a table in which to keep track of available cells.
+
+```lua
+local coords = {}
+for column = 1, COLUMNS do
+  coords[column] = {}
+  for row = 1, ROWS do
+    coords[column][row] = true
+  end
+end
+```
+
+With a given size, the idea is to then continue pick a column and a row until the newly created gem fits. In most practical terms, until every single cell of the gem is available, `true` in the made-up table.
+
+```lua
+while true do
+  column = love.math.random(COLUMNS - (size - 1))
+  row = love.math.random(ROWS - (size - 1))
+  -- check if the gem fits in coords
+end
+```
+
+Notice that the column and row are picked with a random value considering the size; with this precaution it is possible to avoid considering a cell outside of the existing grid.
+
+With the chosen coordinates, a nested for loop considers if the cells are all available with a boolean, ultimately allowing to break out of the `while` statement.
+
+```lua
+if canFit then
+  break
+end
+```
+
+Past the `while` statement, then, the gem is created with the chosen size, column and row. The same nested for loop checking for valid coordinates is then repeated to toggle the corresponding coordinates off.
+
+```lua
+for c = column, column + (size - 1) do
+  for r = row, row + (size - 1) do
+    coords[c][r] = false
+  end
+end
+```
+
+## Libraries
+
+The game benefits from two libraries:
+
+1. `push` to scale the window while preserving the pixelated art style chosen in the spritesheet
+
+2. `Timer` to manage time events, like delays and tweens
 
 ## Input
 
