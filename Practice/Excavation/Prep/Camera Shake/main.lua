@@ -5,7 +5,7 @@ local WINDOW_PADDING = 20
 local OFFSETS = 20
 local ITERATIONS = 2
 local offsets = {}
-local angle = math.pi * 2 * iterations
+local angle = math.pi * 2 * ITERATIONS
 local increment = angle / OFFSETS
 
 for a = 0, angle, increment do

@@ -49,3 +49,18 @@ function GenerateQuadsTools(atlas)
 
   return quads
 end
+
+function GenerateOffsets(numberOffsets, numberRotations)
+  local numberOffsets = numberOffsets or 20
+  local numberRotations = numberRotations or 3
+  local angle = math.pi * 2 * numberRotations
+  local increment = angle / numberOffsets
+
+  local offsets = {}
+
+  for a = 0, angle, increment do
+    table.insert(offsets, math.sin(a))
+  end
+
+  return offsets
+end
