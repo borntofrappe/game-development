@@ -80,6 +80,8 @@ In the `Prep` folder I tackle the main challenges behind the game:
 
 3. how to manage a particle system
 
+4. how to simulate a shake of the camera
+
 ### Noise Field
 
 The idea is to benefit from a noise function in two dimensions, so to create values which change over time, but are inherently connected. In the demo, the smooth change is highlighted with a series of rectangle of different opacity and a grid of integers. Ultimately the idea is to map the noise value to one of the types of textures, so that this integer value is used to pick exactly which type.
@@ -191,6 +193,40 @@ Love2D provides a way to generate and manage a series of particles with a partic
 The sub-folder provides a basic demo to emit a fixed number of particles, be it on click or a specific key press. With a mouse cursor the game updates the origin to follow the appropriate coordinates.
 
 Note the use of radial acceleration, instead of the linear counterpart, and also the `setEmissionArea` function, to spawn the individual particles in a wider area. In the game, the area could match the dimensions of the individual tiles.
+
+### Camera Shake
+
+As the player uses a tool, the idea is to shake the viewport to simulate the impact of the tool on the fragile surface. The demo shows how the effect can be achieved with a series of offset values stored in a table.
+
+```lua
+local offsets = {}
+
+for a = 0, angle, increment do
+  table.insert(offsets, math.sin(a))
+end
+```
+
+I rely on the sine function since it allows to create a series of values which increment and decrement smoothly. Moreover, by choosing the start and end angle as a multiple of `math.pi * 2`, it is possible to have the final translation match the first one,
+
+The angle considers a full rotation, that is `math.pi * 2` as well as an arbitrary number of rotations.
+
+```lua
+local ITERATIONS = 2
+local angle = math.pi * 2 * ITERATIONS
+```
+
+The increment is picked considering a fixed number of offsets.
+
+```lua
+local OFFSETS = 20
+local increment = angle / OFFSETS
+```
+
+_Please note:_ the demo populates a table to show the offset with a line, plotting the sine function.
+
+With the table of offsets, the demo translates the content with `love.graphics.translate`, progressively moving through the table at an interval.
+
+_Please note:_ with a large number of offsets, or with a very small duration, it is likely that delta time `dt` becomes larger than the necessary interval. In this instance the animation might take longer than necessary. Luckily, having fewer offsets results in a less-than-smooth camera shake which fits the tone of the game.
 
 ## Libraries
 
