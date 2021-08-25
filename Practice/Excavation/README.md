@@ -72,11 +72,13 @@ Reddish:
 
 ## Prep
 
-In the `Prep` folder I tackle two of the main challenges:
+In the `Prep` folder I tackle the main challenges behind the game:
 
 1. how to populate a grid with a series of random, but connected values
 
 2. how to position gems of different sizes without overlap
+
+3. how to manage a particle system
 
 ### Noise Field
 
@@ -181,6 +183,14 @@ for c = column, column + (size - 1) do
   end
 end
 ```
+
+### Particle System
+
+Love2D provides a way to generate and manage a series of particles with a particle sytem. In the game, the idea is to show such particles as the player digs with a tool, perhaps changing the number of particles with the heavier hammer.
+
+The sub-folder provides a basic demo to emit a fixed number of particles, be it on click or a specific key press. With a mouse cursor the game updates the origin to follow the appropriate coordinates.
+
+Note the use of radial acceleration, instead of the linear counterpart, and also the `setEmissionArea` function, to spawn the individual particles in a wider area. In the game, the area could match the dimensions of the individual tiles.
 
 ## Libraries
 
