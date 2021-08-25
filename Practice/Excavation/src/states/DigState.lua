@@ -20,8 +20,8 @@ function DigState:enter(params)
         textures,
         {
           ["id"] = id,
-          ["x"] = (c - 1) * TEXTURE_SIZE,
-          ["y"] = (r - 1) * TEXTURE_SIZE
+          ["x"] = (c - 1) * TILE_SIZE,
+          ["y"] = (r - 1) * TILE_SIZE
         }
       )
     end
@@ -31,6 +31,9 @@ function DigState:enter(params)
 end
 
 function DigState:update(dt)
+  if love.keyboard.waspressed("escape") then
+    gStateMachine:change("title")
+  end
 end
 
 function DigState:render()

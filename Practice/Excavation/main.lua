@@ -25,13 +25,16 @@ function love.load()
   gStateMachine =
     StateMachine:new(
     {
+      ["title"] = function()
+        return TitleState:new()
+      end,
       ["dig"] = function()
         return DigState:new()
       end
     }
   )
 
-  gStateMachine:change("dig")
+  gStateMachine:change("title")
 
   love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
@@ -42,9 +45,6 @@ function love.resize(width, height)
 end
 
 function love.keypressed(key)
-  if key == "escape" then
-    love.event.quit()
-  end
   love.keyboard.keypressed[key] = true
 end
 
@@ -69,7 +69,7 @@ end
 
 function love.draw()
   push:start()
-  love.graphics.setColor(0.192, 0.137, 0.094)
+  love.graphics.setColor(0.292, 0.222, 0.155)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   gStateMachine:render()
