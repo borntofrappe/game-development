@@ -10,7 +10,12 @@ function love.load()
   love.window.setTitle("State Stack")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  gStateStack = StateStack:new({PlayState:new()})
+  gStateStack =
+    StateStack:new(
+    {
+      PlayState:new()
+    }
+  )
   --[[ equivalent
     gStateStack = StateStack:new()
     gStateStack:push(PlayState:new())
