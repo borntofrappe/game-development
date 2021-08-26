@@ -1,4 +1,4 @@
-# State dtack
+# State stack
 
 Unlike a state machine, a state stack allows to move from state to state _without_ creating new instances. Consider how in previous games the `gStateMachine:change()` function essentially destroyed a state before moving on to the new one.
 
