@@ -1,4 +1,4 @@
-DialogueState = BaseState:init()
+DialogueState = BaseState:new()
 
 local WHITESPACE = 6
 

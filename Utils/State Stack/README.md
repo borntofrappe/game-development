@@ -111,27 +111,19 @@ The function might be useful in the moment the game is initialized anew.
 
 _Please note:_ this section might change as I improve the way I manage object-oriented programming, and specifically inheritance, with Lua.
 
-The individual states inherit from a base state, so that it is possible to later define only the necessary functions.
+The states inherit from a base state.
 
 ```lua
-PlayState = BaseState:init()
+PlayState = BaseState:new()
 ```
 
-I've decided to use `init` for the base state so that it is later possible to expand the states with a different initialization function: `:new`.
+In this manner the states are already equipped with the lifecycle functions presumed by the state stack.
+
+Past this step, a different initialization function defines the properties necessary for the individual states.
 
 ```lua
 function PlayState:new()
-  -- initialize play state
 end
-```
-
-This allows the states to have the methods of the base state, and then implement their own, bespoke logic.
-
-The solution works, at the price of setting the meta table in both initializations. In the base state and the inidividual state.
-
-```lua
-self.__index = self
-setmetatable(this, self)
 ```
 
 ## Demo

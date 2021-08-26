@@ -1,4 +1,4 @@
-PlayState = BaseState:init()
+PlayState = BaseState:new()
 
 local UPDATE_SPEED = 100
 

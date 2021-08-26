@@ -1,6 +1,6 @@
 BaseState = {}
 
-function BaseState:init()
+function BaseState:new()
   local this = {}
 
   self.__index = self

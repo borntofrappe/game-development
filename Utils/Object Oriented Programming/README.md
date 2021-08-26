@@ -4,7 +4,7 @@ Lua does not have a built-in construct for object-oriented programming, be it a 
 
 ## Snake
 
-Similarly to object, tables can have their own operations, their own methods.
+Similarly to objects, tables can have their own operations, their own methods.
 
 ```lua
 Snake = { points = 0 }
@@ -14,7 +14,7 @@ function Snake.eat(food)
 end
 ```
 
-Operations can work on the receiver instead of affecting the table directly.
+Operations can work on a receiver instead of affecting the table directly.
 
 ```lua
 Snake = { points = 0 }
@@ -90,7 +90,7 @@ The process is as follows:
 
 ### Inheritance
 
-Inheritance goes beyond the scope of the game <i>Snake</i>, but, it is useful to continue the discussion on object-oriented programming considering the way lua manages the concept.
+Inheritance goes beyond the scope of the game <i>Snake</i>, but, it is useful to continue the discussion on object-oriented programming in Lua.
 
 The constructor function works by referencing the initial table in the `setmetatable` function.
 
@@ -135,7 +135,7 @@ In this situation `HungrySnake` inherits the methods from `Snake`. This means th
 
 This makes it possible to redefine methods at any point in the sequence. `player` or `HungrySnake` can define a `eat` function which takes precedence over `Snake:eat`.
 
-## Particles
+## Demo
 
 The demo in this very folder creates `Particle` as an entity subject to gravity. The particle itself is position according to the input `x` and `y` arguments.
 
