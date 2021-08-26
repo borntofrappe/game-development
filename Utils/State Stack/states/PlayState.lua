@@ -1,19 +1,28 @@
-PlayState = Class({__includes = BaseState})
+PlayState = BaseState:new()
 
 local UPDATE_SPEED = 100
 
-function PlayState:init()
+function PlayState:new()
   local playerSize = 20
-  self.player = {
+  local player = {
     ["x"] = WINDOW_WIDTH / 2 - playerSize / 2,
     ["y"] = WINDOW_HEIGHT / 2 - playerSize / 2,
     ["size"] = playerSize
   }
+
+  local this = {
+    ["player"] = player
+  }
+
+  self.__index = self
+  setmetatable(this, self)
+
+  return this
 end
 
 function PlayState:update(dt)
   if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
-    gStateStack:push(DialogueState(self.player))
+    gStateStack:push(DialogueState:new(self.player))
   end
 
   if love.keyboard.wasPressed("escape") then

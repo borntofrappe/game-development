@@ -1,14 +1,23 @@
-DialogueState = Class({__includes = BaseState})
+DialogueState = BaseState:new()
 
 local WHITESPACE = 6
 
-function DialogueState:init(player)
-  self.message = {
+function DialogueState:new(player)
+  local message = {
     ["text"] = "Hello",
     ["x"] = player.x + player.size / 2 < WINDOW_WIDTH / 2 and player.x + player.size + 8 or player.x - 38,
     ["y"] = player.y + player.size / 2 < WINDOW_HEIGHT / 2 and player.y + player.size + WHITESPACE or
       player.y - 16 - WHITESPACE
   }
+
+  local this = {
+    ["message"] = message
+  }
+
+  self.__index = self
+  setmetatable(this, self)
+
+  return this
 end
 
 function DialogueState:update(dt)

@@ -1,14 +1,16 @@
-# State stack
+# State Stack
 
-Unlike a state machine, a state stack allows to move from state to state _without_ creating new instances. Consider how in previous games the `gStateMachine:change()` function essentially destroyed a state before moving on to the new one.
+The concept of a state stack is introduced in the context of the game <i>Pokemon</i>, as an approach to manage state different from the one allowed by a state machine. The difference boils down to how the states are managed:
+
+- in a state machine there exist only one state at a time. The machine is responsible for updating the state's logic and rendering the necessary visuals
+
+- in a state stack it is possible to maintain multiple states. You push and pop states to the stack, which renders the visual of every state, but updates the logic of only the topmost level
+
+With this folder I replicate the example highlighted in `07 Pokemon/State Stack`, without relying on a class library. The notes are adapted to this change.
 
 ## Notes
 
-With a state stack it is possible to render multiple states, which makes it possible to render panels and textbox above the scenery.
-
-### Stack
-
-Taking inspiration from the data structure of a stack, a state stack has several layers of states.
+A state stack has several layers of states.
 
 ```text
  ---------
@@ -19,15 +21,15 @@ Taking inspiration from the data structure of a stack, a state stack has several
  ---------
 ```
 
-You _push_ (add) and _pop_ (remove) a state on the stack as needed, for instance to show or dismiss the dialogue following a specific event. You update the topmost state.
+You _push_ (add) and _pop_ (remove) a state on the stack as needed, for instance to show or dismiss the dialogue following a specific event.
 
 ### Initialize
 
-Dissecting the code, the `StateStack` class is initialized with a table of states.
+Tthe `StateStack` class is initialized with a table of states.
 
 ```lua
-function StateStack:init(states)
-  self.states = states or {}
+function StateStack:new(states)
+  local states = states or {}
 end
 ```
 
@@ -35,7 +37,7 @@ The empty table `{}` is used as a precaution, in the moment the stack is initial
 
 ### Update
 
-In the `update` function, the class updates the topmost state.
+In the `update` function, the stack updates the topmost state.
 
 ```lua
 function StateStack:update(dt)
@@ -45,7 +47,7 @@ end
 
 ### Render
 
-In the `render` logic then, the class renders _every_ state in the stack. This is fundamentally different from a state machine, devoted to update _and_ render only the current state.
+In the `render` logic then, the stack renders every single state.
 
 ```lua
 function StateStack:render()
@@ -95,7 +97,7 @@ end
 
 ### Clear
 
-The lecturer introduces an additional method to clear the stack of any state.
+An additional method clears the stack of any state.
 
 ```lua
 function StateStack:clear()
@@ -103,19 +105,38 @@ function StateStack:clear()
 end
 ```
 
-This might be useful in the moment the game is initialized anew.
+The function might be useful in the moment the game is initialized anew.
+
+## Object-oriented Programming
+
+_Please note:_ this section might change as I improve the way I manage object-oriented programming, and specifically inheritance, with Lua.
+
+The states inherit from a base state.
+
+```lua
+PlayState = BaseState:new()
+```
+
+In this manner the states are already equipped with the lifecycle functions presumed by the state stack.
+
+Past this step, a different initialization function defines the properties necessary for the individual states.
+
+```lua
+function PlayState:new()
+end
+```
 
 ## Demo
 
-`main.lua` highlights the state stack with two layered states: play and dialogue. The idea is to show how the two coexist in terms of visual, and also how the stack updates the state at the top of the stack.
+`main.lua` highlights a state stack with two layered states: play and dialogue. The idea is to show how the two coexist in terms of visual, and also how the stack updates the state at the top of the stack.
 
 `main.lua` sets up the instance of the `StateStack` class.
 
 ```lua
 gStateStack =
-  StateStack(
+  StateStack:new(
   {
-    PlayState(),
+    PlayState:new()
   }
 )
 ```
@@ -123,8 +144,8 @@ gStateStack =
 It is here equivalent to initialize the stack without passing any arguments, and then push the state afterwards.
 
 ```lua
-gStateStack = StateStack()
-gStateStack:push(PlayState())
+gStateStack = StateStack:new()
+gStateStack:push(PlayState:new())
 ```
 
 In the update and draw functions then, the stack calls the matching functions.

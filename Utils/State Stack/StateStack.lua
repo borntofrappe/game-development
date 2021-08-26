@@ -1,7 +1,14 @@
-StateStack = Class {}
+StateStack = {}
 
-function StateStack:init(states)
-  self.states = states or {}
+function StateStack:new(states)
+  local this = {
+    ["states"] = states or {}
+  }
+
+  self.__index = self
+  setmetatable(this, self)
+
+  return this
 end
 
 function StateStack:update(dt)
@@ -14,9 +21,9 @@ function StateStack:render()
   end
 end
 
-function StateStack:push(state, enterParams)
+function StateStack:push(state)
   table.insert(self.states, state)
-  state:enter(enterParams)
+  state:enter()
 end
 
 function StateStack:pop()
