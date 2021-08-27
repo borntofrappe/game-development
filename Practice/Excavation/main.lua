@@ -59,6 +59,9 @@ end
 function love.draw()
   push:start()
 
+  love.graphics.setColor(0.292, 0.222, 0.155)
+  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+
   gStateStack:render()
 
   push:finish()

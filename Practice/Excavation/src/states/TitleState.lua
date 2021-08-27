@@ -35,13 +35,21 @@ function TitleState:enter()
   self.title = title
 end
 
-function TitleState:goToDigState()
+function TitleState:goToPlayState()
   gStateStack:push(
     TransitionState:new(
       {
+        ["isHiding"] = true,
         ["callback"] = function()
           gStateStack:pop()
-          gStateStack:push(DigState:new())
+          gStateStack:push(PlayState:new())
+          gStateStack:push(
+            TransitionState:new(
+              {
+                ["isHiding"] = false
+              }
+            )
+          )
         end
       }
     )
@@ -56,18 +64,15 @@ function TitleState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-  -- self:goToDigState()
+    self:goToPlayState()
   end
 
   if love.mouse.waspressed(1) then
-  -- self:goToDigState()
+    self:goToPlayState()
   end
 end
 
 function TitleState:render()
-  love.graphics.setColor(0.292, 0.222, 0.155)
-  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
-
   love.graphics.setColor(1, 1, 1)
   for k, tile in pairs(self.title) do
     tile:render()
