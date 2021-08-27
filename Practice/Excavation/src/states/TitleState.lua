@@ -1,7 +1,6 @@
 TitleState = BaseState:new()
 
-local SHAKE_DURATION = 1
-
+-- 17 columns by 7 rows
 local TITLE_TEXT =
   [[
 ooooooooooooooooo
@@ -13,7 +12,7 @@ oxxoooxoooxxoooxo
 ooooooooooooooooo
 ]]
 
-function TitleState:enter(params)
+function TitleState:enter()
   local columns = TITLE_TEXT:gsub(" ", ""):find("\n") - 1
   local titleText, rows = TITLE_TEXT:gsub("\n", "")
 
@@ -21,13 +20,6 @@ function TitleState:enter(params)
   local height = rows * TILE_SIZE
   local x = VIRTUAL_WIDTH / 2 - width / 2
   local y = VIRTUAL_HEIGHT / 2 - height / 2
-
-  self.outline = {
-    ["x"] = x,
-    ["y"] = y,
-    ["width"] = width,
-    ["height"] = height
-  }
 
   local title = {}
 
@@ -41,29 +33,19 @@ function TitleState:enter(params)
   end
 
   self.title = title
-
-  local toolName = love.math.random(2) == 1 and "pickaxe" or "hammer"
-  self.tool = Tool:new(toolName, "fill", x + width, y + height)
-
-  self.offsets = GenerateOffsets(20, 5)
-  self.index = 1
 end
 
 function TitleState:goToDigState()
-  if not self.isExiting then
-    self.isExiting = true
-    Timer:every(
-      SHAKE_DURATION / #self.offsets,
-      function()
-        if self.index == #self.offsets then
-          Timer:reset()
-          gStateMachine:change("dig")
-        else
-          self.index = self.index + 1
+  gStateStack:push(
+    TransitionState:new(
+      {
+        ["callback"] = function()
+          gStateStack:pop()
+          gStateStack:push(DigState:new())
         end
-      end
+      }
     )
-  end
+  )
 end
 
 function TitleState:update(dt)
@@ -74,22 +56,17 @@ function TitleState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    self:goToDigState()
+  -- self:goToDigState()
   end
 
   if love.mouse.waspressed(1) then
-    self:goToDigState()
+  -- self:goToDigState()
   end
 end
 
 function TitleState:render()
-  love.graphics.setColor(1, 1, 1)
-  self.tool:render()
-
-  love.graphics.translate(self.offsets[self.index], 0)
-  love.graphics.setColor(0.242, 0.172, 0.105)
-  love.graphics.setLineWidth(3)
-  love.graphics.rectangle("line", self.outline.x, self.outline.y, self.outline.width, self.outline.height)
+  love.graphics.setColor(0.292, 0.222, 0.155)
+  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   love.graphics.setColor(1, 1, 1)
   for k, tile in pairs(self.title) do

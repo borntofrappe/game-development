@@ -22,19 +22,8 @@ function love.load()
     ["tools"] = GenerateQuadsTools(gTextures.spritesheet)
   }
 
-  gStateMachine =
-    StateMachine:new(
-    {
-      ["title"] = function()
-        return TitleState:new()
-      end,
-      ["dig"] = function()
-        return DigState:new()
-      end
-    }
-  )
-
-  gStateMachine:change("title")
+  gStateStack = StateStack:new()
+  gStateStack:push(TitleState:new())
 
   love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
@@ -61,7 +50,7 @@ function love.mouse.waspressed(button)
 end
 
 function love.update(dt)
-  gStateMachine:update(dt)
+  gStateStack:update(dt)
 
   love.keyboard.keypressed = {}
   love.mouse.buttonpressed = {}
@@ -69,10 +58,8 @@ end
 
 function love.draw()
   push:start()
-  love.graphics.setColor(0.292, 0.222, 0.155)
-  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
-  gStateMachine:render()
+  gStateStack:render()
 
   push:finish()
 end
