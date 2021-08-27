@@ -6,7 +6,15 @@ The `res` folder includes supporting material, among which `spritesheet.png`. Wi
 
 ### Sizes
 
-The tiles describing the texture are 8 pixels wide and tall. The gems come in three different sizes: 16, 24 and 32 pixels. The tools finally stretch 21 pixels horizontally and 22 pixels vertically.
+By category:
+
+- the tiles describing the texture are 8 pixels wide and tall
+
+- the gems come in three different sizes: 16, 24 and 32 pixels
+
+- the tools stretch 21 pixels horizontally and 22 pixels vertically
+
+- the progress bar is sectioned in two pieces, the head 10 pixels and the body 26 pixels wide. Both are 12 pixels tall
 
 ### Colors
 
@@ -56,7 +64,11 @@ Rose:
 
 - 1, 0.902, 0.902
 
-For the tools, the darkest shade of maroon is repeated for the handle of the pickaxe and hammer, while pure white is re-used in the outline. The difference between the tools boils down to the colors chosen for the fill.
+For the tools, the darkest shade of maroon is repeated for the body of the handle. Pure white is re-used for the outline, but only after an additional outline marking the edges of the shape:
+
+- 0.173, 0.11, 0.106
+
+. The difference between the tools boils down to the colors chosen for the fill.
 
 Blueish:
 
@@ -70,19 +82,15 @@ Reddish:
 
 - 0.714, 0.443, 0.388
 
+For the progress bar, the cracks at the bottom of the spritesheet lean on the same, dark color used for the outline of the tools (right before pure white).
+
 ## Prep
 
-In the `Prep` folder I tackle the main challenges behind the game:
-
-1. how to populate a grid with a series of random, but connected values
-
-2. how to position gems of different sizes without overlap
-
-3. how to manage a particle system
-
-4. how to simulate a shake of the camera
+In the `Prep` folder I create smaller demos to solve some of the challenges behind the game.
 
 ### Noise Field
+
+> challenge: how to populate a grid with a series of random, but connected values
 
 The idea is to benefit from a noise function in two dimensions, so to create values which change over time, but are inherently connected. In the demo, the smooth change is highlighted with a series of rectangle of different opacity and a grid of integers. Ultimately the idea is to map the noise value to one of the types of textures, so that this integer value is used to pick exactly which type.
 
@@ -142,6 +150,8 @@ Adding `1` means that the grid is populated with integers in the `[1,5]` range.
 
 ### Gems
 
+> challenge: how to position gems of different sizes without overlap
+
 The demo highlights how to position an arbitrary number of cells while ensuring that each entity is separate from the other.
 
 The process begins with a table in which to keep track of available cells.
@@ -186,7 +196,17 @@ for c = column, column + (size - 1) do
 end
 ```
 
+-2. `love.graphics.setStencilTest` details the condition following which love2D updates the content with the prescribed action
+
+```lua
+love.graphics.setStencilTest("greater", 0)
+```
+
+In this instance every bit of content is replaced, effectively hidden
+
 ### Particle System
+
+> challenge: how to render a series of particles
 
 Love2D provides a way to generate and manage a series of particles with a particle sytem. In the game, the idea is to show such particles as the player digs with a tool, perhaps changing the number of particles with the heavier hammer.
 
@@ -195,6 +215,8 @@ The sub-folder provides a basic demo to emit a fixed number of particles, be it 
 Note the use of radial acceleration, instead of the linear counterpart, and also the `setEmissionArea` function, to spawn the individual particles in a wider area. In the game, the area could match the dimensions of the individual tiles.
 
 ### Camera Shake
+
+> how to simulate a camera shake
 
 As the player uses a tool, the idea is to shake the viewport to simulate the impact of the tool on the fragile surface. The demo shows how the effect can be achieved with a series of offset values stored in a table.
 
@@ -227,6 +249,42 @@ _Please note:_ the demo populates a table to show the offset with a line, plotti
 With the table of offsets, the demo translates the content with `love.graphics.translate`, progressively moving through the table at an interval.
 
 _Please note:_ with a large number of offsets, or with a very small duration, it is likely that delta time `dt` becomes larger than the necessary interval. In this instance the animation might take longer than necessary. Luckily, having fewer offsets results in a less-than-smooth camera shake which fits the tone of the game.
+
+### Stencil Transition
+
+> how to progressively hide and show content
+
+When moving between states the idea is to hide the existing content, update the visuals and then show the new material. The demo illustrates how to complete the task with Love2D's stencil feature.
+
+1. `love.graphics.stencil` describes a drawing function, as well as two parameters
+
+   ```lua
+   love.graphics.stencil(stencilFunction, "replace", 1)
+   ```
+
+   The drawing function renders a circle with a varying radius.
+
+   ```lua
+   love.graphics.circle("fill", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, radius)
+   ```
+
+   The parameters describe how the drawing function should impact the desired content (more on this later). Here the desired content is replaced in full, and therefore hidden from view
+
+2. `love.graphics.setStencilTest` details the condition for the desired content
+
+   ```lua
+   love.graphics.setStencilTest("greater", 0)
+   ```
+
+   In this instance any pixel value greater than zero, and therefore the entirety of the content is replaced, effectively hidden
+
+Note that `setStencilTest` is called once again, and this time without arguments.
+
+```lua
+love.graphics.setStencilTest()
+```
+
+In this manner it is possible to remove the logic of the stencil.
 
 ## Libraries
 
