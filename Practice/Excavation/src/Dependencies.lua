@@ -5,7 +5,12 @@ require "src/constants"
 require "src/Utils"
 
 require "src/Tile"
-require "src/Tool"
+
+require "src/Grid"
+
+require "src/gui/Panel"
+require "src/gui/Tool"
+require "src/gui/ProgressBar"
 
 require "src/StateStack"
 require "src/states/BaseState"
