@@ -50,6 +50,14 @@ function GenerateQuadsTools(atlas)
   return quads
 end
 
+function GenerateQuadSelection(atlas)
+  local x = 0
+  local y = 180
+  local size = TEXTURE_SIZE
+
+  return love.graphics.newQuad(x, y, size, size, atlas:getDimensions())
+end
+
 function GenerateOffsets(numberOffsets, numberRotations)
   local numberOffsets = numberOffsets or 20
   local numberRotations = numberRotations or 3

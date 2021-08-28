@@ -19,14 +19,14 @@ function love.load()
   gQuads = {
     ["textures"] = GenerateQuadsTextures(gTextures.spritesheet),
     ["gems"] = GenerateQuadsGems(gTextures.spritesheet),
+    ["selection"] = GenerateQuadSelection(gTextures.spritesheet),
     ["tools"] = GenerateQuadsTools(gTextures.spritesheet)
   }
 
-  gStateStack = StateStack:new()
-  gStateStack:push(TitleState:new())
+  gStateStack = StateStack:new({PlayState:new()})
 
   love.keyboard.keypressed = {}
-  love.mouse.buttonpressed = {}
+  -- love.mouse.buttonpressed = {}
 end
 
 function love.resize(width, height)
@@ -41,26 +41,24 @@ function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
-function love.mousepressed(x, y, button)
-  love.mouse.buttonpressed[button] = true
-end
-
-function love.mouse.waspressed(button)
-  return love.mouse.buttonpressed[button]
-end
-
+--[[
+  function love.mousepressed(x, y, button)
+    love.mouse.buttonpressed[button] = true
+  end
+  
+  function love.mouse.waspressed(button)
+    return love.mouse.buttonpressed[button]
+  end
+]]
 function love.update(dt)
   gStateStack:update(dt)
 
   love.keyboard.keypressed = {}
-  love.mouse.buttonpressed = {}
+  -- love.mouse.buttonpressed = {}
 end
 
 function love.draw()
   push:start()
-
-  love.graphics.setColor(0.292, 0.222, 0.155)
-  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   gStateStack:render()
 

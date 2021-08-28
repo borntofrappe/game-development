@@ -1,37 +1,39 @@
 TransitionState = BaseState:new()
 
-local TWEEN_DURATION = 2
+local TWEEN_DURATION = 1.25
 local RADIUS = ((VIRTUAL_WIDTH ^ 2 + VIRTUAL_HEIGHT ^ 2) ^ 0.5) / 2
 
 function TransitionState:new(def)
+  local rStart = def.transitionStart and RADIUS or 0
+  local rEnd = rStart == RADIUS and 0 or RADIUS
+
   local this = {
     ["callback"] = function()
-      gStateStack:pop()
+      gStateStack:pop() -- by default pop this transition state
+
       if def.callback then
         def.callback()
       end
     end,
     ["stencil"] = {
-      ["r"] = def.isHiding and RADIUS or 0
+      ["r"] = rStart
     }
   }
+
+  Timer:tween(
+    TWEEN_DURATION,
+    {
+      [this.stencil] = {["r"] = rEnd}
+    },
+    function()
+      this.callback()
+    end
+  )
 
   self.__index = self
   setmetatable(this, self)
 
   return this
-end
-
-function TransitionState:enter()
-  Timer:tween(
-    TWEEN_DURATION,
-    {
-      [self.stencil] = {["r"] = self.stencil.r == RADIUS and 0 or RADIUS}
-    },
-    function()
-      self.callback()
-    end
-  )
 end
 
 function TransitionState:update(dt)

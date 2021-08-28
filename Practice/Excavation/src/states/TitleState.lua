@@ -12,14 +12,16 @@ oxxoooxoooxxoooxo
 ooooooooooooooooo
 ]]
 
-function TitleState:enter()
+function TitleState:new()
   local columns = TITLE_TEXT:gsub(" ", ""):find("\n") - 1
   local titleText, rows = TITLE_TEXT:gsub("\n", "")
 
-  local width = columns * TILE_SIZE
-  local height = rows * TILE_SIZE
-  local x = VIRTUAL_WIDTH / 2 - width / 2
-  local y = VIRTUAL_HEIGHT / 2 - height / 2
+  local tileSize = TILE_SIZE
+
+  local width = columns * tileSize
+  local height = rows * tileSize
+  local xStart = VIRTUAL_WIDTH / 2 - width / 2
+  local yStart = VIRTUAL_HEIGHT / 2 - height / 2
 
   local title = {}
 
@@ -27,33 +29,23 @@ function TitleState:enter()
     for row = 1, rows do
       local index = column + (row - 1) * columns
       local character = titleText:sub(index, index)
+      local x = xStart + (column - 1) * tileSize
+      local y = yStart + (row - 1) * tileSize
       local id = character == "o" and #gQuads.textures or 1
-      table.insert(title, Tile:new(x + (column - 1) * TILE_SIZE, y + (row - 1) * TILE_SIZE, id))
+
+      local tile = Tile:new(x, y, id)
+      table.insert(title, tile)
     end
   end
 
-  self.title = title
-end
+  local this = {
+    ["title"] = title
+  }
 
-function TitleState:goToPlayState()
-  gStateStack:push(
-    TransitionState:new(
-      {
-        ["isHiding"] = true,
-        ["callback"] = function()
-          gStateStack:pop()
-          gStateStack:push(PlayState:new())
-          gStateStack:push(
-            TransitionState:new(
-              {
-                ["isHiding"] = false
-              }
-            )
-          )
-        end
-      }
-    )
-  )
+  self.__index = self
+  setmetatable(this, self)
+
+  return this
 end
 
 function TitleState:update(dt)
@@ -64,15 +56,32 @@ function TitleState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    self:goToPlayState()
-  end
+    gStateStack:push(
+      TransitionState:new(
+        {
+          ["transitionStart"] = true,
+          ["callback"] = function()
+            gStateStack:pop()
 
-  if love.mouse.waspressed(1) then
-    self:goToPlayState()
+            gStateStack:push(PlayState:new())
+            gStateStack:push(
+              TransitionState:new(
+                {
+                  ["transitionStart"] = false
+                }
+              )
+            )
+          end
+        }
+      )
+    )
   end
 end
 
 function TitleState:render()
+  love.graphics.setColor(0.292, 0.222, 0.155)
+  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+
   love.graphics.setColor(1, 1, 1)
   for k, tile in pairs(self.title) do
     tile:render()
