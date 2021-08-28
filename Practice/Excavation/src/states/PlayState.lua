@@ -13,9 +13,9 @@ function PlayState:new()
     ["row"] = love.math.random(grid.rows)
   }
 
-  local hammer = Tool:new(147, 32, 27, 38, "hammer", "fill")
-  local pickaxe = Tool:new(147, 74, 27, 38, "pickaxe", "outline")
-  local progressBar = ProgressBar:new(8, 8, 166, 16)
+  local hammer = Tool:new(141, 32, 27, 34, "hammer", "fill")
+  local pickaxe = Tool:new(141, 70, 27, 34, "pickaxe", "outline")
+  local progressBar = ProgressBar:new(8, 8, 160, 16)
 
   local this = {
     ["offsetGrid"] = offsetGrid,
@@ -56,7 +56,12 @@ function PlayState:update(dt)
     local tile = self.grid.tiles[column][row]
     if tile.id > 1 then
       tile.id = tile.id - 1
+      self.progressBar:increase()
     end
+  end
+
+  if love.keyboard.waspressed("r") then
+    self.progressBar:reset()
   end
 
   if love.keyboard.waspressed("h") or love.keyboard.waspressed("H") then

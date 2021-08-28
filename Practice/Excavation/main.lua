@@ -20,7 +20,8 @@ function love.load()
     ["textures"] = GenerateQuadsTextures(gTextures.spritesheet),
     ["gems"] = GenerateQuadsGems(gTextures.spritesheet),
     ["selection"] = GenerateQuadSelection(gTextures.spritesheet),
-    ["tools"] = GenerateQuadsTools(gTextures.spritesheet)
+    ["tools"] = GenerateQuadsTools(gTextures.spritesheet),
+    ["progressBar"] = GenerateQuadsProgressBar(gTextures.spritesheet)
   }
 
   gStateStack = StateStack:new({PlayState:new()})

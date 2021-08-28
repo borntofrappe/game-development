@@ -1,8 +1,5 @@
 Grid = {}
 
-local COLUMNS = 16
-local ROWS = 10
-
 local OFFSET_INCREMENT = 0.15 -- the lower the less varied the noise field
 local OFFSET_START_MAX = 1000
 
@@ -12,8 +9,8 @@ function Grid:new(x, y, id)
   local offsetColumn = offsetStartColumn
   local offsetRow = offsetStartRow
 
-  local columns = COLUMNS
-  local rows = ROWS
+  local columns = GRID_COLUMNS
+  local rows = GRID_ROWS
   local tiles = {}
   local tileSize = TILE_SIZE
 

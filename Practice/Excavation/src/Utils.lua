@@ -58,6 +58,21 @@ function GenerateQuadSelection(atlas)
   return love.graphics.newQuad(x, y, size, size, atlas:getDimensions())
 end
 
+function GenerateQuadsProgressBar(atlas)
+  local x = 36
+  local y = 180
+  local height = 16
+
+  local quads = {}
+
+  for i, width in ipairs(PROGRESS_WIDTHS) do
+    x = x - width
+    table.insert(quads, love.graphics.newQuad(x, y, width, height, atlas:getDimensions()))
+  end
+
+  return quads
+end
+
 function GenerateOffsets(numberOffsets, numberRotations)
   local numberOffsets = numberOffsets or 20
   local numberRotations = numberRotations or 3
