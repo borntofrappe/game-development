@@ -27,7 +27,7 @@ function love.keypressed(key)
 end
 
 function love.draw()
-  love.graphics.setColor(0, 0, 0, 0.25)
+  love.graphics.setColor(0, 0, 0)
   love.graphics.setLineWidth(1)
   for column = 1, COLUMNS + 1 do
     love.graphics.line((column - 1) * CELL_SIZE, 0, (column - 1) * CELL_SIZE, WINDOW_HEIGHT)
@@ -36,12 +36,15 @@ function love.draw()
     love.graphics.line(0, (row - 1) * CELL_SIZE, WINDOW_WIDTH, (row - 1) * CELL_SIZE)
   end
 
-  love.graphics.setColor(0, 0, 0)
+  love.graphics.print(#gGems .. " gem(s)", 2, 2)
+
+  love.graphics.setLineWidth(3)
   for k, gem in pairs(gGems) do
+    love.graphics.setColor(0, 0, 0, 0.2)
+    love.graphics.rectangle("fill", gem.x, gem.y, gem.size, gem.size)
+    love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("line", gem.x, gem.y, gem.size, gem.size)
   end
-
-  love.graphics.print("Number of gem(s): " .. #gGems, 8, 8)
 end
 
 function getGems()

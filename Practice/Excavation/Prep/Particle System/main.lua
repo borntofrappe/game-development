@@ -1,5 +1,6 @@
 local WINDOW_WIDTH = 520
 local WINDOW_HEIGHT = 380
+local WINDOW_PADDING = 20
 
 local PARTICLES = 50
 local particles = {}
@@ -33,7 +34,7 @@ function love.keypressed(key)
   end
 
   if key == "return" then
-    gParticleSystem:setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+    gParticleSystem:setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4)
     gParticleSystem:emit(PARTICLES)
   end
 end
@@ -43,5 +44,21 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(0.392, 0.322, 0.255)
+  love.graphics.rectangle(
+    "line",
+    WINDOW_PADDING,
+    WINDOW_PADDING,
+    WINDOW_WIDTH - WINDOW_PADDING * 2,
+    WINDOW_HEIGHT - WINDOW_PADDING * 2
+  )
+
+  love.graphics.circle("fill", WINDOW_PADDING, WINDOW_PADDING, 10)
+  love.graphics.circle("fill", WINDOW_WIDTH - WINDOW_PADDING, WINDOW_HEIGHT - WINDOW_PADDING, 10)
+  love.graphics.circle("fill", WINDOW_PADDING, WINDOW_HEIGHT - WINDOW_PADDING, 10)
+  love.graphics.circle("fill", WINDOW_WIDTH - WINDOW_PADDING, WINDOW_PADDING, 10)
+  love.graphics.printf("Particle System\nOn click\nOn key press", 0, WINDOW_HEIGHT / 2 - 24, WINDOW_WIDTH, "center")
+
+  love.graphics.setColor(1, 1, 1)
   love.graphics.draw(gParticleSystem)
 end

@@ -1,8 +1,12 @@
 # Excavation
 
+## Preface
+
+Pokemon Diamond and Pearl introduce the underground, where the trainer explores an area hidden below the games' region. In this underground you find a minigame where you are tasked to dig walls for gems, and find the all the treasure before the surface collapses.
+
 ## Spritesheet
 
-The `res` folder includes supporting material, among which `spritesheet.png`. With the image I managed to create a visual for the texture, gems and tools. These assets are ultimately divvied up in quads and used in the project through `love.graphics.draw`.
+The `res` folder includes supporting material, among which `spritesheet.png`. With the image I managed to create a visual for the texture, gems and tools and progress bar. These assets are ultimately divvied up in quads and used in the project through `love.graphics.draw`.
 
 ### Sizes
 
@@ -12,17 +16,17 @@ By category:
 
 - the gems come in three different sizes: 16, 24 and 32 pixels
 
-- the tools stretch 21 pixels horizontally and 22 pixels vertically
+- the tools are 21 pixels wide and 22 pixels tool, both the ouline and filled variant
 
-- the progress bar is sectioned in two pieces, the head 10 pixels and the body 26 pixels wide. Both are 12 pixels tall
+- the progress bar is sectioned in four fragments, two describing the tip of the bar and two its body. The first kind is 6 pixels wide, while the second covers 8 pixels, All are designed to be 16 pixels tall, and match the height of the progress bar, even if the actual content covers a smaller area
 
 ### Colors
 
-The spritesheet leans on a limited color palette.
+The spritesheet introduces several color for the textures, gems and tools, but I tried to limit the number of colors with a few variants of maroon and grey hues
 
-_Please note:_ colors in Love2D describe rgb components in the `[0, 1]` range.
+_Please note:_ Love2D accepts rgb components in the `[0, 1]` range.
 
-For the textures, there are seven types of maroons and greys:
+From the darkest shade to the lightest hue, the textures introduce seven colors:
 
 - 0.392, 0.322, 0.255
 
@@ -38,7 +42,9 @@ For the textures, there are seven types of maroons and greys:
 
 - 0.694, 0.659, 0.624
 
-For the gems, these use the first, darkest shade of maroon for the outline — 0.392, 0.322, 0.255 — while the inner glow is pure white — 1, 1, 1. What changes is the color chosen for the different varieties.
+To highlight the selected tile, an additional square relies on pure white — 1, 1, 1.
+
+The gems rely on the darkest pick for the outline — 0.392, 0.322, 0.255 — while the inner glow is again pure white. What changes is the color pair for the different varieties.
 
 Blue:
 
@@ -64,35 +70,33 @@ Rose:
 
 - 1, 0.902, 0.902
 
-For the tools, the darkest shade of maroon is repeated for the body of the handle. Pure white is re-used for the outline, but only after an additional outline marking the edges of the shape:
+Similarly to the gems, the tools re-use the dark maroon, but this time for the handle of the hammer or pickaxe. Each tool is designed to have a dark outline — 0.173, 0.11, 0.106 — and a white border.
 
-- 0.173, 0.11, 0.106
+Similarly to the gems, the tools rely on a pair of colors.
 
-. The difference between the tools boils down to the colors chosen for the fill.
-
-Blueish:
+Blueish pickaxe:
 
 - 0.71, 0.792, 0.945
 
 - 0.318, 0.392, 0.804
 
-Reddish:
+Reddish hammer:
 
 - 0.91, 0.361, 0.333
 
 - 0.714, 0.443, 0.388
 
-For the progress bar, the cracks at the bottom of the spritesheet lean on the same, dark color used for the outline of the tools (right before pure white).
+The progress bar re-uses the dark color chosen for the tools' outline — 0.173, 0.11, 0.106.
 
 ## Prep
 
-In the `Prep` folder I create smaller demos to solve some of the challenges behind the game.
+In the `Prep` folder I create smaller projects to solve some of the challenges behind the game.
 
 ### Noise Field
 
-> challenge: how to populate a grid with a series of random, but connected values
+> challenge: populate a grid with a series of random, but connected values
 
-The idea is to benefit from a noise function in two dimensions, so to create values which change over time, but are inherently connected. In the demo, the smooth change is highlighted with a series of rectangle of different opacity and a grid of integers. Ultimately the idea is to map the noise value to one of the types of textures, so that this integer value is used to pick exactly which type.
+The idea is to benefit from a noise function in two dimensions, so to create values which change over time, but are inherently connected in a grid-like pattern. In the demo, the smooth change is highlighted with a series of rectangle of different opacity and a series of integers. Ultimately the idea is to map the noise value to one of the types of textures.
 
 `getNoiseField` builds a two-dimensional table where each individual cell describes a number in the `[0,1]` range.
 
@@ -134,23 +138,21 @@ for column = 1, columns do
 end
 ```
 
-`noise` provides a value in the `[0,1]` range. In the demo, the measure is used for the opacity of the rectangles. Notice that the value is limited to avoid having the noise field overpower the integers which follow.
+`noise` provides a value in the `[0,1]` range, which is then incorporated in the opacity of the rectangles, in the `[0, ALPHA_MAX]` range.
 
 ```lua
 local alpha = noise * ALPHA_MAX
 ```
 
-The integer is finally computed weighing this opacity against the maximum possible value.
+The same value is finally mapped to an integer in the `[1, VALUE_MAX]` range.
 
 ```lua
-local value = math.floor(alpha * VALUE_MAX / ALPHA_MAX) + 1
+local value = math.floor(noise * VALUE_MAX) + 1
 ```
-
-Adding `1` means that the grid is populated with integers in the `[1,5]` range.
 
 ### Gems
 
-> challenge: how to position gems of different sizes without overlap
+> challenge: position gems of different sizes without overlap
 
 The demo highlights how to position an arbitrary number of cells while ensuring that each entity is separate from the other.
 
@@ -196,29 +198,25 @@ for c = column, column + (size - 1) do
 end
 ```
 
--2. `love.graphics.setStencilTest` details the condition following which love2D updates the content with the prescribed action
-
-```lua
-love.graphics.setStencilTest("greater", 0)
-```
-
-In this instance every bit of content is replaced, effectively hidden
-
 ### Particle System
 
-> challenge: how to render a series of particles
+> challenge: render a series of particles
 
-Love2D provides a way to generate and manage a series of particles with a particle sytem. In the game, the idea is to show such particles as the player digs with a tool, perhaps changing the number of particles with the heavier hammer.
+The Love2D API provides a particle system to manage and render a series of particles. In the game, the idea is to show such particles as the player digs with a tool, perhaps changing the number of particles with the heavier hammer.
 
 The sub-folder provides a basic demo to emit a fixed number of particles, be it on click or a specific key press. With a mouse cursor the game updates the origin to follow the appropriate coordinates.
 
-Note the use of radial acceleration, instead of the linear counterpart, and also the `setEmissionArea` function, to spawn the individual particles in a wider area. In the game, the area could match the dimensions of the individual tiles.
+Note the use of radial acceleration, instead of the linear counterpart, and also the `setEmissionArea` function, to spawn the individual particles in a wider area. In the game, the area should match the dimensions of the tiles in the grid.
+
+```lua
+gParticleSystem:setEmissionArea("uniform", 8, 8)
+```
 
 ### Camera Shake
 
-> how to simulate a camera shake
+> translate the visuals in `love.draw` to simulate a camera shake
 
-As the player uses a tool, the idea is to shake the viewport to simulate the impact of the tool on the fragile surface. The demo shows how the effect can be achieved with a series of offset values stored in a table.
+As the player uses a tool, the idea is to shake the window to simulate the impact of the tool on the fragile surface. The demo shows how the effect can be achieved with a series of offset values stored in a table.
 
 ```lua
 local offsets = {}
@@ -228,7 +226,7 @@ for a = 0, angle, increment do
 end
 ```
 
-I rely on the sine function since it allows to create a series of values which increment and decrement smoothly. Moreover, by choosing the start and end angle as a multiple of `math.pi * 2`, it is possible to have the final translation match the first one,
+I rely on the sine function since it allows to create a series of values which increment and decrement smoothly, and most importantly a series of values which match at beginning and end. This last feat is achieved by choosing the start and end angle as a multiple of `math.pi * 2`.
 
 The angle considers a full rotation, that is `math.pi * 2` as well as an arbitrary number of rotations.
 
@@ -248,13 +246,21 @@ _Please note:_ the demo populates a table to show the offset with a line, plotti
 
 With the table of offsets, the demo translates the content with `love.graphics.translate`, progressively moving through the table at an interval.
 
+```lua
+love.graphics.translate(offsets[index], 0)
+```
+
 _Please note:_ with a large number of offsets, or with a very small duration, it is likely that delta time `dt` becomes larger than the necessary interval. In this instance the animation might take longer than necessary. Luckily, having fewer offsets results in a less-than-smooth camera shake which fits the tone of the game.
+
+_Please note:_ when considering the offsets, it is actually unnecessary to compute the value for more than one iteration, as the sine function repeats itself. Consider updating the logic when implementing the feature in the actual game.
 
 ### Stencil Transition
 
-> how to progressively hide and show content
+> progressively hide and show content to transition between states
 
-When moving between states the idea is to hide the existing content, update the visuals and then show the new material. The demo illustrates how to complete the task with Love2D's stencil feature.
+_Please note:_ the demo hides and shows the same content, and doesn't bother implementing the state transition. In the actual game consider a state stack in place of a state machine, so to render multiple states on top of one another.
+
+Love2D's stencil allows to prescribe the instructions in `love.draw` to a specific area, and with two functions:
 
 1. `love.graphics.stencil` describes a drawing function, as well as two parameters
 
@@ -285,15 +291,3 @@ love.graphics.setStencilTest()
 ```
 
 In this manner it is possible to remove the logic of the stencil.
-
-## Libraries
-
-The game benefits from two libraries:
-
-1. `push` to scale the window while preserving the pixelated art style chosen in the spritesheet
-
-2. `Timer` to manage time events, like delays and tweens
-
-## Input
-
-The goal of the game is to support both keyboard and mouse input.

@@ -19,7 +19,6 @@ local timer = 0
 
 local isShaking = false
 
--- visual debugging
 local Y_OFFSET = 100
 local offsetLine = {}
 for i, offset in ipairs(offsets) do
@@ -71,8 +70,7 @@ end
 function love.draw()
   love.graphics.translate(offsets[index], 0)
 
-  -- -- visual debugging
-  -- love.graphics.line(offsetLine)
+  love.graphics.line(offsetLine)
 
   love.graphics.setColor(0.392, 0.322, 0.255)
   love.graphics.rectangle(

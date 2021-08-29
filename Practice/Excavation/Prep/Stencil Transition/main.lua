@@ -12,7 +12,7 @@ local isHidden = false
 function love.load()
   love.window.setTitle("Stencil Transition")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-  love.graphics.setBackgroundColor(0, 0, 0)
+  love.graphics.setBackgroundColor(0.392, 0.322, 0.255)
 end
 
 function love.mousepressed(x, y, button)

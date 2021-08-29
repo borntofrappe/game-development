@@ -53,7 +53,7 @@ function getNoiseField()
       local y = (row - 1) * CELL_SIZE
       local noise = love.math.noise(offsetColumn, offsetRow)
       local alpha = noise * ALPHA_MAX
-      local value = math.floor(alpha * VALUE_MAX / ALPHA_MAX) + 1
+      local value = math.floor(noise * VALUE_MAX) + 1
 
       table.insert(
         textures,
