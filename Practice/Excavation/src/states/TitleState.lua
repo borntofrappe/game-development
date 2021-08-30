@@ -1,7 +1,6 @@
 TitleState = BaseState:new()
 
--- 17 columns by 7 rows
-local TITLE_TEXT =
+local TILES =
   [[
 ooooooooooooooooo
 oxxoooxoooxxxooxo
@@ -13,33 +12,32 @@ ooooooooooooooooo
 ]]
 
 function TitleState:new()
-  local columns = TITLE_TEXT:gsub(" ", ""):find("\n") - 1
-  local titleText, rows = TITLE_TEXT:gsub("\n", "")
+  local columns = TILES:gsub(" ", ""):find("\n") - 1
+  local tiles, rows = TILES:gsub("\n", "")
 
-  local tileSize = TILE_SIZE
+  local grid = {}
+  local cellSize = TILE_SIZE
 
-  local width = columns * tileSize
-  local height = rows * tileSize
+  local width = columns * cellSize
+  local height = rows * cellSize
   local xStart = VIRTUAL_WIDTH / 2 - width / 2
   local yStart = VIRTUAL_HEIGHT / 2 - height / 2
-
-  local title = {}
 
   for column = 1, columns do
     for row = 1, rows do
       local index = column + (row - 1) * columns
-      local character = titleText:sub(index, index)
-      local x = xStart + (column - 1) * tileSize
-      local y = yStart + (row - 1) * tileSize
-      local id = character == "o" and #gQuads.textures or 1
+      local character = tiles:sub(index, index)
+      local x = xStart + (column - 1) * cellSize
+      local y = yStart + (row - 1) * cellSize
+      local id = character == "o" and #gQuads.tiles or 1
 
       local tile = Tile:new(x, y, id)
-      table.insert(title, tile)
+      table.insert(grid, tile)
     end
   end
 
   local this = {
-    ["title"] = title
+    ["grid"] = grid
   }
 
   self.__index = self
@@ -61,7 +59,7 @@ function TitleState:update(dt)
         {
           ["transitionStart"] = true,
           ["callback"] = function()
-            gStateStack:pop()
+            gStateStack:pop() -- remove title state
 
             gStateStack:push(PlayState:new(numberGems))
             gStateStack:push(
@@ -90,7 +88,7 @@ function TitleState:render()
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   love.graphics.setColor(1, 1, 1)
-  for k, tile in pairs(self.title) do
+  for k, tile in pairs(self.grid) do
     tile:render()
   end
 end

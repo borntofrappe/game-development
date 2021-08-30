@@ -1,81 +1,40 @@
 PlayState = BaseState:new()
 
 function PlayState:new(numberGems)
-  local offsetGrid = {
+  local offset = {
     ["x"] = 8,
     ["y"] = 32
   }
 
-  local grid = Grid:new()
-  local tileSize = grid.tileSize
+  local tiles = Tiles:new()
+  local columns = tiles.columns
+  local rows = tiles.rows
+  local cellSize = tiles.cellSize
 
-  local gems = {}
-  local gemCoords = {}
-  local numberGems = numberGems or 3
+  local treasure = Treasure:new(numberGems, columns, rows, cellSize)
 
-  for i = 1, numberGems do
-    local gemSize = GEM_SIZES[love.math.random(#GEM_SIZES)]
-    local column, row
-
-    while true do
-      column = love.math.random(grid.columns - (gemSize - 1))
-      row = love.math.random(grid.rows - (gemSize - 1))
-
-      local canFit = true
-
-      for c = column, column + (gemSize - 1) do
-        for r = row, row + (gemSize - 1) do
-          if gemCoords["c" .. c .. "r" .. r] then
-            canFit = false
-            break
-          end
-        end
-        if not canFit then
-          break
-        end
-      end
-
-      if canFit then
-        break
-      end
-    end
-
-    local x = (column - 1) * tileSize
-    local y = (row - 1) * tileSize
-    local gemColor = GEM_COLORS[love.math.random(#GEM_COLORS)]
-
-    local gem = Gem:new(x, y, gemSize, gemColor)
-    table.insert(gems, gem)
-
-    for c = column, column + (gemSize - 1) do
-      for r = row, row + (gemSize - 1) do
-        gemCoords["c" .. c .. "r" .. r] = true
-      end
-    end
-  end
-
-  local gridBackground = love.graphics.newSpriteBatch(gTextures.spritesheet)
-  for column = 1, grid.columns do
-    for row = 1, grid.rows do
-      gridBackground:add(gQuads.textures[1], (column - 1) * tileSize, (row - 1) * tileSize)
+  local underlay = love.graphics.newSpriteBatch(gTextures.spritesheet)
+  for column = 1, tiles.columns do
+    for row = 1, tiles.rows do
+      underlay:add(gQuads.tiles[1], (column - 1) * cellSize, (row - 1) * cellSize)
     end
   end
 
   local selection = {
-    ["column"] = love.math.random(grid.columns),
-    ["row"] = love.math.random(grid.rows)
+    ["column"] = love.math.random(tiles.columns),
+    ["row"] = love.math.random(tiles.rows)
   }
 
   local hammer = Tool:new(141, 32, 27, 34, "hammer", "fill")
   local pickaxe = Tool:new(141, 70, 27, 34, "pickaxe", "outline")
+
   local progressBar = ProgressBar:new(8, 8, 160, 16)
 
   local this = {
-    ["offsetGrid"] = offsetGrid,
-    ["grid"] = grid,
-    ["gems"] = gems,
-    ["gemCoords"] = gemCoords,
-    ["gridBackground"] = gridBackground,
+    ["offset"] = offset,
+    ["underlay"] = underlay,
+    ["treasure"] = treasure,
+    ["tiles"] = tiles,
     ["selection"] = selection,
     ["hammer"] = hammer,
     ["pickaxe"] = pickaxe,
@@ -91,11 +50,11 @@ end
 function PlayState:update(dt)
   local x, y = push:toGame(love.mouse:getPosition())
   if
-    x > self.offsetGrid.x and x < self.offsetGrid.x + self.grid.columns * self.grid.tileSize and y > self.offsetGrid.y and
-      y < self.offsetGrid.y + self.grid.rows * self.grid.tileSize
+    x > self.offset.x and x < self.offset.x + self.tiles.columns * self.tiles.cellSize and y > self.offset.y and
+      y < self.offset.y + self.tiles.rows * self.tiles.cellSize
    then
-    local column = math.floor((x - self.offsetGrid.x) / self.grid.tileSize) + 1
-    local row = math.floor((y - self.offsetGrid.y) / self.grid.tileSize) + 1
+    local column = math.floor((x - self.offset.x) / self.tiles.cellSize) + 1
+    local row = math.floor((y - self.offset.y) / self.tiles.cellSize) + 1
     self.selection.column = column
     self.selection.row = row
   end
@@ -108,11 +67,11 @@ function PlayState:update(dt)
   if love.keyboard.waspressed("up") then
     self.selection.row = math.max(1, self.selection.row - 1)
   elseif love.keyboard.waspressed("down") then
-    self.selection.row = math.min(self.grid.rows, self.selection.row + 1)
+    self.selection.row = math.min(self.tiles.rows, self.selection.row + 1)
   end
 
   if love.keyboard.waspressed("right") then
-    self.selection.column = math.min(self.grid.columns, self.selection.column + 1)
+    self.selection.column = math.min(self.tiles.columns, self.selection.column + 1)
   elseif love.keyboard.waspressed("left") then
     self.selection.column = math.max(1, self.selection.column - 1)
   end
@@ -140,10 +99,9 @@ function PlayState:update(dt)
 
   if
     love.keyboard.waspressed("return") or
-      (love.mouse.waspressed(1) and x > self.offsetGrid.x and
-        x < self.offsetGrid.x + self.grid.columns * self.grid.tileSize and
-        y > self.offsetGrid.y and
-        y < self.offsetGrid.y + self.grid.rows * self.grid.tileSize)
+      (love.mouse.waspressed(1) and x > self.offset.x and x < self.offset.x + self.tiles.columns * self.tiles.cellSize and
+        y > self.offset.y and
+        y < self.offset.y + self.tiles.rows * self.tiles.cellSize)
    then
     local column = self.selection.column
     local row = self.selection.row
@@ -153,10 +111,10 @@ function PlayState:update(dt)
     local tilesCoords = {}
 
     local c1 = math.max(1, column - 1)
-    local c2 = math.min(self.grid.columns, column + 1)
+    local c2 = math.min(self.tiles.columns, column + 1)
 
     local r1 = math.max(1, row - 1)
-    local r2 = math.min(self.grid.rows, row + 1)
+    local r2 = math.min(self.tiles.rows, row + 1)
 
     for c = c1, c2 do
       table.insert(tilesCoords, {c, row})
@@ -170,7 +128,7 @@ function PlayState:update(dt)
       local c = tileCoords[1]
       local r = tileCoords[2]
 
-      local tile = self.grid.tiles[c][r]
+      local tile = self.tiles.grid[c][r]
       if tile.inPlay then
         tile.id = tile.id - 1
         if tile.id == 1 then
@@ -200,7 +158,7 @@ function PlayState:update(dt)
     if collapsed then
       local chunks = {"The wall collapsed!\n"}
       -- technically you'd highlight only the collected gems
-      for i, gem in pairs(self.gems) do
+      for i, gem in pairs(self.treasure.gems) do
         local size = gem.size
         local color = gem.color
         local chunk = "You obtained a " .. color .. " gem, size " .. size .. "!\n"
@@ -244,7 +202,7 @@ function PlayState:update(dt)
     if allDugUp then
       local chunks = {"Everything was dug up!\n"}
 
-      for i, gem in pairs(self.gems) do
+      for i, gem in pairs(self.treasure.gems) do
         local size = gem.size
         local color = gem.color
         local chunk = "You obtained a " .. color .. " gem, size " .. size .. "!\n"
@@ -301,22 +259,20 @@ function PlayState:render()
   self.pickaxe:render()
 
   love.graphics.push()
-  love.graphics.translate(self.offsetGrid.x, self.offsetGrid.y)
+  love.graphics.translate(self.offset.x, self.offset.y)
 
-  love.graphics.draw(self.gridBackground)
+  love.graphics.draw(self.underlay)
 
-  for i, gem in pairs(self.gems) do
-    gem:render()
-  end
+  self.treasure:render()
 
-  self.grid:render()
+  self.tiles:render()
 
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(
     gTextures.spritesheet,
     gQuads.selection,
-    (self.selection.column - 1) * self.grid.tileSize,
-    (self.selection.row - 1) * self.grid.tileSize
+    (self.selection.column - 1) * self.tiles.cellSize,
+    (self.selection.row - 1) * self.tiles.cellSize
   )
 
   love.graphics.pop()

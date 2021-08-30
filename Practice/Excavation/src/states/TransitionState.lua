@@ -1,6 +1,6 @@
 TransitionState = BaseState:new()
 
-local TWEEN_DURATION = 1
+local TWEEN_DURATION = 0.75
 local RADIUS = ((VIRTUAL_WIDTH ^ 2 + VIRTUAL_HEIGHT ^ 2) ^ 0.5) / 2
 
 function TransitionState:new(def)
@@ -10,7 +10,7 @@ function TransitionState:new(def)
   local this = {
     ["callback"] = function()
       if not def.prevenDefault then
-        gStateStack:pop() -- by default remove the transition
+        gStateStack:pop() -- by default remove the transition state
       end
 
       if def.callback then

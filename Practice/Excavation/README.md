@@ -323,3 +323,5 @@ love.graphics.draw(gSpriteBatch)
 ```
 
 I set, or rather reset, the color since it appears the batch is influenced by a different rgb combination.
+
+## Game

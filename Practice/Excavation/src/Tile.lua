@@ -14,5 +14,5 @@ function Tile:new(x, y, id)
 end
 
 function Tile:render()
-  love.graphics.draw(gTextures.spritesheet, gQuads.textures[self.id], self.x, self.y)
+  love.graphics.draw(gTextures.spritesheet, gQuads.tiles[self.id], self.x, self.y)
 end

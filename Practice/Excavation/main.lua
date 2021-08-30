@@ -6,7 +6,6 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  -- in multiples of 8 to maintain a pixelated resolution
   gFont = love.graphics.newFont("res/fonts/font.ttf", 8)
   love.graphics.setFont(gFont)
 
@@ -15,7 +14,7 @@ function love.load()
   }
 
   gQuads = {
-    ["textures"] = GenerateQuadsTextures(gTextures.spritesheet),
+    ["tiles"] = GenerateQuadsTiles(gTextures.spritesheet),
     ["gems"] = GenerateQuadsGems(gTextures.spritesheet),
     ["selection"] = GenerateQuadSelection(gTextures.spritesheet),
     ["tools"] = GenerateQuadsTools(gTextures.spritesheet),

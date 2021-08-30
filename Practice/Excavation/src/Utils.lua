@@ -1,26 +1,26 @@
-function GenerateQuadsTextures(atlas)
+function GenerateQuadsTiles(atlas)
   local quads = {}
-  local types = TEXTURE_TYPES
-  local size = TEXTURE_SIZE
+  local types = TILE_TYPES
+  local size = TILE_SIZE
 
   for i = 1, types do
     table.insert(quads, love.graphics.newQuad((i - 1) * size, 0, size, size, atlas:getDimensions()))
   end
 
-  return quads
+  return quads -- quads[1]
 end
 
 function GenerateQuadsGems(atlas)
   local quads = {}
 
-  local maxSize = GEM_SIZES[#GEM_SIZES] * GEM_SIZE
+  local maxSize = GEM_SIZES[#GEM_SIZES] * TILE_SIZE
   local x = 0
   local y = 8
 
   for i, color in ipairs(GEM_COLORS) do
     quads[color] = {}
     for j, gemSize in ipairs(GEM_SIZES) do
-      local size = gemSize * GEM_SIZE
+      local size = gemSize * TILE_SIZE
       quads[color][gemSize] = love.graphics.newQuad(x, y, size, size, atlas:getDimensions())
       x = x + size
     end
@@ -28,7 +28,7 @@ function GenerateQuadsGems(atlas)
     y = y + maxSize
   end
 
-  return quads
+  return quads -- quads["blue"][2]
 end
 
 function GenerateQuadsTools(atlas)
@@ -48,20 +48,20 @@ function GenerateQuadsTools(atlas)
     y = y + height
   end
 
-  return quads
+  return quads -- quads["hammer"]["outline"]
 end
 
 function GenerateQuadSelection(atlas)
   local x = 0
   local y = 180
-  local size = TEXTURE_SIZE
+  local size = TILE_SIZE
 
   return love.graphics.newQuad(x, y, size, size, atlas:getDimensions())
 end
 
 function GenerateQuadsProgressBar(atlas)
-  local x = 36
-  local y = 180
+  local x = 28
+  local y = 188
   local height = 16
 
   local quads = {}
@@ -71,7 +71,7 @@ function GenerateQuadsProgressBar(atlas)
     table.insert(quads, love.graphics.newQuad(x, y, width, height, atlas:getDimensions()))
   end
 
-  return quads
+  return quads -- quads[1]
 end
 
 function GenerateOffsets(numberOffsets, numberRotations)
