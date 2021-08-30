@@ -53,7 +53,7 @@ function TitleState:update(dt)
     love.event.quit()
   end
 
-  if love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("return") or love.mouse.waspressed(1) then
     local numberGems = love.math.random(GEMS_MAX)
 
     gStateStack:push(

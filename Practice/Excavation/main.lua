@@ -25,7 +25,7 @@ function love.load()
   gStateStack = StateStack:new({TitleState:new()})
 
   love.keyboard.keypressed = {}
-  -- love.mouse.buttonpressed = {}
+  love.mouse.buttonpressed = {}
 end
 
 function love.resize(width, height)
@@ -40,20 +40,19 @@ function love.keyboard.waspressed(key)
   return love.keyboard.keypressed[key]
 end
 
---[[
-  function love.mousepressed(x, y, button)
-    love.mouse.buttonpressed[button] = true
-  end
-  
-  function love.mouse.waspressed(button)
-    return love.mouse.buttonpressed[button]
-  end
-]]
+function love.mousepressed(x, y, button)
+  love.mouse.buttonpressed[button] = true
+end
+
+function love.mouse.waspressed(button)
+  return love.mouse.buttonpressed[button]
+end
+
 function love.update(dt)
   gStateStack:update(dt)
 
   love.keyboard.keypressed = {}
-  -- love.mouse.buttonpressed = {}
+  love.mouse.buttonpressed = {}
 end
 
 function love.draw()

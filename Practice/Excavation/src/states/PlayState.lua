@@ -89,6 +89,17 @@ function PlayState:new(numberGems)
 end
 
 function PlayState:update(dt)
+  local x, y = push:toGame(love.mouse:getPosition())
+  if
+    x > self.offsetGrid.x and x < self.offsetGrid.x + self.grid.columns * self.grid.tileSize and y > self.offsetGrid.y and
+      y < self.offsetGrid.y + self.grid.rows * self.grid.tileSize
+   then
+    local column = math.floor((x - self.offsetGrid.x) / self.grid.tileSize) + 1
+    local row = math.floor((y - self.offsetGrid.y) / self.grid.tileSize) + 1
+    self.selection.column = column
+    self.selection.row = row
+  end
+
   if love.keyboard.waspressed("escape") then
     gStateStack:pop()
     gStateStack:push(TitleState:new())
@@ -106,7 +117,34 @@ function PlayState:update(dt)
     self.selection.column = math.max(1, self.selection.column - 1)
   end
 
-  if love.keyboard.waspressed("return") then
+  if love.mouse.waspressed(1) then
+    -- technically the x and y coordinates are already available from the top of love.update
+    local x, y = push:toGame(love.mouse:getPosition())
+
+    if
+      x > self.hammer.panel.x and x < self.hammer.panel.x + self.hammer.panel.width and y > self.hammer.panel.y and
+        y < self.hammer.panel.y + self.hammer.panel.height
+     then
+      self.hammer:select()
+      self.pickaxe:deselect()
+    end
+
+    if
+      x > self.pickaxe.panel.x and x < self.pickaxe.panel.x + self.pickaxe.panel.width and y > self.pickaxe.panel.y and
+        y < self.pickaxe.panel.y + self.pickaxe.panel.height
+     then
+      self.pickaxe:select()
+      self.hammer:deselect()
+    end
+  end
+
+  if
+    love.keyboard.waspressed("return") or
+      (love.mouse.waspressed(1) and x > self.offsetGrid.x and
+        x < self.offsetGrid.x + self.grid.columns * self.grid.tileSize and
+        y > self.offsetGrid.y and
+        y < self.offsetGrid.y + self.grid.rows * self.grid.tileSize)
+   then
     local column = self.selection.column
     local row = self.selection.row
 

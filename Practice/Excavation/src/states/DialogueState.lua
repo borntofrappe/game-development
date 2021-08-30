@@ -29,7 +29,7 @@ function DialogueState:update(dt)
     self.callback()
   end
 
-  if love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("return") or love.mouse.waspressed(1) then
     if self.index == #self.textBoxes then
       self.callback()
     else
