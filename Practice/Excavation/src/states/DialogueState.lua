@@ -1,14 +1,21 @@
 DialogueState = BaseState:new()
 
-function DialogueState:new(chunks)
+function DialogueState:new(def)
   local textBoxes = {}
-  for i, chunk in ipairs(chunks) do
+  for i, chunk in ipairs(def.chunks) do
     table.insert(textBoxes, TextBox:new(chunk))
   end
 
   local this = {
     ["textBoxes"] = textBoxes,
-    ["index"] = 1
+    ["index"] = 1,
+    ["callback"] = function()
+      gStateStack:pop()
+
+      if def.callback then
+        def.callback()
+      end
+    end
   }
 
   self.__index = self
@@ -19,12 +26,12 @@ end
 
 function DialogueState:update(dt)
   if love.keyboard.waspressed("escape") then
-    gStateStack:pop()
+    self.callback()
   end
 
   if love.keyboard.waspressed("return") then
     if self.index == #self.textBoxes then
-      gStateStack:pop()
+      self.callback()
     else
       self.index = self.index + 1
     end

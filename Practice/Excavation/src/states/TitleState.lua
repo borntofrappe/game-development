@@ -64,7 +64,13 @@ function TitleState:update(dt)
             gStateStack:pop()
 
             gStateStack:push(PlayState:new(numberGems))
-            gStateStack:push(DialogueState:new({"Something pinged in the wall!\n" .. numberGems .. " confirmed!"}))
+            gStateStack:push(
+              DialogueState:new(
+                {
+                  ["chunks"] = {"Something pinged in the wall!\n" .. numberGems .. " confirmed!"}
+                }
+              )
+            )
             gStateStack:push(
               TransitionState:new(
                 {

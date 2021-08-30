@@ -155,6 +155,102 @@ function PlayState:update(dt)
     self.hammer:deselect()
     self.pickaxe:select()
   end
+
+  -- debugging
+  if love.keyboard.waspressed("g") then
+    local collapsed = true
+    if collapsed then
+      local chunks = {"The wall collapsed!\n"}
+      -- technically you'd highlight only the collected gems
+      for i, gem in pairs(self.gems) do
+        local size = gem.size
+        local color = gem.color
+        local chunk = "You obtained a " .. color .. " gem, size " .. size .. "!\n"
+        table.insert(chunks, chunk)
+      end
+
+      gStateStack:push(
+        TransitionState:new(
+          {
+            ["transitionStart"] = true,
+            ["prevenDefault"] = true,
+            ["callback"] = function()
+              gStateStack:push(
+                DialogueState:new(
+                  {
+                    ["chunks"] = chunks,
+                    ["callback"] = function()
+                      gStateStack:pop() -- remove preserved transition
+
+                      gStateStack:push(TitleState:new())
+                      gStateStack:push(
+                        TransitionState:new(
+                          {
+                            ["transitionStart"] = false
+                          }
+                        )
+                      )
+                    end
+                  }
+                )
+              )
+            end
+          }
+        )
+      )
+    end
+  end
+
+  if love.keyboard.waspressed("w") then
+    local allDugUp = true
+    if allDugUp then
+      local chunks = {"Everything was dug up!\n"}
+
+      for i, gem in pairs(self.gems) do
+        local size = gem.size
+        local color = gem.color
+        local chunk = "You obtained a " .. color .. " gem, size " .. size .. "!\n"
+        table.insert(chunks, chunk)
+      end
+
+      gStateStack:push(
+        DialogueState:new(
+          {
+            ["chunks"] = chunks,
+            ["callback"] = function()
+              gStateStack:push(
+                TransitionState:new(
+                  {
+                    ["transitionStart"] = true,
+                    ["callback"] = function()
+                      gStateStack:pop()
+
+                      local numberGems = love.math.random(GEMS_MAX)
+                      gStateStack:push(PlayState:new(numberGems))
+                      gStateStack:push(
+                        DialogueState:new(
+                          {
+                            ["chunks"] = {"Something pinged in the wall!\n" .. numberGems .. " confirmed!"}
+                          }
+                        )
+                      )
+                      gStateStack:push(
+                        TransitionState:new(
+                          {
+                            ["transitionStart"] = false
+                          }
+                        )
+                      )
+                    end
+                  }
+                )
+              )
+            end
+          }
+        )
+      )
+    end
+  end
 end
 
 function PlayState:render()

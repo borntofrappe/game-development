@@ -9,7 +9,9 @@ function TransitionState:new(def)
 
   local this = {
     ["callback"] = function()
-      gStateStack:pop() -- by default pop this transition state
+      if not def.prevenDefault then
+        gStateStack:pop() -- by default remove the transition
+      end
 
       if def.callback then
         def.callback()
@@ -17,7 +19,8 @@ function TransitionState:new(def)
     end,
     ["stencil"] = {
       ["r"] = rStart
-    }
+    },
+    ["wait"] = def.wait
   }
 
   Timer:tween(

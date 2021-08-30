@@ -22,7 +22,7 @@ function love.load()
     ["progressBar"] = GenerateQuadsProgressBar(gTextures.spritesheet)
   }
 
-  gStateStack = StateStack:new({PlayState:new(3)})
+  gStateStack = StateStack:new({TitleState:new()})
 
   love.keyboard.keypressed = {}
   -- love.mouse.buttonpressed = {}
