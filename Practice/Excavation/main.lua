@@ -7,10 +7,8 @@ function love.load()
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
   -- in multiples of 8 to maintain a pixelated resolution
-  gFonts = {
-    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 16),
-    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
-  }
+  gFont = love.graphics.newFont("res/fonts/font.ttf", 8)
+  love.graphics.setFont(gFont)
 
   gTextures = {
     ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
@@ -24,7 +22,7 @@ function love.load()
     ["progressBar"] = GenerateQuadsProgressBar(gTextures.spritesheet)
   }
 
-  gStateStack = StateStack:new({PlayState:new()})
+  gStateStack = StateStack:new({TitleState:new()})
 
   love.keyboard.keypressed = {}
   -- love.mouse.buttonpressed = {}

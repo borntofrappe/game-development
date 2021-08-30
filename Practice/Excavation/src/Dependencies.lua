@@ -11,6 +11,7 @@ require "src/Grid"
 require "src/gui/Panel"
 require "src/gui/Tool"
 require "src/gui/ProgressBar"
+require "src/gui/TextBox"
 
 require "src/StateStack"
 require "src/states/BaseState"

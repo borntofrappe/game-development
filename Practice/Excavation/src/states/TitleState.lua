@@ -39,7 +39,8 @@ function TitleState:new()
   end
 
   local this = {
-    ["title"] = title
+    ["title"] = title,
+    ["text"] = TextBox:new("Hello world!\nOn multiple lines!")
   }
 
   self.__index = self
@@ -86,4 +87,6 @@ function TitleState:render()
   for k, tile in pairs(self.title) do
     tile:render()
   end
+
+  self.text:render()
 end
