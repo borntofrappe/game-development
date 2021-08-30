@@ -6,6 +6,8 @@ function PlayState:new(numberGems)
     ["y"] = 0
   }
 
+  local particleSystem = ParticleSystem:new()
+
   local offset = {
     ["x"] = 8,
     ["y"] = 32
@@ -37,6 +39,7 @@ function PlayState:new(numberGems)
 
   local this = {
     ["camera"] = camera,
+    ["particleSystem"] = particleSystem,
     ["offset"] = offset,
     ["underlay"] = underlay,
     ["treasure"] = treasure,
@@ -54,6 +57,8 @@ function PlayState:new(numberGems)
 end
 
 function PlayState:update(dt)
+  self.particleSystem:update(dt)
+
   local x, y = push:toGame(love.mouse:getPosition())
   if
     x > self.offset.x and x < self.offset.x + self.tiles.columns * self.tiles.cellSize and y > self.offset.y and
@@ -111,6 +116,12 @@ function PlayState:update(dt)
    then
     local column = self.selection.column
     local row = self.selection.row
+
+    self.particleSystem:emit(
+      self.offset.x + (column - 1) * self.tiles.cellSize + self.tiles.cellSize / 2,
+      self.offset.y + (row - 1) * self.tiles.cellSize + self.tiles.cellSize / 2,
+      self.hammer.type == "fill" and 1 or 0.5
+    )
 
     local tile = self.tiles.grid[column][row]
     local tilesCoords = {}
@@ -319,4 +330,6 @@ function PlayState:render()
   )
 
   love.graphics.pop()
+
+  self.particleSystem:render()
 end

@@ -14,6 +14,8 @@ require "src/gui/Tool"
 require "src/gui/ProgressBar"
 require "src/gui/TextBox"
 
+require "src/ParticleSystem"
+
 require "src/StateStack"
 require "src/states/BaseState"
 require "src/states/TitleState"
