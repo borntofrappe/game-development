@@ -13,14 +13,15 @@ end
 function GenerateQuadsGems(atlas)
   local quads = {}
 
-  local maxSize = GEM_SIZES[#GEM_SIZES]
+  local maxSize = GEM_SIZES[#GEM_SIZES] * GEM_SIZE
   local x = 0
   local y = 8
 
   for i, color in ipairs(GEM_COLORS) do
     quads[color] = {}
-    for j, size in ipairs(GEM_SIZES) do
-      table.insert(quads[color], love.graphics.newQuad(x, y, size, size, atlas:getDimensions()))
+    for j, gemSize in ipairs(GEM_SIZES) do
+      local size = gemSize * GEM_SIZE
+      quads[color][gemSize] = love.graphics.newQuad(x, y, size, size, atlas:getDimensions())
       x = x + size
     end
     x = 0

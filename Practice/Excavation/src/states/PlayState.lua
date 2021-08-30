@@ -8,7 +8,53 @@ function PlayState:new(numberGems)
 
   local grid = Grid:new()
   local tileSize = grid.tileSize
-  local gridBackground = love.graphics.newSpriteBatch(gTextures.spritesheet, grid.columns * grid.rows)
+
+  local gems = {}
+  local gemCoords = {}
+  local numberGems = numberGems or 3
+
+  for i = 1, numberGems do
+    local gemSize = GEM_SIZES[love.math.random(#GEM_SIZES)]
+    local column, row
+
+    while true do
+      column = love.math.random(grid.columns - (gemSize - 1))
+      row = love.math.random(grid.rows - (gemSize - 1))
+
+      local canFit = true
+
+      for c = column, column + (gemSize - 1) do
+        for r = row, row + (gemSize - 1) do
+          if gemCoords["c" .. c .. "r" .. r] then
+            canFit = false
+            break
+          end
+        end
+        if not canFit then
+          break
+        end
+      end
+
+      if canFit then
+        break
+      end
+    end
+
+    local x = (column - 1) * tileSize
+    local y = (row - 1) * tileSize
+    local gemColor = GEM_COLORS[love.math.random(#GEM_COLORS)]
+
+    local gem = Gem:new(x, y, gemSize, gemColor)
+    table.insert(gems, gem)
+
+    for c = column, column + (gemSize - 1) do
+      for r = row, row + (gemSize - 1) do
+        gemCoords["c" .. c .. "r" .. r] = true
+      end
+    end
+  end
+
+  local gridBackground = love.graphics.newSpriteBatch(gTextures.spritesheet)
   for column = 1, grid.columns do
     for row = 1, grid.rows do
       gridBackground:add(gQuads.textures[1], (column - 1) * tileSize, (row - 1) * tileSize)
@@ -20,13 +66,15 @@ function PlayState:new(numberGems)
     ["row"] = love.math.random(grid.rows)
   }
 
-  local hammer = Tool:new(141, 32, 27, 34, "hammer", "outline")
-  local pickaxe = Tool:new(141, 70, 27, 34, "pickaxe", "fill")
+  local hammer = Tool:new(141, 32, 27, 34, "hammer", "fill")
+  local pickaxe = Tool:new(141, 70, 27, 34, "pickaxe", "outline")
   local progressBar = ProgressBar:new(8, 8, 160, 16)
 
   local this = {
     ["offsetGrid"] = offsetGrid,
     ["grid"] = grid,
+    ["gems"] = gems,
+    ["gemCoords"] = gemCoords,
     ["gridBackground"] = gridBackground,
     ["selection"] = selection,
     ["hammer"] = hammer,
@@ -61,12 +109,35 @@ function PlayState:update(dt)
   if love.keyboard.waspressed("return") then
     local column = self.selection.column
     local row = self.selection.row
-    local tile = self.grid.tiles[column][row]
-    if tile.inPlay then
-      tile.id = tile.id - 1
-      self.progressBar:increase()
-      if tile.id == 1 then
-        tile.inPlay = false
+
+    self.progressBar:increase()
+
+    local tilesCoords = {}
+
+    local c1 = math.max(1, column - 1)
+    local c2 = math.min(self.grid.columns, column + 1)
+
+    local r1 = math.max(1, row - 1)
+    local r2 = math.min(self.grid.rows, row + 1)
+
+    for c = c1, c2 do
+      table.insert(tilesCoords, {c, row})
+    end
+
+    for r = r1, r2 do
+      table.insert(tilesCoords, {column, r})
+    end
+
+    for i, tileCoords in ipairs(tilesCoords) do
+      local c = tileCoords[1]
+      local r = tileCoords[2]
+
+      local tile = self.grid.tiles[c][r]
+      if tile.inPlay then
+        tile.id = tile.id - 1
+        if tile.id == 1 then
+          tile.inPlay = false
+        end
       end
     end
   end
@@ -99,6 +170,11 @@ function PlayState:render()
   love.graphics.translate(self.offsetGrid.x, self.offsetGrid.y)
 
   love.graphics.draw(self.gridBackground)
+
+  for i, gem in pairs(self.gems) do
+    gem:render()
+  end
+
   self.grid:render()
 
   love.graphics.setColor(1, 1, 1)

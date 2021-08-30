@@ -5,7 +5,7 @@ require "src/constants"
 require "src/Utils"
 
 require "src/Tile"
-
+require "src/Gem"
 require "src/Grid"
 
 require "src/gui/Panel"
