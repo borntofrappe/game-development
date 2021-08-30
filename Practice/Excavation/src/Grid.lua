@@ -3,7 +3,7 @@ Grid = {}
 local OFFSET_INCREMENT = 0.15 -- the lower the less varied the noise field
 local OFFSET_START_MAX = 1000
 
-function Grid:new(x, y, id)
+function Grid:new()
   local offsetStartColumn = love.math.random(OFFSET_START_MAX)
   local offsetStartRow = love.math.random(OFFSET_START_MAX)
   local offsetColumn = offsetStartColumn
@@ -25,6 +25,7 @@ function Grid:new(x, y, id)
       local noise = love.math.noise(offsetColumn, offsetRow)
       local id = math.ceil(noise * (TEXTURE_TYPES - 1)) + 1 -- skip the base layer
       local tile = Tile:new(x, y, id)
+      tile.inPlay = true
 
       tiles[column][row] = tile
     end
@@ -49,7 +50,9 @@ function Grid:render()
 
   for column = 1, self.columns do
     for row = 1, self.rows do
-      self.tiles[column][row]:render()
+      if self.tiles[column][row].inPlay then
+        self.tiles[column][row]:render()
+      end
     end
   end
 end

@@ -23,6 +23,7 @@ OPTIONS = {
 TEXTURE_SIZE = TILE_SIZE
 TEXTURE_TYPES = 6
 
+GEMS_MAX = 4
 GEM_SIZES = {2, 3, 4} -- relative to the tile size
 GEM_COLORS = {"blue", "green", "red", "rose"}
 

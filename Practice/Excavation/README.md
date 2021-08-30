@@ -291,3 +291,35 @@ love.graphics.setStencilTest()
 ```
 
 In this manner it is possible to remove the logic of the stencil.
+
+### Sprite Batch
+
+> batch drawing instructions in a single call to `love.graphics.draw`
+
+Love2D's sprite batch helps to efficiently draw a series of sprites that do not need to change over time. In the game, the feature is useful to draw the bottom layer of the grid, since the layer relies on a single, repeating quad.
+
+The demo highlights the feature considering the quads of a rudimentary spritesheet. Initialize the sprite batch by referencing the texture.
+
+```lua
+gTexture = love.graphics.newImage("spritesheet.png")
+gSpriteBatch = love.graphics.newSpriteBatch(gTexture)
+```
+
+With the `:add` method describe what to draw and where. In this instance, the quads in a grid-like pattern.
+
+```lua
+for column = 1, COLUMNS do
+  for row = 1, ROWS do
+    gSpriteBatch:add(gQuads[love.math.random(#gQuads)], (column - 1) * TILE_SIZE, (row - 1) * TILE_SIZE)
+  end
+end
+```
+
+Once initialized, it is enough to reference the batch in `love.graphics.draw`.
+
+```lua
+love.graphics.setColor(1, 1, 1)
+love.graphics.draw(gSpriteBatch)
+```
+
+I set, or rather reset, the color since it appears the batch is influenced by a different rgb combination.

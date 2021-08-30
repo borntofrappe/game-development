@@ -1,25 +1,33 @@
 PlayState = BaseState:new()
 
-function PlayState:new()
+function PlayState:new(numberGems)
   local offsetGrid = {
     ["x"] = 8,
     ["y"] = 32
   }
 
   local grid = Grid:new()
+  local tileSize = grid.tileSize
+  local gridBackground = love.graphics.newSpriteBatch(gTextures.spritesheet, grid.columns * grid.rows)
+  for column = 1, grid.columns do
+    for row = 1, grid.rows do
+      gridBackground:add(gQuads.textures[1], (column - 1) * tileSize, (row - 1) * tileSize)
+    end
+  end
 
   local selection = {
     ["column"] = love.math.random(grid.columns),
     ["row"] = love.math.random(grid.rows)
   }
 
-  local hammer = Tool:new(141, 32, 27, 34, "hammer", "fill")
-  local pickaxe = Tool:new(141, 70, 27, 34, "pickaxe", "outline")
+  local hammer = Tool:new(141, 32, 27, 34, "hammer", "outline")
+  local pickaxe = Tool:new(141, 70, 27, 34, "pickaxe", "fill")
   local progressBar = ProgressBar:new(8, 8, 160, 16)
 
   local this = {
     ["offsetGrid"] = offsetGrid,
     ["grid"] = grid,
+    ["gridBackground"] = gridBackground,
     ["selection"] = selection,
     ["hammer"] = hammer,
     ["pickaxe"] = pickaxe,
@@ -54,9 +62,12 @@ function PlayState:update(dt)
     local column = self.selection.column
     local row = self.selection.row
     local tile = self.grid.tiles[column][row]
-    if tile.id > 1 then
+    if tile.inPlay then
       tile.id = tile.id - 1
       self.progressBar:increase()
+      if tile.id == 1 then
+        tile.inPlay = false
+      end
     end
   end
 
@@ -87,6 +98,7 @@ function PlayState:render()
   love.graphics.push()
   love.graphics.translate(self.offsetGrid.x, self.offsetGrid.y)
 
+  love.graphics.draw(self.gridBackground)
   self.grid:render()
 
   love.graphics.setColor(1, 1, 1)

@@ -54,6 +54,8 @@ function TitleState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
+    local numberGems = love.math.random(GEMS_MAX)
+
     gStateStack:push(
       TransitionState:new(
         {
@@ -61,8 +63,8 @@ function TitleState:update(dt)
           ["callback"] = function()
             gStateStack:pop()
 
-            gStateStack:push(PlayState:new())
-            gStateStack:push(DialogueState:new({"Something pinged in the wall!\n4 confirmed!"}))
+            gStateStack:push(PlayState:new(numberGems))
+            gStateStack:push(DialogueState:new({"Something pinged in the wall!\n" .. numberGems .. " confirmed!"}))
             gStateStack:push(
               TransitionState:new(
                 {
