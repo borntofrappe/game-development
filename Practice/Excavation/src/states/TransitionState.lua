@@ -1,6 +1,6 @@
 TransitionState = BaseState:new()
 
-local TWEEN_DURATION = 1.25
+local TWEEN_DURATION = 1
 local RADIUS = ((VIRTUAL_WIDTH ^ 2 + VIRTUAL_HEIGHT ^ 2) ^ 0.5) / 2
 
 function TransitionState:new(def)

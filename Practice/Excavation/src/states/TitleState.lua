@@ -39,8 +39,7 @@ function TitleState:new()
   end
 
   local this = {
-    ["title"] = title,
-    ["text"] = TextBox:new("Hello world!\nOn multiple lines!")
+    ["title"] = title
   }
 
   self.__index = self
@@ -50,8 +49,6 @@ function TitleState:new()
 end
 
 function TitleState:update(dt)
-  Timer:update(dt)
-
   if love.keyboard.waspressed("escape") then
     love.event.quit()
   end
@@ -65,6 +62,7 @@ function TitleState:update(dt)
             gStateStack:pop()
 
             gStateStack:push(PlayState:new())
+            gStateStack:push(DialogueState:new({"Something pinged in the wall!\n4 confirmed!"}))
             gStateStack:push(
               TransitionState:new(
                 {
@@ -87,6 +85,4 @@ function TitleState:render()
   for k, tile in pairs(self.title) do
     tile:render()
   end
-
-  self.text:render()
 end
