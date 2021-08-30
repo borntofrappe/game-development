@@ -1,6 +1,11 @@
 PlayState = BaseState:new()
 
 function PlayState:new(numberGems)
+  local camera = {
+    ["x"] = 0,
+    ["y"] = 0
+  }
+
   local offset = {
     ["x"] = 8,
     ["y"] = 32
@@ -31,6 +36,7 @@ function PlayState:new(numberGems)
   local progressBar = ProgressBar:new(8, 8, 160, 16)
 
   local this = {
+    ["camera"] = camera,
     ["offset"] = offset,
     ["underlay"] = underlay,
     ["treasure"] = treasure,
@@ -106,99 +112,79 @@ function PlayState:update(dt)
     local column = self.selection.column
     local row = self.selection.row
 
-    self.progressBar:increase()
-
+    local tile = self.tiles.grid[column][row]
     local tilesCoords = {}
-
     local c1 = math.max(1, column - 1)
     local c2 = math.min(self.tiles.columns, column + 1)
-
     local r1 = math.max(1, row - 1)
     local r2 = math.min(self.tiles.rows, row + 1)
 
-    for c = c1, c2 do
-      table.insert(tilesCoords, {c, row})
-    end
+    if self.hammer.type == "fill" then
+      for c = c1, c2 do
+        for r = r1, r2 do
+          if self.tiles.grid[c][r].inPlay then
+            table.insert(tilesCoords, {c, r})
+            local d = math.abs(c - column) + math.abs(r - row)
+            if d <= 1 then
+              table.insert(tilesCoords, {c, r})
+            end
+          end
+        end
+      end
+    else
+      table.insert(tilesCoords, {column, row})
+      if self.tiles.grid[column][row].id < math.ceil(TILE_TYPES / 2) then
+        table.insert(tilesCoords, {column, row})
+      end
 
-    for r = r1, r2 do
-      table.insert(tilesCoords, {column, r})
-    end
-
-    for i, tileCoords in ipairs(tilesCoords) do
-      local c = tileCoords[1]
-      local r = tileCoords[2]
-
-      local tile = self.tiles.grid[c][r]
-      if tile.inPlay then
-        tile.id = tile.id - 1
-        if tile.id == 1 then
-          tile.inPlay = false
+      for c = c1, c2 do
+        for r = r1, r2 do
+          local d = math.abs(c - column) + math.abs(r - row)
+          if d == 1 and self.tiles.grid[c][r].inPlay then
+            table.insert(tilesCoords, {c, r})
+          end
         end
       end
     end
-  end
 
-  if love.keyboard.waspressed("r") then
-    self.progressBar:reset()
-  end
+    for k, tileCoords in pairs(tilesCoords) do
+      local c = tileCoords[1]
+      local r = tileCoords[2]
 
-  if love.keyboard.waspressed("h") or love.keyboard.waspressed("H") then
-    self.hammer:select()
-    self.pickaxe:deselect()
-  end
-
-  if love.keyboard.waspressed("p") or love.keyboard.waspressed("P") then
-    self.hammer:deselect()
-    self.pickaxe:select()
-  end
-
-  -- debugging
-  if love.keyboard.waspressed("g") then
-    local collapsed = true
-    if collapsed then
-      local chunks = {"The wall collapsed!\n"}
-      -- technically you'd highlight only the collected gems
-      for i, gem in pairs(self.treasure.gems) do
-        local size = gem.size
-        local color = gem.color
-        local chunk = "You obtained a " .. color .. " gem, size " .. size .. "!\n"
-        table.insert(chunks, chunk)
+      self.tiles.grid[c][r].id = math.max(1, self.tiles.grid[c][r].id - 1)
+      if self.tiles.grid[c][r].id == 1 then
+        self.tiles.grid[c][r].inPlay = false
       end
-
-      gStateStack:push(
-        TransitionState:new(
-          {
-            ["transitionStart"] = true,
-            ["prevenDefault"] = true,
-            ["callback"] = function()
-              gStateStack:push(
-                DialogueState:new(
-                  {
-                    ["chunks"] = chunks,
-                    ["callback"] = function()
-                      gStateStack:pop() -- remove preserved transition
-
-                      gStateStack:push(TitleState:new())
-                      gStateStack:push(
-                        TransitionState:new(
-                          {
-                            ["transitionStart"] = false
-                          }
-                        )
-                      )
-                    end
-                  }
-                )
-              )
-            end
-          }
-        )
-      )
     end
-  end
 
-  if love.keyboard.waspressed("w") then
+    for k, gem in pairs(self.treasure.gems) do
+      if not gem.dugUp then
+        local inPlay = false
+        for c = gem.column, gem.column + (gem.size - 1) do
+          for r = gem.row, gem.row + (gem.size - 1) do
+            if self.tiles.grid[c][r].inPlay then
+              inPlay = true
+              break
+            end
+          end
+        end
+
+        if not inPlay then
+          gem.dugUp = true
+          break
+        end
+      end
+    end
+
     local allDugUp = true
+
+    for k, gem in pairs(self.treasure.gems) do
+      if not gem.dugUp then
+        allDugUp = false
+        break
+      end
+    end
+
     if allDugUp then
       local chunks = {"Everything was dug up!\n"}
 
@@ -246,10 +232,67 @@ function PlayState:update(dt)
         )
       )
     end
+
+    local progressAmount = self.hammer.type == "fill" and 1 or 0.5
+    local wallCollapsed = self.progressBar:increase(progressAmount)
+
+    if not allDugUp and wallCollapsed then
+      local chunks = {"The wall collapsed!\n"}
+      for k, gem in pairs(self.treasure.gems) do
+        if gem.dugUp then
+          local size = gem.size
+          local color = gem.color
+          local chunk = "You obtained a " .. color .. " gem, size " .. size .. "!\n"
+          table.insert(chunks, chunk)
+        end
+      end
+
+      gStateStack:push(
+        TransitionState:new(
+          {
+            ["transitionStart"] = true,
+            ["prevenDefault"] = true,
+            ["callback"] = function()
+              gStateStack:push(
+                DialogueState:new(
+                  {
+                    ["chunks"] = chunks,
+                    ["callback"] = function()
+                      gStateStack:pop() -- remove preserved transition
+
+                      gStateStack:push(TitleState:new())
+                      gStateStack:push(
+                        TransitionState:new(
+                          {
+                            ["transitionStart"] = false
+                          }
+                        )
+                      )
+                    end
+                  }
+                )
+              )
+            end
+          }
+        )
+      )
+    end
+  end
+
+  if love.keyboard.waspressed("h") or love.keyboard.waspressed("H") then
+    self.hammer:select()
+    self.pickaxe:deselect()
+  end
+
+  if love.keyboard.waspressed("p") or love.keyboard.waspressed("P") then
+    self.hammer:deselect()
+    self.pickaxe:select()
   end
 end
 
 function PlayState:render()
+  love.graphics.translate(self.camera.x, self.camera.y)
+
   love.graphics.setColor(0.292, 0.222, 0.155)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 

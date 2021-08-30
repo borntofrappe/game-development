@@ -31,11 +31,9 @@ function Treasure:new(numberGems, columns, rows, cellSize)
       end
     end
 
-    local x = (column - 1) * cellSize
-    local y = (row - 1) * cellSize
     local color = GEM_COLORS[love.math.random(#GEM_COLORS)]
 
-    local gem = Gem:new(x, y, size, color)
+    local gem = Gem:new(column, row, size, color)
     table.insert(gems, gem)
 
     for c = column, column + (size - 1) do

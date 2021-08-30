@@ -34,7 +34,8 @@ function ProgressBar:new(x, y, width, height)
     ["panel"] = panel,
     ["steps"] = steps,
     ["step"] = step,
-    ["index"] = 0
+    ["index"] = 0,
+    ["progress"] = 0
   }
 
   self.__index = self
@@ -43,23 +44,24 @@ function ProgressBar:new(x, y, width, height)
   return this
 end
 
-function ProgressBar:reset()
-  self.index = 0
-end
+function ProgressBar:increase(amount)
+  local amount = amount or 1
+  self.progress = self.progress + amount
+  local index = math.min(math.floor(self.progress), PROGRESS_STEPS)
 
-function ProgressBar:increase()
-  local index = math.min(self.index + 1, PROGRESS_STEPS)
-  local width = 0
+  if index > self.index then
+    local width = 0
 
-  for i = 1, index - 1 do
-    width = width + self.steps[i].width
+    for i = 1, index - 1 do
+      width = width + self.steps[i].width
+    end
+
+    self.step.x = self.panel.x + self.panel.width - self.step.width - width - 1
+    self.step.id = index % 2 == 0 and 3 or 4
+    self.index = index
+
+    return self.index == PROGRESS_STEPS
   end
-
-  self.step.x = self.panel.x + self.panel.width - self.step.width - width - 1
-  self.step.id = index % 2 == 0 and 3 or 4
-  self.index = index
-
-  return self.index == PROGRESS_STEPS
 end
 
 function ProgressBar:render()

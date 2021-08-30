@@ -1,11 +1,14 @@
 Gem = {}
 
-function Gem:new(x, y, size, color)
+function Gem:new(column, row, size, color)
   local this = {
-    ["x"] = x,
-    ["y"] = y,
+    ["x"] = (column - 1) * TILE_SIZE,
+    ["y"] = (row - 1) * TILE_SIZE,
+    ["column"] = column,
+    ["row"] = row,
     ["size"] = size,
-    ["color"] = color
+    ["color"] = color,
+    ["dugUp"] = false
   }
 
   self.__index = self
