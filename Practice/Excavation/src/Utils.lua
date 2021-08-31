@@ -7,7 +7,7 @@ function GenerateQuadsTiles(atlas)
     table.insert(quads, love.graphics.newQuad((i - 1) * size, 0, size, size, atlas:getDimensions()))
   end
 
-  return quads -- quads[1]
+  return quads -- quads[n]
 end
 
 function GenerateQuadsGems(atlas)
@@ -28,7 +28,7 @@ function GenerateQuadsGems(atlas)
     y = y + maxSize
   end
 
-  return quads -- quads["blue"][2]
+  return quads -- quads[color][size]
 end
 
 function GenerateQuadsTools(atlas)
@@ -48,20 +48,20 @@ function GenerateQuadsTools(atlas)
     y = y + height
   end
 
-  return quads -- quads["hammer"]["outline"]
+  return quads -- quads[name][type]
 end
 
 function GenerateQuadSelection(atlas)
-  local x = 0
-  local y = 180
+  local x = 48
+  local y = 0
   local size = TILE_SIZE
 
-  return love.graphics.newQuad(x, y, size, size, atlas:getDimensions())
+  return love.graphics.newQuad(x, y, size, size, atlas:getDimensions()) -- quad
 end
 
 function GenerateQuadsProgressBar(atlas)
   local x = 28
-  local y = 188
+  local y = 180
   local height = 16
 
   local quads = {}
@@ -71,19 +71,19 @@ function GenerateQuadsProgressBar(atlas)
     table.insert(quads, love.graphics.newQuad(x, y, width, height, atlas:getDimensions()))
   end
 
-  return quads -- quads[1]
+  return quads -- quads[n]
 end
 
 function GenerateOffsets(numberOffsets)
   local numberOffsets = numberOffsets or 10
-  local angle = math.pi * 2
-  local increment = angle / numberOffsets
 
   local offsets = {}
 
-  for a = 0, angle, increment do
-    table.insert(offsets, math.sin(a))
+  for i = 1, numberOffsets - 1 do
+    table.insert(offsets, math.sin((math.pi * 2) * (i - 1) / numberOffsets))
   end
+
+  table.insert(offsets, 0)
 
   return offsets
 end

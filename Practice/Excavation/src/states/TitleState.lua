@@ -1,5 +1,6 @@
 TitleState = BaseState:new()
 
+-- replace `x`s with a specific tile
 local TILES =
   [[
 ooooooooooooooooo
@@ -29,7 +30,7 @@ function TitleState:new()
       local character = tiles:sub(index, index)
       local x = xStart + (column - 1) * cellSize
       local y = yStart + (row - 1) * cellSize
-      local id = character == "o" and #gQuads.tiles or 1
+      local id = character == "x" and 1 or #gQuads.tiles
 
       local tile = Tile:new(x, y, id)
       table.insert(grid, tile)
@@ -59,7 +60,7 @@ function TitleState:update(dt)
         {
           ["transitionStart"] = true,
           ["callback"] = function()
-            gStateStack:pop() -- remove title state
+            gStateStack:pop() -- title state
 
             gStateStack:push(PlayState:new(numberGems))
             gStateStack:push(

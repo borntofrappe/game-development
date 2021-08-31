@@ -23,6 +23,12 @@ OPTIONS = {
 
 GEMS_MAX = 4
 GEM_SIZES = {2, 3, 4} -- measured relative to the tile size
+GEM_SIZES_DUG_UP = {
+  [2] = {1, 7},
+  [3] = {8, 14},
+  [4] = {15, 21}
+}
+
 GEM_COLORS = {"blue", "green", "red", "rose"}
 
 TOOLS = {"pickaxe", "hammer"}

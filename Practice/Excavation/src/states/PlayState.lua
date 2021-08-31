@@ -31,6 +31,12 @@ function PlayState:new(numberGems)
   local progressBar = ProgressBar:new(8, 8, 160, 16)
 
   local this = {
+    ["particleSystem"] = ParticleSystem:new(),
+    ["camera"] = {
+      ["offsets"] = GenerateOffsets(),
+      ["index"] = 1,
+      ["duration"] = 0.15
+    },
     ["offset"] = offset,
     ["underlay"] = underlay,
     ["treasure"] = treasure,
@@ -48,9 +54,29 @@ function PlayState:new(numberGems)
 end
 
 function PlayState:update(dt)
+  self.particleSystem:update(dt)
+
   if love.keyboard.waspressed("escape") then
-    gStateStack:pop()
-    gStateStack:push(TitleState:new())
+    gStateStack:push(
+      TransitionState:new(
+        {
+          ["transitionStart"] = true,
+          ["callback"] = function()
+            gStateStack:pop() -- play state
+
+            gStateStack:push(TitleState:new())
+
+            gStateStack:push(
+              TransitionState:new(
+                {
+                  ["transitionStart"] = false
+                }
+              )
+            )
+          end
+        }
+      )
+    )
   end
 
   if love.keyboard.waspressed("up") then
@@ -126,6 +152,9 @@ function PlayState:render()
   love.graphics.setColor(0.292, 0.222, 0.155)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
+  love.graphics.push()
+  love.graphics.translate(self.camera.offsets[self.camera.index], 0)
+
   self.progressBar:render()
 
   self.hammer:render()
@@ -147,6 +176,10 @@ function PlayState:render()
     (self.selection.column - 1) * self.tiles.cellSize,
     (self.selection.row - 1) * self.tiles.cellSize
   )
+
+  love.graphics.pop()
+
+  self.particleSystem:render()
 
   love.graphics.pop()
 end

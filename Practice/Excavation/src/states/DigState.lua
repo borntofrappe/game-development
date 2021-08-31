@@ -2,13 +2,7 @@ DigState = BaseState:new()
 
 function DigState:new(def)
   local this = {
-    ["state"] = def.state,
-    ["particleSystem"] = ParticleSystem:new(),
-    ["camera"] = {
-      ["offsets"] = GenerateOffsets(),
-      ["index"] = 1,
-      ["duration"] = 0.15
-    }
+    ["state"] = def.state
   }
 
   self.__index = self
@@ -18,10 +12,12 @@ function DigState:new(def)
 end
 
 function DigState:enter()
+  self.state.camera.index = 1 -- reset camera shake
+
   local column = self.state.selection.column
   local row = self.state.selection.row
 
-  self.particleSystem:emit(
+  self.state.particleSystem:emit(
     self.state.offset.x + (column - 1) * self.state.tiles.cellSize + self.state.tiles.cellSize / 2,
     self.state.offset.y + (row - 1) * self.state.tiles.cellSize + self.state.tiles.cellSize / 2,
     self.state.hammer.type == "fill" and 1 or 0.5
@@ -102,14 +98,14 @@ function DigState:enter()
   local wallCollapsed = self.state.progressBar:increase(progressAmount)
 
   Timer:every(
-    self.camera.duration / #self.camera.offsets,
+    self.state.camera.duration / #self.state.camera.offsets,
     function()
-      if self.camera.index == #self.camera.offsets then
+      if self.state.camera.index == #self.state.camera.offsets then
         Timer:reset()
         if allDugUp then
           local chunks = {"Everything was dug up!\n"}
           for i, gem in pairs(self.state.treasure.gems) do
-            local size = gem.size
+            local size = love.math.random(GEM_SIZES_DUG_UP[gem.size][1], GEM_SIZES_DUG_UP[gem.size][2])
             local color = gem.color
             local chunk = "You obtained a " .. color .. " gem, size " .. size .. "!\n"
             table.insert(chunks, chunk)
@@ -159,12 +155,12 @@ function DigState:enter()
           )
         elseif wallCollapsed then
           Timer:every(
-            self.camera.duration / #self.camera.offsets,
+            self.state.camera.duration / #self.state.camera.offsets,
             function()
-              if self.camera.index == #self.camera.offsets then
-                self.camera.index = 1
+              if self.state.camera.index == #self.state.camera.offsets then
+                self.state.camera.index = 1
               else
-                self.camera.index = self.camera.index + 1
+                self.state.camera.index = self.state.camera.index + 1
               end
             end
           )
@@ -172,7 +168,7 @@ function DigState:enter()
           local chunks = {"The wall collapsed!\n"}
           for k, gem in pairs(self.state.treasure.gems) do
             if gem.dugUp then
-              local size = gem.size
+              local size = love.math.random(GEM_SIZES_DUG_UP[gem.size][1], GEM_SIZES_DUG_UP[gem.size][2])
               local color = gem.color
               local chunk = "You obtained a " .. color .. " gem, size " .. size .. "!\n"
               table.insert(chunks, chunk)
@@ -189,6 +185,7 @@ function DigState:enter()
                     ["prevenDefault"] = true,
                     ["callback"] = function()
                       Timer:reset()
+
                       gStateStack:push(
                         DialogueState:new(
                           {
@@ -220,7 +217,7 @@ function DigState:enter()
           gStateStack:pop()
         end
       else
-        self.camera.index = self.camera.index + 1
+        self.state.camera.index = self.state.camera.index + 1
       end
     end
   )
@@ -228,15 +225,9 @@ end
 
 function DigState:update(dt)
   Timer:update(dt)
-
-  self.particleSystem:update(dt)
+  self.state.particleSystem:update(dt)
 end
 
 function DigState:render()
-  love.graphics.setColor(0.292, 0.222, 0.155)
-  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
-
-  love.graphics.translate(self.camera.offsets[self.camera.index], 0)
   self.state:render()
-  self.particleSystem:render(dt)
 end

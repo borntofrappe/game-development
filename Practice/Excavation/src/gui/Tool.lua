@@ -5,6 +5,7 @@ function Tool:new(x, y, width, height, name, type)
 
   local this = {
     ["panel"] = panel,
+    -- center the tool in the panel
     ["x"] = math.floor(panel.x + panel.width / 2 - TOOLS_WIDTH / 2),
     ["y"] = math.floor(panel.y + panel.height / 2 - TOOLS_WIDTH / 2),
     ["name"] = name,
