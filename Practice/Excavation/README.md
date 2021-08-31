@@ -1,24 +1,26 @@
 # Excavation
 
-## Preface
+Pokemon Diamond and Pearl introduce the underground, where the trainer explores an area hidden below the games' region. With this project I try to replicate a mini-game available in this very underground, and speficically the mini-game where the player is tasked to dig a wall and uncover the hidden treasures before the brittle surface collapses.
 
-Pokemon Diamond and Pearl introduce the underground, where the trainer explores an area hidden below the games' region. In this underground you find a minigame where you are tasked to dig walls for gems, and find the all the treasure before the surface collapses.
+![Excavation in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Excavation/excavation.gif)
 
 ## Spritesheet
 
-The `res` folder includes supporting material, among which `spritesheet.png`. With the image I managed to create a visual for the texture, gems and tools and progress bar. These assets are ultimately divvied up in quads and used in the project through `love.graphics.draw`.
+The `res` folder includes supporting material, among which `spritesheet.png`. With the image I managed to create a visual for the tiles, gems and tools and progress bar. These assets are ultimately divvied up in quads and used in the project through `love.graphics.draw`.
 
 ### Sizes
 
 By category:
 
-- the tiles describing the texture are 8 pixels wide and tall
+- the tiles are 8 pixels wide and tall
 
-- the gems come in three different sizes: 16, 24 and 32 pixels
+- an additional sprite sized 8 pixels is used as an overlay to highlight the selected tile
 
-- the tools are 21 pixels wide and 22 pixels tool, both the ouline and filled variant
+- the gems come in three different sizes: 16, 24 and 32 pixels. I've designed the assets to be in a size multiple of the tile
 
-- the progress bar is sectioned in four fragments, two describing the tip of the bar and two its body. The first kind is 6 pixels wide, while the second covers 8 pixels, All are designed to be 16 pixels tall, and match the height of the progress bar, even if the actual content covers a smaller area
+- the tools come in two variants, outline and fill, and are 21 pixels wide while 22 pixels tall
+
+- the progress bar is sectioned in four fragments, two describing the end of the bar and two its body. The first kind is 6 pixels wide, while the second covers 8 pixels, All are designed to be 16 pixels tall, and match the height of the progress bar, even if the actual content covers a smaller area
 
 ### Colors
 
@@ -325,3 +327,103 @@ love.graphics.draw(gSpriteBatch)
 I set, or rather reset, the color since it appears the batch is influenced by a different rgb combination.
 
 ## Game
+
+### Offsets
+
+`GenerateOffsets` is tweaked from the version in the `Prep` folder to consider the angle in the `[0, math.pi * 2]` range. Moreover, the logic is updated to ensure that the last and first value match, by including an additional value outside of the for loop.
+
+```lua
+table.insert(offsets, 0)
+```
+
+To ensure the number of offsets is respected the loops consider one point less than the input value.
+
+```lua
+for i = 1, numberOffsets - 1 do
+
+end
+```
+
+### Stencil
+
+The stencil in the transition state works slightly different from the one introduced in the `Prep` folder. Instead of hiding and showing the content, the idea is to progressively show and hide an overlay. The approach helps the stack structure, since the transition "sits" above the previous states.
+
+```diff
+-love.graphics.setStencilTest("greater", 0)
++love.graphics.setStencilTest("equal", 0)
+```
+
+With a callback function it is possible to execute code as the transition comes to an end. This allows to implement the two-step transition, by pushing and popping transition states.
+
+Note that the callback function has a sensible default to pop the transition ends. It is possible to prevent this default, which comes in handy when showing the gameover message `The wall has collapsed`. In this instance the state hiding the content is kept until the subsequent dialogue is dismissed.
+
+```lua
+if not def.prevenDefault then
+  gStateStack:pop()
+end
+```
+
+### Dialogue state and textboxes
+
+The dialogue state is used to overlay a series of textboxes, and executes the callback function when the last of these boxes is dismissed.
+
+```lua
+if self.index == #self.textBoxes then
+  self.callback()
+else
+  self.index = self.index + 1
+end
+```
+
+The index variable helps to loop through the table and show one text box at a time.
+
+### Play and dig
+
+The play state describes most of the logic of the game, to ultimately show the interactive grid of tiles, tools and progress bar. It is not, however, where the tiles are ultimately updated, as I ultimately preferred to create an additional state, the dig state, to manage the particles and shake animation while preventing further user input.
+
+The dig state receives the entire play state as an argument.
+
+```lua
+gStateStack:push(
+  DigState:new(
+    {
+      ["state"] = self
+    }
+  )
+)
+```
+
+In the `enter` function then the idea is to modify the game in the play state directly.
+
+```lua
+function DigState:enter()
+  local column = self.state.selection.column
+  local row = self.state.selection.row
+
+  -- modify self.state.tiles accordingly
+end
+```
+
+In the `render` function, finally, the idea is to repeat the logic of the input state.
+
+```lua
+function DigState:render()
+  self.state:render()
+end
+```
+
+### Tools and progress
+
+The types of tool introduce two main differences with respect to the tiles and the progress bar.
+
+For the tiles:
+
+- the hammer knocks down the selected tile and those directly adjacent by two levels. The tiles in the diagonals are reduced by one measure
+
+- the pickaxe knocks down the selected tile by one level, two if the id is low enough. The tiles directly adjacent are reduced by one measure
+
+For the progress bar, the hammer increases the progress by one, while the pickaxe by half. The GUI handles the change by rounding down the value and show one of the `n` possible frames.
+
+### Input
+
+The game can be played with keyboard or mouse input. In the first instance the project relies on the arrow keys, return key and the `h` and `p` keys to select the hammer and pickaxe respectively. In the second instance it is enough to interact with the window and tools' panels.
