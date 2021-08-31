@@ -74,10 +74,9 @@ function GenerateQuadsProgressBar(atlas)
   return quads -- quads[1]
 end
 
-function GenerateOffsets(numberOffsets, numberRotations)
-  local numberOffsets = numberOffsets or 20
-  local numberRotations = numberRotations or 3
-  local angle = math.pi * 2 * numberRotations
+function GenerateOffsets(numberOffsets)
+  local numberOffsets = numberOffsets or 10
+  local angle = math.pi * 2
   local increment = angle / numberOffsets
 
   local offsets = {}

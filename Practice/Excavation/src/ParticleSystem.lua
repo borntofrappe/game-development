@@ -1,6 +1,6 @@
 ParticleSystem = {}
 
-local PARTICLES = 50
+local PARTICLES = 60
 
 function ParticleSystem:new()
   local image = love.graphics.newImage("res/graphics/particle.png")
