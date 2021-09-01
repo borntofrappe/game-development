@@ -6,8 +6,16 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  gFont = love.graphics.newFont("res/fonts/font.ttf", 8)
-  love.graphics.setFont(gFont)
+  gTexture = love.graphics.newImage("res/graphics/spritesheet.png")
+
+  gQuads = {
+    ["player"] = GenerateQuadsPlayer(gTexture)
+  }
+
+  gFonts = {
+    ["large"] = love.graphics.newFont("res/fonts/font.ttf", 24),
+    ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
+  }
 
   gStateMachine =
     StateMachine:new(
