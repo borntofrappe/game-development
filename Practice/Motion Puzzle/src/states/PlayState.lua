@@ -3,40 +3,36 @@ PlayState = BaseState:new()
 function PlayState:enter()
   local border = love.graphics.newSpriteBatch(gTexture)
   local PUZZLE_DIMENSIONS = math.floor(PUZZLE_SIZE / TILE_SIZE)
-  for dimension = 0, PUZZLE_DIMENSIONS + 1 do
-    border:add(gQuads.tiles[1], (dimension - 1) * TILE_SIZE, -TILE_SIZE)
-    border:add(gQuads.tiles[1], (dimension - 1) * TILE_SIZE, PUZZLE_DIMENSIONS * TILE_SIZE)
-    border:add(gQuads.tiles[1], -TILE_SIZE, (dimension - 1) * TILE_SIZE)
-    border:add(gQuads.tiles[1], PUZZLE_DIMENSIONS * TILE_SIZE, (dimension - 1) * TILE_SIZE)
+  for dimension = -2, PUZZLE_DIMENSIONS + 1 do
+    border:add(gQuads.tiles[1], (dimension) * TILE_SIZE, -TILE_SIZE * 2)
+    border:add(gQuads.tiles[1], (dimension) * TILE_SIZE, (PUZZLE_DIMENSIONS + 1) * TILE_SIZE)
+    border:add(gQuads.tiles[1], -TILE_SIZE * 2, (dimension) * TILE_SIZE)
+    border:add(gQuads.tiles[1], (PUZZLE_DIMENSIONS + 1) * TILE_SIZE, (dimension) * TILE_SIZE)
   end
   self.border = border
 
-  self.puzzle = Puzzle:new(1)
+  self.puzzle = Puzzle:new()
 
   self.offset = math.floor(WINDOW_SIZE - PUZZLE_SIZE) / 2
+
+  self.frameDirection = 1
+  Timer:every(
+    0.75,
+    function()
+      self.puzzle.frame = self.puzzle.frame + self.frameDirection
+      if self.puzzle.frame == self.puzzle.frames or self.puzzle.frame == 1 then
+        self.frameDirection = self.frameDirection * -1
+      end
+    end
+  )
 end
 
 function PlayState:update(dt)
+  Timer:update(dt)
+
   if love.keyboard.waspressed("escape") then
+    Timer:reset()
     gStateMachine:change("title")
-  end
-
-  if love.keyboard.waspressed("right") then
-    self.puzzle.frame = self.puzzle.frame == #gQuads.levels[self.puzzle.level] and 1 or self.puzzle.frame + 1
-  end
-
-  if love.keyboard.waspressed("left") then
-    self.puzzle.frame = self.puzzle.frame == 1 and #gQuads.levels[self.puzzle.level] or self.puzzle.frame - 1
-  end
-
-  if love.keyboard.waspressed("up") then
-    local level = self.puzzle.level == 1 and #gQuads.levels or self.puzzle.level - 1
-    self.puzzle = Puzzle:new(level)
-  end
-
-  if love.keyboard.waspressed("down") then
-    local level = self.puzzle.level == #gQuads.levels and 1 or self.puzzle.level + 1
-    self.puzzle = Puzzle:new(level)
   end
 end
 
