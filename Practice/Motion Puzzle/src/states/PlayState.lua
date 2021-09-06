@@ -29,8 +29,13 @@ function PlayState:update(dt)
     self.puzzle.frame = self.puzzle.frame == 1 and #gQuads.levels[self.puzzle.level] or self.puzzle.frame - 1
   end
 
-  if love.keyboard.waspressed("up") or love.keyboard.waspressed("down") then
-    local level = self.puzzle.level == 1 and 2 or 1
+  if love.keyboard.waspressed("up") then
+    local level = self.puzzle.level == 1 and #gQuads.levels or self.puzzle.level - 1
+    self.puzzle = Puzzle:new(level)
+  end
+
+  if love.keyboard.waspressed("down") then
+    local level = self.puzzle.level == #gQuads.levels and 1 or self.puzzle.level + 1
     self.puzzle = Puzzle:new(level)
   end
 end

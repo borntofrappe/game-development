@@ -16,7 +16,7 @@ function GenerateQuadsLevels(atlas)
     local quads = {}
     local x = 0
     local y = 0
-    local framesLevels = {2, 3}
+    local framesLevels = {2, 3, 3, 3}
 
     for i, framesLevel in ipairs(framesLevels) do
         quads[i] = {}
