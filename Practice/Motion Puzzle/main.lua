@@ -11,6 +11,7 @@ function love.load()
     gTexture = love.graphics.newImage("res/graphics/spritesheet.png")
 
     gQuads = {
+        ["levels"] = GenerateQuadsLevels(gTexture),
         ["tiles"] = GenerateQuadsTiles(gTexture)
     }
 
@@ -40,7 +41,7 @@ function love.load()
         }
     )
 
-    gStateMachine:change("title")
+    gStateMachine:change("play")
 
     love.keyboard.keypressed = {}
 end

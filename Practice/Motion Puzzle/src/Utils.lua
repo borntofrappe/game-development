@@ -11,3 +11,24 @@ function GenerateQuadsTiles(atlas)
 
     return quads
 end
+
+function GenerateQuadsLevels(atlas)
+    local quads = {}
+    local x = 0
+    local y = 0
+    local framesLevels = {2, 3}
+
+    for i, framesLevel in ipairs(framesLevels) do
+        quads[i] = {}
+
+        x = 0
+        for frameLevel = 1, framesLevel do
+            table.insert(quads[i], love.graphics.newQuad(x, y, PUZZLE_SIZE, PUZZLE_SIZE, atlas:getDimensions()))
+
+            x = x + PUZZLE_SIZE
+        end
+        y = y + PUZZLE_SIZE
+    end
+
+    return quads
+end
