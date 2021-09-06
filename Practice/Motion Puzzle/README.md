@@ -17,3 +17,12 @@ The idea is to include a nested structure highlighting:
 3. the puzzle pieces
 
 With this setup a puzzle class should be able to populate a grid of pieces in a random order, and ultimately cinclude the game when the columns and rows of the grid match the columns and row of the pieces.
+
+## Colors
+
+Foreground: 0.07, 0.14, 0.07
+Background: 0.62, 0.7, 0.62
+
+## Pieces
+
+The structure of the `pieces` table is never modified. Only the column and row describing the frames are.

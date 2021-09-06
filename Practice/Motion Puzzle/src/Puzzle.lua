@@ -17,11 +17,11 @@ function Puzzle:new(level)
     local pieces = {}
 
     for column = 1, PUZZLE_DIMENSIONS do
-        pieces[column] = {}
         for row = 1, PUZZLE_DIMENSIONS do
             local piecePosition = table.remove(piecesPositions, love.math.random(#piecesPositions))
+            local key = GenerateKey(piecePosition.column, piecePosition.row)
 
-            pieces[column][row] = {
+            pieces[key] = {
                 ["column"] = column,
                 ["row"] = row,
                 ["position"] = {
@@ -36,6 +36,7 @@ function Puzzle:new(level)
     local frames = #gQuads.levels[level]
 
     local this = {
+        ["dimensions"] = PUZZLE_DIMENSIONS,
         ["level"] = level,
         ["frame"] = 1,
         ["frames"] = frames,
@@ -48,18 +49,13 @@ function Puzzle:new(level)
     return this
 end
 
-function Puzzle:update(dt)
-end
-
 function Puzzle:render()
-    for i, column in ipairs(self.pieces) do
-        for j, piece in ipairs(column) do
-            love.graphics.draw(
-                gTexture,
-                gQuads.levels[self.level][self.frame][piece.column][piece.row],
-                (piece.position.column - 1) * PIECE_SIZE,
-                (piece.position.row - 1) * PIECE_SIZE
-            )
-        end
+    for k, piece in pairs(self.pieces) do
+        love.graphics.draw(
+            gTexture,
+            gQuads.levels[self.level][self.frame][piece.column][piece.row],
+            (piece.position.column - 1) * PIECE_SIZE,
+            (piece.position.row - 1) * PIECE_SIZE
+        )
     end
 end

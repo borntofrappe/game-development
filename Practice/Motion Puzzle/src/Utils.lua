@@ -2,6 +2,7 @@ function GenerateQuadsTiles(atlas)
     local quads = {}
     local x = 512
     local y = 0
+
     for i = 1, 2 do
         table.insert(
             quads,
@@ -43,4 +44,53 @@ function GenerateQuadsLevels(atlas)
     end
 
     return quads
+end
+
+function GenerateQuadsHighlight(atlas)
+    local quads = {}
+    local x = 512
+    local y = 4
+
+    for i = 1, 2 do
+        table.insert(
+            quads,
+            love.graphics.newQuad(x + (i - 1) * PIECE_SIZE, y, PIECE_SIZE, PIECE_SIZE, atlas:getDimensions())
+        )
+    end
+
+    return quads
+end
+
+function GenerateQuadsPointer(atlas)
+    local quads = {}
+    local x = 512
+    local y = 68
+
+    for i = 1, 2 do
+        table.insert(
+            quads,
+            love.graphics.newQuad(x + (i - 1) * PIECE_SIZE, y, PIECE_SIZE, PIECE_SIZE, atlas:getDimensions())
+        )
+    end
+
+    return quads
+end
+
+function GenerateQuadsSelection(atlas)
+    local quads = {}
+    local x = 512
+    local y = 132
+
+    for i = 1, 2 do
+        table.insert(
+            quads,
+            love.graphics.newQuad(x + (i - 1) * PIECE_SIZE, y, PIECE_SIZE, PIECE_SIZE, atlas:getDimensions())
+        )
+    end
+
+    return quads
+end
+
+function GenerateKey(column, row)
+    return "c" .. column .. "r" .. row
 end

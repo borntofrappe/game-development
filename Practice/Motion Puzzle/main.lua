@@ -12,7 +12,10 @@ function love.load()
 
     gQuads = {
         ["levels"] = GenerateQuadsLevels(gTexture),
-        ["tiles"] = GenerateQuadsTiles(gTexture)
+        ["tiles"] = GenerateQuadsTiles(gTexture),
+        ["highlight"] = GenerateQuadsHighlight(gTexture),
+        ["pointer"] = GenerateQuadsPointer(gTexture),
+        ["selection"] = GenerateQuadsSelection(gTexture)
     }
 
     spriteBatch = love.graphics.newSpriteBatch(gTexture)
