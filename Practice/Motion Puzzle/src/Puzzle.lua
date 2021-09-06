@@ -33,13 +33,15 @@ function Puzzle:new(level)
     end
 
     local level = level or love.math.random(#gQuads.levels)
-    local frames = #gQuads.levels[level]
+    local name = LEVELS[level].name
+    local frames = LEVELS[level].frames
 
     local this = {
         ["dimensions"] = PUZZLE_DIMENSIONS,
         ["level"] = level,
-        ["frame"] = 1,
+        ["name"] = name,
         ["frames"] = frames,
+        ["frame"] = 1,
         ["pieces"] = pieces
     }
 

@@ -29,7 +29,8 @@ function love.load()
 
     gFonts = {
         ["large"] = love.graphics.newFont("res/fonts/font.ttf", 56),
-        ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
+        ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24),
+        ["small"] = love.graphics.newFont("res/fonts/font.ttf", 18)
     }
 
     gStateMachine =
@@ -40,6 +41,9 @@ function love.load()
             end,
             ["play"] = function()
                 return PlayState:new()
+            end,
+            ["congrats"] = function()
+                return CongratsState:new()
             end
         }
     )

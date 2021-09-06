@@ -1,6 +1,6 @@
 PlayState = BaseState:new()
 
-function PlayState:enter()
+function PlayState:enter(params)
   local border = love.graphics.newSpriteBatch(gTexture)
   local PUZZLE_DIMENSIONS = math.floor(PUZZLE_SIZE / TILE_SIZE)
   for dimension = -2, PUZZLE_DIMENSIONS + 1 do
@@ -13,7 +13,15 @@ function PlayState:enter()
 
   self.offset = math.floor(WINDOW_SIZE - PUZZLE_SIZE) / 2
 
-  self.puzzle = Puzzle:new()
+  local level
+  if params and params.previousLevel then
+    repeat
+      level = love.math.random(#gQuads.levels)
+    until level ~= params.previousLevel
+  end
+
+  self.puzzle = Puzzle:new(level)
+
   self.frameDirection = 1
   Timer:every(
     0.7,
@@ -86,7 +94,22 @@ function PlayState:update(dt)
         self.puzzle.pieces[key2].column = c
         self.puzzle.pieces[key2].row = r
 
-      -- here you'd check for victory
+        local isPuzzleComplete = true
+        for k, piece in pairs(self.puzzle.pieces) do
+          if piece.column ~= piece.position.column or piece.row ~= piece.position.row then
+            isPuzzleComplete = false
+            break
+          end
+        end
+        if isPuzzleComplete then
+          gStateMachine:change(
+            "congrats",
+            {
+              ["offset"] = self.offset,
+              ["puzzle"] = self.puzzle
+            }
+          )
+        end
       end
       self.selection = nil
     else
@@ -95,6 +118,16 @@ function PlayState:update(dt)
         ["row"] = self.highlight.row
       }
     end
+  end
+
+  if love.keyboard.waspressed("g") then
+    gStateMachine:change(
+      "congrats",
+      {
+        ["offset"] = self.offset,
+        ["puzzle"] = self.puzzle
+      }
+    )
   end
 end
 

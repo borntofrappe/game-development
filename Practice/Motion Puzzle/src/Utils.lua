@@ -17,17 +17,16 @@ function GenerateQuadsLevels(atlas)
     local quads = {}
     local x = 0
     local y = 0
-    local framesLevels = {2, 3, 3, 3}
 
-    for i, framesLevel in ipairs(framesLevels) do
+    for i, level in ipairs(LEVELS) do
         quads[i] = {}
         x = 0
-        for frameLevel = 1, framesLevel do
-            quads[i][frameLevel] = {}
+        for frame = 1, level.frames do
+            quads[i][frame] = {}
             for column = 1, PUZZLE_DIMENSIONS do
-                quads[i][frameLevel][column] = {}
+                quads[i][frame][column] = {}
                 for row = 1, PUZZLE_DIMENSIONS do
-                    quads[i][frameLevel][column][row] =
+                    quads[i][frame][column][row] =
                         love.graphics.newQuad(
                         x + (column - 1) * PIECE_SIZE,
                         y + (row - 1) * PIECE_SIZE,
