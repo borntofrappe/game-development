@@ -1,7 +1,11 @@
 PlayState = BaseState:new()
 
+local INTERVAL_PUZZLE = 0.7
+local INTERVAL_SUPPORT = 0.2
+
 function PlayState:enter(params)
   local border = love.graphics.newSpriteBatch(gTexture)
+
   local PUZZLE_DIMENSIONS = math.floor(PUZZLE_SIZE / TILE_SIZE)
   for dimension = -2, PUZZLE_DIMENSIONS + 1 do
     border:add(gQuads.tiles[1], (dimension) * TILE_SIZE, -TILE_SIZE * 2)
@@ -9,22 +13,16 @@ function PlayState:enter(params)
     border:add(gQuads.tiles[1], -TILE_SIZE * 2, (dimension) * TILE_SIZE)
     border:add(gQuads.tiles[1], (PUZZLE_DIMENSIONS + 1) * TILE_SIZE, (dimension) * TILE_SIZE)
   end
+
   self.border = border
 
-  self.offset = math.floor(WINDOW_SIZE - PUZZLE_SIZE) / 2
+  self.offset = math.floor((WINDOW_SIZE - PUZZLE_SIZE) / 2)
 
-  local level
-  if params and params.previousLevel then
-    repeat
-      level = love.math.random(#gQuads.levels)
-    until level ~= params.previousLevel
-  end
-
-  self.puzzle = Puzzle:new(level)
+  self.puzzle = Puzzle:new(params and params.level)
 
   self.frameDirection = 1
   Timer:every(
-    0.7,
+    INTERVAL_PUZZLE,
     function()
       self.puzzle.frame = self.puzzle.frame + self.frameDirection
       if self.puzzle.frame == self.puzzle.frames or self.puzzle.frame == 1 then
@@ -35,20 +33,24 @@ function PlayState:enter(params)
 
   self.highlight = {
     ["column"] = love.math.random(self.puzzle.dimensions),
-    ["row"] = love.math.random(self.puzzle.dimensions),
-    ["frame"] = 1,
-    ["label"] = "highlight"
+    ["row"] = love.math.random(self.puzzle.dimensions)
   }
 
   self.selection = nil
 
+  self.support = {
+    ["frame"] = 1,
+    ["frames"] = 2,
+    ["label"] = "support"
+  }
+
   Timer:every(
-    0.2,
+    INTERVAL_SUPPORT,
     function()
-      self.highlight.frame = self.highlight.frame == #gQuads.highlight and 1 or self.highlight.frame + 1
+      self.support.frame = self.support.frame == self.support.frames and 1 or self.support.frame + 1
     end,
     false,
-    self.highlight.label
+    self.support.label
   )
 end
 
@@ -57,7 +59,7 @@ function PlayState:update(dt)
 
   if love.keyboard.waspressed("escape") or love.mouse.waspressed(2) then
     Timer:reset()
-    gStateMachine:change("title")
+    gStateMachine:change("start")
   end
 
   if love.keyboard.waspressed("up") then
@@ -77,7 +79,7 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    self:handleSelection()
+    self:handleInput()
   end
 
   local x, y = love.mouse.getPosition()
@@ -88,12 +90,12 @@ function PlayState:update(dt)
     self.highlight.row = row
 
     if love.mouse.waspressed(1) then
-      self:handleSelection()
+      self:handleInput()
     end
   end
 end
 
-function PlayState:handleSelection()
+function PlayState:handleInput()
   if self.selection then
     if self.selection.column ~= self.highlight.column or self.selection.row ~= self.highlight.row then
       local c1 = self.selection.column
@@ -120,10 +122,11 @@ function PlayState:handleSelection()
           break
         end
       end
+
       if isPuzzleComplete then
-        Timer:remove(self.highlight.label)
+        Timer:remove(self.support.label)
         gStateMachine:change(
-          "congrats",
+          "finish",
           {
             ["offset"] = self.offset,
             ["puzzle"] = self.puzzle
@@ -142,6 +145,7 @@ end
 
 function PlayState:render()
   love.graphics.translate(self.offset, self.offset)
+
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(self.border)
 
@@ -150,7 +154,7 @@ function PlayState:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(
     gTexture,
-    gQuads.highlight[self.highlight.frame],
+    gQuads.highlight[self.support.frame],
     (self.highlight.column - 1) * PIECE_SIZE,
     (self.highlight.row - 1) * PIECE_SIZE
   )
@@ -158,7 +162,7 @@ function PlayState:render()
   if self.selection then
     love.graphics.draw(
       gTexture,
-      gQuads.selection[self.highlight.frame],
+      gQuads.selection[self.support.frame],
       (self.selection.column - 1) * PIECE_SIZE,
       (self.selection.row - 1) * PIECE_SIZE
     )
@@ -166,7 +170,7 @@ function PlayState:render()
 
   love.graphics.draw(
     gTexture,
-    gQuads.pointer[self.highlight.frame],
+    gQuads.pointer[self.support.frame],
     (self.highlight.column - 1) * PIECE_SIZE + math.floor(PIECE_SIZE / 2),
     (self.highlight.row - 1) * PIECE_SIZE + math.floor(PIECE_SIZE / 2)
   )

@@ -1,3 +1,5 @@
+TITLE = "Motion Puzzle"
+
 WINDOW_SIZE = 368
 TILE_SIZE = 4
 PUZZLE_SIZE = 256

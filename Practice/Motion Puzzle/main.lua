@@ -1,9 +1,9 @@
 require "src/Dependencies"
 
-local spriteBatch
+local backgroundTiles
 
 function love.load()
-    love.window.setTitle("Motion Puzzle")
+    love.window.setTitle(TITLE)
 
     love.window.setMode(WINDOW_SIZE, WINDOW_SIZE)
     love.graphics.setBackgroundColor(0.62, 0.7, 0.62)
@@ -18,36 +18,36 @@ function love.load()
         ["selection"] = GenerateQuadsSelection(gTexture)
     }
 
-    spriteBatch = love.graphics.newSpriteBatch(gTexture)
-
-    local WINDOW_DIMENSIONS = math.floor(WINDOW_SIZE / TILE_SIZE)
-    for column = 1, WINDOW_DIMENSIONS do
-        for row = 1, WINDOW_DIMENSIONS do
-            spriteBatch:add(gQuads.tiles[2], (column - 1) * TILE_SIZE, (row - 1) * TILE_SIZE)
-        end
-    end
-
     gFonts = {
         ["large"] = love.graphics.newFont("res/fonts/font.ttf", 64),
         ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 24)
     }
 
+    backgroundTiles = love.graphics.newSpriteBatch(gTexture)
+
+    local WINDOW_DIMENSIONS = math.floor(WINDOW_SIZE / TILE_SIZE)
+    for column = 1, WINDOW_DIMENSIONS do
+        for row = 1, WINDOW_DIMENSIONS do
+            backgroundTiles:add(gQuads.tiles[2], (column - 1) * TILE_SIZE, (row - 1) * TILE_SIZE)
+        end
+    end
+
     gStateMachine =
         StateMachine:new(
         {
-            ["title"] = function()
-                return TitleState:new()
+            ["start"] = function()
+                return StartState:new()
             end,
             ["play"] = function()
                 return PlayState:new()
             end,
-            ["congrats"] = function()
-                return CongratsState:new()
+            ["finish"] = function()
+                return FinishState:new()
             end
         }
     )
 
-    gStateMachine:change("title")
+    gStateMachine:change("start")
 
     love.keyboard.keypressed = {}
     love.mouse.buttonpressed = {}
@@ -78,7 +78,7 @@ end
 
 function love.draw()
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(spriteBatch)
+    love.graphics.draw(backgroundTiles)
 
     gStateMachine:render()
 end

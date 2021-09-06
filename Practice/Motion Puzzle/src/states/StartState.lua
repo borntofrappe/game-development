@@ -1,6 +1,6 @@
-TitleState = BaseState:new()
+StartState = BaseState:new()
 
-function TitleState:update(dt)
+function StartState:update(dt)
   if love.keyboard.waspressed("escape") or love.mouse.waspressed(2) then
     love.event.quit()
   end
@@ -10,8 +10,8 @@ function TitleState:update(dt)
   end
 end
 
-function TitleState:render()
+function StartState:render()
   love.graphics.setColor(0.07, 0.14, 0.07)
   love.graphics.setFont(gFonts.large)
-  love.graphics.printf("Motion Puzzle", 0, WINDOW_SIZE / 2 - gFonts.large:getHeight() - 2, WINDOW_SIZE, "center")
+  love.graphics.printf(TITLE, 0, WINDOW_SIZE / 2 - gFonts.large:getHeight() - 2, WINDOW_SIZE, "center")
 end

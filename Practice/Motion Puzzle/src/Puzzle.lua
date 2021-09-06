@@ -32,7 +32,7 @@ function Puzzle:new(level)
         end
     end
 
-    local level = level or love.math.random(#gQuads.levels)
+    local level = level or love.math.random(#LEVELS)
     local name = LEVELS[level].name
     local frames = LEVELS[level].frames
 
