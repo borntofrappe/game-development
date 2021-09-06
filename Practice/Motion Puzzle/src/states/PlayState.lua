@@ -11,9 +11,9 @@ function PlayState:enter()
   end
   self.border = border
 
+  self.puzzle = Puzzle:new(1)
+
   self.offset = math.floor(WINDOW_SIZE - PUZZLE_SIZE) / 2
-  self.level = 1
-  self.frame = 1
 end
 
 function PlayState:update(dt)
@@ -22,16 +22,16 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("right") then
-    self.frame = self.frame == #gQuads.levels[self.level] and 1 or self.frame + 1
+    self.puzzle.frame = self.puzzle.frame == #gQuads.levels[self.puzzle.level] and 1 or self.puzzle.frame + 1
   end
 
   if love.keyboard.waspressed("left") then
-    self.frame = self.frame == 1 and #gQuads.levels[self.level] or self.frame - 1
+    self.puzzle.frame = self.puzzle.frame == 1 and #gQuads.levels[self.puzzle.level] or self.puzzle.frame - 1
   end
 
   if love.keyboard.waspressed("up") or love.keyboard.waspressed("down") then
-    self.level = self.level == 1 and 2 or 1
-    self.frame = 1
+    local level = self.puzzle.level == 1 and 2 or 1
+    self.puzzle = Puzzle:new(level)
   end
 end
 
@@ -39,5 +39,6 @@ function PlayState:render()
   love.graphics.translate(self.offset, self.offset)
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(self.border)
-  love.graphics.draw(gTexture, gQuads.levels[self.level][self.frame], 0, 0)
+
+  self.puzzle:render()
 end

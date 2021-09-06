@@ -3,6 +3,9 @@ Timer = require "res/lib/Timer"
 require "src/constants"
 require "src/Utils"
 
+require "src/Piece"
+require "src/Puzzle"
+
 require "src/StateMachine"
 
 require "src/states/BaseState"

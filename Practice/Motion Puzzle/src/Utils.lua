@@ -20,10 +20,22 @@ function GenerateQuadsLevels(atlas)
 
     for i, framesLevel in ipairs(framesLevels) do
         quads[i] = {}
-
         x = 0
         for frameLevel = 1, framesLevel do
-            table.insert(quads[i], love.graphics.newQuad(x, y, PUZZLE_SIZE, PUZZLE_SIZE, atlas:getDimensions()))
+            quads[i][frameLevel] = {}
+            for column = 1, PUZZLE_DIMENSIONS do
+                quads[i][frameLevel][column] = {}
+                for row = 1, PUZZLE_DIMENSIONS do
+                    quads[i][frameLevel][column][row] =
+                        love.graphics.newQuad(
+                        x + (column - 1) * PIECE_SIZE,
+                        y + (row - 1) * PIECE_SIZE,
+                        PIECE_SIZE,
+                        PIECE_SIZE,
+                        atlas:getDimensions()
+                    )
+                end
+            end
 
             x = x + PUZZLE_SIZE
         end
