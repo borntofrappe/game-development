@@ -6,15 +6,16 @@ function CongratsState:enter(params)
 end
 
 function CongratsState:update(dt)
-  -- Timer:update(dt) -- REMOVE COMMENT AS YOU COMPLETED PUZZLE
-  -- Timer:update(dt) -- REMOVE COMMENT AS YOU COMPLETED PUZZLE
+  -- cheeky way to speed up the timer
+  Timer:update(dt)
+  Timer:update(dt)
 
-  if love.keyboard.waspressed("escape") then
+  if love.keyboard.waspressed("escape") or love.mouse.waspressed(2) then
     Timer:reset()
     gStateMachine:change("title")
   end
 
-  if love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("return") or love.mouse.waspressed(1) then
     Timer:reset()
     gStateMachine:change(
       "play",
@@ -27,12 +28,10 @@ end
 
 function CongratsState:render()
   love.graphics.translate(self.offset, self.offset)
-  love.graphics.setColor(0, 0, 0)
+  love.graphics.setColor(0.07, 0.14, 0.07)
   love.graphics.setFont(gFonts.normal)
-  love.graphics.printf("It's " .. self.puzzle.name .. "!", -self.offset, PUZZLE_SIZE + 12, WINDOW_SIZE, "center")
+  love.graphics.printf("It's " .. self.puzzle.name .. "!", -self.offset, PUZZLE_SIZE + 6, WINDOW_SIZE, "center")
 
   love.graphics.setColor(1, 1, 1)
-  -- love.graphics.draw(self.border)
-
   self.puzzle:render()
 end

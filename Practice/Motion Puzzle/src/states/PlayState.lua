@@ -36,7 +36,8 @@ function PlayState:enter(params)
   self.highlight = {
     ["column"] = love.math.random(self.puzzle.dimensions),
     ["row"] = love.math.random(self.puzzle.dimensions),
-    ["frame"] = 1
+    ["frame"] = 1,
+    ["label"] = "highlight"
   }
 
   self.selection = nil
@@ -45,14 +46,16 @@ function PlayState:enter(params)
     0.2,
     function()
       self.highlight.frame = self.highlight.frame == #gQuads.highlight and 1 or self.highlight.frame + 1
-    end
+    end,
+    false,
+    self.highlight.label
   )
 end
 
 function PlayState:update(dt)
-  -- Timer:update(dt) -- REMOVE COMMENT AS YOU COMPLETED PUZZLE
+  Timer:update(dt)
 
-  if love.keyboard.waspressed("escape") then
+  if love.keyboard.waspressed("escape") or love.mouse.waspressed(2) then
     Timer:reset()
     gStateMachine:change("title")
   end
@@ -74,60 +77,66 @@ function PlayState:update(dt)
   end
 
   if love.keyboard.waspressed("return") then
-    if self.selection then
-      -- update the pieces position if the selection and highlight don't match
-      if self.selection.column ~= self.highlight.column or self.selection.row ~= self.highlight.row then
-        local c1 = self.selection.column
-        local r1 = self.selection.row
-        local c2 = self.highlight.column
-        local r2 = self.highlight.row
-
-        local key1 = GenerateKey(c1, r1)
-        local key2 = GenerateKey(c2, r2)
-
-        local c = self.puzzle.pieces[key1].column
-        local r = self.puzzle.pieces[key1].row
-
-        self.puzzle.pieces[key1].column = self.puzzle.pieces[key2].column
-        self.puzzle.pieces[key1].row = self.puzzle.pieces[key2].row
-
-        self.puzzle.pieces[key2].column = c
-        self.puzzle.pieces[key2].row = r
-
-        local isPuzzleComplete = true
-        for k, piece in pairs(self.puzzle.pieces) do
-          if piece.column ~= piece.position.column or piece.row ~= piece.position.row then
-            isPuzzleComplete = false
-            break
-          end
-        end
-        if isPuzzleComplete then
-          gStateMachine:change(
-            "congrats",
-            {
-              ["offset"] = self.offset,
-              ["puzzle"] = self.puzzle
-            }
-          )
-        end
-      end
-      self.selection = nil
-    else
-      self.selection = {
-        ["column"] = self.highlight.column,
-        ["row"] = self.highlight.row
-      }
-    end
+    self:handleSelection()
   end
 
-  if love.keyboard.waspressed("g") then
-    gStateMachine:change(
-      "congrats",
-      {
-        ["offset"] = self.offset,
-        ["puzzle"] = self.puzzle
-      }
-    )
+  local x, y = love.mouse.getPosition()
+  if x > self.offset and x < self.offset + PUZZLE_SIZE and y > self.offset and y < self.offset + PUZZLE_SIZE then
+    local column = math.floor((x - self.offset) / PIECE_SIZE) + 1
+    local row = math.floor((y - self.offset) / PIECE_SIZE) + 1
+    self.highlight.column = column
+    self.highlight.row = row
+
+    if love.mouse.waspressed(1) then
+      self:handleSelection()
+    end
+  end
+end
+
+function PlayState:handleSelection()
+  if self.selection then
+    if self.selection.column ~= self.highlight.column or self.selection.row ~= self.highlight.row then
+      local c1 = self.selection.column
+      local r1 = self.selection.row
+      local c2 = self.highlight.column
+      local r2 = self.highlight.row
+
+      local key1 = GenerateKey(c1, r1)
+      local key2 = GenerateKey(c2, r2)
+
+      local c = self.puzzle.pieces[key1].column
+      local r = self.puzzle.pieces[key1].row
+
+      self.puzzle.pieces[key1].column = self.puzzle.pieces[key2].column
+      self.puzzle.pieces[key1].row = self.puzzle.pieces[key2].row
+
+      self.puzzle.pieces[key2].column = c
+      self.puzzle.pieces[key2].row = r
+
+      local isPuzzleComplete = true
+      for k, piece in pairs(self.puzzle.pieces) do
+        if piece.column ~= piece.position.column or piece.row ~= piece.position.row then
+          isPuzzleComplete = false
+          break
+        end
+      end
+      if isPuzzleComplete then
+        Timer:remove(self.highlight.label)
+        gStateMachine:change(
+          "congrats",
+          {
+            ["offset"] = self.offset,
+            ["puzzle"] = self.puzzle
+          }
+        )
+      end
+    end
+    self.selection = nil
+  else
+    self.selection = {
+      ["column"] = self.highlight.column,
+      ["row"] = self.highlight.row
+    }
   end
 end
 
