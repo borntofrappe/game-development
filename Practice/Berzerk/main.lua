@@ -1,7 +1,7 @@
 require "src/Dependencies"
 
 function love.load()
-  love.window.setTitle("berzerk")
+  love.window.setTitle("Berzerk")
 
   love.graphics.setDefaultFilter("nearest", "nearest")
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
@@ -52,7 +52,7 @@ end
 function love.draw()
   push:start()
 
-  love.graphics.setColor(0, 0, 0)
+  love.graphics.setColor(0.09, 0.09, 0.09)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
   gStateMachine:render()

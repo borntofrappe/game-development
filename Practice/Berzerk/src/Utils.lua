@@ -1,6 +1,6 @@
 function GenerateQuadsPlayer(atlas)
   local x = 0
-  local y = 8
+  local y = 0
   --[[
     1 default
     2,3 walking

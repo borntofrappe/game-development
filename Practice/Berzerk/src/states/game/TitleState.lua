@@ -17,7 +17,7 @@ function TitleState:update(dt)
 end
 
 function TitleState:render()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(0.824, 0.824, 0.824)
 
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(self.title.text, 0, self.title.y, VIRTUAL_WIDTH, "center")
