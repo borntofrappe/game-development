@@ -9,6 +9,8 @@ require "src/Entity"
 require "src/Player"
 require "src/Enemy"
 
+require "src/gui/Message"
+
 require "src/StateMachine"
 require "src/states/BaseState"
 
