@@ -18,16 +18,7 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
   }
 
-  gStateMachine =
-    StateMachine:new(
-    {
-      ["title"] = function()
-        return TitleState:new()
-      end
-    }
-  )
-
-  gStateMachine:change("title")
+  gStateStack = StateStack:new({TitleState:new()})
 
   love.keyboard.keypressed = {}
 end
@@ -45,7 +36,7 @@ function love.keyboard.waspressed(key)
 end
 
 function love.update(dt)
-  gStateMachine:update(dt)
+  gStateStack:update(dt)
 
   love.keyboard.keypressed = {}
 end
@@ -56,7 +47,7 @@ function love.draw()
   love.graphics.setColor(0.09, 0.09, 0.09)
   love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
-  gStateMachine:render()
+  gStateStack:render()
 
   push:finish()
 end

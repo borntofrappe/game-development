@@ -14,7 +14,7 @@ function Enemy:new(x, y, state)
   }
 
   local stateMachine =
-    gStateMachine:new(
+    StateMachine:new(
     {
       ["idle"] = function()
         return EnemyIdleState:new(this)

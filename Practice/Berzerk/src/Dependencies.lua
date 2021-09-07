@@ -11,10 +11,13 @@ require "src/Enemy"
 
 require "src/gui/Message"
 
+require "src/StateStack"
 require "src/StateMachine"
 require "src/states/BaseState"
 
 require "src/states/game/TitleState"
+require "src/states/game/TransitionState"
+require "src/states/game/PlayState"
 
 require "src/states/entities/player/PlayerIdleState"
 require "src/states/entities/player/PlayerWalkingState"

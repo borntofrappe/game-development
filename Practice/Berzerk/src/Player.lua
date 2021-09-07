@@ -12,7 +12,7 @@ function Player:new(x, y)
   }
 
   local stateMachine =
-    gStateMachine:new(
+    StateMachine:new(
     {
       ["idle"] = function()
         return PlayerIdleState:new(this)

@@ -30,3 +30,9 @@ Picking up from `04 Super Mario Bros` the idea is to have a class dedicated to t
 - Fight like a robot
 
 - Intruder alert! Intruder alert!
+
+## State stack
+
+State stack to allow a transition overlay.
+
+Transition out, not in.

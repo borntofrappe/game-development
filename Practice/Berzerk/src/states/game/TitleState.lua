@@ -11,17 +11,22 @@ function TitleState:enter()
 
   self.message = nil
 
-  Timer:tween(
-    4,
-    {
-      [self.enemy] = {["y"] = VIRTUAL_HEIGHT / 2}
-    },
+  Timer:after(
+    1,
     function()
-      self.enemy:changeState("idle")
-      Timer:after(
-        1,
+      Timer:tween(
+        4,
+        {
+          [self.enemy] = {["y"] = VIRTUAL_HEIGHT / 2}
+        },
         function()
-          self.message = Message:new(yEnd + self.enemy.size + 8, "Intruder alert!")
+          self.enemy:changeState("idle")
+          Timer:after(
+            1,
+            function()
+              self.message = Message:new(self.enemy.y + self.enemy.size + 8, "Intruder alert!")
+            end
+          )
         end
       )
     end
@@ -35,26 +40,42 @@ function TitleState:update(dt)
     love.event.quit()
   end
 
-  if love.keyboard.waspressed("up") then
-    self.enemy:changeState("walking-up")
+  if love.keyboard.waspressed("return") then
+    Timer:reset()
+    gStateStack:push(
+      TransitionState:new(
+        {
+          ["callback"] = function()
+            gStateStack:pop()
+            gStateStack:push(PlayState:new())
+          end
+        }
+      )
+    )
   end
 
-  if love.keyboard.waspressed("right") then
-    self.enemy:changeState("walking-right")
-  end
-
-  if love.keyboard.waspressed("down") then
-    self.enemy:changeState("walking-down")
-  end
-
-  if love.keyboard.waspressed("left") then
-    self.enemy:changeState("walking-left")
-  end
-
-  self.enemy:update(dt)
+  -- update only the animation as the y coordinate is tweened separately
+  self.enemy.currentAnimation:update(dt)
 end
 
 function TitleState:render()
+  love.graphics.setColor(0.427, 0.459, 0.906)
+  love.graphics.setLineWidth(4)
+  love.graphics.line(
+    VIRTUAL_WIDTH / 3,
+    VIRTUAL_HEIGHT - 8,
+    8,
+    VIRTUAL_HEIGHT - 8,
+    8,
+    8,
+    VIRTUAL_WIDTH - 8,
+    8,
+    VIRTUAL_WIDTH - 8,
+    VIRTUAL_HEIGHT - 8,
+    VIRTUAL_WIDTH * 2 / 3,
+    VIRTUAL_HEIGHT - 8
+  )
+
   love.graphics.setColor(0.824, 0.824, 0.824)
   love.graphics.setFont(gFonts.large)
   love.graphics.printf(self.title.text, 0, self.title.y, VIRTUAL_WIDTH, "center")
