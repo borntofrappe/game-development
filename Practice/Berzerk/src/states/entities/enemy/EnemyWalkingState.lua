@@ -1,6 +1,6 @@
-EnemyIdleState = BaseState:new()
+EnemyWalkingState = BaseState:new()
 
-function EnemyIdleState:new(enemy)
+function EnemyWalkingState:new(enemy, direction)
   local this = {
     ["enemy"] = enemy
   }
@@ -11,6 +11,6 @@ function EnemyIdleState:new(enemy)
   return this
 end
 
-function EnemyIdleState:update(dt)
+function EnemyWalkingState:update(dt)
   self.enemy.currentAnimation:update(dt)
 end

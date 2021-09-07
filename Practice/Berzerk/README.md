@@ -20,3 +20,13 @@ The structure of the spritesheet might change as I consider the efficiency of th
 ## Entities, player and enemies
 
 Picking up from `04 Super Mario Bros` the idea is to have a class dedicated to the entities of the game. With this class the player and enemies share a few common features, like a state machine or a `bump` function.
+
+## Phrases
+
+- The humanoid must not escape
+
+- The intruder must not scape
+
+- Fight like a robot
+
+- Intruder alert! Intruder alert!

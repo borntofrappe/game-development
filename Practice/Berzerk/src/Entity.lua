@@ -21,6 +21,10 @@ function Entity:init(def)
     self.direction = def.direction
     self.quads = def.quads
     self.stateMachine = def.stateMachine
+
+    if def.currentAnimation then
+        self.currentAnimation = def.currentAnimation
+    end
 end
 
 function Entity:update(dt)
@@ -32,6 +36,7 @@ function Entity:changeState(state, params)
 end
 
 function Entity:render()
+    love.graphics.setColor(1, 1, 1)
     love.graphics.draw(
         gTexture,
         gQuads[self.quads][self.currentAnimation:getCurrentFrame()],

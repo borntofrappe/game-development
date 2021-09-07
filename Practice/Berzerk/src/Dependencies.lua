@@ -20,3 +20,4 @@ require "src/states/entities/player/PlayerShootingState"
 require "src/states/entities/player/PlayerGameoverState"
 
 require "src/states/entities/enemy/EnemyIdleState"
+require "src/states/entities/enemy/EnemyWalkingState"
