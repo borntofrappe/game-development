@@ -1,11 +1,14 @@
-Player = {}
+Player = Entity:new()
 
 function Player:new(x, y)
-  local this = {
+  local this = {}
+
+  local def = {
     ["x"] = x,
     ["y"] = y,
     ["size"] = SPRITE_SIZE,
-    ["direction"] = "left"
+    ["direction"] = "right",
+    ["quads"] = "player"
   }
 
   local stateMachine =
@@ -27,8 +30,9 @@ function Player:new(x, y)
   )
 
   stateMachine:change("idle")
+  def.stateMachine = stateMachine
 
-  this.stateMachine = stateMachine
+  Entity.init(self, def)
 
   self.__index = self
   setmetatable(this, self)
@@ -37,21 +41,9 @@ function Player:new(x, y)
 end
 
 function Player:update(dt)
-  self.stateMachine:update(dt)
-end
-
-function Player:changeState(state, params)
-  self.stateMachine:change(state, params)
+  Entity.update(self, dt)
 end
 
 function Player:render()
-  love.graphics.draw(
-    gTexture,
-    gQuads.player[self.currentAnimation:getCurrentFrame()],
-    self.direction == "right" and self.x or self.x + self.size,
-    self.y,
-    0,
-    self.direction == "right" and 1 or -1,
-    1
-  )
+  Entity.render(self)
 end

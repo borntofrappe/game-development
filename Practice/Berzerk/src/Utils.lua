@@ -20,3 +20,20 @@ function GenerateQuadsPlayer(atlas)
 
   return quads
 end
+
+function GenerateQuadsEnemy(atlas)
+  local x = 0
+  local y = 8
+  local types = 8
+
+  local quads = {}
+
+  for i = 1, types do
+    table.insert(
+      quads,
+      love.graphics.newQuad(x + (i - 1) * SPRITE_SIZE, y, SPRITE_SIZE, SPRITE_SIZE, atlas:getDimensions())
+    )
+  end
+
+  return quads
+end

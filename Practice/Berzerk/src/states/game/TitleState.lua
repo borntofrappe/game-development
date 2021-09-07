@@ -6,6 +6,7 @@ function TitleState:enter()
     ["y"] = VIRTUAL_HEIGHT / 2 - gFonts.large:getHeight() - 2
   }
   self.player = Player:new(VIRTUAL_WIDTH / 2 - SPRITE_SIZE / 2, self.title.y + gFonts.large:getHeight() + 2)
+  self.enemy = Enemy:new()
 end
 
 function TitleState:update(dt)
@@ -14,6 +15,7 @@ function TitleState:update(dt)
   end
 
   self.player:update(dt)
+  self.enemy:update(dt)
 end
 
 function TitleState:render()
@@ -23,4 +25,5 @@ function TitleState:render()
   love.graphics.printf(self.title.text, 0, self.title.y, VIRTUAL_WIDTH, "center")
 
   self.player:render()
+  self.enemy:render()
 end

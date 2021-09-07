@@ -9,7 +9,8 @@ function love.load()
   gTexture = love.graphics.newImage("res/graphics/spritesheet.png")
 
   gQuads = {
-    ["player"] = GenerateQuadsPlayer(gTexture)
+    ["player"] = GenerateQuadsPlayer(gTexture),
+    ["enemy"] = GenerateQuadsEnemy(gTexture)
   }
 
   gFonts = {
