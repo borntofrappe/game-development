@@ -8,6 +8,7 @@ require "src/Utils"
 require "src/Entity"
 require "src/Player"
 require "src/Enemy"
+require "src/Wall"
 
 require "src/gui/Message"
 

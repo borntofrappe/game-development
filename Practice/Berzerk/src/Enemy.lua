@@ -68,10 +68,6 @@ function Enemy:changeState(state, params)
 end
 
 function Enemy:render()
-  Entity.render(self)
-end
-
-function Enemy:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(
     gTexture,

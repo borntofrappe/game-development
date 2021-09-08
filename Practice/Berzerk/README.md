@@ -30,32 +30,3 @@ Transition out, not in.
 ## Room
 
 A table to describe the position of the walls. The idea is to create walls for contiguous `x` characters. Once you retrieve the size of the grid, the columns and rows, the idea is to loop through the sequence twice to consider the horizontal and vertical walls. Having a wall described by an `x`, `y` coordinate, `width` and `height` dimensions should make it easier to later consider a collision with the enemies/player.
-
-```lua
-local ROOMS = {
-    [[
-xxxoxxx
-xooxoox
-xooxoox
-xooxoox
-xooxoox
-xxxoxxx
-]],
-[[
-xxxxxxx
-xooooox
-oxoooxo
-oxxxxxo
-oxoooxo
-xooooox
-xxxxxxx
-]],
-[[
-xxxxxxx
-xooooox
-xxxxooo
-xooooox
-xxxxxxx
-]]
-}
-```

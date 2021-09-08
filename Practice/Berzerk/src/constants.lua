@@ -1,8 +1,8 @@
-WINDOW_WIDTH = 576
-WINDOW_HEIGHT = 384
+WINDOW_WIDTH = 588
+WINDOW_HEIGHT = 420
 
-VIRTUAL_WIDTH = 144
-VIRTUAL_HEIGHT = 96
+VIRTUAL_WIDTH = 168
+VIRTUAL_HEIGHT = 120
 
 OPTIONS = {
   fullscreen = false,
@@ -16,7 +16,8 @@ ROOM_PADDING = 8
 
 WALL_SIZE = 4
 
-ROOM = [[
+ROOMS = {
+  [[
 xxxxxxx
 xooooox
 oxoooxo
@@ -24,4 +25,52 @@ oxxxxxo
 oxoooxo
 xooooox
 xxxxxxx
+]],
+  [[
+xxxoxxx
+xooxoox
+xooxoox
+xooxoox
+xooxoox
+xxxoxxx
+]],
+  [[
+xxxoxxx
+xoxoxox
+xoxoxox
+xooooox
+xooooox
+xoxoxox
+xoxoxox
+xxxoxxx
+  ]],
+  [[
+xxxxoxxxx
+xooxoxoox
+xooxoxoox
+xooooooox
+xooooooox
+xxxxoxxxx
+xooooooox
+xxxxoxxxx
+]],
+  [[
+xxxxoxxxx
+xooxoxoox
+xooxoxoox
+ooooooooo
+ooooooooo
+xxxxoxxxx
+xooooooox
+xxxxoxxxx
+]],
+  [[
+xxxxxxx
+xooooox
+oxoooxo
+oxoooxo
+oxoooxo
+xooooox
+xxxxxxx
 ]]
+}
