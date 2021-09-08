@@ -63,17 +63,17 @@ function TitleState:render()
   love.graphics.setLineWidth(4)
   love.graphics.line(
     VIRTUAL_WIDTH / 3,
-    VIRTUAL_HEIGHT - 8,
-    8,
-    VIRTUAL_HEIGHT - 8,
-    8,
-    8,
-    VIRTUAL_WIDTH - 8,
-    8,
-    VIRTUAL_WIDTH - 8,
-    VIRTUAL_HEIGHT - 8,
+    VIRTUAL_HEIGHT - ROOM_PADDING,
+    ROOM_PADDING,
+    VIRTUAL_HEIGHT - ROOM_PADDING,
+    ROOM_PADDING,
+    ROOM_PADDING,
+    VIRTUAL_WIDTH - ROOM_PADDING,
+    ROOM_PADDING,
+    VIRTUAL_WIDTH - ROOM_PADDING,
+    VIRTUAL_HEIGHT - ROOM_PADDING,
     VIRTUAL_WIDTH * 2 / 3,
-    VIRTUAL_HEIGHT - 8
+    VIRTUAL_HEIGHT - ROOM_PADDING
   )
 
   love.graphics.setColor(0.824, 0.824, 0.824)

@@ -11,3 +11,17 @@ OPTIONS = {
 }
 
 SPRITE_SIZE = 8
+
+ROOM_PADDING = 8
+
+WALL_SIZE = 4
+
+ROOM = [[
+xxxxxxx
+xooooox
+oxoooxo
+oxxxxxo
+oxoooxo
+xooooox
+xxxxxxx
+]]
