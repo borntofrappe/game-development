@@ -44,7 +44,7 @@ function Enemy:new(x, y, state)
   end
   def.currentAnimation = Animation:new(frames, 0.2)
 
-  Entity.init(self, def)
+  Entity.init(this, def)
 
   self.__index = self
   setmetatable(this, self)

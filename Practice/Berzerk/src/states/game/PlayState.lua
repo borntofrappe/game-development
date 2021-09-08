@@ -6,6 +6,8 @@ function PlayState:enter()
     self.height = VIRTUAL_HEIGHT - self.padding * 2
 
     self.walls = {}
+    self.player = nil
+    self.enemies = nil
     self:generateRoom()
 end
 
@@ -27,6 +29,14 @@ function PlayState:render()
     for k, wall in pairs(self.walls) do
         wall:render()
     end
+
+    love.graphics.setColor(1, 1, 1)
+
+    for k, enemy in pairs(self.enemies) do
+        enemy:render()
+    end
+
+    self.player:render()
 end
 
 function PlayState:generateRoom()
@@ -44,6 +54,7 @@ function PlayState:generateRoom()
     local heightUnit = self.height / (rows - 1)
 
     local walls = {}
+    local free = {}
 
     for row = 1, rows do
         local isWall = false
@@ -59,6 +70,14 @@ function PlayState:generateRoom()
             if character == "o" or column == columns then
                 if character == "x" then
                     widthWall = widthWall + 1
+                else
+                    table.insert(
+                        free,
+                        {
+                            ["column"] = column,
+                            ["row"] = row
+                        }
+                    )
                 end
                 if isWall and widthWall >= 1 then
                     local wall =
@@ -124,4 +143,15 @@ function PlayState:generateRoom()
     end
 
     self.walls = walls
+
+    local playerPosition = table.remove(free, love.math.random(#free))
+    self.player = Player:new((playerPosition.column - 1) * widthUnit, (playerPosition.row - 1) * heightUnit)
+
+    local enemies = {}
+    for i = 1, 3 do
+        local enemyPosition = table.remove(free, love.math.random(#free))
+        local enemy = Enemy:new((enemyPosition.column - 1) * widthUnit, (enemyPosition.row - 1) * heightUnit)
+        table.insert(enemies, enemy)
+    end
+    self.enemies = enemies
 end

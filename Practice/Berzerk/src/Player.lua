@@ -32,7 +32,7 @@ function Player:new(x, y)
   stateMachine:change("idle")
   def.stateMachine = stateMachine
 
-  Entity.init(self, def)
+  Entity.init(this, def)
 
   self.__index = self
   setmetatable(this, self)
