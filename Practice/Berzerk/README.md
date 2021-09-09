@@ -18,7 +18,7 @@ Each frame is 8 pixels wide and tall.
 
 The game relies on a limited set of colors, described here in the rgb components required by Love2D (in the `[0,1]` range)
 
-- player: 0.949, 0.545, 0.694
+- player and projectiles: 0.949, 0.545, 0.694
 
 - enemies and foreground: 0.824, 0.824, 0.824
 
@@ -55,12 +55,10 @@ TODO
 
 - [x] player moving
 
-- enemies AI (interval to decide whether to walk or stay idle)
+- [x] player shooting
 
-- player shooting, enemies inPlay
+- [ ] enemies, AI (interval to decide whether to walk or stay idle), in play, shooting
 
-- player losing, enemies shooting
+- [ ] doors
 
-- doors
-
-- dungeon?
+- [ ] dungeon?

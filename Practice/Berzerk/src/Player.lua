@@ -2,7 +2,8 @@ Player = Entity:new()
 
 function Player:new(x, y, walls)
   local this = {
-    ["direction"] = "right"
+    ["direction"] = "right",
+    ["projectiles"] = {}
   }
 
   local def = {
@@ -45,9 +46,20 @@ end
 
 function Player:update(dt)
   Entity.update(self, dt)
+
+  for k, projectile in pairs(self.projectiles) do
+    projectile:update(dt)
+    if not projectile.inPlay then
+      table.remove(self.projectiles, k)
+    end
+  end
 end
 
 function Player:render()
+  for k, projectile in pairs(self.projectiles) do
+    projectile:render()
+  end
+
   love.graphics.setColor(1, 1, 1)
   love.graphics.draw(
     gTexture,

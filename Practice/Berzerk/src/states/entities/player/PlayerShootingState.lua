@@ -16,6 +16,11 @@ function PlayerShootingState:new(player)
   return this
 end
 
+function PlayerShootingState:enter()
+  local projectile = Projectile:new(self.player)
+  table.insert(self.player.projectiles, projectile)
+end
+
 function PlayerShootingState:update(dt)
   self.delay = self.delay - dt
 

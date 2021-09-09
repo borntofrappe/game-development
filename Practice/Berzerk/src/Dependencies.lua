@@ -6,6 +6,7 @@ require "src/constants"
 require "src/Utils"
 
 require "src/Entity"
+require "src/Projectile"
 require "src/Player"
 require "src/Enemy"
 require "src/Wall"
