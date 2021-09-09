@@ -1,5 +1,10 @@
 TitleState = BaseState:new()
 
+local CUTSCENE_DELAY = 1
+local CUTSCENE_TWEEN = 4
+
+local MESSAGE_DELAY = 1
+
 function TitleState:enter()
   local yEnd = VIRTUAL_HEIGHT / 2
   self.enemy = Enemy:new(VIRTUAL_WIDTH / 2 - SPRITE_SIZE / 2, VIRTUAL_HEIGHT, "walking-up")
@@ -12,17 +17,17 @@ function TitleState:enter()
   self.message = nil
 
   Timer:after(
-    1,
+    CUTSCENE_DELAY,
     function()
       Timer:tween(
-        4,
+        CUTSCENE_TWEEN,
         {
           [self.enemy] = {["y"] = VIRTUAL_HEIGHT / 2}
         },
         function()
           self.enemy:changeState("idle")
           Timer:after(
-            1,
+            MESSAGE_DELAY,
             function()
               self.message = Message:new(self.enemy.y + self.enemy.size + 8, "Intruder alert!")
             end
@@ -54,11 +59,14 @@ function TitleState:update(dt)
     )
   end
 
-  -- update only the animation as the y coordinate is tweened separately
+  -- update only the animation as the y coordinate is updated separately in the tween animation
   self.enemy.currentAnimation:update(dt)
 end
 
 function TitleState:render()
+  love.graphics.setColor(0.09, 0.09, 0.09)
+  love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+
   love.graphics.setColor(0.427, 0.459, 0.906)
   love.graphics.setLineWidth(4)
   love.graphics.line(
@@ -81,6 +89,7 @@ function TitleState:render()
   love.graphics.printf(self.title.text, 0, self.title.y, VIRTUAL_WIDTH, "center")
 
   self.enemy:render()
+
   if self.message then
     self.message:render()
   end

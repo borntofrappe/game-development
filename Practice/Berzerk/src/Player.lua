@@ -1,13 +1,14 @@
 Player = Entity:new()
 
 function Player:new(x, y)
-  local this = {}
+  local this = {
+    ["direction"] = "right"
+  }
 
   local def = {
     ["x"] = x,
     ["y"] = y,
     ["size"] = SPRITE_SIZE,
-    ["direction"] = "right",
     ["quads"] = "player"
   }
 
@@ -23,8 +24,8 @@ function Player:new(x, y)
       ["shoot"] = function()
         return PlayerShootingState:new(this)
       end,
-      ["gameover"] = function()
-        return PlayerGameoverState:new(this)
+      ["lose"] = function()
+        return PlayerLoseState:new(this)
       end
     }
   )
@@ -45,5 +46,14 @@ function Player:update(dt)
 end
 
 function Player:render()
-  Entity.render(self)
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.draw(
+    gTexture,
+    gQuads[self.quads][self.currentAnimation:getCurrentFrame()],
+    self.direction == "right" and math.floor(self.x) or math.floor(self.x) + self.size,
+    math.floor(self.y),
+    0,
+    self.direction == "right" and 1 or -1,
+    1
+  )
 end

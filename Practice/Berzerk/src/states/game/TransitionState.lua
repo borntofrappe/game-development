@@ -1,5 +1,7 @@
 TransitionState = BaseState:new()
 
+local TRANSITION_TWEEN = 2
+
 function TransitionState:new(def)
     local this = {
         ["y"] = -VIRTUAL_HEIGHT,
@@ -17,7 +19,7 @@ end
 
 function TransitionState:enter()
     Timer:tween(
-        2,
+        TRANSITION_TWEEN,
         {
             [self] = {["y"] = 0}
         },

@@ -1,11 +1,13 @@
 PlayerShootingState = BaseState:new()
 
+local PLAYER_ANIMATION_DELAY = 0.15
+
 function PlayerShootingState:new(player)
   player.currentAnimation = Animation:new({4}, 1)
 
   local this = {
     ["player"] = player,
-    ["delay"] = 0.15
+    ["delay"] = PLAYER_ANIMATION_DELAY
   }
 
   self.__index = self

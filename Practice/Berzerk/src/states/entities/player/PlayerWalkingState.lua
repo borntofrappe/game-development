@@ -1,7 +1,9 @@
 PlayerWalkingState = BaseState:new()
 
+local PLAYER_ANIMATION_INTERVAL = 0.15
+
 function PlayerWalkingState:new(player)
-  player.currentAnimation = Animation:new({2, 3}, 0.15)
+  player.currentAnimation = Animation:new({2, 3}, PLAYER_ANIMATION_INTERVAL)
 
   local this = {
     ["player"] = player

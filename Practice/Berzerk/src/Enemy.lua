@@ -1,5 +1,7 @@
 Enemy = Entity:new()
 
+local ENEMY_ANIMATION_INTERVAL = 0.2
+
 function Enemy:new(x, y, state)
   local state = state or "idle"
   local this = {
@@ -37,12 +39,13 @@ function Enemy:new(x, y, state)
   stateMachine:change(state)
   def.stateMachine = stateMachine
 
-  -- necessary to set the initial animation since it's not defined in the individual states
+  -- :changeState sets up the animation in place of the individual states
+  -- as the function not called when the enemy is initialized it is necessary to set up the first animation
   local frames = {}
   for frame = 1, #gQuads.enemy[state] do
     table.insert(frames, frame)
   end
-  def.currentAnimation = Animation:new(frames, 0.2)
+  def.currentAnimation = Animation:new(frames, ENEMY_ANIMATION_INTERVAL)
 
   Entity.init(this, def)
 
@@ -58,11 +61,12 @@ end
 
 function Enemy:changeState(state, params)
   self.state = state
+
   local frames = {}
   for frame = 1, #gQuads.enemy[state] do
     table.insert(frames, frame)
   end
-  self.currentAnimation = Animation:new(frames, 0.2)
+  self.currentAnimation = Animation:new(frames, ENEMY_ANIMATION_INTERVAL)
 
   self.stateMachine:change(state, params)
 end

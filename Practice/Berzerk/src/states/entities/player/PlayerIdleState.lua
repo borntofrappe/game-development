@@ -25,7 +25,7 @@ function PlayerIdleState:update(dt)
   end
 
   -- debugging
-  if love.keyboard.waspressed("g") then
-    self.player:changeState("gameover")
+  if love.keyboard.waspressed("d") then
+    self.player:changeState("lose")
   end
 end

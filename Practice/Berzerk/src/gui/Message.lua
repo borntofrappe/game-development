@@ -1,5 +1,6 @@
 Message = {}
 
+local MESSAGE_INTERVAL = 0.125
 function Message:new(y, text)
     local this = {
         ["y"] = y,
@@ -10,7 +11,7 @@ function Message:new(y, text)
     local label = "message" .. #Timer.intervals
 
     Timer:every(
-        0.125,
+        MESSAGE_INTERVAL,
         function()
             this.index = this.index + 1
             if this.index == #this.text then

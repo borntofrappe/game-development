@@ -24,8 +24,10 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
+    love.graphics.setColor(0.09, 0.09, 0.09)
+    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+
     love.graphics.translate(self.padding, self.padding)
-    love.graphics.setColor(0.427, 0.459, 0.906)
     for k, wall in pairs(self.walls) do
         wall:render()
     end

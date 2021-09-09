@@ -18,7 +18,6 @@ function Entity:init(def)
 
     self.size = def.size
 
-    self.direction = def.direction
     self.quads = def.quads
     self.stateMachine = def.stateMachine
 
@@ -33,17 +32,4 @@ end
 
 function Entity:changeState(state, params)
     self.stateMachine:change(state, params)
-end
-
-function Entity:render()
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(
-        gTexture,
-        gQuads[self.quads][self.currentAnimation:getCurrentFrame()],
-        self.direction == "right" and math.floor(self.x) or math.floor(self.x) + self.size,
-        math.floor(self.y),
-        0,
-        self.direction == "right" and 1 or -1,
-        1
-    )
 end

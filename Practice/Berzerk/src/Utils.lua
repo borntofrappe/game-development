@@ -1,12 +1,7 @@
 function GenerateQuadsPlayer(atlas)
   local x = 0
   local y = 0
-  --[[
-    1 default
-    2,3 walking
-    4 shooting
-    5 losing
-  ]]
+
   local types = 5
 
   local quads = {}
