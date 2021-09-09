@@ -37,12 +37,13 @@ function Entity:changeState(state, params)
     self.stateMachine:change(state, params)
 end
 
-function Entity:collides(target)
-    if target.x + target.width - 1 < self.x or target.x + 1 > self.x + self.width then
+function Entity:collides(target, inset)
+    local inset = inset or 0
+    if target.x + target.width - inset < self.x or target.x + inset > self.x + self.width then
         return false
     end
 
-    if target.y + target.height - 1 < self.y or target.y + 1 > self.y + self.height then
+    if target.y + target.height - inset < self.y or target.y + inset > self.y + self.height then
         return false
     end
 

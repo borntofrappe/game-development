@@ -14,6 +14,10 @@ function PlayState:update(dt)
     end
 
     self.player:update(dt)
+
+    for k, enemy in pairs(self.enemies) do
+        enemy:update(dt)
+    end
 end
 
 function PlayState:render()

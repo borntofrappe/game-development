@@ -1,5 +1,7 @@
 PlayerIdleState = BaseState:new()
 
+local PLAYER_PROJECTILES = 2
+
 function PlayerIdleState:new(player)
   player.currentAnimation = Animation:new({1}, 1)
 
@@ -21,7 +23,7 @@ function PlayerIdleState:update(dt)
     self.player:changeState("walk")
   end
 
-  if love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("return") and #self.player.projectiles < PLAYER_PROJECTILES then
     self.player:changeState("shoot")
   end
 end

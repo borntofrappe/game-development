@@ -5,7 +5,8 @@ local ENEMY_ANIMATION_INTERVAL = 0.2
 function Enemy:new(x, y, walls, state)
   local state = state or "idle"
   local this = {
-    ["state"] = "idle"
+    ["state"] = "idle",
+    ["inPlay"] = true
   }
 
   local def = {
@@ -60,7 +61,9 @@ function Enemy:new(x, y, walls, state)
 end
 
 function Enemy:update(dt)
-  Entity.update(self, dt)
+  if self.inPlay then
+    Entity.update(self, dt)
+  end
 end
 
 function Enemy:changeState(state, params)
@@ -76,11 +79,13 @@ function Enemy:changeState(state, params)
 end
 
 function Enemy:render()
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.draw(
-    gTexture,
-    gQuads[self.quads][self.state][self.currentAnimation:getCurrentFrame()],
-    math.floor(self.x),
-    math.floor(self.y)
-  )
+  if self.inPlay then
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(
+      gTexture,
+      gQuads[self.quads][self.state][self.currentAnimation:getCurrentFrame()],
+      math.floor(self.x),
+      math.floor(self.y)
+    )
+  end
 end

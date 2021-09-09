@@ -5,6 +5,7 @@ local PLAYER_UPDATE_SPEED = {
   ["x"] = 15,
   ["y"] = 10
 }
+local PLAYER_PROJECTILES = 1
 
 function PlayerWalkingState:new(player)
   player.currentAnimation = Animation:new({2, 3}, PLAYER_ANIMATION_INTERVAL)
@@ -24,7 +25,7 @@ function PlayerWalkingState:update(dt)
 
   local isColliding = false
   for k, wall in pairs(self.player.walls) do
-    if self.player:collides(wall) then
+    if self.player:collides(wall, 1) then
       isColliding = true
       break
     end
@@ -66,7 +67,7 @@ function PlayerWalkingState:update(dt)
     self.player:changeState("idle")
   end
 
-  if love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("return") and #self.player.projectiles < PLAYER_PROJECTILES then
     self.player:changeState("shoot")
   end
 end

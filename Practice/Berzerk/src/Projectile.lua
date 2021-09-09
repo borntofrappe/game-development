@@ -1,13 +1,18 @@
 Projectile = {}
 
-function Projectile:new(player)
-  local dx = player.dx
-  if dx == 0 and player.dy == 0 then
-    dx = player.direction == "right" and 20 or -20
-  end
-  local dy = player.dy
+local PROJECTILE_BASE_SPEED = 30
+local PROJECTILE_MULTIPLIER_SPEED = 3
 
-  local width = dx ~= 0 and 4 or 1
+function Projectile:new(player)
+  local dx
+  if player.dx == 0 and player.dy == 0 then
+    dx = player.direction == "right" and PROJECTILE_BASE_SPEED or -PROJECTILE_BASE_SPEED
+  else
+    dx = player.dx * PROJECTILE_MULTIPLIER_SPEED
+  end
+  local dy = player.dy * PROJECTILE_MULTIPLIER_SPEED
+
+  local width = dx == 0 and 1 or 4
   local height = width == 4 and 1 or 4
 
   local x = player.direction == "right" and player.x + 6 or player.x + 1 - width
@@ -41,4 +46,16 @@ end
 function Projectile:render()
   love.graphics.setColor(0.949, 0.545, 0.694)
   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+end
+
+function Projectile:collides(target)
+  if target.x + target.width < self.x or target.x > self.x + self.width then
+    return false
+  end
+
+  if target.y + target.height < self.y or target.y > self.y + self.height then
+    return false
+  end
+
+  return true
 end

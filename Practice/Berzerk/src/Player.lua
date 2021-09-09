@@ -49,6 +49,13 @@ function Player:update(dt)
 
   for k, projectile in pairs(self.projectiles) do
     projectile:update(dt)
+    for j, wall in pairs(self.walls) do
+      if projectile:collides(wall) then
+        projectile.inPlay = false
+        break
+      end
+    end
+
     if not projectile.inPlay then
       table.remove(self.projectiles, k)
     end
