@@ -16,58 +16,63 @@ ROOM_PADDING = 8
 
 WALL_SIZE = 4
 
-ROOMS = {
+--[[
+  x: wall
+  p: player
+  e: enemy
+]]
+LEVELS = {
   [[
 xxxxxx
-oooooo
+ooeooo
 oxooxo
 oxxxxo
-oxooxo
-oooooo
+oxpoxo
+ooooeo
 xxxxxx
 ]],
   [[
 xxoxx
+xoxpx
 xoxox
-xoxox
-xoxox
+xexox
 xxoxx
 ]],
   [[
 xxxoxxx
+xoxpxox
 xoxoxox
+xoeooox
+xooooex
 xoxoxox
-xooooox
-xooooox
-xoxoxox
-xoxoxox
+xoxexox
 xxxoxxx
   ]],
   [[
 xxxoxxx
+xoxoxex
 xoxoxox
-xoxoxox
-xooooox
+xoeooox
 xooooox
 xxxoxxx
-xooooox
-xxxoxxx
+xoooopx
+xxxexxx
 ]],
   [[
 xxxoxxx
 xoxoxox
-xoxoxox
-ooooooo
-xxxoxxx
-xooooox
+xoxoxex
+oeooooo
+xxxpxxx
+xooooex
 xxxoxxx
 ]],
   [[
 xxxxxx
-xoooox
+xoeoox
 oxooxo
 oxooxo
-xoooox
+xoopox
 xxxxxx
 ]]
 }

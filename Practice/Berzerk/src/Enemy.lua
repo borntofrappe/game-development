@@ -46,6 +46,8 @@ function Enemy:new(x, y, state)
     table.insert(frames, frame)
   end
   def.currentAnimation = Animation:new(frames, ENEMY_ANIMATION_INTERVAL)
+  -- initialize to a random frame to avoid having the enemies all in sync
+  def.currentAnimation.index = frames[love.math.random(#frames)]
 
   Entity.init(this, def)
 

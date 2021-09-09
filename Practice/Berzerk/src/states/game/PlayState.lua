@@ -1,14 +1,10 @@
 PlayState = BaseState:new()
 
 function PlayState:enter()
-    self.padding = ROOM_PADDING
-    self.width = VIRTUAL_WIDTH - self.padding * 2
-    self.height = VIRTUAL_HEIGHT - self.padding * 2
-
     self.walls = {}
-    self.player = nil
-    self.enemies = nil
-    self:generateRoom()
+    self.player = Player:new(0, 0)
+    self.enemies = {Enemy:new(0, 0)}
+    self:initializeLevel()
 end
 
 function PlayState:update(dt)
@@ -18,8 +14,8 @@ function PlayState:update(dt)
     end
 
     -- debugging
-    if love.keyboard.waspressed("r") then
-        self:generateRoom()
+    if love.keyboard.waspressed("d") then
+        self:initializeLevel()
     end
 end
 
@@ -27,12 +23,9 @@ function PlayState:render()
     love.graphics.setColor(0.09, 0.09, 0.09)
     love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
-    love.graphics.translate(self.padding, self.padding)
     for k, wall in pairs(self.walls) do
         wall:render()
     end
-
-    love.graphics.setColor(1, 1, 1)
 
     for k, enemy in pairs(self.enemies) do
         enemy:render()
@@ -41,27 +34,22 @@ function PlayState:render()
     self.player:render()
 end
 
-function PlayState:generateRoom()
-    local index
-    repeat
-        index = love.math.random(#ROOMS)
-    until index ~= self.index
-    self.index = index
+function PlayState:initializeLevel()
+    local level = LEVELS[love.math.random(#LEVELS)]:gsub(" ", "")
+    local sequence, rows = level:gsub("\n", "")
+    local columns = level:find("\n") - 1
 
-    local room = ROOMS[self.index]:gsub(" ", "")
-    local sequence, rows = room:gsub("\n", "")
-    local columns = room:find("\n") - 1
-
-    local widthUnit = self.width / (columns - 1)
-    local heightUnit = self.height / (rows - 1)
+    local widthUnit = VIRTUAL_WIDTH / columns
+    local heightUnit = VIRTUAL_HEIGHT / rows
 
     local walls = {}
-    local free = {}
+    local player = nil
+    local enemies = {}
 
     for row = 1, rows do
         local isWall = false
 
-        local yWall = row - 1
+        local yWall = row
         local xWall = 0
         local widthWall = 0
 
@@ -69,38 +57,42 @@ function PlayState:generateRoom()
             local index = column + (row - 1) * columns
             local character = sequence:sub(index, index)
 
-            if character == "o" or column == columns then
-                if character == "x" then
-                    widthWall = widthWall + 1
-                else
-                    table.insert(
-                        free,
-                        {
-                            ["column"] = column,
-                            ["row"] = row
-                        }
-                    )
-                end
-                if isWall and widthWall >= 1 then
-                    local wall =
-                        Wall:new(
-                        xWall * widthUnit - WALL_SIZE / 2,
-                        yWall * heightUnit - WALL_SIZE / 2,
-                        widthWall * widthUnit + WALL_SIZE,
-                        WALL_SIZE
-                    )
-                    table.insert(walls, wall)
-                end
-                isWall = false
-                widthWall = 0
-            else
-                if isWall then
-                    widthWall = widthWall + 1
-                else
-                    xWall = column - 1
-                    widthWall = 0
+            if character == "x" then
+                if not isWall then
                     isWall = true
+                    xWall = column
                 end
+                widthWall = widthWall + 1
+            end
+
+            if character ~= "x" or column == columns then
+                if isWall then
+                    if widthWall > 1 then
+                        local x = (xWall - 1) * widthUnit + widthUnit / 2 - WALL_SIZE / 2
+                        local y = (yWall - 1) * heightUnit + heightUnit / 2 - WALL_SIZE / 2
+                        local width = (widthWall - 1) * widthUnit + WALL_SIZE
+                        local height = WALL_SIZE
+
+                        local wall = Wall:new(x, y, width, height)
+                        table.insert(walls, wall)
+                    end
+                    isWall = false
+                    widthWall = 0
+                end
+            end
+
+            if character == "p" then
+                local x = (column - 1) * widthUnit + widthUnit / 2 - SPRITE_SIZE / 2
+                local y = (row - 1) * heightUnit + heightUnit / 2 - SPRITE_SIZE / 2
+                player = Player:new(x, y)
+            end
+
+            if character == "e" then
+                local x = (column - 1) * widthUnit + widthUnit / 2 - SPRITE_SIZE / 2
+                local y = (row - 1) * heightUnit + heightUnit / 2 - SPRITE_SIZE / 2
+                local enemy = Enemy:new(x, y)
+
+                table.insert(enemies, enemy)
             end
         end
     end
@@ -108,7 +100,7 @@ function PlayState:generateRoom()
     for column = 1, columns do
         local isWall = false
 
-        local xWall = column - 1
+        local xWall = column
         local yWall = 0
         local heightWall = 0
 
@@ -116,44 +108,33 @@ function PlayState:generateRoom()
             local index = column + (row - 1) * columns
             local character = sequence:sub(index, index)
 
-            if character == "o" or row == rows then
-                if character == "x" then
-                    heightWall = heightWall + 1
-                end
-                if isWall and heightWall >= 1 then
-                    local wall =
-                        Wall:new(
-                        xWall * widthUnit - WALL_SIZE / 2,
-                        yWall * heightUnit - WALL_SIZE / 2,
-                        WALL_SIZE,
-                        heightWall * heightUnit + WALL_SIZE
-                    )
-                    table.insert(walls, wall)
-                end
-                isWall = false
-                heightWall = 0
-            else
-                if isWall then
-                    heightWall = heightWall + 1
-                else
-                    yWall = row - 1
-                    heightWall = 0
+            if character == "x" then
+                if not isWall then
                     isWall = true
+                    yWall = row
+                end
+                heightWall = heightWall + 1
+            end
+
+            if character ~= "x" or row == rows then
+                if isWall then
+                    if heightWall > 1 then
+                        local x = (xWall - 1) * widthUnit + widthUnit / 2 - WALL_SIZE / 2
+                        local y = (yWall - 1) * heightUnit + heightUnit / 2 - WALL_SIZE / 2
+                        local width = WALL_SIZE
+                        local height = (heightWall - 1) * heightUnit + WALL_SIZE
+
+                        local wall = Wall:new(x, y, width, height)
+                        table.insert(walls, wall)
+                    end
+                    isWall = false
+                    heightWall = 0
                 end
             end
         end
     end
 
     self.walls = walls
-
-    local playerPosition = table.remove(free, love.math.random(#free))
-    self.player = Player:new((playerPosition.column - 1) * widthUnit, (playerPosition.row - 1) * heightUnit)
-
-    local enemies = {}
-    for i = 1, 3 do
-        local enemyPosition = table.remove(free, love.math.random(#free))
-        local enemy = Enemy:new((enemyPosition.column - 1) * widthUnit, (enemyPosition.row - 1) * heightUnit)
-        table.insert(enemies, enemy)
-    end
+    self.player = player
     self.enemies = enemies
 end
