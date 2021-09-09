@@ -13,10 +13,7 @@ function PlayState:update(dt)
         gStateStack:push(TitleState:new())
     end
 
-    -- debugging
-    if love.keyboard.waspressed("d") then
-        self:initializeLevel()
-    end
+    self.player:update(dt)
 end
 
 function PlayState:render()
@@ -84,13 +81,13 @@ function PlayState:initializeLevel()
             if character == "p" then
                 local x = (column - 1) * widthUnit + widthUnit / 2 - SPRITE_SIZE / 2
                 local y = (row - 1) * heightUnit + heightUnit / 2 - SPRITE_SIZE / 2
-                player = Player:new(x, y)
+                player = Player:new(x, y, walls)
             end
 
             if character == "e" then
                 local x = (column - 1) * widthUnit + widthUnit / 2 - SPRITE_SIZE / 2
                 local y = (row - 1) * heightUnit + heightUnit / 2 - SPRITE_SIZE / 2
-                local enemy = Enemy:new(x, y)
+                local enemy = Enemy:new(x, y, walls)
 
                 table.insert(enemies, enemy)
             end

@@ -1,6 +1,6 @@
 Player = Entity:new()
 
-function Player:new(x, y)
+function Player:new(x, y, walls)
   local this = {
     ["direction"] = "right"
   }
@@ -8,8 +8,10 @@ function Player:new(x, y)
   local def = {
     ["x"] = x,
     ["y"] = y,
-    ["size"] = SPRITE_SIZE,
-    ["quads"] = "player"
+    ["width"] = SPRITE_SIZE,
+    ["height"] = SPRITE_SIZE,
+    ["quads"] = "player",
+    ["walls"] = walls
   }
 
   local stateMachine =
@@ -50,7 +52,7 @@ function Player:render()
   love.graphics.draw(
     gTexture,
     gQuads[self.quads][self.currentAnimation:getCurrentFrame()],
-    self.direction == "right" and math.floor(self.x) or math.floor(self.x) + self.size,
+    self.direction == "right" and math.floor(self.x) or math.floor(self.x) + self.width,
     math.floor(self.y),
     0,
     self.direction == "right" and 1 or -1,

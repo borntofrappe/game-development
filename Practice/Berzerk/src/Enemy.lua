@@ -2,17 +2,19 @@ Enemy = Entity:new()
 
 local ENEMY_ANIMATION_INTERVAL = 0.2
 
-function Enemy:new(x, y, state)
+function Enemy:new(x, y, walls, state)
   local state = state or "idle"
   local this = {
-    ["state"] = state
+    ["state"] = "idle"
   }
 
   local def = {
     ["x"] = x,
     ["y"] = y,
-    ["size"] = SPRITE_SIZE,
-    ["quads"] = "enemy"
+    ["width"] = SPRITE_SIZE,
+    ["height"] = SPRITE_SIZE,
+    ["quads"] = "enemy",
+    ["walls"] = walls
   }
 
   local stateMachine =

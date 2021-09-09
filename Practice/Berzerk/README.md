@@ -50,3 +50,17 @@ The `Message` class in the `gui` folder helps to implement a text box which incl
 -Entity.init(self, def)
 +Entity.init(this, def)
 ```
+
+TODO
+
+- [x] player moving
+
+- enemies AI (interval to decide whether to walk or stay idle)
+
+- player shooting, enemies inPlay
+
+- player losing, enemies shooting
+
+- doors
+
+- dungeon?

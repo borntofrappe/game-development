@@ -20,6 +20,13 @@ function PlayerShootingState:update(dt)
   self.delay = self.delay - dt
 
   if self.delay <= 0 then
-    self.player:changeState("idle")
+    if
+      love.keyboard.isDown("left") or love.keyboard.isDown("right") or love.keyboard.isDown("up") or
+        love.keyboard.isDown("down")
+     then
+      self.player:changeState("walk")
+    else
+      self.player:changeState("idle")
+    end
   end
 end

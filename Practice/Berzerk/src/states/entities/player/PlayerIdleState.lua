@@ -14,18 +14,14 @@ function PlayerIdleState:new(player)
 end
 
 function PlayerIdleState:update(dt)
-  if love.keyboard.waspressed("right") then
-    self.player:changeState("walk")
-  elseif love.keyboard.waspressed("left") then
+  if
+    love.keyboard.waspressed("left") or love.keyboard.waspressed("right") or love.keyboard.waspressed("up") or
+      love.keyboard.waspressed("down")
+   then
     self.player:changeState("walk")
   end
 
   if love.keyboard.waspressed("return") then
     self.player:changeState("shoot")
-  end
-
-  -- debugging
-  if love.keyboard.waspressed("d") then
-    self.player:changeState("lose")
   end
 end
