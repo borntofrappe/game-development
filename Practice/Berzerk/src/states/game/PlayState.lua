@@ -15,10 +15,6 @@ function PlayState:update(dt)
 
     for k, enemy in pairs(self.level.enemies) do
         enemy:update(dt)
-
-        if not enemy.inPlay then
-            table.remove(self.level.enemies, k)
-        end
     end
 end
 

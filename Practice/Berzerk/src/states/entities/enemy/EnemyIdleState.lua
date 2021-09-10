@@ -3,8 +3,8 @@ EnemyIdleState = BaseState:new()
 local ENEMY_DECISION_INTERVAL = {0, 5}
 local ENEMY_DECISIONS = {
   ["idle"] = {4, 7},
-  ["walking"] = {1, 3}
-  -- ["shooting"] = {1, 3}
+  ["walking"] = {2, 6},
+  ["shooting"] = {2, 4}
 }
 
 function EnemyIdleState:new(enemy)
@@ -34,7 +34,20 @@ function EnemyIdleState:enter()
     for i = 1, n do
       local decision = k
       if decision == "walking" then
-        decision = decision .. "-" .. directions[love.math.random(#directions)]
+        if self.enemy.level and love.math.random(2) == 1 then
+          local direction
+          local dx = self.enemy.level.player.x - self.enemy.x
+          local dy = self.enemy.level.player.y - self.enemy.y
+          if math.abs(dx) < math.abs(dy) then
+            direction = dy > 0 and "down" or "up"
+          else
+            direction = dx > 0 and "right" or "left"
+          end
+
+          decision = decision .. "-" .. direction
+        else
+          decision = decision .. "-" .. directions[love.math.random(#directions)]
+        end
       end
       table.insert(decisions, decision)
     end

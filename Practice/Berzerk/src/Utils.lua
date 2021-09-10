@@ -42,6 +42,11 @@ function GenerateQuadsEnemy(atlas)
       ["frames"] = 3,
       ["x"] = 0,
       ["y"] = 40
+    },
+    ["shooting"] = {
+      ["frames"] = 1,
+      ["x"] = 0,
+      ["y"] = 8
     }
   }
 

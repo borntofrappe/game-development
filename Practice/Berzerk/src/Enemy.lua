@@ -1,12 +1,15 @@
 Enemy = Entity:new()
 
 local ENEMY_ANIMATION_INTERVAL = 0.12
+local ENEMY_AMMUNITIONS_MAX = {2, 5}
 
 function Enemy:new(x, y, level, state)
   local state = state or "idle"
   local this = {
     ["state"] = "idle",
-    ["inPlay"] = true
+    ["inPlay"] = true,
+    ["ammunitions"] = love.math.random(ENEMY_AMMUNITIONS_MAX[1], ENEMY_AMMUNITIONS_MAX[2]),
+    ["lasers"] = {}
   }
 
   local def = {
@@ -35,6 +38,9 @@ function Enemy:new(x, y, level, state)
       end,
       ["walking-left"] = function()
         return EnemyWalkingState:new(this, "left")
+      end,
+      ["shooting"] = function()
+        return EnemyShootingState:new(this)
       end
     }
   )
@@ -64,6 +70,33 @@ function Enemy:update(dt)
   if self.inPlay then
     Entity.update(self, dt)
   end
+
+  for k, laser in pairs(self.lasers) do
+    laser:update(dt)
+    for j, enemy in pairs(self.level.enemies) do
+      if laser:collides(enemy) and (self.x ~= enemy.x or self.y ~= enemy.y) then
+        enemy.inPlay = false
+        laser.inPlay = false
+        break
+      end
+    end
+
+    if laser:collides(self.level.player) then
+      self.level.player:changeState("lose")
+      laser.inPlay = false
+    end
+
+    for j, wall in pairs(self.level.walls) do
+      if laser:collides(wall) then
+        laser.inPlay = false
+        break
+      end
+    end
+
+    if not laser.inPlay then
+      table.remove(self.lasers, k)
+    end
+  end
 end
 
 function Enemy:changeState(state, params)
@@ -79,6 +112,10 @@ function Enemy:changeState(state, params)
 end
 
 function Enemy:render()
+  for k, laser in pairs(self.lasers) do
+    laser:render()
+  end
+
   if self.inPlay then
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(

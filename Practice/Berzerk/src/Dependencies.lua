@@ -8,6 +8,7 @@ require "src/Utils"
 require "src/Entity"
 require "src/Projectile"
 require "src/Player"
+require "src/Laser"
 require "src/Enemy"
 require "src/Wall"
 
@@ -28,3 +29,4 @@ require "src/states/entities/player/PlayerLoseState"
 
 require "src/states/entities/enemy/EnemyIdleState"
 require "src/states/entities/enemy/EnemyWalkingState"
+require "src/states/entities/enemy/EnemyShootingState"
