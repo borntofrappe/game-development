@@ -51,7 +51,7 @@ function Player:update(dt)
     projectile:update(dt)
     for j, enemy in pairs(self.level.enemies) do
       if enemy.inPlay and projectile:collides(enemy) then
-        enemy.inPlay = false
+        enemy:changeState("lose")
         projectile.inPlay = false
         break
       end

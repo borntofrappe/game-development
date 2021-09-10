@@ -18,10 +18,11 @@ function Enemy:new(x, y, level, state)
 
   local this = {
     ["state"] = state,
+    ["currentAnimation"] = currentAnimation,
     ["inPlay"] = true,
     ["ammunitions"] = love.math.random(ENEMY_LASERS[1], ENEMY_LASERS[2]),
     ["lasers"] = {},
-    ["currentAnimation"] = currentAnimation
+    ["particles"] = {}
   }
 
   local def = {
@@ -53,6 +54,9 @@ function Enemy:new(x, y, level, state)
       end,
       ["shooting"] = function()
         return EnemyShootingState:new(this)
+      end,
+      ["lose"] = function()
+        return EnemyLoseState:new(this)
       end
     }
   )
@@ -77,7 +81,7 @@ function Enemy:update(dt)
     laser:update(dt)
     for j, enemy in pairs(self.level.enemies) do
       if laser:collides(enemy) and (self.x ~= enemy.x or self.y ~= enemy.y) then
-        enemy.inPlay = false
+        enemy:changeState("lose")
         laser.inPlay = false
         break
       end

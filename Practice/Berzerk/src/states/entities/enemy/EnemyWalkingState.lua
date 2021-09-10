@@ -53,7 +53,7 @@ function EnemyWalkingState:update(dt)
 
   for k, wall in pairs(self.enemy.level.walls) do
     if self.enemy:collides(wall) then
-      self.enemy.inPlay = false
+      self.enemy:changeState("lose")
       break
     end
   end
