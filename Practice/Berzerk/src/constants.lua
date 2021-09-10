@@ -12,10 +12,6 @@ OPTIONS = {
 
 SPRITE_SIZE = 8
 
-ROOM_PADDING = 8
-
-WALL_SIZE = 4
-
 --[[
   x: wall
   p: player

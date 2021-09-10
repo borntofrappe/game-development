@@ -1,11 +1,10 @@
 EnemyShootingState = BaseState:new()
 
-local ENEMY_IDLE_DELAY = 0.25
+local ENEMY_STATE_DELAY = 0.2
 
 function EnemyShootingState:new(enemy)
   local this = {
-    ["enemy"] = enemy,
-    ["delay"] = ENEMY_IDLE_DELAY
+    ["enemy"] = enemy
   }
 
   self.__index = self
@@ -16,8 +15,6 @@ end
 
 function EnemyShootingState:enter()
   if self.enemy.ammunitions > 0 then
-    gSounds["enemy-shoot"]:play()
-
     local direction
     local dx = self.enemy.level.player.x - self.enemy.x
     local dy = self.enemy.level.player.y - self.enemy.y
@@ -31,12 +28,11 @@ function EnemyShootingState:enter()
     table.insert(self.enemy.lasers, laser)
     self.enemy.ammunitions = self.enemy.ammunitions - 1
   end
-end
 
-function EnemyShootingState:update(dt)
-  self.delay = self.delay - dt
-
-  if self.delay <= 0 then
-    self.enemy:changeState("idle")
-  end
+  Timer:after(
+    ENEMY_STATE_DELAY,
+    function()
+      self.enemy:changeState("idle")
+    end
+  )
 end

@@ -1,15 +1,27 @@
 Enemy = Entity:new()
 
-local ENEMY_ANIMATION_INTERVAL = 0.12
-local ENEMY_AMMUNITIONS_MAX = {2, 5}
+local ENEMY_ANIMATION_INTERVAL = 0.15
+local ENEMY_LASERS = {3, 7}
 
 function Enemy:new(x, y, level, state)
   local state = state or "idle"
+
+  -- set up initial animation
+  -- following animations are managed by `:changeState`
+  local frames = {}
+  for frame = 1, #gQuads.enemy[state] do
+    table.insert(frames, frame)
+  end
+  local currentAnimation = Animation:new(frames, ENEMY_ANIMATION_INTERVAL)
+  -- initialize to a random frame to avoid having the enemies all in sync
+  currentAnimation.index = frames[love.math.random(#frames)]
+
   local this = {
     ["state"] = state,
     ["inPlay"] = true,
-    ["ammunitions"] = love.math.random(ENEMY_AMMUNITIONS_MAX[1], ENEMY_AMMUNITIONS_MAX[2]),
-    ["lasers"] = {}
+    ["ammunitions"] = love.math.random(ENEMY_LASERS[1], ENEMY_LASERS[2]),
+    ["lasers"] = {},
+    ["currentAnimation"] = currentAnimation
   }
 
   local def = {
@@ -48,16 +60,6 @@ function Enemy:new(x, y, level, state)
   stateMachine:change(state)
   def.stateMachine = stateMachine
 
-  -- :changeState sets up the animation in place of the individual states
-  -- as the function not called when the enemy is initialized it is necessary to set up the first animation
-  local frames = {}
-  for frame = 1, #gQuads.enemy[state] do
-    table.insert(frames, frame)
-  end
-  def.currentAnimation = Animation:new(frames, ENEMY_ANIMATION_INTERVAL)
-  -- initialize to a random frame to avoid having the enemies all in sync
-  def.currentAnimation.index = frames[love.math.random(#frames)]
-
   Entity.init(this, def)
 
   self.__index = self
@@ -94,7 +96,6 @@ function Enemy:update(dt)
     end
 
     if not laser.inPlay then
-      gSounds["projectile-collision"]:play()
       table.remove(self.lasers, k)
     end
   end

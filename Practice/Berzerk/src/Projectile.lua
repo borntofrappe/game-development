@@ -2,6 +2,11 @@ Projectile = {}
 
 local PROJECTILE_BASE_SPEED = 30
 local PROJECTILE_MULTIPLIER_SPEED = 3
+local PROJECTILE_SIZES = {1, 4}
+local PROJECTILE_INSET = {
+  ["x"] = 6,
+  ["y"] = 3
+}
 
 function Projectile:new(player)
   local dx
@@ -12,11 +17,12 @@ function Projectile:new(player)
   end
   local dy = player.dy * PROJECTILE_MULTIPLIER_SPEED
 
-  local width = dx == 0 and 1 or 4
-  local height = width == 4 and 1 or 4
+  local width = dx == 0 and PROJECTILE_SIZES[1] or PROJECTILE_SIZES[2]
+  local height = width == PROJECTILE_SIZES[1] and PROJECTILE_SIZES[2] or PROJECTILE_SIZES[1]
 
-  local x = player.direction == "right" and player.x + 6 or player.x + 1 - width
-  local y = player.y + 3 - height
+  local x =
+    player.direction == "right" and player.x + PROJECTILE_INSET.x or player.x - player.width + PROJECTILE_INSET.x
+  local y = player.y + PROJECTILE_INSET.y - height
 
   local this = {
     ["x"] = x,

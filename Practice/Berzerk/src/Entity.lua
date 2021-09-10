@@ -1,5 +1,6 @@
 Entity = {}
 
+local ENTITY_DEFAULT_INSET = 1
 function Entity:new()
     local this = {}
 
@@ -23,10 +24,6 @@ function Entity:init(def)
     self.stateMachine = def.stateMachine
 
     self.level = def.level
-
-    if def.currentAnimation then
-        self.currentAnimation = def.currentAnimation
-    end
 end
 
 function Entity:update(dt)
@@ -38,7 +35,7 @@ function Entity:changeState(state, params)
 end
 
 function Entity:collides(target, inset)
-    local inset = inset or 0
+    local inset = inset or ENTITY_DEFAULT_INSET
     if target.x + target.width - inset < self.x or target.x + inset > self.x + self.width then
         return false
     end

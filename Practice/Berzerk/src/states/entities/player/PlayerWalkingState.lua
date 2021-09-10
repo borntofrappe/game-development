@@ -1,6 +1,6 @@
 PlayerWalkingState = BaseState:new()
 
-local PLAYER_ANIMATION_INTERVAL = 0.12
+local PLAYER_ANIMATION_INTERVAL = 0.15
 local PLAYER_UPDATE_SPEED = {
   ["x"] = 20,
   ["y"] = 10
@@ -33,7 +33,7 @@ function PlayerWalkingState:update(dt)
 
   if not isColliding then
     for k, enemy in pairs(self.player.level.enemies) do
-      if self.player:collides(enemy, 1) then
+      if enemy.inPlay and self.player:collides(enemy) then
         isColliding = true
         enemy:changeState("idle")
         break

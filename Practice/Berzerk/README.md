@@ -2,6 +2,54 @@
 
 [Berzerk](<https://en.wikipedia.org/wiki/Berzerk_(video_game)>)
 
+## Worth mentioning
+
+- the spritesheet, texture and quads
+
+- state stack, state machine
+
+- projectile based on the direction and speed of the player
+
+- player and enemy based on an entity, to manage the state machine and share a few values, like `dx` or again the collides function
+
+- directions, projectiles, inPlay; few variables tailored for the classes initialized in `this`
+
+- `Entity.init`, `Entity.update`, without colon to pass the player class explicitly `(this, def)`
+
+- enemy managing the animation through the `changeState` function, and setting up a first animation to have the value readily available come initialization
+
+- x, y, width and height to detect collision with an AABB test
+
+- inset to detect a collision with the entities and some mercy padding
+
+- transition state mostly to transition out of the current scene
+
+- title state cutscene, animating an enemy to walk upwards toward the title before showing a message
+
+- timer library to manage time events
+
+- message gui to show centered text one character at a time
+
+- play state setting up the level on the basis of data, a long string describing the position of the walls, player and enemies with a grid of characters
+
+- for the wall the idea is to keep track of contiguous x characters
+
+- player states
+
+  - idle, two projectiles, not updating animation, to walking and shoot state
+
+  - lose, alternate between two sprites before moving to a new play state
+
+  - walking, alternating between two frames, keeping track of the directions to move diagonaly
+
+- enemy states
+
+  - idle, making a decision at an interval, picking between a table of options
+
+  - walking, for a limited duration, colliding with the player or wall. If outside of the room, set inPlay to false, but do not show particles. As if the enemy was moving to the adjacent room
+
+  - shooting, picking a direction to aim in the general direction of the player
+
 ## Spritesheet
 
 In the `res/graphics` sub-folder you find the spritesheet used to render the player, the enemies, and the particles shown when an enemy is shot.
@@ -50,11 +98,3 @@ The `Message` class in the `gui` folder helps to implement a text box which incl
 -Entity.init(self, def)
 +Entity.init(this, def)
 ```
-
-- add particles
-
-- clean up code
-
-- document and add gif
-
-- sound?!

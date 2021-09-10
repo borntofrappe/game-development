@@ -1,7 +1,7 @@
 EnemyWalkingState = BaseState:new()
 
 local ENEMY_UPDATE_SPEED = 10
-local ENEMY_WALKING_DURATION = {1, 3}
+local ENEMY_STATE_DELAY = {1, 4}
 
 function EnemyWalkingState:new(enemy, direction)
   local this = {
@@ -26,22 +26,19 @@ function EnemyWalkingState:enter()
     self.enemy.dy = ENEMY_UPDATE_SPEED
   end
 
-  self.duration = love.math.random(ENEMY_WALKING_DURATION[1], ENEMY_WALKING_DURATION[2])
+  self.delay = love.math.random(ENEMY_STATE_DELAY[1], ENEMY_STATE_DELAY[2])
 end
 
 function EnemyWalkingState:update(dt)
   self.enemy.currentAnimation:update(dt)
 
-  self.duration = self.duration - dt
+  self.delay = self.delay - dt
 
-  if
-    self.duration <= 0 or self.enemy.x <= 0 or self.enemy.x >= VIRTUAL_WIDTH - self.enemy.width or self.enemy.y <= 0 or
-      self.enemy.y >= VIRTUAL_HEIGHT - self.enemy.height
-   then
+  if self.delay <= 0 then
     self.enemy:changeState("idle")
   end
 
-  if self.enemy:collides(self.enemy.level.player, 1) then
+  if self.enemy:collides(self.enemy.level.player) then
     self.enemy.level.player:changeState("lose")
     self.enemy:changeState("idle")
   end
@@ -56,26 +53,20 @@ function EnemyWalkingState:update(dt)
 
   for k, wall in pairs(self.enemy.level.walls) do
     if self.enemy:collides(wall) then
-      gSounds["buzz"]:play()
       self.enemy.inPlay = false
       break
     end
   end
 
-  self.enemy.x =
-    math.max(
-    self.enemy.level.room.x,
-    math.min(
-      self.enemy.level.room.x + self.enemy.level.room.width - self.enemy.width,
-      self.enemy.x + self.enemy.dx * dt
-    )
-  )
-  self.enemy.y =
-    math.max(
-    self.enemy.level.room.y,
-    math.min(
-      self.enemy.level.room.y + self.enemy.level.room.height - self.enemy.height,
-      self.enemy.y + self.enemy.dy * dt
-    )
-  )
+  if
+    self.enemy.x < self.enemy.level.room.x or
+      self.enemy.x + self.enemy.width > self.enemy.level.room.x + self.enemy.level.room.width or
+      self.enemy.y < self.enemy.level.room.y or
+      self.enemy.y + self.enemy.height > self.enemy.level.room.y + self.enemy.level.room.height
+   then
+    self.enemy.inPlay = false
+  end
+
+  self.enemy.x = self.enemy.x + self.enemy.dx * dt
+  self.enemy.y = self.enemy.y + self.enemy.dy * dt
 end

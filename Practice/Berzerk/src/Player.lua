@@ -50,9 +50,7 @@ function Player:update(dt)
   for k, projectile in pairs(self.projectiles) do
     projectile:update(dt)
     for j, enemy in pairs(self.level.enemies) do
-      if projectile:collides(enemy) then
-        gSounds["enemy-shot"]:play()
-
+      if enemy.inPlay and projectile:collides(enemy) then
         enemy.inPlay = false
         projectile.inPlay = false
         break
@@ -67,8 +65,6 @@ function Player:update(dt)
     end
 
     if not projectile.inPlay then
-      gSounds["projectile-collision"]:play()
-
       table.remove(self.projectiles, k)
     end
   end

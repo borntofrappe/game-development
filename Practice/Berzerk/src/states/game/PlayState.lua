@@ -1,12 +1,15 @@
 PlayState = BaseState:new()
 
+local WALL_SIZE = 4
+
 function PlayState:enter()
-    gSounds["level"]:play()
     self.level = {}
     self:initializeLevel()
 end
 
 function PlayState:update(dt)
+    Timer:update(dt)
+
     if love.keyboard.waspressed("escape") then
         gStateStack:pop()
         gStateStack:push(TitleState:new())
@@ -54,38 +57,43 @@ function PlayState:initializeLevel()
         ["enemies"] = {}
     }
 
-    for row = 1, rows do
-        local isWall = false
+    local wallCharacter = "x"
+    local wallSegments = {}
 
-        local yWall = row
-        local xWall = 0
-        local widthWall = 0
+    for row = 1, rows do
+        local wallCounter = 0
 
         for column = 1, columns do
             local index = column + (row - 1) * columns
             local character = sequence:sub(index, index)
 
             if character == "x" then
-                if not isWall then
-                    isWall = true
-                    xWall = column
+                wallCounter = wallCounter + 1
+            else
+                if wallCounter > 1 then
+                    table.insert(
+                        wallSegments,
+                        {
+                            ["column"] = column - wallCounter,
+                            ["row"] = row,
+                            ["width"] = wallCounter
+                        }
+                    )
                 end
-                widthWall = widthWall + 1
+
+                wallCounter = 0
             end
 
-            if character ~= "x" or column == columns then
-                if isWall then
-                    if widthWall > 1 then
-                        local x = (xWall - 1) * widthUnit + widthUnit / 2 - WALL_SIZE / 2
-                        local y = (yWall - 1) * heightUnit + heightUnit / 2 - WALL_SIZE / 2
-                        local width = (widthWall - 1) * widthUnit + WALL_SIZE
-                        local height = WALL_SIZE
-
-                        local wall = Wall:new(x, y, width, height)
-                        table.insert(level.walls, wall)
-                    end
-                    isWall = false
-                    widthWall = 0
+            if column == columns then
+                if wallCounter > 1 then
+                    table.insert(
+                        wallSegments,
+                        {
+                            ["column"] = column - wallCounter + 1,
+                            ["row"] = row,
+                            ["width"] = wallCounter
+                        }
+                    )
                 end
             end
 
@@ -106,40 +114,52 @@ function PlayState:initializeLevel()
     end
 
     for column = 1, columns do
-        local isWall = false
-
-        local xWall = column
-        local yWall = 0
-        local heightWall = 0
+        local wallCounter = 0
 
         for row = 1, rows do
             local index = column + (row - 1) * columns
             local character = sequence:sub(index, index)
 
             if character == "x" then
-                if not isWall then
-                    isWall = true
-                    yWall = row
+                wallCounter = wallCounter + 1
+            else
+                if wallCounter > 1 then
+                    table.insert(
+                        wallSegments,
+                        {
+                            ["row"] = row - wallCounter,
+                            ["column"] = column,
+                            ["height"] = wallCounter
+                        }
+                    )
                 end
-                heightWall = heightWall + 1
+
+                wallCounter = 0
             end
 
-            if character ~= "x" or row == rows then
-                if isWall then
-                    if heightWall > 1 then
-                        local x = (xWall - 1) * widthUnit + widthUnit / 2 - WALL_SIZE / 2
-                        local y = (yWall - 1) * heightUnit + heightUnit / 2 - WALL_SIZE / 2
-                        local width = WALL_SIZE
-                        local height = (heightWall - 1) * heightUnit + WALL_SIZE
-
-                        local wall = Wall:new(x, y, width, height)
-                        table.insert(level.walls, wall)
-                    end
-                    isWall = false
-                    heightWall = 0
+            if row == rows then
+                if wallCounter > 1 then
+                    table.insert(
+                        wallSegments,
+                        {
+                            ["row"] = row - wallCounter + 1,
+                            ["column"] = column,
+                            ["height"] = wallCounter
+                        }
+                    )
                 end
             end
         end
+    end
+
+    for k, wall in pairs(wallSegments) do
+        local x = (wall.column - 1) * widthUnit + widthUnit / 2 - WALL_SIZE / 2
+        local y = (wall.row - 1) * heightUnit + heightUnit / 2 - WALL_SIZE / 2
+        local width = wall.width and (wall.width - 1) * widthUnit + WALL_SIZE or WALL_SIZE
+        local height = wall.height and (wall.height - 1) * heightUnit + WALL_SIZE or WALL_SIZE
+
+        local wall = Wall:new(x, y, width, height)
+        table.insert(level.walls, wall)
     end
 
     self.level = level

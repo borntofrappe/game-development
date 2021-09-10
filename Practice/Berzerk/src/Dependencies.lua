@@ -6,10 +6,13 @@ require "src/constants"
 require "src/Utils"
 
 require "src/Entity"
+
 require "src/Projectile"
 require "src/Player"
+
 require "src/Laser"
 require "src/Enemy"
+
 require "src/Wall"
 
 require "src/gui/Message"

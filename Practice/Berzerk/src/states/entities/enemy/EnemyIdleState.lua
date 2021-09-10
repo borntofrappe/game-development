@@ -1,10 +1,10 @@
 EnemyIdleState = BaseState:new()
 
-local ENEMY_DECISION_INTERVAL = {0, 5}
+local ENEMY_DECISION_INTERVAL = {0, 3}
 local ENEMY_DECISIONS = {
-  ["idle"] = {4, 7},
-  ["walking"] = {2, 6},
-  ["shooting"] = {2, 4}
+  ["idle"] = {3, 7},
+  ["walking"] = {2, 7},
+  ["shooting"] = {2, 5}
 }
 
 function EnemyIdleState:new(enemy)
