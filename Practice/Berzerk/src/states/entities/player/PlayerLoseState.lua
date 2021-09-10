@@ -17,6 +17,10 @@ function PlayerLoseState:new(player)
   return this
 end
 
+function PlayerLoseState:enter()
+  gSounds["buzz"]:play()
+end
+
 function PlayerLoseState:update(dt)
   self.player.currentAnimation:update(dt)
 

@@ -50,3 +50,11 @@ The `Message` class in the `gui` folder helps to implement a text box which incl
 -Entity.init(self, def)
 +Entity.init(this, def)
 ```
+
+- add particles
+
+- clean up code
+
+- document and add gif
+
+- sound?!

@@ -6,7 +6,7 @@ local ENEMY_AMMUNITIONS_MAX = {2, 5}
 function Enemy:new(x, y, level, state)
   local state = state or "idle"
   local this = {
-    ["state"] = "idle",
+    ["state"] = state,
     ["inPlay"] = true,
     ["ammunitions"] = love.math.random(ENEMY_AMMUNITIONS_MAX[1], ENEMY_AMMUNITIONS_MAX[2]),
     ["lasers"] = {}
@@ -94,6 +94,7 @@ function Enemy:update(dt)
     end
 
     if not laser.inPlay then
+      gSounds["projectile-collision"]:play()
       table.remove(self.lasers, k)
     end
   end

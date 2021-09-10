@@ -17,6 +17,8 @@ function PlayerShootingState:new(player)
 end
 
 function PlayerShootingState:enter()
+  gSounds["player-shoot"]:play()
+
   local projectile = Projectile:new(self.player)
   table.insert(self.player.projectiles, projectile)
 end

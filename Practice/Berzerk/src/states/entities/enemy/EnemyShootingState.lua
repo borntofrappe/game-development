@@ -16,6 +16,8 @@ end
 
 function EnemyShootingState:enter()
   if self.enemy.ammunitions > 0 then
+    gSounds["enemy-shoot"]:play()
+
     local direction
     local dx = self.enemy.level.player.x - self.enemy.x
     local dy = self.enemy.level.player.y - self.enemy.y

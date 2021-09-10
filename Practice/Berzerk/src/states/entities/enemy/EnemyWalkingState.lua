@@ -54,17 +54,12 @@ function EnemyWalkingState:update(dt)
     end
   end
 
-  local isColliding = false
-
   for k, wall in pairs(self.enemy.level.walls) do
     if self.enemy:collides(wall) then
-      isColliding = true
+      gSounds["buzz"]:play()
+      self.enemy.inPlay = false
       break
     end
-  end
-
-  if isColliding then
-    self.enemy.inPlay = false
   end
 
   self.enemy.x =

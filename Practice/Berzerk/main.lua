@@ -18,6 +18,15 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
   }
 
+  gSounds = {
+    ["buzz"] = love.audio.newSource("res/sounds/buzz.wav", "static"),
+    ["enemy-shoot"] = love.audio.newSource("res/sounds/enemy-shoot.wav", "static"),
+    ["enemy-shot"] = love.audio.newSource("res/sounds/enemy-shot.wav", "static"),
+    ["level"] = love.audio.newSource("res/sounds/level.wav", "static"),
+    ["player-shoot"] = love.audio.newSource("res/sounds/player-shoot.wav", "static"),
+    ["projectile-collision"] = love.audio.newSource("res/sounds/projectile-collision.wav", "static")
+  }
+
   -- gStateStack = StateStack:new({TitleState:new()}) -- uncomment in the final version
   gStateStack = StateStack:new({PlayState:new()})
 

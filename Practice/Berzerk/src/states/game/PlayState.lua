@@ -1,6 +1,7 @@
 PlayState = BaseState:new()
 
 function PlayState:enter()
+    gSounds["level"]:play()
     self.level = {}
     self:initializeLevel()
 end

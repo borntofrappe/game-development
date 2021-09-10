@@ -7,7 +7,7 @@ local MESSAGE_DELAY = 1
 
 function TitleState:enter()
   local yEnd = VIRTUAL_HEIGHT / 2
-  self.enemy = Enemy:new(VIRTUAL_WIDTH / 2 - SPRITE_SIZE / 2, VIRTUAL_HEIGHT, "walking-up")
+  self.enemy = Enemy:new(VIRTUAL_WIDTH / 2 - SPRITE_SIZE / 2, VIRTUAL_HEIGHT, nil, "walking-up")
 
   self.title = {
     ["text"] = "Berzerk",
@@ -19,6 +19,8 @@ function TitleState:enter()
   Timer:after(
     CUTSCENE_DELAY,
     function()
+      gSounds["level"]:play()
+
       Timer:tween(
         CUTSCENE_TWEEN,
         {
@@ -29,7 +31,7 @@ function TitleState:enter()
           Timer:after(
             MESSAGE_DELAY,
             function()
-              self.message = Message:new(self.enemy.y + self.enemy.size + 8, "Intruder alert!")
+              self.message = Message:new(self.enemy.y + self.enemy.height + 8, "Intruder alert!")
             end
           )
         end
