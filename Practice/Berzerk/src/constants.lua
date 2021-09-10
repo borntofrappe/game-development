@@ -25,7 +25,7 @@ LEVELS = {
   [[
 xxxxxx
 ooeooo
-oxooxo
+oxoexo
 oxxxxo
 oxpoxo
 ooooeo
@@ -33,7 +33,7 @@ xxxxxx
 ]],
   [[
 xxoxx
-xoxpx
+xexpx
 xoxox
 xexox
 xxoxx
@@ -41,7 +41,7 @@ xxoxx
   [[
 xxxoxxx
 xoxpxox
-xoxoxox
+xoxoxex
 xoeooox
 xooooex
 xoxoxox
@@ -50,7 +50,7 @@ xxxoxxx
   ]],
   [[
 xxxoxxx
-xoxoxex
+xexoxex
 xoxoxox
 xoeooox
 xooooox

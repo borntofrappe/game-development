@@ -1,6 +1,6 @@
 Player = Entity:new()
 
-function Player:new(x, y, walls)
+function Player:new(x, y, level)
   local this = {
     ["direction"] = "right",
     ["projectiles"] = {}
@@ -12,7 +12,7 @@ function Player:new(x, y, walls)
     ["width"] = SPRITE_SIZE,
     ["height"] = SPRITE_SIZE,
     ["quads"] = "player",
-    ["walls"] = walls
+    ["level"] = level
   }
 
   local stateMachine =
@@ -49,7 +49,15 @@ function Player:update(dt)
 
   for k, projectile in pairs(self.projectiles) do
     projectile:update(dt)
-    for j, wall in pairs(self.walls) do
+    for j, enemy in pairs(self.level.enemies) do
+      if projectile:collides(enemy) then
+        enemy.inPlay = false
+        projectile.inPlay = false
+        break
+      end
+    end
+
+    for j, wall in pairs(self.level.walls) do
       if projectile:collides(wall) then
         projectile.inPlay = false
         break

@@ -1,9 +1,7 @@
 PlayState = BaseState:new()
 
 function PlayState:enter()
-    self.walls = {}
-    self.player = Player:new(0, 0)
-    self.enemies = {Enemy:new(0, 0)}
+    self.level = {}
     self:initializeLevel()
 end
 
@@ -13,10 +11,14 @@ function PlayState:update(dt)
         gStateStack:push(TitleState:new())
     end
 
-    self.player:update(dt)
+    self.level.player:update(dt)
 
-    for k, enemy in pairs(self.enemies) do
+    for k, enemy in pairs(self.level.enemies) do
         enemy:update(dt)
+
+        if not enemy.inPlay then
+            table.remove(self.level.enemies, k)
+        end
     end
 end
 
@@ -24,15 +26,15 @@ function PlayState:render()
     love.graphics.setColor(0.09, 0.09, 0.09)
     love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
-    for k, wall in pairs(self.walls) do
+    for k, wall in pairs(self.level.walls) do
         wall:render()
     end
 
-    for k, enemy in pairs(self.enemies) do
+    for k, enemy in pairs(self.level.enemies) do
         enemy:render()
     end
 
-    self.player:render()
+    self.level.player:render()
 end
 
 function PlayState:initializeLevel()
@@ -43,9 +45,17 @@ function PlayState:initializeLevel()
     local widthUnit = VIRTUAL_WIDTH / columns
     local heightUnit = VIRTUAL_HEIGHT / rows
 
-    local walls = {}
-    local player = nil
-    local enemies = {}
+    local level = {
+        ["room"] = {
+            ["x"] = widthUnit / 2 - WALL_SIZE / 2,
+            ["y"] = heightUnit / 2 - WALL_SIZE / 2,
+            ["width"] = VIRTUAL_WIDTH - widthUnit + WALL_SIZE,
+            ["height"] = VIRTUAL_HEIGHT - heightUnit + WALL_SIZE
+        },
+        ["walls"] = {},
+        ["player"] = nil,
+        ["enemies"] = {}
+    }
 
     for row = 1, rows do
         local isWall = false
@@ -75,7 +85,7 @@ function PlayState:initializeLevel()
                         local height = WALL_SIZE
 
                         local wall = Wall:new(x, y, width, height)
-                        table.insert(walls, wall)
+                        table.insert(level.walls, wall)
                     end
                     isWall = false
                     widthWall = 0
@@ -85,15 +95,15 @@ function PlayState:initializeLevel()
             if character == "p" then
                 local x = (column - 1) * widthUnit + widthUnit / 2 - SPRITE_SIZE / 2
                 local y = (row - 1) * heightUnit + heightUnit / 2 - SPRITE_SIZE / 2
-                player = Player:new(x, y, walls)
+                level.player = Player:new(x, y, level)
             end
 
             if character == "e" then
                 local x = (column - 1) * widthUnit + widthUnit / 2 - SPRITE_SIZE / 2
                 local y = (row - 1) * heightUnit + heightUnit / 2 - SPRITE_SIZE / 2
-                local enemy = Enemy:new(x, y, walls)
+                local enemy = Enemy:new(x, y, level)
 
-                table.insert(enemies, enemy)
+                table.insert(level.enemies, enemy)
             end
         end
     end
@@ -126,7 +136,7 @@ function PlayState:initializeLevel()
                         local height = (heightWall - 1) * heightUnit + WALL_SIZE
 
                         local wall = Wall:new(x, y, width, height)
-                        table.insert(walls, wall)
+                        table.insert(level.walls, wall)
                     end
                     isWall = false
                     heightWall = 0
@@ -135,7 +145,5 @@ function PlayState:initializeLevel()
         end
     end
 
-    self.walls = walls
-    self.player = player
-    self.enemies = enemies
+    self.level = level
 end

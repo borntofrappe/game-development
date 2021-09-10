@@ -22,7 +22,7 @@ function Entity:init(def)
     self.quads = def.quads
     self.stateMachine = def.stateMachine
 
-    self.walls = def.walls
+    self.level = def.level
 
     if def.currentAnimation then
         self.currentAnimation = def.currentAnimation

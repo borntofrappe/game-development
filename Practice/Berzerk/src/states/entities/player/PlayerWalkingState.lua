@@ -1,8 +1,8 @@
 PlayerWalkingState = BaseState:new()
 
-local PLAYER_ANIMATION_INTERVAL = 0.15
+local PLAYER_ANIMATION_INTERVAL = 0.12
 local PLAYER_UPDATE_SPEED = {
-  ["x"] = 15,
+  ["x"] = 20,
   ["y"] = 10
 }
 local PLAYER_PROJECTILES = 1
@@ -24,10 +24,20 @@ function PlayerWalkingState:update(dt)
   self.player.currentAnimation:update(dt)
 
   local isColliding = false
-  for k, wall in pairs(self.player.walls) do
+  for k, wall in pairs(self.player.level.walls) do
     if self.player:collides(wall, 1) then
       isColliding = true
       break
+    end
+  end
+
+  if not isColliding then
+    for k, enemy in pairs(self.player.level.enemies) do
+      if self.player:collides(enemy, 1) then
+        isColliding = true
+        enemy:changeState("idle")
+        break
+      end
     end
   end
 
@@ -60,8 +70,26 @@ function PlayerWalkingState:update(dt)
     self.player.dy = 0
   end
 
-  self.player.x = math.max(0, math.min(VIRTUAL_WIDTH - self.player.width, self.player.x + self.player.dx * dt))
-  self.player.y = math.max(0, math.min(VIRTUAL_HEIGHT - self.player.height, self.player.y + self.player.dy * dt))
+  self.player.x = self.player.x + self.player.dx * dt
+  self.player.y = self.player.y + self.player.dy * dt
+
+  if
+    self.player.x < self.player.level.room.x or
+      self.player.x + self.player.width > self.player.level.room.x + self.player.level.room.width or
+      self.player.y < self.player.level.room.y or
+      self.player.y + self.player.height > self.player.level.room.y + self.player.level.room.height
+   then
+    gStateStack:push(
+      TransitionState:new(
+        {
+          ["callback"] = function()
+            gStateStack:pop()
+            gStateStack:push(PlayState:new())
+          end
+        }
+      )
+    )
+  end
 
   if not (directions["left"] or directions["right"] or directions["up"] or directions["down"]) then
     self.player:changeState("idle")
