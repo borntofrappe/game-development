@@ -13,7 +13,7 @@ function love.load()
   love.window.setTitle(TITLE)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
-  background = love.graphics.newImage("res/graphics/background.png")
+  background = love.graphics.newImage("res/graphics/background.jpg")
 
   gMouseInput = false
 
