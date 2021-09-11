@@ -5,7 +5,7 @@ local PROJECTILE_MULTIPLIER_SPEED = 3
 local PROJECTILE_SIZES = {1, 4}
 local PROJECTILE_INSET = {
   ["x"] = 6,
-  ["y"] = 3
+  ["y"] = 2
 }
 
 function Projectile:new(player)
@@ -21,8 +21,9 @@ function Projectile:new(player)
   local height = width == PROJECTILE_SIZES[1] and PROJECTILE_SIZES[2] or PROJECTILE_SIZES[1]
 
   local x =
-    player.direction == "right" and player.x + PROJECTILE_INSET.x or player.x - player.width + PROJECTILE_INSET.x
-  local y = player.y + PROJECTILE_INSET.y - height
+    player.direction == "right" and player.x + PROJECTILE_INSET.x or
+    player.x + player.width - PROJECTILE_INSET.x - width
+  local y = dy >= 0 and player.y + PROJECTILE_INSET.y or player.y + PROJECTILE_INSET.y - height
 
   local this = {
     ["x"] = x,

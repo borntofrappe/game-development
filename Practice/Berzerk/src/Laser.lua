@@ -19,11 +19,12 @@ local LASER_UPDATE_SPEEDS = {
     ["dy"] = LASER_UPDATE_SPEED
   }
 }
-local LASER_SIZES = {1, 4}
+
 local LASER_INSET = {
-  ["x"] = 4,
-  ["y"] = 2
+  ["y"] = 1
 }
+
+local LASER_SIZES = {1, 4}
 
 function Laser:new(enemy, direction)
   local dx = LASER_UPDATE_SPEEDS[direction].dx
@@ -32,8 +33,22 @@ function Laser:new(enemy, direction)
   local width = dx == 0 and LASER_SIZES[1] or LASER_SIZES[2]
   local height = width == LASER_SIZES[1] and LASER_SIZES[2] or LASER_SIZES[1]
 
-  local x = enemy.x + LASER_INSET.x - width / 2
-  local y = enemy.y + LASER_INSET.y - height / 2
+  local x, y
+  if direction == "right" then
+    x = enemy.x + enemy.width
+  elseif direction == "left" then
+    x = enemy.x - width
+  else
+    x = enemy.x + enemy.width / 2 - width / 2
+  end
+
+  if direction == "up" then
+    y = enemy.y - height
+  elseif direction == "down" then
+    y = enemy.y + enemy.height
+  else
+    y = enemy.y + LASER_INSET.y
+  end
 
   local this = {
     ["x"] = x,
