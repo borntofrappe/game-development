@@ -39,7 +39,9 @@ function EnemyWalkingState:update(dt)
   end
 
   if self.enemy:collides(self.enemy.level.player) then
-    self.enemy.level.player:changeState("lose")
+    if self.enemy.level.player.inPlay then
+      self.enemy.level.player:changeState("lose")
+    end
     self.enemy:changeState("idle")
   end
 
@@ -53,7 +55,12 @@ function EnemyWalkingState:update(dt)
 
   for k, wall in pairs(self.enemy.level.walls) do
     if self.enemy:collides(wall) then
-      self.enemy:changeState("lose")
+      self.enemy:changeState(
+        "explode",
+        {
+          ["numberFrames"] = 1
+        }
+      )
       break
     end
   end

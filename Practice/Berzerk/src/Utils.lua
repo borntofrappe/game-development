@@ -4,9 +4,9 @@ function GenerateQuadsPlayer(atlas)
 
   --[[
     1 idle
-    2,3 walking
-    4 shooting
-    5 losing
+    2,3 walk
+    4 shoot
+    5 lose
   ]]
   local types = 5
 
@@ -29,32 +29,32 @@ function GenerateQuadsEnemy(atlas)
       ["x"] = 0,
       ["y"] = 8
     },
-    ["walking-down"] = {
+    ["walk-down"] = {
       ["frames"] = 3,
       ["x"] = 0,
       ["y"] = 16
     },
-    ["walking-right"] = {
+    ["walk-right"] = {
       ["frames"] = 3,
       ["x"] = 0,
       ["y"] = 24
     },
-    ["walking-up"] = {
+    ["walk-up"] = {
       ["frames"] = 3,
       ["x"] = 0,
       ["y"] = 32
     },
-    ["walking-left"] = {
+    ["walk-left"] = {
       ["frames"] = 3,
       ["x"] = 0,
       ["y"] = 40
     },
-    ["shooting"] = {
+    ["shoot"] = {
       ["frames"] = 1,
       ["x"] = 0,
       ["y"] = 8
     },
-    ["lose"] = {
+    ["explode"] = {
       ["frames"] = 2,
       ["x"] = 48,
       ["y"] = 0

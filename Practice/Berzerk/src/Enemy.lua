@@ -40,23 +40,23 @@ function Enemy:new(x, y, level, state)
       ["idle"] = function()
         return EnemyIdleState:new(this)
       end,
-      ["walking-up"] = function()
+      ["walk-up"] = function()
         return EnemyWalkingState:new(this, "up")
       end,
-      ["walking-right"] = function()
+      ["walk-right"] = function()
         return EnemyWalkingState:new(this, "right")
       end,
-      ["walking-down"] = function()
+      ["walk-down"] = function()
         return EnemyWalkingState:new(this, "down")
       end,
-      ["walking-left"] = function()
+      ["walk-left"] = function()
         return EnemyWalkingState:new(this, "left")
       end,
-      ["shooting"] = function()
+      ["shoot"] = function()
         return EnemyShootingState:new(this)
       end,
-      ["lose"] = function()
-        return EnemyLoseState:new(this)
+      ["explode"] = function()
+        return EnemyExplodingState:new(this)
       end
     }
   )
@@ -80,15 +80,17 @@ function Enemy:update(dt)
   for k, laser in pairs(self.lasers) do
     laser:update(dt)
     for j, enemy in pairs(self.level.enemies) do
-      if laser:collides(enemy) and (self.x ~= enemy.x or self.y ~= enemy.y) then
-        enemy:changeState("lose")
+      if laser:collides(enemy) then
+        enemy:changeState("explode")
         laser.inPlay = false
         break
       end
     end
 
     if laser:collides(self.level.player) then
-      self.level.player:changeState("lose")
+      if self.level.player.inPlay then
+        self.level.player:changeState("lose")
+      end
       laser.inPlay = false
     end
 

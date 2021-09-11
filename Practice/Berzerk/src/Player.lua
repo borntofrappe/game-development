@@ -3,7 +3,8 @@ Player = Entity:new()
 function Player:new(x, y, level)
   local this = {
     ["direction"] = "right",
-    ["projectiles"] = {}
+    ["projectiles"] = {},
+    ["inPlay"] = true
   }
 
   local def = {
@@ -51,7 +52,7 @@ function Player:update(dt)
     projectile:update(dt)
     for j, enemy in pairs(self.level.enemies) do
       if enemy.inPlay and projectile:collides(enemy) then
-        enemy:changeState("lose")
+        enemy:changeState("explode")
         projectile.inPlay = false
         break
       end

@@ -10,7 +10,7 @@ local TITLE_MARGIN_BOTTOM = 8
 
 function TitleState:enter()
   local yEnd = VIRTUAL_HEIGHT / 2
-  self.enemy = Enemy:new(VIRTUAL_WIDTH / 2 - SPRITE_SIZE / 2, VIRTUAL_HEIGHT, nil, "walking-up")
+  self.enemy = Enemy:new(VIRTUAL_WIDTH / 2 - SPRITE_SIZE / 2, VIRTUAL_HEIGHT, nil, "walk-up")
 
   self.title = {
     ["text"] = "Berzerk",

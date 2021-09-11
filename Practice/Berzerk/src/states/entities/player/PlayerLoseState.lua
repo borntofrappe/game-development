@@ -5,6 +5,7 @@ local GAME_STATE_DELAY = PLAYER_ANIMATION_INTERVAL * 10 + 1
 
 function PlayerLoseState:new(player)
   player.currentAnimation = Animation:new({5, 1}, PLAYER_ANIMATION_INTERVAL)
+  player.inPlay = false
 
   local this = {
     ["player"] = player

@@ -3,8 +3,8 @@ EnemyIdleState = BaseState:new()
 local ENEMY_DECISION_INTERVAL = {0, 3}
 local ENEMY_DECISIONS = {
   ["idle"] = {3, 7},
-  ["walking"] = {2, 7},
-  ["shooting"] = {2, 5}
+  ["walk"] = {2, 7},
+  ["shoot"] = {2, 5}
 }
 
 function EnemyIdleState:new(enemy)
@@ -40,7 +40,7 @@ function EnemyIdleState:update(dt)
 
       for i = 1, n do
         local decision = k
-        if decision == "walking" then
+        if decision == "walk" then
           if self.enemy.level and love.math.random(2) == 1 then
             local direction
             local dx = self.enemy.level.player.x - self.enemy.x
