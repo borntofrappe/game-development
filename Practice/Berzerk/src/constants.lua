@@ -67,8 +67,38 @@ xxxoxxx
 xxxxxx
 xoeoox
 oxooxo
-oxooxo
+exooxo
 xoopox
 xxxxxx
+]],
+  [[
+oxxxxxxo
+xooeooex
+xpxxxxox
+xoooeoox
+oxxxxxxo
+]],
+  [[
+xxxxxxxx
+xooopoox
+xexxxxox
+xooeooox
+xoxxxxex
+]],
+  [[
+xxxooxxx
+xoxoeoox
+xexxxxox
+xoooexox
+xopooxox
+xxxxooox
+]],
+  [[
+xxxxxxxxx
+xoeoooxox
+xoooopxox
+xoxxxxxex
+xoeooooox
+xxxooexxx
 ]]
 }

@@ -18,8 +18,7 @@ function love.load()
     ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
   }
 
-  -- gStateStack = StateStack:new({TitleState:new()})
-  gStateStack = StateStack:new({PlayState:new()})
+  gStateStack = StateStack:new({TitleState:new()})
 
   love.keyboard.keypressed = {}
 end

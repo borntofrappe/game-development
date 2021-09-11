@@ -26,7 +26,7 @@ function PlayerLoseState:enter()
           {
             ["callback"] = function()
               gStateStack:pop()
-              gStateStack:push(PlayState:new())
+              gStateStack:push(TitleState:new())
             end
           }
         )
