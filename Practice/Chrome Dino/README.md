@@ -2,7 +2,7 @@
 
 Google Chrome offers a [neat endless scroller](https://en.wikipedia.org/wiki/Dinosaur_Game) when the browser is offline.
 
-## Resources
+## res
 
 ### Spritesheet
 
@@ -17,3 +17,13 @@ Google Chrome offers a [neat endless scroller](https://en.wikipedia.org/wiki/Din
 - bird 19 by 16
 
 <!-- ### Sound bytes -->
+
+### lib
+
+Timer library to manage delays, tweens, intervals
+
+push library to scale the window while preserving pixelated look
+
+Animation library to manage sprite animation
+
+## src
