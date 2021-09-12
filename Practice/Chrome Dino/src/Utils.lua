@@ -23,7 +23,7 @@ function GenerateQuadsDino(atlas)
     },
     ["gameover"] = {
       ["frames"] = 1,
-      ["x"] = 70,
+      ["x"] = 90,
       ["y"] = 0,
       ["width"] = 16,
       ["height"] = 16
