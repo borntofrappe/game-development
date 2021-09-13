@@ -20,7 +20,10 @@ function love.load()
         ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
     }
 
-    gStateStack = StateStack:new({TitleState:new()})
+    gGround = Ground:new()
+    gDino = Dino:new(gGround)
+
+    gStateStack = StateStack:new({ServeState:new()})
 
     love.keyboard.keypressed = {}
 end
@@ -48,6 +51,10 @@ function love.draw()
 
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+
+    gGround:render()
+    gDino:render()
+
     gStateStack:render()
 
     push:finish()

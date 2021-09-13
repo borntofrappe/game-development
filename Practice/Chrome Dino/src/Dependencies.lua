@@ -5,8 +5,13 @@ require "res/lib/Animation"
 require "src/constants"
 require "src/Utils"
 
+require "src/Ground"
+require "src/Dino"
+-- require "src/Bird"
+-- require "src/Cactus"
+
 require "src/StateStack"
 require "src/StateMachine"
 require "src/states/BaseState"
 
-require "src/states/TitleState"
+require "src/states/ServeState"

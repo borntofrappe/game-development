@@ -27,3 +27,5 @@ push library to scale the window while preserving pixelated look
 Animation library to manage sprite animation
 
 ## src
+
+State stack to manage the game. Global values for the dinosaur, ground coordinates and score
