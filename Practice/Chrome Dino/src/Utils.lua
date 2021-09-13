@@ -21,7 +21,7 @@ function GenerateQuadsDino(atlas)
 end
 
 function GenerateQuadCloud(atlas)
-    local x = 39
+    local x = 29
     local y = 16
     local width = CLOUD_WIDTH
     local height = CLOUD_HEIGHT

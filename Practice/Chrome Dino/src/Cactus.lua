@@ -5,7 +5,7 @@ local CACTUS_INSET = {
 }
 
 function Cactus:new(ground, type)
-    local type = type or 3
+    local type = type or 1
     local width = CACTI_TYPES[type].width
     local height = CACTI_TYPES[type].height
 

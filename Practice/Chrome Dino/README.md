@@ -6,6 +6,8 @@ Google Chrome offers a [neat endless scroller](https://en.wikipedia.org/wiki/Din
 
 ### Spritesheet
 
+Color 0.42\*3
+
 - ground 256 pixels by 10
 
 - dinosaur 16 by 16 for the idle, walking and gameover states, 21 by 11 for the ducked down version

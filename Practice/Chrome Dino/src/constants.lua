@@ -1,8 +1,8 @@
-WINDOW_WIDTH = 558
-WINDOW_HEIGHT = 288
+WINDOW_WIDTH = 606
+WINDOW_HEIGHT = 312
 
-VIRTUAL_WIDTH = 186
-VIRTUAL_HEIGHT = 96
+VIRTUAL_WIDTH = 202
+VIRTUAL_HEIGHT = 104
 
 OPTIONS = {
     fullscreen = false,
@@ -50,20 +50,23 @@ DINO_STATES = {
 
 SCROLL_SPEED = 80
 
-CLOUD_WIDTH = 25
-CLOUD_HEIGHT = 8
+CLOUD_WIDTH = 18
+CLOUD_HEIGHT = 6
 
 CACTI_TYPES = {
     {
-        ["width"] = 12,
-        ["height"] = 16
+        ["width"] = 9,
+        ["height"] = 12
     },
     {
-        ["width"] = 12,
-        ["height"] = 16
+        ["width"] = 9,
+        ["height"] = 12
     },
     {
-        ["width"] = 15,
-        ["height"] = 24
+        ["width"] = 11,
+        ["height"] = 18
     }
 }
+
+BIRD_WIDTH = 16
+BIRD_HEIGHT = 11
