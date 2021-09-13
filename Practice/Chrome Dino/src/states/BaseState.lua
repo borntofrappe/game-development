@@ -1,12 +1,12 @@
 BaseState = {}
 
 function BaseState:new()
-  local this = {}
+    local this = {}
 
-  self.__index = self
-  setmetatable(this, self)
+    self.__index = self
+    setmetatable(this, self)
 
-  return this
+    return this
 end
 
 function BaseState:enter()

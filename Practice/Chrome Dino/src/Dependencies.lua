@@ -7,6 +7,8 @@ require "src/Utils"
 
 require "src/Ground"
 require "src/Dino"
+require "src/Cloud"
+
 -- require "src/Bird"
 -- require "src/Cactus"
 

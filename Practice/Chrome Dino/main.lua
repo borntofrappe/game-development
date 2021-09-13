@@ -12,7 +12,8 @@ function love.load()
     }
 
     gQuads = {
-        ["dino"] = GenerateQuadsDino(gTextures.spritesheet)
+        ["dino"] = GenerateQuadsDino(gTextures.spritesheet),
+        ["cloud"] = GenerateQuadCloud(gTextures.spritesheet)
     }
 
     gFonts = {
