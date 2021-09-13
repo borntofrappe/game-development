@@ -21,8 +21,8 @@ function Dino:new(state)
     local animation = Animation:new(frames, INTERVAL_ANIMATION)
 
     local this = {
-        ["x"] = x,
         ["yStart"] = y,
+        ["x"] = x,
         ["y"] = y,
         ["dy"] = 0,
         ["width"] = width,
@@ -97,4 +97,17 @@ function Dino:render()
         math.floor(self.x),
         math.floor(self.y)
     )
+end
+
+function Dino:collides(target, inset)
+    local inset = inset or 2
+    if target.x + target.width - inset < self.x or target.x + inset > self.x + self.width then
+        return false
+    end
+
+    if target.y + target.height - inset < self.y or target.y + inset > self.y + self.height then
+        return false
+    end
+
+    return true
 end

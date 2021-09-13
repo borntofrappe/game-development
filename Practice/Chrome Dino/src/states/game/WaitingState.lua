@@ -24,7 +24,9 @@ function WaitingState:update(dt)
     end
 
     if love.keyboard.waspressed("space") or love.keyboard.waspressed("up") then
-        gDino:changeState("jump")
+        if gDino.state == "idle" then
+            gDino:changeState("jump")
+        end
     end
 
     if gDino.state == "run" then

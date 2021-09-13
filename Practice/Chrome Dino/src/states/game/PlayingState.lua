@@ -27,6 +27,11 @@ function PlayingState:update(dt)
 
     for k, cactus in pairs(self.cacti) do
         cactus:update(dt)
+
+        if gDino:collides(cactus) then
+            gStateStack:push(StoppedState:new())
+        end
+
         if not cactus.inPlay then
             table.remove(self.cacti, k)
         end
