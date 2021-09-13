@@ -1,11 +1,14 @@
 Ground = {}
 
-function Ground:new(x, y)
-    local x = x or 0
-    local y = y or VIRTUAL_HEIGHT - gTextures["ground"]:getHeight()
+function Ground:new()
+    local width = gTextures["ground"]:getWidth()
+    local x = 0
+    local y = VIRTUAL_HEIGHT - gTextures["ground"]:getHeight()
     local this = {
         ["x"] = x,
-        ["y"] = y
+        ["y"] = y,
+        ["width"] = width,
+        ["offset"] = width
     }
 
     self.__index = self
@@ -20,4 +23,5 @@ end
 function Ground:render()
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(gTextures["ground"], self.x, self.y)
+    love.graphics.draw(gTextures["ground"], self.x + self.offset, self.y)
 end

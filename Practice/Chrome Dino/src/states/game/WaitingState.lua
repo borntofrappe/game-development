@@ -1,6 +1,8 @@
-ServeState = BaseState:new()
+WaitingState = BaseState:new()
 
-function ServeState:enter()
+local OVERLAY_TWEEN = 0.9
+
+function WaitingState:enter()
   local x = gDino.x + gDino.width + 2
   local y = 0
   self.overlay = {
@@ -13,31 +15,42 @@ function ServeState:enter()
   self.isTransitioning = false
 end
 
-function ServeState:update(dt)
+function WaitingState:update(dt)
   Timer:update(dt)
+  gDino:update(dt)
 
   if love.keyboard.waspressed("escape") then
     love.event.quit()
   end
 
-  if love.keyboard.waspressed("return") then
+  if love.keyboard.waspressed("space") or love.keyboard.waspressed("up") then
+    gDino:changeState("jump")
+  end
+
+  if gDino.state == "run" then
+    gGround.x = gGround.x - SCROLL_SPEED * dt
+    if gGround.x <= -gGround.width then
+      gGround.x = 0
+    end
+
     if not self.isTransitioning then
       self.isTransitioning = true
 
       Timer:tween(
-        2,
+        OVERLAY_TWEEN,
         {
           [self.overlay] = {["x"] = VIRTUAL_WIDTH}
         },
         function()
-          -- here you'd start playing
+          gStateStack:pop()
+          gStateStack:push(PlayingState:new())
         end
       )
     end
   end
 end
 
-function ServeState:render()
+function WaitingState:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.rectangle("fill", self.overlay.x, self.overlay.y, self.overlay.width, self.overlay.height)
 end

@@ -1,16 +1,16 @@
 Dino = {}
 
-local INTERVAL_ANIMATION = 0.15
-local GROUND_INSET = {
-    ["x"] = 2,
-    ["y"] = 7
+local INTERVAL_ANIMATION = 0.12
+local DINO_INSET = {
+    ["x"] = 4,
+    ["y"] = 2
 }
 
-function Dino:new(ground, state)
+function Dino:new(state)
     local state = state or "idle"
 
-    local x = ground.x + GROUND_INSET.x
-    local y = ground.y - DINO_STATES[state].height + GROUND_INSET.y
+    local x = DINO_INSET.x
+    local y = VIRTUAL_HEIGHT - (DINO_STATES[state].height + DINO_INSET.y)
     local width = DINO_STATES[state].width
     local height = DINO_STATES[state].height
 
@@ -22,7 +22,9 @@ function Dino:new(ground, state)
 
     local this = {
         ["x"] = x,
+        ["yStart"] = y,
         ["y"] = y,
+        ["dy"] = 0,
         ["width"] = width,
         ["height"] = height,
         ["state"] = state,

@@ -14,7 +14,8 @@ require "src/StateStack"
 require "src/StateMachine"
 require "src/states/BaseState"
 
-require "src/states/game/ServeState"
+require "src/states/game/WaitingState"
+require "src/states/game/PlayingState"
 
 require "src/states/dino/DinoIdleState"
 require "src/states/dino/DinoRunningState"

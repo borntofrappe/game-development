@@ -10,9 +10,3 @@ function DinoDuckingState:new(dino)
 
     return this
 end
-
-function DinoDuckingState:update(dt)
-    if love.keyboard.waspressed("space") then
-        self.dino:changeState("idle")
-    end
-end

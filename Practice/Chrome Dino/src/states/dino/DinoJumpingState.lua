@@ -1,7 +1,9 @@
 DinoJumpingState = BaseState:new()
 
+local GRAVITY = 20
+local JUMP = 5
+
 function DinoJumpingState:new(dino)
-    dino.y = dino.y - 5
     local this = {
         ["dino"] = dino
     }
@@ -12,12 +14,16 @@ function DinoJumpingState:new(dino)
     return this
 end
 
-function DinoJumpingState:exit()
-    self.dino.y = self.dino.y + 5
+function DinoJumpingState:enter()
+    self.dino.dy = -JUMP
 end
 
 function DinoJumpingState:update(dt)
-    if love.keyboard.waspressed("space") then
-        self.dino:changeState("idle")
+    self.dino.dy = self.dino.dy + GRAVITY * dt
+    self.dino.y = self.dino.y + self.dino.dy
+
+    if self.dino.y >= self.dino.yStart then
+        self.dino.y = self.dino.yStart
+        self.dino:changeState("run")
     end
 end

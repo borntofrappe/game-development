@@ -10,9 +10,3 @@ function DinoStoppedState:new(dino)
 
     return this
 end
-
-function DinoStoppedState:update(dt)
-    if love.keyboard.waspressed("space") then
-        self.dino:changeState("idle")
-    end
-end

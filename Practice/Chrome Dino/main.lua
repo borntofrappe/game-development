@@ -21,9 +21,9 @@ function love.load()
     }
 
     gGround = Ground:new()
-    gDino = Dino:new(gGround)
+    gDino = Dino:new()
 
-    gStateStack = StateStack:new({ServeState:new()})
+    gStateStack = StateStack:new({WaitingState:new()})
 
     love.keyboard.keypressed = {}
 end
@@ -41,7 +41,6 @@ function love.keyboard.waspressed(key)
 end
 
 function love.update(dt)
-    gDino:update(dt)
     gStateStack:update(dt)
 
     love.keyboard.keypressed = {}
