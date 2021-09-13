@@ -41,6 +41,7 @@ function love.keyboard.waspressed(key)
 end
 
 function love.update(dt)
+    gDino:update(dt)
     gStateStack:update(dt)
 
     love.keyboard.keypressed = {}

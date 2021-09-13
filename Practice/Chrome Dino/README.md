@@ -29,3 +29,5 @@ Animation library to manage sprite animation
 ## src
 
 State stack to manage the game. Global values for the dinosaur, ground coordinates and score
+
+State machine to manage the dinosaur and its possible states.

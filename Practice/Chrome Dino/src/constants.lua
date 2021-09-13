@@ -18,6 +18,13 @@ DINO_STATES = {
     ["width"] = 16,
     ["height"] = 16
   },
+  ["jump"] = {
+    ["frames"] = 1,
+    ["x"] = 0,
+    ["y"] = 0,
+    ["width"] = 16,
+    ["height"] = 16
+  },
   ["run"] = {
     ["frames"] = 2,
     ["x"] = 16,
@@ -32,7 +39,7 @@ DINO_STATES = {
     ["width"] = 21,
     ["height"] = 11
   },
-  ["gameover"] = {
+  ["stop"] = {
     ["frames"] = 1,
     ["x"] = 90,
     ["y"] = 0,
