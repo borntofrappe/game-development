@@ -94,7 +94,7 @@ function Dino:render()
     love.graphics.draw(
         gTextures["spritesheet"],
         gQuads["dino"][self.state][self.animation:getCurrentFrame()],
-        self.x,
-        self.y
+        math.floor(self.x),
+        math.floor(self.y)
     )
 end

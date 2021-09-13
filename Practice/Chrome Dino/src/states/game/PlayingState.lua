@@ -1,15 +1,35 @@
 PlayingState = BaseState:new()
 
+local SPAWN_INTERVAL = 4
+
 function PlayingState:enter()
     self.cloud = Cloud:new()
+
+    self.cacti = {}
+
+    Timer:every(
+        SPAWN_INTERVAL,
+        function()
+            table.insert(self.cacti, Cactus:new(gGround))
+        end,
+        true
+    )
 end
 
 function PlayingState:update(dt)
+    Timer:update(dt)
     gDino:update(dt)
 
     self.cloud:update(dt)
     if not self.cloud.inPlay then
         self.cloud = Cloud:new()
+    end
+
+    for k, cactus in pairs(self.cacti) do
+        cactus:update(dt)
+        if not cactus.inPlay then
+            table.remove(self.cacti, k)
+        end
     end
 
     gGround.x = gGround.x - SCROLL_SPEED * dt
@@ -26,6 +46,10 @@ end
 
 function PlayingState:render()
     self.cloud:render()
+
+    for k, cactus in pairs(self.cacti) do
+        cactus:render()
+    end
 end
 
 function PlayingState:exit()

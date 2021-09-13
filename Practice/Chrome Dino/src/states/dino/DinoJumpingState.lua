@@ -1,6 +1,6 @@
 DinoJumpingState = BaseState:new()
 
-local GRAVITY = 20
+local GRAVITY = 16
 local JUMP = 5
 
 function DinoJumpingState:new(dino)

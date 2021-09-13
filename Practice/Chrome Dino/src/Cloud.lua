@@ -28,7 +28,7 @@ end
 
 function Cloud:render()
     if self.inPlay then
-        love.graphics.setColor(1, 1, 1, 0.5)
-        love.graphics.draw(gTextures["spritesheet"], gQuads["cloud"], self.x, self.y)
+        love.graphics.setColor(1, 1, 1, 0.3)
+        love.graphics.draw(gTextures["spritesheet"], gQuads["cloud"], math.floor(self.x), math.floor(self.y))
     end
 end

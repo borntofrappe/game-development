@@ -48,7 +48,22 @@ DINO_STATES = {
     }
 }
 
-SCROLL_SPEED = 50
+SCROLL_SPEED = 80
 
 CLOUD_WIDTH = 25
 CLOUD_HEIGHT = 8
+
+CACTI_TYPES = {
+    {
+        ["width"] = 12,
+        ["height"] = 16
+    },
+    {
+        ["width"] = 12,
+        ["height"] = 16
+    },
+    {
+        ["width"] = 15,
+        ["height"] = 24
+    }
+}

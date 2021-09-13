@@ -13,7 +13,8 @@ function love.load()
 
     gQuads = {
         ["dino"] = GenerateQuadsDino(gTextures.spritesheet),
-        ["cloud"] = GenerateQuadCloud(gTextures.spritesheet)
+        ["cloud"] = GenerateQuadCloud(gTextures.spritesheet),
+        ["cacti"] = GenerateQuadsCacti(gTextures.spritesheet)
     }
 
     gFonts = {
@@ -24,7 +25,8 @@ function love.load()
     gGround = Ground:new()
     gDino = Dino:new()
 
-    gStateStack = StateStack:new({WaitingState:new()})
+    -- gStateStack = StateStack:new({WaitingState:new()})
+    gStateStack = StateStack:new({PlayingState:new()})
 
     love.keyboard.keypressed = {}
 end

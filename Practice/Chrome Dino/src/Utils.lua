@@ -28,3 +28,19 @@ function GenerateQuadCloud(atlas)
 
     return love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
 end
+
+function GenerateQuadsCacti(atlas)
+    local quads = {}
+    local x = 0
+    local y = 16
+
+    for i, type in ipairs(CACTI_TYPES) do
+        local width = type.width
+        local height = type.height
+        table.insert(quads, love.graphics.newQuad(x, y, width, height, atlas:getDimensions()))
+
+        x = x + width
+    end
+
+    return quads
+end

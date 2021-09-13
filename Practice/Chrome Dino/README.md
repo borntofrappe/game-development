@@ -31,3 +31,9 @@ Animation library to manage sprite animation
 State stack to manage the game. Global values for the dinosaur, ground coordinates and score
 
 State machine to manage the dinosaur and its possible states.
+
+## ShoPping LiSt
+
+- graphics | reduce the size of the cloud and increase the brightness of its color; reduce the size of the cacti
+
+- sounds | jumping, stopping soundbyte

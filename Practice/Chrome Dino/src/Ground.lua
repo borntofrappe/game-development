@@ -22,6 +22,6 @@ end
 
 function Ground:render()
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(gTextures["ground"], self.x, self.y)
-    love.graphics.draw(gTextures["ground"], self.x + self.offset, self.y)
+    love.graphics.draw(gTextures["ground"], math.floor(self.x), math.floor(self.y))
+    love.graphics.draw(gTextures["ground"], math.floor(self.x + self.offset), math.floor(self.y))
 end
