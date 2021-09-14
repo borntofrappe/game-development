@@ -40,7 +40,7 @@ function WaitingState:update(dt)
             self.ground.x = 0
         end
 
-        self.score.current = self.score.current + SCORE_SPEED * dt
+        self.score.current = self.score.current + SCROLL_SPEED.min * SCORE_SPEED * dt
 
         if not self.isTweening then
             self.isTweening = true

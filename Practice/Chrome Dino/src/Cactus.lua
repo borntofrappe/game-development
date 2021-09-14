@@ -4,17 +4,15 @@ local CACTUS_INSET = {
     ["y"] = 3
 }
 
-function Cactus:new(ground, scrollSpeed, type, offset)
+function Cactus:new(ground, type, offset)
     local type = type or love.math.random(#CACTI)
     local offset = offset or 0
 
     local width = CACTI[type].width
     local height = CACTI[type].height
 
-    local x = ground.x + ground.width + VIRTUAL_WIDTH + offset
+    local x = VIRTUAL_WIDTH + offset
     local y = ground.y - height + CACTUS_INSET.y
-
-    local dx = scrollSpeed
 
     local hitRadius = ((width ^ 2 + height ^ 2) ^ 0.5) / 3
 
@@ -25,7 +23,6 @@ function Cactus:new(ground, scrollSpeed, type, offset)
         ["height"] = height,
         ["hitRadius"] = hitRadius,
         ["type"] = type,
-        ["dx"] = dx,
         ["inPlay"] = true
     }
 
@@ -33,15 +30,6 @@ function Cactus:new(ground, scrollSpeed, type, offset)
     setmetatable(this, self)
 
     return this
-end
-
-function Cactus:update(dt)
-    if self.inPlay then
-        self.x = self.x - self.dx * dt
-        if self.x < -self.width then
-            self.inPlay = false
-        end
-    end
 end
 
 function Cactus:render()

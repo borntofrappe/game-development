@@ -1,5 +1,7 @@
 PlayingState = BaseState:new()
 
+local DAY_NIGHT_CYCLE = 42
+
 local COLLIDABLE_BUCKETS = {
     {
         ["cactus"] = 1
@@ -50,6 +52,13 @@ function PlayingState:enter(params)
     self.scrollSpeedThreshold = math.ceil(SCROLL_SPEED.max - SCROLL_SPEED.min) / #self.collidablesBuckets
 
     self.collidables = self:addCollidables()
+
+    Timer:every(
+        DAY_NIGHT_CYCLE,
+        function()
+            gNight = not gNight
+        end
+    )
 end
 
 function PlayingState:addCollidables()
@@ -62,27 +71,31 @@ function PlayingState:addCollidables()
     local collidable = bucket[love.math.random(#bucket)]
 
     if collidable == "bird" then
-        return {Bird:new(self.ground, self.scrollSpeed)}
+        return {Bird:new(self.ground)}
     elseif collidable == "cacti" then
         local cacti = {}
         local offset = 0
         for i = 1, 2 do
             local type = love.math.random(#CACTI)
             local width = CACTI[type].width
-            table.insert(cacti, Cactus:new(self.ground, self.scrollSpeed, type, offset))
+            table.insert(cacti, Cactus:new(self.ground, type, offset))
             offset = offset + width + 1
         end
 
         return cacti
     else
-        return {Cactus:new(self.ground, self.scrollSpeed)}
+        return {Cactus:new(self.ground)}
     end
 end
 
 function PlayingState:update(dt)
-    self.score.current = self.score.current + SCORE_SPEED * dt
+    Timer:update(dt)
+
+    self.score.current = self.score.current + self.scrollSpeed * SCORE_SPEED * dt
 
     if love.keyboard.waspressed("escape") then
+        Timer:reset()
+
         gStateMachine:change("wait")
     end
 
@@ -96,9 +109,15 @@ function PlayingState:update(dt)
     end
 
     for k, collidable in pairs(self.collidables) do
-        collidable:update(dt)
+        collidable.x = collidable.x - self.scrollSpeed * dt
+
+        if collidable.animation then
+            collidable.animation:update(dt)
+        end
 
         if self.dino:collides(collidable) then
+            Timer:reset()
+
             gStateMachine:change(
                 "stop",
                 {
@@ -111,7 +130,7 @@ function PlayingState:update(dt)
             )
         end
 
-        if not collidable.inPlay then
+        if collidable.x < -collidable.width then
             table.remove(self.collidables, k)
 
             if #self.collidables == 0 then

@@ -48,7 +48,7 @@ The shader is defined to consider every pixel and subtract the rgb components by
 local shader =
     love.graphics.newShader [[
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords){
-        vec4 pixel = Texel(texture, texture_coords);
+        vec4 pixel = color * Texel(texture, texture_coords);
         pixel.r = 1.0 - pixel.r;
         pixel.g = 1.0 - pixel.g;
         pixel.b = 1.0 - pixel.b;
@@ -59,3 +59,10 @@ local shader =
 ```
 
 In this manner white pixels become black, grey pixels increase in brightness.
+
+local storage
+update speed and night cycle
+sound
+docs
+
+BUG: shader not affecting the high score :/
