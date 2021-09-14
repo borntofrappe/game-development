@@ -20,10 +20,8 @@ function love.load()
         ["bird"] = GenerateQuadsBird(gTextures.spritesheet)
     }
 
-    gFonts = {
-        ["large"] = love.graphics.newFont("res/fonts/font.ttf", 24),
-        ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
-    }
+    gFont = love.graphics.newFont("res/fonts/font.ttf", 8)
+    love.graphics.setFont(gFont)
 
     gStateMachine =
         StateMachine:new(
@@ -42,7 +40,7 @@ function love.load()
 
     gStateMachine:change("wait")
 
-    gNight = true
+    gNight = false
 
     shader =
         love.graphics.newShader [[

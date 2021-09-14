@@ -11,6 +11,8 @@ require "src/Cloud"
 require "src/Cactus"
 require "src/Bird"
 
+require "src/Score"
+
 require "src/StateMachine"
 require "src/states/BaseState"
 

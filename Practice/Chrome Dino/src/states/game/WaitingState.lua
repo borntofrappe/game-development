@@ -5,6 +5,7 @@ local OVERLAY_TWEEN = 0.9
 function WaitingState:enter()
     self.ground = Ground:new()
     self.dino = Dino:new(self.ground)
+    self.score = Score:new()
 
     local xOverlay = self.dino.x + self.dino.width + 2
     self.overlay = {
@@ -39,6 +40,8 @@ function WaitingState:update(dt)
             self.ground.x = 0
         end
 
+        self.score.current = self.score.current + SCORE_SPEED * dt
+
         if not self.isTweening then
             self.isTweening = true
 
@@ -52,7 +55,8 @@ function WaitingState:update(dt)
                         "play",
                         {
                             ["ground"] = self.ground,
-                            ["dino"] = self.dino
+                            ["dino"] = self.dino,
+                            ["score"] = self.score
                         }
                     )
                 end
@@ -67,6 +71,7 @@ function WaitingState:render()
 
     self.ground:render()
     self.dino:render()
+    self.score:render()
 
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("fill", self.overlay.x, self.overlay.y, self.overlay.width, self.overlay.height)

@@ -5,6 +5,11 @@ function StoppedState:enter(params)
     self.dino = params.dino
     self.dino:changeState("stop")
 
+    self.score = params.score
+    if self.score.current > self.score.record then
+        self.score.record = self.score.current
+    end
+
     self.collidables = params.collidables
     self.cloud = params.cloud
 end
@@ -30,4 +35,6 @@ function StoppedState:render()
     end
 
     self.dino:render()
+
+    self.score:render()
 end

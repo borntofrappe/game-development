@@ -28,6 +28,7 @@ local COLLIDABLE_BUCKETS = {
 function PlayingState:enter(params)
     self.ground = params.ground
     self.dino = params.dino
+    self.score = params.score
 
     self.scrollSpeed = SCROLL_SPEED.min
 
@@ -79,6 +80,8 @@ function PlayingState:addCollidables()
 end
 
 function PlayingState:update(dt)
+    self.score.current = self.score.current + SCORE_SPEED * dt
+
     if love.keyboard.waspressed("escape") then
         gStateMachine:change("wait")
     end
@@ -101,6 +104,7 @@ function PlayingState:update(dt)
                 {
                     ["dino"] = self.dino,
                     ["ground"] = self.ground,
+                    ["score"] = self.score,
                     ["cloud"] = self.cloud,
                     ["collidables"] = self.collidables
                 }
@@ -140,4 +144,6 @@ function PlayingState:render()
     end
 
     self.dino:render()
+
+    self.score:render()
 end

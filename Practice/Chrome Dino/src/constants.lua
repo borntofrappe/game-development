@@ -15,6 +15,8 @@ SCROLL_SPEED = {
     ["max"] = 200
 }
 
+SCORE_SPEED = 10
+
 DINO = {
     ["idle"] = {
         ["frames"] = 1,
