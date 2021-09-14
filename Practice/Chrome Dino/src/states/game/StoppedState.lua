@@ -3,12 +3,10 @@ StoppedState = BaseState:new()
 function StoppedState:enter(params)
     self.ground = params.ground
     self.dino = params.dino
-
     self.dino:changeState("stop")
 
-    self.clouds = params.clouds
-    self.cacti = params.cacti
-    self.bird = params.bird
+    self.collidables = params.collidables
+    self.cloud = params.cloud
 end
 
 function StoppedState:update(dt)
@@ -22,17 +20,14 @@ function StoppedState:render()
     love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 
     self.ground:render()
+
+    for k, collidable in pairs(self.collidables) do
+        collidable:render()
+    end
+
+    if self.cloud then
+        self.cloud:render()
+    end
+
     self.dino:render()
-
-    for k, cloud in pairs(self.clouds) do
-        cloud:render()
-    end
-
-    for k, cactus in pairs(self.cacti) do
-        cactus:render()
-    end
-
-    if self.bird then
-        self.bird:render()
-    end
 end

@@ -1,14 +1,18 @@
 Cloud = {}
 
-function Cloud:new(x, y)
-    local x = x or love.math.random(VIRTUAL_WIDTH, VIRTUAL_WIDTH * 2)
-    local y = y or love.math.random(math.floor(VIRTUAL_HEIGHT / 2) - CLOUD_HEIGHT)
+function Cloud:new(scrollSpeed)
+    local width = CLOUD.width
+    local height = CLOUD.height
+    local x = love.math.random(VIRTUAL_WIDTH, VIRTUAL_WIDTH * 2)
+    local y = love.math.random(math.floor(VIRTUAL_HEIGHT / 2) - height)
+    local dx = math.floor(scrollSpeed / 3)
     local this = {
         ["x"] = x,
         ["y"] = y,
-        ["width"] = CLOUD_WIDTH,
+        ["width"] = width,
+        ["height"] = height,
         ["inPlay"] = true,
-        ["dx"] = love.math.random(math.floor(SCROLL_SPEED / 3), math.floor(SCROLL_SPEED / 2))
+        ["dx"] = dx
     }
 
     self.__index = self
@@ -28,7 +32,7 @@ end
 
 function Cloud:render()
     if self.inPlay then
-        love.graphics.setColor(1, 1, 1, 0.25)
+        love.graphics.setColor(1, 1, 1, 0.42)
         love.graphics.draw(gTextures["spritesheet"], gQuads["cloud"], math.floor(self.x), math.floor(self.y))
     end
 end

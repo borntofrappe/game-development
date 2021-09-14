@@ -34,7 +34,7 @@ function WaitingState:update(dt)
     self.dino:update(dt)
 
     if self.dino.state == "run" or self.dino.state == "duck" then
-        self.ground.x = self.ground.x - SCROLL_SPEED * dt
+        self.ground.x = self.ground.x - SCROLL_SPEED.min * dt
         if self.ground.x <= -self.ground.width then
             self.ground.x = 0
         end

@@ -15,11 +15,7 @@ function Dino:new(ground, state)
     local x = ground.x + DINO_INSET.x
     local y = ground.y - height + DINO_INSET.y
 
-    local hitCircle = {
-        ["x"] = x + width / 2,
-        ["y"] = y + height / 2,
-        ["r"] = ((width ^ 2 + height ^ 2) ^ 0.5) / 3
-    }
+    local hitRadius = ((width ^ 2 + height ^ 2) ^ 0.5) / 3
 
     local frames = {}
     for i = 1, DINO[state].frames do
@@ -34,7 +30,7 @@ function Dino:new(ground, state)
         ["dy"] = 0, -- subject to jump and gravity
         ["width"] = width,
         ["height"] = height,
-        ["hitCircle"] = hitCircle,
+        ["hitRadius"] = hitRadius,
         ["state"] = state,
         ["animation"] = animation
     }
@@ -86,9 +82,7 @@ function Dino:changeState(state, params)
     self.width = width
     self.height = height
 
-    self.hitCircle.x = self.x + self.width / 2
-    self.hitCircle.y = self.y + self.height / 2
-    self.hitCircle.r = ((self.width ^ 2 + self.height ^ 2) ^ 0.5) / 3
+    self.hitRadius = ((self.width ^ 2 + self.height ^ 2) ^ 0.5) / 3
 
     local frames = {}
     for frame = 1, DINO[state].frames do
@@ -110,12 +104,14 @@ function Dino:render()
     )
 
     --[[
-    love.graphics.setColor(0, 1, 0, 0.5)
-    love.graphics.circle("fill", self.hitCircle.x, self.hitCircle.y, self.hitCircle.r)
+        love.graphics.setColor(0, 1, 0, 0.5)
+        love.graphics.circle("fill", self.x + self.width / 2, self.y + self.height / 2, self.hitRadius)
     --]]
 end
 
-function Dino:collides(target)
-    return ((self.hitCircle.x - target.hitCircle.x) ^ 2 + (self.hitCircle.y - target.hitCircle.y) ^ 2) ^ 0.5 <
-        self.hitCircle.r + target.hitCircle.r
+function Dino:collides(collidable)
+    return (((self.x + self.width / 2) - (collidable.x + collidable.width / 2)) ^ 2 +
+        ((self.y + self.height / 2) - (collidable.y + collidable.height / 2)) ^ 2) ^
+        0.5 <
+        self.hitRadius + collidable.hitRadius
 end

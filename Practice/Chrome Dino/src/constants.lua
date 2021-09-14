@@ -10,7 +10,10 @@ OPTIONS = {
     resizable = true
 }
 
-SCROLL_SPEED = 80
+SCROLL_SPEED = {
+    ["min"] = 80,
+    ["max"] = 200
+}
 
 DINO = {
     ["idle"] = {
@@ -73,13 +76,13 @@ CACTI = {
 
 BIRD = {
     {
-        ["x"] = 44,
+        ["x"] = 47,
         ["y"] = 16,
         ["width"] = 16,
         ["height"] = 15
     },
     {
-        ["x"] = 60,
+        ["x"] = 63,
         ["y"] = 16,
         ["width"] = 16,
         ["height"] = 15
@@ -87,7 +90,7 @@ BIRD = {
 }
 
 CLOUD = {
-    ["x"] = 36,
+    ["x"] = 29,
     ["y"] = 16,
     ["width"] = 18,
     ["height"] = 6

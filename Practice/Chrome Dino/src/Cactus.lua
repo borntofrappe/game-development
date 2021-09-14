@@ -4,29 +4,28 @@ local CACTUS_INSET = {
     ["y"] = 3
 }
 
-function Cactus:new(ground, type)
+function Cactus:new(ground, scrollSpeed, type, offset)
     local type = type or love.math.random(#CACTI)
+    local offset = offset or 0
 
     local width = CACTI[type].width
     local height = CACTI[type].height
 
-    local x = VIRTUAL_WIDTH
+    local x = ground.x + ground.width + VIRTUAL_WIDTH + offset
     local y = ground.y - height + CACTUS_INSET.y
 
-    local hitCircle = {
-        ["x"] = x + width / 2,
-        ["y"] = y + height / 2,
-        ["r"] = ((width ^ 2 + height ^ 2) ^ 0.5) / 3
-    }
+    local dx = scrollSpeed
+
+    local hitRadius = ((width ^ 2 + height ^ 2) ^ 0.5) / 3
 
     local this = {
         ["x"] = x,
         ["y"] = y,
         ["width"] = width,
         ["height"] = height,
-        ["hitCircle"] = hitCircle,
+        ["hitRadius"] = hitRadius,
         ["type"] = type,
-        ["dx"] = SCROLL_SPEED,
+        ["dx"] = dx,
         ["inPlay"] = true
     }
 
@@ -39,7 +38,6 @@ end
 function Cactus:update(dt)
     if self.inPlay then
         self.x = self.x - self.dx * dt
-        self.hitCircle.x = self.x + self.width / 2
         if self.x < -self.width then
             self.inPlay = false
         end
@@ -52,8 +50,8 @@ function Cactus:render()
         love.graphics.draw(gTextures["spritesheet"], gQuads["cacti"][self.type], math.floor(self.x), math.floor(self.y))
 
     --[[
-    love.graphics.setColor(0, 1, 0, 0.5)
-    love.graphics.circle("fill", self.hitCircle.x, self.hitCircle.y, self.hitCircle.r)
+        love.graphics.setColor(0, 1, 0, 0.5)
+        love.graphics.circle("fill", self.x + self.width / 2, self.y + self.height / 2, self.hitRadius)
     --]]
     end
 end
