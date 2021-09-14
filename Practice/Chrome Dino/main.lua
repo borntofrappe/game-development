@@ -1,5 +1,7 @@
 require "src/Dependencies"
 
+local shader
+
 function love.load()
     love.window.setTitle("Chrome Dino")
 
@@ -40,6 +42,19 @@ function love.load()
 
     gStateMachine:change("wait")
 
+    gNight = true
+
+    shader =
+        love.graphics.newShader [[
+        vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords){
+            vec4 pixel = Texel(texture, texture_coords);
+            pixel.r = 1.0 - pixel.r;
+            pixel.g = 1.0 - pixel.g;
+            pixel.b = 1.0 - pixel.b;
+            return pixel;
+        }
+        ]]
+
     love.keyboard.keypressed = {}
 end
 
@@ -64,7 +79,15 @@ end
 function love.draw()
     push:start()
 
+    if gNight then
+        love.graphics.setShader(shader)
+    end
+
     gStateMachine:render()
+
+    if gNight then
+        love.graphics.setShader()
+    end
 
     push:finish()
 end

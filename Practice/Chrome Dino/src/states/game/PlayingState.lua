@@ -14,8 +14,13 @@ local COLLIDABLE_BUCKETS = {
         ["bird"] = 1
     },
     {
+        ["cactus"] = 8,
+        ["cacti"] = 4,
+        ["bird"] = 2
+    },
+    {
         ["cactus"] = 10,
-        ["cacti"] = 5,
+        ["cacti"] = 6,
         ["bird"] = 3
     }
 }
@@ -47,7 +52,11 @@ function PlayingState:enter(params)
 end
 
 function PlayingState:addCollidables()
-    local scrollSpeedIndex = math.floor((self.scrollSpeed - SCROLL_SPEED.min - 1) / self.scrollSpeedThreshold) + 1
+    local scrollSpeedIndex =
+        math.min(
+        #self.collidablesBuckets,
+        math.floor((self.scrollSpeed - SCROLL_SPEED.min) / self.scrollSpeedThreshold) + 1
+    )
     local bucket = self.collidablesBuckets[scrollSpeedIndex]
     local collidable = bucket[love.math.random(#bucket)]
 
