@@ -15,7 +15,9 @@ SCROLL_SPEED = {
     ["max"] = 200
 }
 
-SCORE_SPEED = 10
+-- fraction of the scroll speed
+SCORE_SPEED = 0.1
+FILE_PATH = "highscores.lst"
 
 DINO = {
     ["idle"] = {
