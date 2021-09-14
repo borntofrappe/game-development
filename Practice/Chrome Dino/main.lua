@@ -23,10 +23,22 @@ function love.load()
         ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 8)
     }
 
-    gGround = Ground:new()
-    gDino = Dino:new()
+    gStateMachine =
+        StateMachine:new(
+        {
+            ["wait"] = function()
+                return WaitingState:new()
+            end,
+            ["play"] = function()
+                return PlayingState:new()
+            end,
+            ["stop"] = function()
+                return StoppedState:new()
+            end
+        }
+    )
 
-    gStateStack = StateStack:new({WaitingState:new()})
+    gStateMachine:change("wait")
 
     love.keyboard.keypressed = {}
 end
@@ -44,7 +56,7 @@ function love.keyboard.waspressed(key)
 end
 
 function love.update(dt)
-    gStateStack:update(dt)
+    gStateMachine:update(dt)
 
     love.keyboard.keypressed = {}
 end
@@ -52,13 +64,7 @@ end
 function love.draw()
     push:start()
 
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
-
-    gGround:render()
-    gDino:render()
-
-    gStateStack:render()
+    gStateMachine:render()
 
     push:finish()
 end

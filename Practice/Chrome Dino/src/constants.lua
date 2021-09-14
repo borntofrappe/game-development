@@ -10,7 +10,9 @@ OPTIONS = {
     resizable = true
 }
 
-DINO_STATES = {
+SCROLL_SPEED = 80
+
+DINO = {
     ["idle"] = {
         ["frames"] = 1,
         ["x"] = 0,
@@ -48,25 +50,45 @@ DINO_STATES = {
     }
 }
 
-SCROLL_SPEED = 80
-
-CLOUD_WIDTH = 18
-CLOUD_HEIGHT = 6
-
-CACTI_TYPES = {
+CACTI = {
     {
+        ["x"] = 0,
+        ["y"] = 16,
         ["width"] = 9,
         ["height"] = 12
     },
     {
+        ["x"] = 9,
+        ["y"] = 16,
         ["width"] = 9,
         ["height"] = 12
     },
     {
+        ["x"] = 18,
+        ["y"] = 16,
         ["width"] = 11,
         ["height"] = 18
     }
 }
 
-BIRD_WIDTH = 16
-BIRD_HEIGHT = 15
+BIRD = {
+    {
+        ["x"] = 44,
+        ["y"] = 16,
+        ["width"] = 16,
+        ["height"] = 15
+    },
+    {
+        ["x"] = 60,
+        ["y"] = 16,
+        ["width"] = 16,
+        ["height"] = 15
+    }
+}
+
+CLOUD = {
+    ["x"] = 36,
+    ["y"] = 16,
+    ["width"] = 18,
+    ["height"] = 6
+}

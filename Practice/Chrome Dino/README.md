@@ -1,42 +1,48 @@
 # Chrome Dino
 
-Google Chrome offers a [neat endless scroller](https://en.wikipedia.org/wiki/Dinosaur_Game) when the browser is offline.
+Google Chrome offers a [neat endless scroller](https://en.wikipedia.org/wiki/Dinosaur_Game) when the browser is offline. Here I try to replicate the essence of the game and mainly practice with a state machine for the game and the game's entities (the player).
 
-## res
+## Resources
 
 ### Spritesheet
 
-Color 0.42\*3
+In the `res/graphics` sub-folder you find two images for the game assets, one describing the ground and one the world's elements — the dinosaur, various type of cactus, a cloud and a pterodactylus.
 
-- ground 256 pixels by 10
+| Asset           | Width | Height |
+| --------------- | ----- | ------ |
+| ground          | 352   | 8      |
+| dino (idle)     | 16    | 16     |
+| dino (running)  | 16    | 16     |
+| dino (ducking)  | 21    | 11     |
+| dino (stopped)  | 16    | 16     |
+| cactus (normal) | 9     | 12     |
+| cactus (large)  | 11    | 18     |
+| cloud           | 18    | 6      |
+| bird            | 16    | 15     |
 
-- dinosaur 16 by 16 for the idle, walking and gameover states, 21 by 11 for the ducked down version
+In terms of color, the assets use a relatively bright grey: 0.42, 0.42, 0.42.
 
-- cacti 12 by 16 for the two smaller versions, 15 by 24 for the larger piece
+### Sounds
 
-- cloud 25 by 8
+The game has but two sound bytes, describing the player jumping and colliding with one of the world's entities.
 
-- bird 19 by 16
+### Libraries
 
-<!-- ### Sound bytes -->
+The `push` library helps to scale the small textures while preserving the pixelated look.
 
-### lib
+`Timer` and `Animation` help to manage time events and sprite animation.
 
-Timer library to manage delays, tweens, intervals
+## Source
 
-push library to scale the window while preserving pixelated look
+### States
 
-Animation library to manage sprite animation
+The project is managed with a couple of state machines, one for the game and one for the dinosaur.
 
-## src
+### Shader
 
-State stack to manage the game. Global values for the dinosaur, ground coordinates and score
+The project allows to experiment with a shader in order to simulate a day and night cycle.
 
-State machine to manage the dinosaur and its possible states.
-
-## ShoPping LiSt
-
-- shader: flip the color palette to simulate the day and night cycle
+The shader is defined to consider every pixel and subtract the rgb components by the white color `1`
 
 ```lua
 local shader =
@@ -50,8 +56,6 @@ local shader =
     }
 ]]
 
-love.graphics.setShader(shader)
-love.graphics.setShader()
 ```
 
-- sounds | jumping, stopping soundbyte
+In this manner white pixels become black, grey pixels increase in brightness.

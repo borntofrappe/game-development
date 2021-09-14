@@ -3,32 +3,39 @@ Dino = {}
 local INTERVAL_ANIMATION = 0.12
 local DINO_INSET = {
     ["x"] = 4,
-    ["y"] = 3
+    ["y"] = 5
 }
 
-function Dino:new(state)
+function Dino:new(ground, state)
     local state = state or "idle"
 
-    local x = DINO_INSET.x
-    local y = VIRTUAL_HEIGHT - (DINO_STATES[state].height + DINO_INSET.y)
-    local width = DINO_STATES[state].width
-    local height = DINO_STATES[state].height
+    local width = DINO[state].width
+    local height = DINO[state].height
+
+    local x = ground.x + DINO_INSET.x
+    local y = ground.y - height + DINO_INSET.y
+
+    local hitCircle = {
+        ["x"] = x + width / 2,
+        ["y"] = y + height / 2,
+        ["r"] = ((width ^ 2 + height ^ 2) ^ 0.5) / 3
+    }
 
     local frames = {}
-    for i = 1, DINO_STATES[state].frames do
+    for i = 1, DINO[state].frames do
         table.insert(frames, i)
     end
     local animation = Animation:new(frames, INTERVAL_ANIMATION)
 
     local this = {
-        ["yStart"] = y,
+        ["yStart"] = y, -- baseline
         ["x"] = x,
         ["y"] = y,
-        ["dy"] = 0,
+        ["dy"] = 0, -- subject to jump and gravity
         ["width"] = width,
         ["height"] = height,
+        ["hitCircle"] = hitCircle,
         ["state"] = state,
-        ["quads"] = state,
         ["animation"] = animation
     }
 
@@ -68,24 +75,28 @@ function Dino:update(dt)
 end
 
 function Dino:changeState(state, params)
-    local previousHeight = DINO_STATES[self.state].height
+    -- align bottom left
+    local previousHeight = DINO[self.state].height
 
-    local width = DINO_STATES[state].width
-    local height = DINO_STATES[state].height
-
-    self.state = state
+    local width = DINO[state].width
+    local height = DINO[state].height
 
     self.y = self.y + previousHeight - height
 
     self.width = width
     self.height = height
 
+    self.hitCircle.x = self.x + self.width / 2
+    self.hitCircle.y = self.y + self.height / 2
+    self.hitCircle.r = ((self.width ^ 2 + self.height ^ 2) ^ 0.5) / 3
+
     local frames = {}
-    for frame = 1, DINO_STATES[state].frames do
+    for frame = 1, DINO[state].frames do
         table.insert(frames, frame)
     end
     self.animation = Animation:new(frames, INTERVAL_ANIMATION)
 
+    self.state = state
     self.stateMachine:change(state, params)
 end
 
@@ -97,17 +108,14 @@ function Dino:render()
         math.floor(self.x),
         math.floor(self.y)
     )
+
+    --[[
+    love.graphics.setColor(0, 1, 0, 0.5)
+    love.graphics.circle("fill", self.hitCircle.x, self.hitCircle.y, self.hitCircle.r)
+    --]]
 end
 
-function Dino:collides(target, inset)
-    local inset = inset or 2
-    if target.x + target.width - inset < self.x or target.x + inset > self.x + self.width then
-        return false
-    end
-
-    if target.y + target.height - inset < self.y or target.y + inset > self.y + self.height then
-        return false
-    end
-
-    return true
+function Dino:collides(target)
+    return ((self.hitCircle.x - target.hitCircle.x) ^ 2 + (self.hitCircle.y - target.hitCircle.y) ^ 2) ^ 0.5 <
+        self.hitCircle.r + target.hitCircle.r
 end

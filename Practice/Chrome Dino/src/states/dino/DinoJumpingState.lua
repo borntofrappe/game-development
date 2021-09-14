@@ -21,9 +21,11 @@ end
 function DinoJumpingState:update(dt)
     self.dino.dy = self.dino.dy + GRAVITY * dt
     self.dino.y = self.dino.y + self.dino.dy
+    self.dino.hitCircle.y = self.dino.y + self.dino.height / 2
 
     if self.dino.y >= self.dino.yStart then
         self.dino.y = self.dino.yStart
+        self.dino.hitCircle.y = self.dino.y + self.dino.height / 2
 
         if love.keyboard.isDown("down") then
             self.dino:changeState("duck")

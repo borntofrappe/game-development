@@ -1,16 +1,16 @@
 function GenerateQuadsDino(atlas)
     local quads = {}
 
-    for k, state in pairs(DINO_STATES) do
-        quads[k] = {}
-        for i = 1, state.frames do
+    for state, dino in pairs(DINO) do
+        quads[state] = {}
+        for i = 1, dino.frames do
             table.insert(
-                quads[k],
+                quads[state],
                 love.graphics.newQuad(
-                    state.x + (i - 1) * state.width,
-                    state.y,
-                    state.width,
-                    state.height,
+                    dino.x + (i - 1) * dino.width,
+                    dino.y,
+                    dino.width,
+                    dino.height,
                     atlas:getDimensions()
                 )
             )
@@ -20,40 +20,28 @@ function GenerateQuadsDino(atlas)
     return quads
 end
 
-function GenerateQuadCloud(atlas)
-    local x = 29
-    local y = 16
-    local width = CLOUD_WIDTH
-    local height = CLOUD_HEIGHT
-
-    return love.graphics.newQuad(x, y, width, height, atlas:getDimensions())
-end
-
 function GenerateQuadsCacti(atlas)
     local quads = {}
-    local x = 0
-    local y = 16
 
-    for i, type in ipairs(CACTI_TYPES) do
-        local width = type.width
-        local height = type.height
-        table.insert(quads, love.graphics.newQuad(x, y, width, height, atlas:getDimensions()))
-
-        x = x + width
+    for i, cactus in pairs(CACTI) do
+        table.insert(
+            quads,
+            love.graphics.newQuad(cactus.x, cactus.y, cactus.width, cactus.height, atlas:getDimensions())
+        )
     end
 
     return quads
 end
 
+function GenerateQuadCloud(atlas)
+    return love.graphics.newQuad(CLOUD.x, CLOUD.y, CLOUD.width, CLOUD.height, atlas:getDimensions())
+end
+
 function GenerateQuadsBird(atlas)
     local quads = {}
-    local x = 47
-    local y = 16
-    local width = BIRD_WIDTH
-    local height = BIRD_HEIGHT
 
-    for i = 1, 2 do
-        table.insert(quads, love.graphics.newQuad(x + (i - 1) * width, y, width, height, atlas:getDimensions()))
+    for i, bird in pairs(BIRD) do
+        table.insert(quads, love.graphics.newQuad(bird.x, bird.y, bird.width, bird.height, atlas:getDimensions()))
     end
 
     return quads

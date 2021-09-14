@@ -2,12 +2,15 @@ Ground = {}
 
 function Ground:new()
     local width = gTextures["ground"]:getWidth()
+    local height = gTextures["ground"]:getHeight()
     local x = 0
-    local y = VIRTUAL_HEIGHT - gTextures["ground"]:getHeight()
+    local y = VIRTUAL_HEIGHT - height
+
     local this = {
         ["x"] = x,
         ["y"] = y,
         ["width"] = width,
+        ["height"] = height,
         ["offset"] = width
     }
 

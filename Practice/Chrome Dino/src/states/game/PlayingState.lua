@@ -2,42 +2,59 @@ PlayingState = BaseState:new()
 
 local SPAWN_INTERVAL = 4
 
-function PlayingState:enter()
-    self.cloud = Cloud:new()
+function PlayingState:enter(params)
+    self.ground = params.ground
+    self.dino = params.dino
 
+    self.clouds = {}
     self.cacti = {}
-
     self.bird = nil
+    self.interval = SPAWN_INTERVAL
 
     Timer:every(
-        SPAWN_INTERVAL,
+        self.interval,
         function()
-            if love.math.random(2) == 1 then
-                if not self.bird then
-                    self.bird = Bird:new()
-                end
-            else
-                table.insert(self.cacti, Cactus:new(gGround))
-            end
-        end,
-        true
+            table.insert(self.cacti, Cactus:new(self.ground))
+        end
     )
 end
 
 function PlayingState:update(dt)
-    Timer:update(dt)
-    gDino:update(dt)
+    if love.keyboard.waspressed("escape") then
+        Timer:reset()
+        gStateMachine:change("wait")
+    end
 
-    self.cloud:update(dt)
-    if not self.cloud.inPlay then
-        self.cloud = Cloud:new()
+    Timer:update(dt)
+
+    self.dino:update(dt)
+
+    self.ground.x = self.ground.x - SCROLL_SPEED * dt
+    if self.ground.x <= -self.ground.width then
+        self.ground.x = 0
+    end
+
+    for k, cloud in pairs(self.clouds) do
+        cloud:update(dt)
+        if not self.cloud.inPlay then
+            table.remove(self.clouds, k)
+        end
     end
 
     for k, cactus in pairs(self.cacti) do
         cactus:update(dt)
 
-        if gDino:collides(cactus) then
-            gStateStack:push(StoppedState:new())
+        if self.dino:collides(cactus) then
+            gStateMachine:change(
+                "stop",
+                {
+                    ["dino"] = self.dino,
+                    ["ground"] = self.ground,
+                    ["clouds"] = self.clouds,
+                    ["cacti"] = self.cacti,
+                    ["bird"] = self.bird
+                }
+            )
         end
 
         if not cactus.inPlay then
@@ -48,29 +65,35 @@ function PlayingState:update(dt)
     if self.bird then
         self.bird:update(dt)
 
-        if gDino:collides(self.bird) then
-            gStateStack:push(StoppedState:new())
+        if self.dino:collides(self.bird) then
+            gStateMachine:change(
+                "stop",
+                {
+                    ["dino"] = self.dino,
+                    ["ground"] = self.ground,
+                    ["clouds"] = self.clouds,
+                    ["cacti"] = self.cacti,
+                    ["bird"] = self.bird
+                }
+            )
         end
 
         if not self.bird.inPlay then
             self.bird = nil
         end
     end
-
-    gGround.x = gGround.x - SCROLL_SPEED * dt
-    if gGround.x <= -gGround.width then
-        gGround.x = 0
-    end
-
-    if love.keyboard.waspressed("escape") then
-        Timer:reset()
-        gStateStack:pop()
-        gStateStack:push(WaitingState:new())
-    end
 end
 
 function PlayingState:render()
-    self.cloud:render()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+
+    self.ground:render()
+    self.dino:render()
+
+    for k, cloud in pairs(self.clouds) do
+        cloud:render()
+    end
 
     for k, cactus in pairs(self.cacti) do
         cactus:render()
@@ -79,9 +102,4 @@ function PlayingState:render()
     if self.bird then
         self.bird:render()
     end
-end
-
-function PlayingState:exit()
-    gDino:changeState("idle")
-    gGround.x = 0
 end
