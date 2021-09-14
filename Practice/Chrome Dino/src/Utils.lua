@@ -44,3 +44,17 @@ function GenerateQuadsCacti(atlas)
 
     return quads
 end
+
+function GenerateQuadsBird(atlas)
+    local quads = {}
+    local x = 47
+    local y = 16
+    local width = BIRD_WIDTH
+    local height = BIRD_HEIGHT
+
+    for i = 1, 2 do
+        table.insert(quads, love.graphics.newQuad(x + (i - 1) * width, y, width, height, atlas:getDimensions()))
+    end
+
+    return quads
+end

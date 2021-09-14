@@ -29,7 +29,7 @@ function WaitingState:update(dt)
         end
     end
 
-    if gDino.state == "run" then
+    if gDino.state == "run" or gDino.state == "duck" then
         gGround.x = gGround.x - SCROLL_SPEED * dt
         if gGround.x <= -gGround.width then
             gGround.x = 0

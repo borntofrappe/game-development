@@ -9,8 +9,7 @@ require "src/Ground"
 require "src/Dino"
 require "src/Cloud"
 require "src/Cactus"
-
--- require "src/Bird"
+require "src/Bird"
 
 require "src/StateStack"
 require "src/StateMachine"

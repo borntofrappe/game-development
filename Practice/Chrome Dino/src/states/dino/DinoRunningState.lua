@@ -15,4 +15,8 @@ function DinoRunningState:update(dt)
     if love.keyboard.waspressed("space") or love.keyboard.waspressed("up") then
         self.dino:changeState("jump")
     end
+
+    if love.keyboard.waspressed("down") then
+        self.dino:changeState("duck")
+    end
 end

@@ -36,6 +36,22 @@ State machine to manage the dinosaur and its possible states.
 
 ## ShoPping LiSt
 
-- graphics | reduce the size of the cloud and increase the brightness of its color; reduce the size of the cacti
+- shader: flip the color palette to simulate the day and night cycle
+
+```lua
+local shader =
+    love.graphics.newShader [[
+    vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords){
+        vec4 pixel = Texel(texture, texture_coords);
+        pixel.r = 1.0 - pixel.r;
+        pixel.g = 1.0 - pixel.g;
+        pixel.b = 1.0 - pixel.b;
+        return pixel;
+    }
+]]
+
+love.graphics.setShader(shader)
+love.graphics.setShader()
+```
 
 - sounds | jumping, stopping soundbyte

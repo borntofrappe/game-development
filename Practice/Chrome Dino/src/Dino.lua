@@ -3,7 +3,7 @@ Dino = {}
 local INTERVAL_ANIMATION = 0.12
 local DINO_INSET = {
     ["x"] = 4,
-    ["y"] = 2
+    ["y"] = 3
 }
 
 function Dino:new(state)

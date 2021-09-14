@@ -7,10 +7,18 @@ function PlayingState:enter()
 
     self.cacti = {}
 
+    self.bird = nil
+
     Timer:every(
         SPAWN_INTERVAL,
         function()
-            table.insert(self.cacti, Cactus:new(gGround))
+            if love.math.random(2) == 1 then
+                if not self.bird then
+                    self.bird = Bird:new()
+                end
+            else
+                table.insert(self.cacti, Cactus:new(gGround))
+            end
         end,
         true
     )
@@ -37,6 +45,18 @@ function PlayingState:update(dt)
         end
     end
 
+    if self.bird then
+        self.bird:update(dt)
+
+        if gDino:collides(self.bird) then
+            gStateStack:push(StoppedState:new())
+        end
+
+        if not self.bird.inPlay then
+            self.bird = nil
+        end
+    end
+
     gGround.x = gGround.x - SCROLL_SPEED * dt
     if gGround.x <= -gGround.width then
         gGround.x = 0
@@ -54,6 +74,10 @@ function PlayingState:render()
 
     for k, cactus in pairs(self.cacti) do
         cactus:render()
+    end
+
+    if self.bird then
+        self.bird:render()
     end
 end
 
