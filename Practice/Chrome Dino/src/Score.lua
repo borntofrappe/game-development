@@ -1,17 +1,23 @@
 Score = {}
 
-function Score:new()
-    local x = VIRTUAL_WIDTH - 1 - gFont:getWidth("HI 9999 9999")
-    local y = 1
+local PADDING = 1
 
-    love.filesystem.setIdentity("chrome-dino")
-    if not love.filesystem.getInfo(FILE_PATH) then
+function Score:new()
+    local x = VIRTUAL_WIDTH - PADDING - gFont:getWidth("HI " .. SCORE_MAX .. " " .. SCORE_MAX)
+    local y = PADDING
+
+    local sep = FILE_PATH:find("/")
+    local folder = FILE_PATH:sub(1, sep - 1)
+    local file = FILE_PATH:sub(sep + 1)
+
+    love.filesystem.setIdentity(folder)
+    if not love.filesystem.getInfo(file) then
         local highscore = 0
-        love.filesystem.write(FILE_PATH, highscore)
+        love.filesystem.write(file, highscore)
     end
 
     local highscore
-    for line in love.filesystem.lines(FILE_PATH) do
+    for line in love.filesystem.lines(file) do
         highscore = math.floor(line)
         break
     end
@@ -19,7 +25,7 @@ function Score:new()
     local this = {
         ["x"] = x,
         ["y"] = y,
-        ["hi"] = highscore,
+        ["hiscore"] = highscore,
         ["current"] = 0
     }
 
@@ -31,5 +37,5 @@ end
 
 function Score:render()
     love.graphics.setColor(0.42, 0.42, 0.42)
-    love.graphics.print(string.format("HI %04d %04d", self.hi, self.current), self.x, self.y)
+    love.graphics.print(string.format("HI %04d %04d", self.hiscore, self.current), self.x, self.y)
 end

@@ -23,6 +23,13 @@ function love.load()
     gFont = love.graphics.newFont("res/fonts/font.ttf", 8)
     love.graphics.setFont(gFont)
 
+    gSounds = {
+        ["jump"] = love.audio.newSource("res/sounds/jump.wav", "static"),
+        ["stop"] = love.audio.newSource("res/sounds/stop.wav", "static")
+    }
+
+    love.audio.setVolume(0.42)
+
     gStateMachine =
         StateMachine:new(
         {
@@ -75,11 +82,11 @@ function love.update(dt)
 end
 
 function love.draw()
-    push:start()
-
     if gNight then
         love.graphics.setShader(shader)
     end
+
+    push:start()
 
     gStateMachine:render()
 

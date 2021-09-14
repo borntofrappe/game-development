@@ -5,7 +5,7 @@ function Cloud:new(scrollSpeed)
     local height = CLOUD.height
     local x = love.math.random(VIRTUAL_WIDTH, VIRTUAL_WIDTH * 2)
     local y = love.math.random(math.floor(VIRTUAL_HEIGHT / 2) - height)
-    local dx = math.floor(scrollSpeed / 3)
+    local dx = math.floor(scrollSpeed / 4)
     local this = {
         ["x"] = x,
         ["y"] = y,

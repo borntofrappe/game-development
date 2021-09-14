@@ -17,7 +17,9 @@ SCROLL_SPEED = {
 
 -- fraction of the scroll speed
 SCORE_SPEED = 0.1
-FILE_PATH = "highscores.lst"
+
+SCORE_MAX = 9999
+FILE_PATH = "chrome-dino/highscores.lst"
 
 DINO = {
     ["idle"] = {

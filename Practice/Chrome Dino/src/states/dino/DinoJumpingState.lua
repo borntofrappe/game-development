@@ -16,6 +16,7 @@ end
 
 function DinoJumpingState:enter()
     self.dino.dy = -JUMP
+    gSounds["jump"]:play()
 end
 
 function DinoJumpingState:update(dt)

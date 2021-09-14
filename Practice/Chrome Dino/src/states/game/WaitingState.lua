@@ -1,13 +1,14 @@
 WaitingState = BaseState:new()
 
-local OVERLAY_TWEEN = 0.9
+local OVERLAY_TWEEN = 0.84
+local OVERLAY_OFFSET = 2
 
 function WaitingState:enter()
     self.ground = Ground:new()
     self.dino = Dino:new(self.ground)
     self.score = Score:new()
 
-    local xOverlay = self.dino.x + self.dino.width + 2
+    local xOverlay = self.dino.x + self.dino.width + OVERLAY_OFFSET
     self.overlay = {
         ["x"] = xOverlay,
         ["y"] = 0,
@@ -34,13 +35,13 @@ function WaitingState:update(dt)
 
     self.dino:update(dt)
 
-    if self.dino.state == "run" or self.dino.state == "duck" then
+    if self.dino.state ~= "idle" then
         self.ground.x = self.ground.x - SCROLL_SPEED.min * dt
         if self.ground.x <= -self.ground.width then
             self.ground.x = 0
         end
 
-        self.score.current = self.score.current + SCROLL_SPEED.min * SCORE_SPEED * dt
+        self.score.current = math.min(SCORE_MAX, self.score.current + SCROLL_SPEED.min * SCORE_SPEED * dt)
 
         if not self.isTweening then
             self.isTweening = true

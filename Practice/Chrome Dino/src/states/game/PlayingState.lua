@@ -91,7 +91,7 @@ end
 function PlayingState:update(dt)
     Timer:update(dt)
 
-    self.score.current = self.score.current + self.scrollSpeed * SCORE_SPEED * dt
+    self.score.current = math.min(SCORE_MAX, self.score.current + self.scrollSpeed * SCORE_SPEED * dt)
 
     if love.keyboard.waspressed("escape") then
         Timer:reset()

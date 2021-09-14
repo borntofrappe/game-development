@@ -1,49 +1,64 @@
 StoppedState = BaseState:new()
 
+local KEY_DELAY = 0.1
+
 function StoppedState:enter(params)
+    gSounds["jump"]:stop()
+    gSounds["stop"]:play()
+
     self.ground = params.ground
     self.dino = params.dino
     self.dino:changeState("stop")
 
     self.score = params.score
-    if self.score.current > self.score.hi then
-        self.score.hi = self.score.current
+    if self.score.current > self.score.hiscore then
+        self.score.hiscore = self.score.current
 
-        love.filesystem.setIdentity("chrome-dino")
-        local highscore
-        for line in love.filesystem.lines(FILE_PATH) do
-            highscore = math.floor(line)
-            break
-        end
+        local sep = FILE_PATH:find("/")
+        local folder = FILE_PATH:sub(1, sep - 1)
+        local file = FILE_PATH:sub(sep + 1)
 
-        if self.score.hi > highscore then
-            love.filesystem.write(FILE_PATH, self.score.hi)
-        end
+        love.filesystem.setIdentity(folder)
+        love.filesystem.write(file, self.score.hiscore)
     end
 
     self.collidables = params.collidables
     self.cloud = params.cloud
+
+    self.isListening = false
+    Timer:after(
+        KEY_DELAY,
+        function()
+            self.isListening = true
+        end
+    )
 end
 
 function StoppedState:update(dt)
-    if love.keyboard.waspressed("escape") or love.keyboard.waspressed("space") or love.keyboard.waspressed("up") then
-        gStateMachine:change("wait")
-        gNight = false
+    Timer:update(dt)
+
+    if love.keyboard.waspressed("escape") then
+        if self.isListening then
+            gStateMachine:change("wait")
+            gNight = false
+        end
     end
 
     if love.keyboard.waspressed("space") or love.keyboard.waspressed("up") then
-        local ground = Ground:new()
-        local dino = Dino:new(ground, "run")
+        if self.isListening then
+            local ground = Ground:new()
+            local dino = Dino:new(ground, "run")
 
-        self.score.current = 0
-        gStateMachine:change(
-            "play",
-            {
-                ["ground"] = ground,
-                ["dino"] = dino,
-                ["score"] = self.score
-            }
-        )
+            self.score.current = 0
+            gStateMachine:change(
+                "play",
+                {
+                    ["ground"] = ground,
+                    ["dino"] = dino,
+                    ["score"] = self.score
+                }
+            )
+        end
     end
 end
 

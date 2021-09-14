@@ -24,10 +24,10 @@ function Dino:new(ground, state)
     local animation = Animation:new(frames, INTERVAL_ANIMATION)
 
     local this = {
-        ["yStart"] = y, -- baseline
+        ["yStart"] = y,
         ["x"] = x,
         ["y"] = y,
-        ["dy"] = 0, -- subject to jump and gravity
+        ["dy"] = 0,
         ["width"] = width,
         ["height"] = height,
         ["hitRadius"] = hitRadius,
@@ -71,7 +71,6 @@ function Dino:update(dt)
 end
 
 function Dino:changeState(state, params)
-    -- align bottom left
     local previousHeight = DINO[self.state].height
 
     local width = DINO[state].width
