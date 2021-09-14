@@ -4,10 +4,7 @@ local DAY_NIGHT_CYCLE = 42
 
 local COLLIDABLE_BUCKETS = {
     {
-        ["cactus"] = 1
-    },
-    {
-        ["cactus"] = 3,
+        ["cactus"] = 5,
         ["cacti"] = 1
     },
     {
@@ -79,7 +76,9 @@ function PlayingState:addCollidables()
             local type = love.math.random(#CACTI)
             local width = CACTI[type].width
             table.insert(cacti, Cactus:new(self.ground, type, offset))
-            offset = offset + width + 1
+            local gap =
+                love.math.random(2) == 1 and width or love.math.random(math.floor(VIRTUAL_WIDTH / 2), VIRTUAL_WIDTH)
+            offset = offset + gap + 1
         end
 
         return cacti

@@ -48,6 +48,7 @@ function StoppedState:update(dt)
         if self.isListening then
             local ground = Ground:new()
             local dino = Dino:new(ground, "run")
+            gNight = false
 
             self.score.current = 0
             gStateMachine:change(

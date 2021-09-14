@@ -7,7 +7,7 @@ function Bird:new(ground, frame)
     local width = BIRD[frame].width
     local height = BIRD[frame].height
 
-    local x = VIRTUAL_WIDTH
+    local x = love.math.random(VIRTUAL_WIDTH, math.floor(VIRTUAL_WIDTH * 1.5))
     local y = love.math.random(math.floor(VIRTUAL_HEIGHT / 2), VIRTUAL_HEIGHT - height - ground.height)
 
     local hitRadius = ((width ^ 2 + height ^ 2) ^ 0.5) / 3.5
@@ -25,7 +25,8 @@ function Bird:new(ground, frame)
         ["width"] = width,
         ["height"] = height,
         ["hitRadius"] = hitRadius,
-        ["animation"] = animation
+        ["animation"] = animation,
+        ["inPlay"] = true
     }
 
     self.__index = self
