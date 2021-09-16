@@ -1,8 +1,6 @@
-# 2D Minigames
+# Minigames Math
 
-The goal of this project is to create a series of independent games inspired by the series <i>Wario Ware</i>. The games are developed in sub-folders, and allow to practice with different sections of the Love2D API. That being said, the ultimate goal is to incorporate every game in a larger title running the smaller demos one after the other.
-
-_Please note:_ the
+The goal of this project is to practice with basic math with a series of independent games. Ultimately, I might incorporate the multiple demos in a larger title inspired by the <i>Wario Ware</i> series, and similarly to `Minigames Box`.
 
 ## Detonate
 
@@ -11,5 +9,3 @@ Press a specific key, in this instance the enter key, to have the firework deton
 ## Escape
 
 Move around the screen while avoiding an arbitrary number of moving obstacles.
-
-?? consider touch input instead ??
