@@ -4,7 +4,7 @@ The goal of this project is to practice with basic math with a series of indepen
 
 ## Detonate
 
-Press a specific key, in this instance the enter key, to have the firework detonate in the designated area. The demo features Love2D particle system, three particle systems actually, to highlight the movement and explosion of the firework, in and outside the target area. In terms of difficulty, consider updating the game in terms of the size or position of the target, or again the speed of the firework.
+Press the enter key to have a firework detonate in the designated area.
 
 ## Escape
 
