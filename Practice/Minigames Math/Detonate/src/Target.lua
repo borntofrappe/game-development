@@ -3,7 +3,7 @@ Target = {}
 function Target:new()
     local size = TARGET_SIZE
     local x = WINDOW_WIDTH / 2 - size / 2
-    local y = WINDOW_HEIGHT / 4 - size / 2
+    local y = WINDOW_HEIGHT / 3 - size / 2
 
     local this = {
         ["x"] = x,

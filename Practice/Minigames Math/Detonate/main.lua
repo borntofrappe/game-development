@@ -22,9 +22,9 @@ function love.keypressed(key)
         firework.inPlay = false
 
         if target.inFocus then
-            particles:explode(firework)
+            particles:detonate(firework.x, firework.y)
         else
-            particles:fizzle(firework)
+            particles:fizzle(firework.x, firework.y)
         end
     end
 end

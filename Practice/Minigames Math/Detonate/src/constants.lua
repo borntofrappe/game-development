@@ -10,3 +10,15 @@ FIREWORK_UPDATE_SPEED = {
 }
 
 PARTICLE_RADIUS = 4
+
+GRAVITY = 1
+
+FIZZLE_SPEED = {
+    ["coords"] = 0.1,
+    ["r"] = 6
+}
+
+DETONATION_SPEED = {
+    ["coords"] = {0.2, 1},
+    ["r"] = {1, 0.5}
+}
