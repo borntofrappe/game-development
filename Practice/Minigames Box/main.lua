@@ -11,7 +11,7 @@ function love.load()
         ["normal"] = love.graphics.newFont("res/fonts/font.ttf", 28)
     }
 
-    gStates = {"strike", "pop", "tilt", "catch"}
+    gStates = {"strike", "pop", "tilt", "catch", "detonate"}
     gState = nil
 
     gStateMachine =
@@ -44,7 +44,7 @@ function love.load()
         }
     )
 
-    gStateMachine:change("detonate")
+    gStateMachine:change("title")
 
     love.mouse.buttonpressed = {}
 end

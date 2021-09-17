@@ -533,7 +533,9 @@ Each title sets up a basic simulation with the Box2D library and the `love.physi
 
 - `TiltState`: rotate a platform to have a ball fall in the container below container
 
-- `CatchState` move a container to collect a falling ball
+- `CatchState`: move a container to collect a falling ball
+
+- `DetonateState`: cause the explosion of a firework in the designated area
 
 The titles are time-sensitive, but do not rely on the timer library. Here the progress bar is updated continuously and through delta time, so to incrementally update the width of the rectangle.
 
