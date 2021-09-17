@@ -35,13 +35,16 @@ function love.load()
             ["catch"] = function()
                 return CatchState:new()
             end,
+            ["detonate"] = function()
+                return DetonateState:new()
+            end,
             ["feedback"] = function()
                 return FeedbackState:new()
             end
         }
     )
 
-    gStateMachine:change("title")
+    gStateMachine:change("detonate")
 
     love.mouse.buttonpressed = {}
 end

@@ -14,5 +14,6 @@ require "src/states/StrikeState"
 require "src/states/PopState"
 require "src/states/TiltState"
 require "src/states/CatchState"
+require "src/states/DetonateState"
 
 require "src/states/FeedbackState"
