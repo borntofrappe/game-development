@@ -525,30 +525,18 @@ The `res` folder includes [Amatic SC](https://fonts.google.com/specimen/Amatic+S
 
 ## Minigames
 
-The <b>box</b> introduces the games with a dedicated state:
+Each title sets up a basic simulation with the Box2D library and the `love.physics` module.
 
-- `StrikeState`, where you are tasked to direct a ball toward a set of pins
+- `StrikeState`: direct a ball toward a set of pins
 
-- `PopState`, where you need to free a small weight from a series of floating balloons
+- `PopState`: free a small weight from a series of floating balloons
 
-- `TiltState`, where you rotate a platform to have a ball fall in a container
+- `TiltState`: rotate a platform to have a ball fall in the container below container
 
-- `CatchState`, where you move a container to collect a ball subject to gravity
+- `CatchState` move a container to collect a falling ball
 
-At a later stage I might update the project with additional scripts, but these are enough to show the overall flow of the application.
+The titles are time-sensitive, but do not rely on the timer library. Here `self.timer` is updated continuously and through delta time, so to incrementally update a progress bar.
 
 `CountdownState` helps to introduce the individual titles with a string and a brief delay.
 
-The state-based titles are then time-sensitive, but do not rely on the timer library. Here `self.timer` is updated continuously and through delta time, so to incrementally update a progress bar.
-
-Each of the three titles sets up a basic simulation with the Box2D library and the `love.physics` module:
-
-- `StrikeState`: dynamic objects, collision callback
-
-- `PopState`: velocity, forces, distance joints
-
-- `TiltState`: dynamic and kinematic objects, collision callback, sensor
-
-- `CatchState`: dynamic and kinematic objects, chain shape
-
-With a completed game, `FeedbackState` provides feeback in the form of an arbitrary string. Following a delay similar to that introduced in the countdown state, the game progresses to a different title.
+`FeedbackState` provides feeback in the form of an arbitrary string. Following a delay similar to that introduced in the countdown state, the game progresses to a different title.

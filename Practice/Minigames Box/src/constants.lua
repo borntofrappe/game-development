@@ -10,8 +10,8 @@ COUNTDOWN_LEVEL = 5
 COUNTDOWN_LEVEL_BAR_HEIGHT = 6
 
 CAMERA_SHAKE = {
-  ["label"] = "shake",
-  ["interval"] = 0.1,
-  ["x"] = 2,
-  ["y"] = 2
+    ["label"] = "shake",
+    ["interval"] = 0.1,
+    ["x"] = 2,
+    ["y"] = 2
 }
