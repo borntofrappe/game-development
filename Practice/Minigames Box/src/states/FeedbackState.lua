@@ -19,7 +19,7 @@ function FeedbackState:enter(params)
     )
 
     Timer:after(
-        COUNTDOWN_FEEBACK,
+        FEEDBACK_DELAY,
         function()
             Timer:remove(CAMERA_SHAKE.label)
             gStateMachine:change("countdown")

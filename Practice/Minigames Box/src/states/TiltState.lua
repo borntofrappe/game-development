@@ -5,7 +5,7 @@ local ANGLE_SPEED = 2
 local ANGLE_INITIAL = 4
 
 function TiltState:enter()
-    self.timer = COUNTDOWN_LEVEL
+    self.progressBar = ProgressBar:new()
     self.hasWon = false
 
     local world = love.physics.newWorld(0, GRAVITY)
@@ -109,9 +109,9 @@ function TiltState:enter()
 end
 
 function TiltState:update(dt)
-    self.timer = math.max(0, self.timer - dt)
+    self.progressBar:update(dt)
 
-    if self.timer == 0 then
+    if self.progressBar.value == 0 then
         gStateMachine:change(
             "feedback",
             {
@@ -133,14 +133,7 @@ function TiltState:update(dt)
 end
 
 function TiltState:render()
-    love.graphics.setColor(0.17, 0.17, 0.17)
-    love.graphics.rectangle(
-        "fill",
-        0,
-        PLAYING_HEIGHT - COUNTDOWN_LEVEL_BAR_HEIGHT,
-        PLAYING_WIDTH * self.timer / COUNTDOWN_LEVEL,
-        COUNTDOWN_LEVEL_BAR_HEIGHT
-    )
+    self.progressBar:render()
 
     love.graphics.setColor(0.737, 0.204, 0.224)
     love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())

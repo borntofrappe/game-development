@@ -26,7 +26,7 @@ function CountdownState:enter()
     )
 
     Timer:after(
-        COUNTDOWN_FEEBACK,
+        COUNTDOWN_DELAY,
         function()
             Timer:remove(CAMERA_SHAKE.label)
             gStateMachine:change(state)

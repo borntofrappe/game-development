@@ -2,6 +2,8 @@ Timer = require "res/lib/Timer"
 
 require "src/constants"
 
+require "src/gui/ProgressBar"
+
 require "src/StateMachine"
 require "src/states/BaseState"
 

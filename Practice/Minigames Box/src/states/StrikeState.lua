@@ -6,7 +6,7 @@ local ANGLE_MIN = -45
 local ANGLE_MAX = 45
 
 function StrikeState:enter()
-    self.timer = COUNTDOWN_LEVEL
+    self.progressBar = ProgressBar:new()
     self.hasWon = false
     self.state = "launching"
 
@@ -113,9 +113,9 @@ function StrikeState:enter()
 end
 
 function StrikeState:update(dt)
-    self.timer = math.max(0, self.timer - dt)
+    self.progressBar:update(dt)
 
-    if self.timer == 0 then
+    if self.progressBar.value == 0 then
         gStateMachine:change(
             "feedback",
             {
@@ -156,16 +156,9 @@ function StrikeState:update(dt)
 end
 
 function StrikeState:render()
-    love.graphics.setColor(0.17, 0.17, 0.17)
-    love.graphics.rectangle(
-        "fill",
-        0,
-        PLAYING_HEIGHT - COUNTDOWN_LEVEL_BAR_HEIGHT,
-        PLAYING_WIDTH * self.timer / COUNTDOWN_LEVEL,
-        COUNTDOWN_LEVEL_BAR_HEIGHT
-    )
+    self.progressBar:render()
 
-    -- love.graphics.setColor(0.17, 0.17, 0.17)
+    love.graphics.setColor(0.17, 0.17, 0.17)
     love.graphics.setLineWidth(1)
     for i, pin in pairs(self.pins) do
         love.graphics.circle("line", pin.x, pin.y, pin.r * 0.8)

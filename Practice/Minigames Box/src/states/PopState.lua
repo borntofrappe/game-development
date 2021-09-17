@@ -8,7 +8,7 @@ local WEIGHT_LINEAR_VELOCITY = {
 local BALLOON_FORCE = GRAVITY * 1.5
 
 function PopState:enter()
-    self.timer = COUNTDOWN_LEVEL
+    self.progressBar = ProgressBar:new()
     self.hasWon = false
 
     local world = love.physics.newWorld(0, GRAVITY)
@@ -81,9 +81,9 @@ function PopState:enter()
 end
 
 function PopState:update(dt)
-    self.timer = math.max(0, self.timer - dt)
+    self.progressBar:update(dt)
 
-    if self.timer == 0 then
+    if self.progressBar.value == 0 then
         gStateMachine:change(
             "feedback",
             {
@@ -120,14 +120,7 @@ function PopState:update(dt)
 end
 
 function PopState:render()
-    love.graphics.setColor(0.17, 0.17, 0.17)
-    love.graphics.rectangle(
-        "fill",
-        0,
-        PLAYING_HEIGHT - COUNTDOWN_LEVEL_BAR_HEIGHT,
-        PLAYING_WIDTH * self.timer / COUNTDOWN_LEVEL,
-        COUNTDOWN_LEVEL_BAR_HEIGHT
-    )
+    self.progressBar:render()
 
     love.graphics.setColor(0.17, 0.17, 0.17)
     for _, balloon in ipairs(self.balloons) do

@@ -535,7 +535,7 @@ Each title sets up a basic simulation with the Box2D library and the `love.physi
 
 - `CatchState` move a container to collect a falling ball
 
-The titles are time-sensitive, but do not rely on the timer library. Here `self.timer` is updated continuously and through delta time, so to incrementally update a progress bar.
+The titles are time-sensitive, but do not rely on the timer library. Here the progress bar is updated continuously and through delta time, so to incrementally update the width of the rectangle.
 
 `CountdownState` helps to introduce the individual titles with a string and a brief delay.
 

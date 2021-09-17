@@ -7,7 +7,7 @@ local BALL_LINEAR_VELOCITY = {
 }
 
 function CatchState:enter()
-    self.timer = COUNTDOWN_LEVEL
+    self.progressBar = ProgressBar:new()
 
     local world = love.physics.newWorld(0, GRAVITY)
 
@@ -99,9 +99,9 @@ function CatchState:enter()
 end
 
 function CatchState:update(dt)
-    self.timer = math.max(0, self.timer - dt)
+    self.progressBar:update(dt)
 
-    if self.timer == 0 then
+    if self.progressBar.value == 0 then
         local ball = {
             ["x"] = self.ball.body:getX(),
             ["y"] = self.ball.body:getY(),
@@ -143,14 +143,7 @@ function CatchState:update(dt)
 end
 
 function CatchState:render()
-    love.graphics.setColor(0.17, 0.17, 0.17)
-    love.graphics.rectangle(
-        "fill",
-        0,
-        PLAYING_HEIGHT - COUNTDOWN_LEVEL_BAR_HEIGHT,
-        PLAYING_WIDTH * self.timer / COUNTDOWN_LEVEL,
-        COUNTDOWN_LEVEL_BAR_HEIGHT
-    )
+    self.progressBar:render()
 
     love.graphics.setColor(0.737, 0.204, 0.224)
     love.graphics.circle("fill", self.ball.body:getX(), self.ball.body:getY(), self.ball.shape:getRadius())
