@@ -1,27 +1,9 @@
 # game-development
 
-The repository of an aspiring game developer, starting from [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz) and creating interactive demos. Lots and lots of demos.
+- in the numbered folders I develop the games discussed in [CS50's Intro to Game Development](https://www.youtube.com/playlist?list=PLWKjhJtqVAbluXJKKbCIb4xd7fcRkpzoz), in increments and documenting the process as much as possible
 
-![github.com/borntofrappe/game-development](https://github.com/borntofrappe/game-development/blob/master/banner.svg)
+- in the `Practice` folder I create additional games to practice
 
-## Project structure
+- in the `Utils` folder I keep a few helper projects
 
-[The wiki](https://github.com/borntofrappe/game-development/wiki) is a good place to start, but here's a few pointers starting from how the repository is organized:
-
-- in the numbered folders I develop the games discussed in the CS course, documenting the process as much as possible. It is a lengthy process, but hopefully worth the extra effort
-
-- in the `Practice` folder I create additional demos to rehearse the concepts introduced in the course — and learn plenty more. I've managed 15+ titles so far, and I'm proud of at least half of them
-
-- in the `Utils` folder I introduce a few helper projects. How to work with object-oriented programming, how to manage game state, how to benefit from a timer library. The `Practice` folder ows a lot to these utilities
-
-## How to contribute
-
-[File an issue](https://github.com/borntofrappe/game-development/issues/new).
-
-Any contribution is welcome, no matter how small:
-
-- [found a typo](https://github.com/borntofrappe/game-development/issues/new?title=Found%20a%20typo)
-
-- [found a bug](https://github.com/borntofrappe/game-development/issues/new?title=Bug%20Report&labels=bug)
-
-- [have an idea for a practice game](https://github.com/borntofrappe/game-development/issues/new?title=Practice%20game&labels=project)
+Refer to the wiki for more details
