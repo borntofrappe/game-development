@@ -4,15 +4,15 @@ With the [AI Update](https://cs50.harvard.edu/games/2019/spring/assignments/0/) 
 
 - in `love.load` initialize a table to keep track of three variables
 
-  1. `x` to describe the threshold after which the paddle should consider the ball
+  1. `scope` to describe when the paddle should consider the ball based on the ball's position
 
-  2. `y` to describe where the paddle should move
+  2. `y` to describe where the paddle should move based on where the ball will end
 
-  3. `looksAhead` to avoid computing the vertical coordinate continuously
+  3. `looksAhead` to avoid computing `y` coordinate continuously
 
   ```lua
   ai = {
-    ['x'] = math.random(VIRTUAL_WIDTH / 2, VIRTUAL_WIDTH * 3 / 4),
+    ['scope'] = math.random(VIRTUAL_WIDTH * 3 / 4, VIRTUAL_WIDTH / 2),
     ['y'] = VIRTUAL_HEIGHT / 2,
     ['looksAhead'] = false
   }
@@ -20,23 +20,24 @@ With the [AI Update](https://cs50.harvard.edu/games/2019/spring/assignments/0/) 
 
 - set `ai['looksAhead']` to true following multiple conditions
 
-  - when the game moves to the playing state
-
   - when the ball collides with the player
 
   - when the ball collides with the top of bottom edge
 
+  - when the game moves to the playing state and the ball moves toward the computer
+
 - in `love.update` compute `ai['y']` when the boolean variable is true and the ball is moving toward the computer
 
   ```lua
-  if ai['looksAhead'] and ball.dx < 0 and ball.x < ai['x'] then
+  if ai['looksAhead'] and ball.dx < 0 and ball.x < ai['scope'] then
     -- compute ai['y']
+    -- set ai['looksAhead'] back to false
   end
   ```
 
-  `ai['x']` is used as an additional condition to have the computer
+  `ai['scope']` is used as an additional condition to have the computer stationary outside of the threshold distance
 
-  `ai['y']` is computed considering where the ball will move. `ball.x / math.abs(ball.dx)` describes the time the ball takes to move toward the left side — space divided by velocity. `ball.dy * time` illustrates the change in vertical coordinate, so that the paddle moves toward `ball.y + changeY`
+  For `ai['y']` the value considers where the ball will move. `ball.x / math.abs(ball.dx)` describes the time the ball takes to move toward the left side — space divided by velocity. `ball.dy * time` illustrates the vertical distance the ball will cover, so that the paddle should move toward the spot
 
   ```lua
   ai['y'] = ball.dy * ball.x / math.abs(ball.dx) + ball.y

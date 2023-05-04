@@ -67,13 +67,16 @@ function love.load()
   --[[
     AI
     the idea is to 
-    1. move the paddle toward ai['y']
-    2. compute ai['y'] when the ball crosses ai['x'] or bounces against the top or bottom edge
-
-    ai['looksAhead'] to avoid computing ai['y'] continuously
+    1. move the paddle toward ai["y"]
+    2. compute ai["y"] only when ai["looksAhead"] is set to true
+    3. set ai["looksAhead"] to true in a set of circumstances
+      - when the ball collides with the player
+      - when the ball bounces against a wall
+      - when the game moves to the 'playing' state and the ball moves toward the player
+    4. set ai["looksAhead"] to false once you compute ai["y"]
   ]]
   ai = {
-    ["x"] = math.random(VIRTUAL_WIDTH / 2, VIRTUAL_WIDTH * 3 / 4),
+    ["scope"] = math.random(VIRTUAL_WIDTH * 3 / 4, VIRTUAL_WIDTH / 2),
     ["y"] = VIRTUAL_HEIGHT / 2,
     ["looksAhead"] = false
   }
@@ -103,12 +106,18 @@ function love.keypressed(key)
       gameState = "playing"
       computer.points = 0
       player.points = 0
-      ai["looksAhead"] = true
+      ai["y"] = VIRTUAL_HEIGHT / 2
+      if ball.dx < 0 then 
+        ai["looksAhead"] = true
+      end
 
       sounds["playing"]:play()
     else
       gameState = "playing"
-      ai["looksAhead"] = true
+      ai["y"] = VIRTUAL_HEIGHT / 2
+      if ball.dx < 0 then 
+        ai["looksAhead"] = true
+      end
 
       sounds["playing"]:play()
     end
@@ -132,8 +141,6 @@ function love.update(dt)
 
     -- collision with paddles
     if ball:collides(computer) then
-      ai["looksAhead"] = true
-
       ball.dx = -ball.dx * 1.1
       ball.x = computer.x + computer.width
 
@@ -154,6 +161,8 @@ function love.update(dt)
         ball.dy = math.random(10, 150)
       end
 
+      ai["looksAhead"] = true
+
       sounds["paddle_hit"]:play()
     end
 
@@ -161,12 +170,14 @@ function love.update(dt)
     if ball.y <= 0 then
       ball.y = 0
       ball.dy = -ball.dy
+
       ai["looksAhead"] = true
 
       sounds["wall_hit"]:play()
     elseif ball.y >= VIRTUAL_HEIGHT - ball.width then
       ball.y = VIRTUAL_HEIGHT - ball.width
       ball.dy = -ball.dy
+
       ai["looksAhead"] = true
 
       sounds["wall_hit"]:play()
@@ -217,22 +228,21 @@ function love.update(dt)
     player.dy = 0
   end
 
-  if ai["looksAhead"] and ball.dx < 0 and ball.x < ai["x"] then
-    ai["looksAhead"] = false
-    ai["x"] = math.random(VIRTUAL_WIDTH / 2, VIRTUAL_WIDTH * 3 / 4)
-
+  if ai["looksAhead"] and ball.dx < 0 and ball.x < ai["scope"] then
     -- where the ball will land as speed * time + starting y
     ai["y"] = ball.dy * ball.x / math.abs(ball.dx) + ball.y
+    
+    -- update scope
+    ai["scope"] = math.random(VIRTUAL_WIDTH * 3 / 4, VIRTUAL_WIDTH / 2)
+    ai["looksAhead"] = false
   end
 
-  if ball.x < ai["x"] then
-    if computer.y > ai["y"] then
-      computer.dy = -PADDLE_SPEED
-    elseif computer.y + computer.height < ai["y"] then
-      computer.dy = PADDLE_SPEED
-    else
-      computer.dy = 0
-    end
+  if computer.y > ai["y"] then
+    computer.dy = -PADDLE_SPEED
+  elseif computer.y + computer.height < ai["y"] then
+    computer.dy = PADDLE_SPEED
+  else
+    computer.dy = 0
   end
 
   computer:update(dt)
