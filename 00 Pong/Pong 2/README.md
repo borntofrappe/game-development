@@ -6,6 +6,8 @@ _Please note:_ `main.lua` depends on `push.lua` being available in the same fold
 
 The code makes use of a library called `push`. It is available on github [right here](https://github.com/Ulydev/push/blob/master/push.lua), and it allows to achieve a resolution based on the actual/virtual dimensions defined atop the script.
 
+! I use the library as updated on December 22nd, 2020, and with Love2D 11.4
+
 To update the resolution:
 
 - require the `push` library
@@ -14,11 +16,11 @@ To update the resolution:
   push = require 'push'
   ```
 
-- define two sets of variables for the actual andvirtual dimensions
+- define two sets of variables for the actual and virtual dimensions
 
   ```lua
-  WINDOW_WIDTH = 864
-  WINDOW_HEIGHT = 486
+  WINDOW_WIDTH = 1080
+  WINDOW_HEIGHT = 608
 
   VIRTUAL_WIDTH = 432
   VIRTUAL_HEIGHT = 243
@@ -32,17 +34,17 @@ To update the resolution:
   love.graphics.setDefaultFilter('nearest', 'nearest')
   ```
 
-  This is used to avoid blur
+  This is used to avoid blur.
 
-- always in the `load` function, set up the resolution using `push:setupScreen`:
+- always in the `load` function, set up the resolution using `push:setupScreen`
 
   ```lua
   push:setupScreen(virtualWidth, virtualHeight, width, height, options)
   ```
 
-  The function is used instead of`setMode`, and except for the two additional arguments describing the virtual dimensions (`virtualWidth` and `virtualHeight`), the two work in the same fashion
+  The function is used instead of`setMode`, and except for the two additional arguments describing the virtual dimensions (`virtualWidth` and `virtualHeight`), the two work in the same fashion.
 
-  The colon operator `:` allows to use the `setupScreen` function from the `push` module
+  The colon operator `:` allows to use the `setupScreen` function from the `push` module.
 
 - in the `draw` function, draw/render the shapes in between `push:start` and `push:finish`.
 

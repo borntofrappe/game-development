@@ -13,12 +13,12 @@ It is important to note how the presence of a winning condition introduces a new
   ```lua
   if ball.x < 0 then
     -- update score
-    if player1.points >= 10 then
+    if player2.points >= 10 then
       gameState = 'victory'
 
   elseif ball.x > VIRTUAL_WIDTH then
     -- update score
-    if player2.points >= 10 then
+    if player1.points >= 10 then
       gameState = 'victory'
     end
   end

@@ -2,13 +2,9 @@
 
 _Please note:_ `main.lua` depends on `push.lua`, `class.lua`, `font.ttf` and the sound files in a `sound` folder being available a `res` folder
 
-Here you add audio.
-
-**requires a res folder with push.lua, font.ttf, class.lua and the sounds folder**
-
 ## Audio
 
-Including audio is a simple matter of initializing variables in the `load()` function and later access them where needed.
+Including audio is a matter of initializing variables in the `load()` function and later access them where needed. Similarly to fonts.
 
 In the `load()` function, initialize the audio files in a table.
 
@@ -37,10 +33,12 @@ sounds['paddle_hit']:play()
 
 Once you know how it is a matter of placing the audio files where needed:
 
-- when the ball hits a paddle;
+- when the ball hits a paddle
 
-- when the ball hits a wall;
+- when the ball hits a wall
 
-- when a point is scored
+- when a player scores a point
 
-- when the victory state is reached
+- when a player wins
+
+- when moving to the playing state

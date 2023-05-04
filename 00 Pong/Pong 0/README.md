@@ -2,7 +2,7 @@
 
 ## LOVE2D
 
-1. [Install LOVE2D](https://love2d.org/)
+1. [Install LOVE2D](https://love2d.org/#download)
 
 2. create a `main.lua` file
 
@@ -24,6 +24,8 @@ To run the program you have at least two options:
    # "application" "path to the folder containing main.lua"
    "C:\Program Files\LOVE\love.exe" "C:\game-development\00 Pong\Pong 0"
    ```
+
+3. (VSCode) install [love-launcher](https://marketplace.visualstudio.com/items?itemName=JanW.love-launcher)
 
 ## 2D Coordinate System
 

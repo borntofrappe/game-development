@@ -88,7 +88,7 @@ if ball.y >= VIRTUAL_HEIGHT - ball.width then
 
 ## collide
 
-The `:collide` function takes as argument a paddle and checks the position of the ball in connection to the coordinate of this object. It then checks through a series of conditional whether the ball and the paddle are **not** overlapping, returning `true` otherwise.
+The `:collide` function takes as argument a paddle and checks the position of the ball in connection to the coordinate of this object. It then goes through a series of conditional whether the ball and the paddle are **not** overlapping, returning `true` otherwise.
 
 An overlap, actually the lack of an overlap is assessed by checking the position of the edges of the two shapes with the following considerations:
 

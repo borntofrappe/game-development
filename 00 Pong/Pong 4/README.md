@@ -49,7 +49,7 @@ love.graphics.printf(
   )
 ```
 
-`tostring()` coerces the number to a string value. However, there is no error when printing an integer.
+`tostring()` coerces the number to a string value. That being said, the app still works if you refer directly to the integer.
 
 ## Variables
 
@@ -61,7 +61,7 @@ The code initializes variables at the top of the script, but also in the `love.l
 PADDLE_SPEED = 200
 ```
 
-- as mentioned in the previous section, `player1Score` an `player2Score` detail the score of each player
+- `player1Score` and `player2Score` describe the score of each player
 
 ```lua
 function love.load()
@@ -69,7 +69,7 @@ function love.load()
   player2Score = 0
 ```
 
-- `player1Y` an `player2Y` detail the vertical position of the paddles.
+- `player1Y` an `player2Y` keep track of the vertical position of the paddles.
 
 ```lua
 function love.load()
@@ -91,7 +91,7 @@ PADDLE_SPEED = 200
 
 ## User input
 
-To move the paddles, the code leverages the core function `love.update(dt)`. As mentioned in a previous section, this function runs at every frame, and can be used to update the game as per the game loop.
+To move the paddles, the code leans on the core function `love.update(dt)`. As mentioned in a previous chapter, this function runs at every frame, and can be used to update the game as per the game loop.
 
 `dt` refers delta time, how much time has passed in each frame. To maintain uniform speed in the paddles' movememnt, this value is used in conjunction with the constant `PADDLE_SPEED`.
 
@@ -103,7 +103,7 @@ end
 
 This works as to move the paddle, but it does so regardless of user input.
 
-To consider user interaction, the code introduces `love.keyboard` and `love.keyboard.isDown`. This function accepts as argument a key, similarly to `love.keypressed`. It listens continuously for a key press, and returns a boolean describing whether the specific key is being pressed.
+To consider user interaction, refer to `love.keyboard` and `love.keyboard.isDown`. The function accepts as argument a key, similarly to `love.keypressed`. It listens continuously for a key press and returns a boolean describing whether the specific key is being pressed.
 
 ```lua
 function love.update(dt)

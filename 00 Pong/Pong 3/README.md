@@ -33,7 +33,7 @@ In the `draw` function, the code updates the window in its color and the shapes 
   love.graphics.clear(r, g, b, a)
   ```
 
-  **Important**: `r`, `g`, `b` and `a` are values in the [0-1] range
+  _Please note_: from Love 11.0 onward `r`, `g`, `b` and `a` are values in the [0-1] range, **not** [0, 255]
 
 - draw rectangles for the paddles and the puck
 
@@ -46,9 +46,3 @@ In the `draw` function, the code updates the window in its color and the shapes 
   ```
 
   `mode` translates to one of two values: `fill` or `line`, to respectively draw a filled shape or just the outline.
-
-For the puck, you can very well draw a circular shape instead of a rectangle, using `love.graphics.circle()`
-
-```lua
-love.graphics.circle(mode, x, y, r)
-```

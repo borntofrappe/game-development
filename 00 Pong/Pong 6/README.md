@@ -150,7 +150,7 @@ function Ball:reset()
 end
 ```
 
-Once more, this allows `main.lua` to reposition the ball with a cleaner syntax
+Once more, this allows `main.lua` to reposition the ball with a cleaner syntax.
 
 ```lua
 if gameState == 'waiting'

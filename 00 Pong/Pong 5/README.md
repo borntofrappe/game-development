@@ -6,7 +6,7 @@ _Please note:_ `main.lua` depends on `push.lua` and `font.ttf` being available i
 
 Once the paddles are allowed to move following user input, you need to make sure their position doesn't exceed the boundaries of the window.
 
-Lua provides `math.min` and `math.max` to clmap values to a lower and upper threshold. The idea is to assign to the coordinate the value following user interaction, or the threshold. For instance, to clamp the northbound paddle for `player1`, as the paddle reaches the top of the window (`y = 0`), assign a value of `0` to avoid having the paddle above the window (`y < 0`)
+Lua provides `math.min` and `math.max` to clamp values to a lower and upper threshold. The idea is to assign to the coordinate the value following user interaction, or the threshold. For instance, to clamp the northbound paddle for `player1`, as the paddle reaches the top of the window (`y = 0`), assign a value of `0` to avoid having the paddle above the window (`y < 0`)
 
 ```lua
 if love.keyboard.isDown('w') then
@@ -34,7 +34,7 @@ To avoid a predictable behavior, the code introduces randomness in the form or r
 
 - with one positive integer `i`, it returns a random integer in the `[1, i]` range
 
-- with twp positive integer `i` and `j`, it returns a random integer in the `[i, j]` range
+- with two positive integers `i` and `j`, it returns a random integer in the `[i, j]` range
 
 `math.random()` produces a random number. However, the output is not completely random. It is based on a seed, a fixed value which means the function ultimately produces the same sequence of numbers. `math.randomseed()` is used to change this seed. By using a different seed every time, the script ensures that this sequence changes, and one way of describing a different seed is through the current time from the `os` module.
 
@@ -130,7 +130,7 @@ The variable is then used:
 - in the `update` function to move the ball conditional to the string being `playing`
 
 ```lua
-function update(dt)
+function love.update(dt)
   if gameState == 'playing' then
     ballX = ballX + ballDX * dt
     ballY = ballY + ballDY * dt

@@ -69,8 +69,6 @@ function love.draw()
   love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT * 3 / 4, 5, 20)
 
   -- include a rectangle for the puck
-  -- a circle could be very well be drawn with the circle function, as follows
-  -- love.graphics.circle('fill', VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 4)
   love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 5, 5)
 
   push:finish()

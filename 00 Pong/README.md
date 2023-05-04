@@ -1,8 +1,8 @@
 # 00 Pong
 
-[GD50](https://youtu.be/jZqYXSmgDuM) introduces the [Lua programming language](https://www.lua.org/) and the [LOVE environment](http://love2d.org/) by creating the game Pong.
+[GD50](https://youtu.be/jZqYXSmgDuM) introduces the [Lua programming language](https://www.lua.org/) and the [LOVE2D framework](http://love2d.org/) by creating the game Pong.
 
-![A few frames from the assignment for "Pong"](https://github.com/borntofrappe/game-development/blob/master/00%20Pong/pong.gif)
+![](https://github.com/borntofrappe/game-development/blob/main/00%20Pong/pong.gif)
 
 ## Topics
 
@@ -20,7 +20,7 @@
 
 - hitboxes to check the collision of boxes
 
-- sound effects with bfxr
+- sound effects with [bfxr](https://www.bfxr.net/)
 
 ## Increments
 
