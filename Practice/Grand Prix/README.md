@@ -2,7 +2,7 @@
 
 Accelerate and avoid slower cars to reach the finish line in record time.
 
-![Grand Prix in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Grand%20Prix/grand-prix.gif)
+![Grand Prix in a few frames](https://github.com/borntofrappe/game-development/blob/main/Practice/Grand%20Prix/grand-prix.gif)
 
 ## The game
 

@@ -2,7 +2,7 @@
 
 [Motion Puzzle](https://serebii.net/mini/puzzle/#motion) is a game developed for the Pokemon Mini system where you are tasked to swap the pieces of a picture until you complete the original design. The goal of this project is to replicate the basic concept starting from a spritesheet and a few levels.
 
-![A few frames from the demo "Motion Puzzle"](https://github.com/borntofrappe/game-development/blob/master/Practice/Motion%20Puzzle/motion-puzzle.gif)
+![A few frames from the demo "Motion Puzzle"](https://github.com/borntofrappe/game-development/blob/main/Practice/Motion%20Puzzle/motion-puzzle.gif)
 
 ## Spritesheet
 

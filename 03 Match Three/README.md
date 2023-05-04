@@ -2,7 +2,7 @@
 
 The fourth video moves on to create a game in which you match tiles of the same shape and color.
 
-![A few frames from the assignment for "Match Three"](https://github.com/borntofrappe/game-development/blob/master/03%20Match%20Three/match-three.gif)
+![A few frames from the assignment for "Match Three"](https://github.com/borntofrappe/game-development/blob/main/03%20Match%20Three/match-three.gif)
 
 ## Topics
 

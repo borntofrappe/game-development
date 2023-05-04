@@ -4,7 +4,7 @@
 
 The project is more of an experiment than a game, but it does provide a modicum of interaction, by pressing buttons or again a cell in the grid. The project is also simple enough to highlight how Love2D sets up the gaming window. The goal is to consider the entirety of the window's width and height, and scale the grid and buttons accordingly.
 
-![Game of Life in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Game%20of%20Life/game-of-life.gif)
+![Game of Life in a few frames](https://github.com/borntofrappe/game-development/blob/main/Practice/Game%20of%20Life/game-of-life.gif)
 
 ## Game
 

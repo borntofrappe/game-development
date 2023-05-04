@@ -2,7 +2,7 @@
 
 [Berzerk](<https://en.wikipedia.org/wiki/Berzerk_(video_game)>) is an arcade game where the player roams a series of levels, shooting robot enemies while avoiding incoming fire and the surrounding walls. Here I try to replicate the essence of the game taking inspiration from the port for the Atari 2600 system.
 
-![Berzerk in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Berzerk/berzerk.gif)
+![Berzerk in a few frames](https://github.com/borntofrappe/game-development/blob/main/Practice/Berzerk/berzerk.gif)
 
 ## Spritesheet
 

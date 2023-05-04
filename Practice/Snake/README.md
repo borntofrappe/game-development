@@ -2,7 +2,7 @@
 
 Recreate the popular game snake with a blocky design inspired by the display of a Nokia phone.
 
-![Snake in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Snake/snake.gif)
+![Snake in a few frames](https://github.com/borntofrappe/game-development/blob/main/Practice/Snake/snake.gif)
 
 ## Project structure
 

@@ -2,7 +2,7 @@
 
 The goal is to recreate the game <i>Space Invaders</i> while practicing with the concept of a state machine and a timer library.
 
-![Space Invaders in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Space%20Invaders/space-invaders.gif)
+![Space Invaders in a few frames](https://github.com/borntofrappe/game-development/blob/main/Practice/Space%20Invaders/space-invaders.gif)
 
 ## Resources
 

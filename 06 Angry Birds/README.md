@@ -2,7 +2,7 @@
 
 The seventh videos in the course introduces the game Angry Birds where the player throws an entity toward a target.
 
-![A few frames from the assignment for "Angry Birds"](https://github.com/borntofrappe/game-development/blob/master/04%20Angry%20Birds/angry-birds.gif)
+![A few frames from the assignment for "Angry Birds"](https://github.com/borntofrappe/game-development/blob/main/04%20Angry%20Birds/angry-birds.gif)
 
 ## Topics
 

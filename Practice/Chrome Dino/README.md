@@ -2,7 +2,7 @@
 
 Google Chrome provides the game [Dinosaur Jump](https://en.wikipedia.org/wiki/Dinosaur_Game), also known as Chrome Dino, when the browser is offline. The goal of this project is to replicate the essence of the endless scroller starting from a pixelated spritesheet.
 
-![Chrome Dino in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Chrome%20Dino/chrome-dino.gif)
+![Chrome Dino in a few frames](https://github.com/borntofrappe/game-development/blob/main/Practice/Chrome%20Dino/chrome-dino.gif)
 
 ## Resources
 

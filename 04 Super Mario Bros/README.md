@@ -2,7 +2,7 @@
 
 The fifth lecture covers a 2D platformer inspired by Super Mario Bros.
 
-![A few frames from the assignment for "Super Mario Bros"](https://github.com/borntofrappe/game-development/blob/master/04%20Super%20Mario%20%Bros/super-mario-bros.gif)
+![A few frames from the assignment for "Super Mario Bros"](https://github.com/borntofrappe/game-development/blob/main/04%20Super%20Mario%20%Bros/super-mario-bros.gif)
 
 ## Topics
 

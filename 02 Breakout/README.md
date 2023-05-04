@@ -2,7 +2,7 @@
 
 After Pong and Flappy Bird, the course proceeds to recreate the game Breakout.
 
-![A few frames from the assignment for "Breakout"](https://github.com/borntofrappe/game-development/blob/master/02%20Breakout/breakout.gif)
+![A few frames from the assignment for "Breakout"](https://github.com/borntofrappe/game-development/blob/main/02%20Breakout/breakout.gif)
 
 ## Topics
 

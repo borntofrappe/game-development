@@ -2,7 +2,7 @@
 
 Pokemon Diamond and Pearl introduce the underground, where the trainer explores an area hidden below the games' region. With this project I try to replicate a mini-game available in this very underground, and speficically the mini-game where the player is tasked to dig a wall and uncover the hidden treasures before the brittle surface collapses.
 
-![Excavation in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Excavation/excavation.gif)
+![Excavation in a few frames](https://github.com/borntofrappe/game-development/blob/main/Practice/Excavation/excavation.gif)
 
 ## Spritesheet
 

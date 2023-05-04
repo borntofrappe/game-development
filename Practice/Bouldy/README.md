@@ -2,7 +2,7 @@
 
 > A small pebble in a considerably large maze.
 
-![A few frames from the demo "Bouldy"](https://github.com/borntofrappe/game-development/blob/master/Practice/Bouldy/bouldy.gif)
+![A few frames from the demo "Bouldy"](https://github.com/borntofrappe/game-development/blob/main/Practice/Bouldy/bouldy.gif)
 
 The goal of this project is to have the player move a square inside of a maze to collect a few coins. With every step of uninterrupted movement the player gains speed, allowing the player to optionally break through the surrounding gates — but not the edges of the window.
 

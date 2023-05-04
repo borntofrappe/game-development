@@ -2,7 +2,7 @@
 
 Try to pocket every single colorful ball in a physics-based game of pool.
 
-![Pockets in a few frames](https://github.com/borntofrappe/game-development/blob/master/Practice/Pockets/pockets.gif)
+![Pockets in a few frames](https://github.com/borntofrappe/game-development/blob/main/Practice/Pockets/pockets.gif)
 
 ## Box2D
 

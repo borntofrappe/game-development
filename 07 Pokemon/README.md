@@ -2,7 +2,7 @@
 
 The eight title in the course introduces role-playing games with a demo inspired by the Pokemon series.
 
-![A few frames from the assignment for "Pokemon"](https://github.com/borntofrappe/game-development/blob/master/04%20Angry%20Birds/pokemon.gif)
+![A few frames from the assignment for "Pokemon"](https://github.com/borntofrappe/game-development/blob/main/04%20Angry%20Birds/pokemon.gif)
 
 ## Topics
 
