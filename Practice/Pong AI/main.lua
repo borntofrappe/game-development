@@ -18,7 +18,11 @@ PADDLE = {
 }
 
 PUCK = {
-    radius = 8
+    radius = 8,
+    speed = {
+        min = 70,
+        max = 160
+    }
 }
 
 function love.load()
@@ -44,10 +48,36 @@ function love.keypressed(key)
     if key == 'up' or key == 'down' or key == 'tab' then 
         playerSide = playerSide == 1 and 2 or 1
     end
+
+
+    if key == 'return' then 
+        if gameState == 'waiting' then 
+            gameState = 'playing'
+        end
+
+    end
 end
 
 function love.update(dt)
+    if gameState == 'playing' then 
+        puck:update(dt)
 
+        if puck.x <= puck.r then 
+            puck.x = puck.r
+            puck.dx = math.abs(puck.dx)
+        elseif puck.x >= WINDOW.width - puck.r * 2 then 
+            puck.x = WINDOW.width - puck.r * 2
+            puck.dx = math.abs(puck.dx) * -1
+        end
+
+        if puck.y <= 0 then 
+            puck:reset()
+            gameState = 'waiting'
+        elseif puck.y >= WINDOW.height then 
+            puck:reset()
+            gameState = 'waiting'
+        end
+    end
 end
 
 function love.draw()
