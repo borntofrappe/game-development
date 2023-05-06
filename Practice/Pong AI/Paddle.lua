@@ -16,8 +16,8 @@ function Paddle:init(x, y)
     self.points = 0
 end
 
-function Paddle:score()
-    self.points = self.points + 1
+function Paddle:score(increment)
+    self.points = self.points + increment
 end
 
 function Paddle:target(puck)

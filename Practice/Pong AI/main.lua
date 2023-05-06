@@ -37,7 +37,12 @@ function love.load()
     love.graphics.setLineWidth(2)
 
     gameState = 'waiting' -- waiting - playing
-    playerSide = 1
+
+    player = {
+        side = 1,
+        guesses = 0,
+        correct = 0
+    }
 
     ai1 = Paddle(WINDOW.width / 2 - PADDLE.width / 2, WINDOW.padding)
     ai2 = Paddle(WINDOW.width / 2 - PADDLE.width / 2, WINDOW.height - WINDOW.padding - PADDLE.height)
@@ -51,21 +56,22 @@ function love.keypressed(key)
     end
 
     if key == 'up' or key == 'down' or key == 'tab' then 
-        playerSide = playerSide == 1 and 2 or 1
+        player.side = player.side == 1 and 2 or 1
     end
-
 
     if key == 'return' then 
         if gameState == 'waiting' then 
             gameState = 'playing'
+            player.guesses = player.guesses + 1
 
-            if puck.dy > 0 then 
-                ai2.looksAhead = true
-            else
+            if player.side == 1 then 
+                puck.dy = math.abs(puck.dy) * -1
                 ai1.looksAhead = true
+            else
+                puck.dy = math.abs(puck.dy)
+                ai2.looksAhead = true
             end
         end
-
     end
 end
 
@@ -98,11 +104,23 @@ function love.update(dt)
         end
 
         if puck.y <= 0 then
-            ai2:score()
+            playerSupport = player.side == 1
+            if playerSupport then 
+                ai2:score(1)
+                player.correct = player.correct + 1
+            else
+                ai2:score(2)
+            end
             puck:reset()
             gameState = 'waiting'
         elseif puck.y >= WINDOW.height then
-            ai1:score()
+            playerSupport = player.side == 1
+            if playerSupport then 
+                ai1:score(1)
+                player.correct = player.correct + 1
+            else
+                ai1:score(2)
+            end
             puck:reset()
             gameState = 'waiting'
         end
@@ -130,7 +148,7 @@ function love.draw()
         love.graphics.printf('Points: ' .. ai2.points, -8, WINDOW.height / 2 + 4, WINDOW.width, 'right')
 
 
-        if playerSide == 1 then 
+        if player.side == 1 then 
             love.graphics.setColor(0.5, 0.5, 0.5, 0.3)
             love.graphics.rectangle('fill', 0, 0, WINDOW.width, WINDOW.height / 2)
             
