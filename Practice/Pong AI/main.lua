@@ -4,8 +4,8 @@ require 'Paddle'
 require 'Puck'
 
 WINDOW = {
-    width = 350,
-    height = 440,
+    width = 360,
+    height = 480,
     options = {
         fullscreen = false,
     },
@@ -16,8 +16,8 @@ PADDLE = {
     width = 52,
     height = 8,
     scope = {
-        min = WINDOW.height / 4,
-        max = WINDOW.height / 2
+        min = WINDOW.height / 3,
+        max = WINDOW.height
     },
     speed = 200
 }
@@ -97,20 +97,22 @@ function love.update(dt)
             ai2.looksAhead = true
         end
 
-        if puck.y <= 0 then 
+        if puck.y <= 0 then
+            ai2:score()
             puck:reset()
             gameState = 'waiting'
-        elseif puck.y >= WINDOW.height then 
+        elseif puck.y >= WINDOW.height then
+            ai1:score()
             puck:reset()
             gameState = 'waiting'
         end
 
         if puck:collides(ai1) then
             puck.y = ai1.y + ai1.height + puck.r
-            puck.dy = math.abs(puck.dy) * 1.1
+            puck.dy = math.abs(puck.dy) * 1.2
         elseif puck:collides(ai2) then
             puck.y = ai2.y - puck.r
-            puck.dy = math.abs(puck.dy) * -1 * 1.1
+            puck.dy = math.abs(puck.dy) * -1 * 1.2
         end
     end
 end
@@ -119,6 +121,15 @@ function love.draw()
     love.graphics.clear(0.95, 0.95, 0.95)
 
     if gameState == 'waiting' then 
+        love.graphics.setColor(0.2, 0.2, 0.2)
+        love.graphics.push()
+        love.graphics.translate(WINDOW.width, WINDOW.height)
+        love.graphics.rotate(math.pi)
+        love.graphics.printf('Points: ' .. ai1.points, -8, WINDOW.height / 2 + 4, WINDOW.width, 'right')
+        love.graphics.pop()
+        love.graphics.printf('Points: ' .. ai2.points, -8, WINDOW.height / 2 + 4, WINDOW.width, 'right')
+
+
         if playerSide == 1 then 
             love.graphics.setColor(0.5, 0.5, 0.5, 0.3)
             love.graphics.rectangle('fill', 0, 0, WINDOW.width, WINDOW.height / 2)
@@ -132,7 +143,6 @@ function love.draw()
             
             love.graphics.setColor(0.2, 0.2, 0.2)
             love.graphics.printf('Pick a side to support', 0, WINDOW.height * 3 / 4 - 6, WINDOW.width, 'center')
-
         end
     end
 

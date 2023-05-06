@@ -13,10 +13,20 @@ function Paddle:init(x, y)
     self.looksAhead = false 
     self.scope = self:getScope()
     self.aim = x
+    self.points = 0
+end
+
+function Paddle:score()
+    self.points = self.points + 1
 end
 
 function Paddle:target(puck)
     self.aim = puck.x + puck.dx * math.abs(self.y + self.height / 2 - puck.y) / math.abs(puck.dy)
+    if self.aim > self.x then
+        self.aim = self.aim + self.width / 2
+    else
+        self.aim = self.aim - self.width / 2
+    end
     self.scope = self:getScope()
     self.looksAhead = false
 end
