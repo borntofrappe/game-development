@@ -23,6 +23,14 @@ function Puck:reset()
     self.dx, self.dy = self:getDs()
 end
 
+function Puck:collides(paddle)
+    if self.x + self.r < paddle.x or self.x - self.r > paddle.x + paddle.width or self.y + self.r < paddle.y or self.y - self.r > paddle.y + paddle.height then 
+        return false
+    end
+
+    return true
+end
+
 function Puck:update(dt)
     self.x = self.x + (self.dx * dt)
     self.y = self.y + (self.dy * dt)

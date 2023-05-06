@@ -104,6 +104,14 @@ function love.update(dt)
             puck:reset()
             gameState = 'waiting'
         end
+
+        if puck:collides(ai1) then
+            puck.y = ai1.y + ai1.height + puck.r
+            puck.dy = math.abs(puck.dy) * 1.1
+        elseif puck:collides(ai2) then
+            puck.y = ai2.y - puck.r
+            puck.dy = math.abs(puck.dy) * -1 * 1.1
+        end
     end
 end
 
