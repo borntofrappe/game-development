@@ -14,7 +14,12 @@ WINDOW = {
 
 PADDLE = {
     width = 52,
-    height = 8
+    height = 8,
+    scope = {
+        min = WINDOW.height / 4,
+        max = WINDOW.height / 2
+    },
+    speed = 200
 }
 
 PUCK = {
@@ -53,6 +58,12 @@ function love.keypressed(key)
     if key == 'return' then 
         if gameState == 'waiting' then 
             gameState = 'playing'
+
+            if puck.dy > 0 then 
+                ai2.looksAhead = true
+            else
+                ai1.looksAhead = true
+            end
         end
 
     end
@@ -61,13 +72,29 @@ end
 function love.update(dt)
     if gameState == 'playing' then 
         puck:update(dt)
+        ai1:update(dt)
+        ai2:update(dt)
+
+        if ai1.looksAhead and puck.dy < 0 and math.abs(ai1.y + ai1.height / 2 - puck.y) < ai1.scope then 
+            ai1:target(puck)
+        end
+
+        if ai2.looksAhead and puck.dy > 0 and math.abs(ai2.y + ai2.height / 2 - puck.y) < ai2.scope then 
+            ai2:target(puck)
+        end
 
         if puck.x <= puck.r then 
             puck.x = puck.r
             puck.dx = math.abs(puck.dx)
-        elseif puck.x >= WINDOW.width - puck.r * 2 then 
-            puck.x = WINDOW.width - puck.r * 2
+
+            ai1.looksAhead = true
+            ai2.looksAhead = true
+        elseif puck.x >= WINDOW.width - puck.r then 
+            puck.x = WINDOW.width - puck.r
             puck.dx = math.abs(puck.dx) * -1
+
+            ai1.looksAhead = true
+            ai2.looksAhead = true
         end
 
         if puck.y <= 0 then 
