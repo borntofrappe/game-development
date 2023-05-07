@@ -1,10 +1,13 @@
-Puck = Class{}
-
+Puck = Class {}
 
 function Puck:getDs()
-    dx = math.random(2) == 1 and math.random(PUCK.speed.min, PUCK.speed.max) or math.random(PUCK.speed.min, PUCK.speed.max) * -1
-    dy = math.random(2) == 1 and math.random(PUCK.speed.min, PUCK.speed.max) or math.random(PUCK.speed.min, PUCK.speed.max) * -1
-    return dx, dy 
+    dx =
+        math.random(2) == 1 and math.random(PUCK.speed.min, PUCK.speed.max) or
+        math.random(PUCK.speed.min, PUCK.speed.max) * -1
+    dy =
+        math.random(2) == 1 and math.random(PUCK.speed.min, PUCK.speed.max) or
+        math.random(PUCK.speed.min, PUCK.speed.max) * -1
+    return dx, dy
 end
 
 function Puck:init(x, y)
@@ -25,7 +28,10 @@ function Puck:reset()
 end
 
 function Puck:collides(paddle)
-    if self.x + self.width < paddle.x or self.x > paddle.x + paddle.width or self.y + self.height < paddle.y or self.y > paddle.y + paddle.height then 
+    if
+        self.x + self.width < paddle.x or self.x > paddle.x + paddle.width or self.y + self.height < paddle.y or
+            self.y > paddle.y + paddle.height
+     then
         return false
     end
 
@@ -38,5 +44,5 @@ function Puck:update(dt)
 end
 
 function Puck:render()
-    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
+    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
