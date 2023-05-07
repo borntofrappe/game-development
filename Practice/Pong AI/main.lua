@@ -34,8 +34,8 @@ PUCK = {
 POINTS_GOAL = 5
 
 function love.load()
+    love.window.setTitle("Pong AI")
     love.window.setMode(WINDOW.width, WINDOW.height, WINDOW.options)
-    love.window.setTitle("pong-ai")
 
     fonts = {
         normal = love.graphics.newFont("res/font.ttf", 16),
