@@ -21,7 +21,7 @@ function Paddle:score(increment)
 end
 
 function Paddle:target(puck)
-    self.aim = puck.x + puck.dx * math.abs(self.y + self.height / 2 - puck.y) / math.abs(puck.dy)
+    self.aim = (puck.x + puck.width / 2) + puck.dx * math.abs(self.y + self.height / 2 - puck.y + puck.height / 2) / math.abs(puck.dy)
     if self.aim > self.x then
         self.aim = self.aim + self.width / 2
     else
@@ -44,5 +44,5 @@ function Paddle:update(dt)
 end
 
 function Paddle:render()
-    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
 end

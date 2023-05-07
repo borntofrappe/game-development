@@ -12,9 +12,10 @@ function Puck:init(x, y)
         x = x,
         y = y
     }
-    self.x = x
-    self.y = y
-    self.r = PUCK.radius
+    self.x = x - PUCK.size / 2
+    self.y = y - PUCK.size / 2
+    self.width = PUCK.size
+    self.height = PUCK.size
     self.dx, self.dy = self:getDs()
 end
 
@@ -24,7 +25,7 @@ function Puck:reset()
 end
 
 function Puck:collides(paddle)
-    if self.x + self.r < paddle.x or self.x - self.r > paddle.x + paddle.width or self.y + self.r < paddle.y or self.y - self.r > paddle.y + paddle.height then 
+    if self.x + self.width < paddle.x or self.x > paddle.x + paddle.width or self.y + self.height < paddle.y or self.y > paddle.y + paddle.height then 
         return false
     end
 
@@ -37,5 +38,5 @@ function Puck:update(dt)
 end
 
 function Puck:render()
-    love.graphics.circle('fill', self.x, self.y, self.r)
+    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
 end

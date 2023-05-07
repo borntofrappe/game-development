@@ -5,7 +5,7 @@ require 'Puck'
 
 WINDOW = {
     width = 360,
-    height = 480,
+    height = 460,
     options = {
         fullscreen = false,
     },
@@ -13,8 +13,8 @@ WINDOW = {
 }
 
 PADDLE = {
-    width = 52,
-    height = 8,
+    width = 60,
+    height = 10,
     scope = {
         min = WINDOW.height / 3,
         max = WINDOW.height
@@ -23,10 +23,10 @@ PADDLE = {
 }
 
 PUCK = {
-    radius = 8,
+    size = 10,
     speed = {
-        min = 70,
-        max = 160
+        min = 50,
+        max = 150
     }
 }
 
@@ -37,6 +37,37 @@ function love.load()
     love.graphics.setLineWidth(2)
 
     gameState = 'waiting' -- waiting - playing
+
+    fonts = {
+        normal = love.graphics.newFont('res/font.ttf', 16),
+        large = love.graphics.newFont('res/font.ttf', 28),
+    }
+    love.graphics.setFont(fonts.normal)
+
+    messages = {
+        {
+            text = 'Support',
+            center = {
+                x = WINDOW.width / 2,
+                y = WINDOW.height / 4
+            }
+        },
+        {
+            text = 'Support',
+            center = {
+                x = WINDOW.width / 2,
+                y = WINDOW.height * 3 / 4
+            }
+        }
+    }
+
+    for i, message in ipairs(messages) do
+        message.text = message.text:upper()
+        message.width = fonts.large:getWidth(message.text) * 1.1
+        message.x = message.center.x - message.width / 2
+        message.height = fonts.large:getHeight()
+        message.y = message.center.y - message.height / 2
+    end
 
     player = {
         side = 1,
@@ -89,14 +120,14 @@ function love.update(dt)
             ai2:target(puck)
         end
 
-        if puck.x <= puck.r then 
-            puck.x = puck.r
+        if puck.x <= 0 then 
+            puck.x = 0
             puck.dx = math.abs(puck.dx)
 
             ai1.looksAhead = true
             ai2.looksAhead = true
-        elseif puck.x >= WINDOW.width - puck.r then 
-            puck.x = WINDOW.width - puck.r
+        elseif puck.x >= WINDOW.width - puck.width then 
+            puck.x = WINDOW.width - puck.width
             puck.dx = math.abs(puck.dx) * -1
 
             ai1.looksAhead = true
@@ -126,49 +157,40 @@ function love.update(dt)
         end
 
         if puck:collides(ai1) then
-            puck.y = ai1.y + ai1.height + puck.r
+            puck.y = ai1.y + ai1.height
             puck.dy = math.abs(puck.dy) * 1.2
         elseif puck:collides(ai2) then
-            puck.y = ai2.y - puck.r
+            puck.y = ai2.y - puck.height
             puck.dy = math.abs(puck.dy) * -1 * 1.2
         end
     end
 end
 
 function love.draw()
-    love.graphics.clear(0.95, 0.95, 0.95)
+    love.graphics.clear(1, 1, 1)
 
     if gameState == 'waiting' then 
-        love.graphics.setColor(0.2, 0.2, 0.2)
-        love.graphics.push()
-        love.graphics.translate(WINDOW.width, WINDOW.height)
-        love.graphics.rotate(math.pi)
-        love.graphics.printf('Points: ' .. ai1.points, -8, WINDOW.height / 2 + 4, WINDOW.width, 'right')
-        love.graphics.pop()
-        love.graphics.printf('Points: ' .. ai2.points, -8, WINDOW.height / 2 + 4, WINDOW.width, 'right')
+        love.graphics.setColor(0.02, 0.02, 0.01)
+        love.graphics.setFont(fonts.normal)
+        love.graphics.print('Points: ' .. ai1.points, 8, WINDOW.height / 2 - 16)
+        love.graphics.printf('Points: ' .. ai2.points, -8, WINDOW.height / 2, WINDOW.width, 'right')
 
-
+        love.graphics.setColor(0.02, 0.02, 0.01)
+        love.graphics.setFont(fonts.large)
         if player.side == 1 then 
-            love.graphics.setColor(0.5, 0.5, 0.5, 0.3)
-            love.graphics.rectangle('fill', 0, 0, WINDOW.width, WINDOW.height / 2)
-            
-            love.graphics.setColor(0.2, 0.2, 0.2)
-            love.graphics.printf('Pick a side to support', 0, WINDOW.height / 4 - 6, WINDOW.width, 'center')
-
+            love.graphics.setColor(0.02, 0.02, 0.01)
+            love.graphics.rectangle('fill', messages[1].x, messages[1].y, messages[1].width, messages[1].height)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.printf(messages[1].text, messages[1].x, messages[1].y + 2, messages[1].width, 'center')
         else
-            love.graphics.setColor(0.5, 0.5, 0.5, 0.3)
-            love.graphics.rectangle('fill', 0, WINDOW.height / 2, WINDOW.width, WINDOW.height / 2)
-            
-            love.graphics.setColor(0.2, 0.2, 0.2)
-            love.graphics.printf('Pick a side to support', 0, WINDOW.height * 3 / 4 - 6, WINDOW.width, 'center')
+            love.graphics.setColor(0.02, 0.02, 0.01)
+            love.graphics.rectangle('fill', messages[2].x, messages[2].y, messages[2].width, messages[2].height)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.printf(messages[2].text, messages[2].x, messages[2].y + 2, messages[2].width, 'center')
         end
     end
 
-    love.graphics.setColor(0.2, 0.2, 0.2)
-    love.graphics.line(0, WINDOW.height / 2, WINDOW.width, WINDOW.height / 2)
-    love.graphics.rectangle('line', 0, 0, WINDOW.width, WINDOW.height)
-
-    
+    love.graphics.setColor(0.02, 0.02, 0.01)
     puck:render()
     ai1:render()
     ai2:render()
