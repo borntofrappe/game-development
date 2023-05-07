@@ -6,4 +6,4 @@
 
 - in the `Utils` folder I keep a few helper projects
 
-Refer to the wiki for more details
+Refer to [the wiki](https://github.com/borntofrappe/game-development/wiki) for the exciting details.
