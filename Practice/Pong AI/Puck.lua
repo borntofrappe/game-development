@@ -1,30 +1,26 @@
 Puck = Class {}
 
-function Puck:getDs()
-    dx =
-        math.random(2) == 1 and math.random(PUCK.speed.min, PUCK.speed.max) or
-        math.random(PUCK.speed.min, PUCK.speed.max) * -1
-    dy =
-        math.random(2) == 1 and math.random(PUCK.speed.min, PUCK.speed.max) or
-        math.random(PUCK.speed.min, PUCK.speed.max) * -1
-    return dx, dy
-end
-
 function Puck:init(x, y)
-    self.origin = {
-        x = x,
-        y = y
-    }
     self.x = x - PUCK.size / 2
     self.y = y - PUCK.size / 2
     self.width = PUCK.size
     self.height = PUCK.size
+    self.origin = {
+        x = self.x,
+        y = self.y
+    }
     self.dx, self.dy = self:getDs()
 end
 
 function Puck:reset()
     self.x, self.y = self.origin.x, self.origin.y
     self.dx, self.dy = self:getDs()
+end
+
+function Puck:getDs()
+    dx = math.random(PUCK.dx[1], PUCK.dx[2])
+    dy = math.random(2) == 1 and math.random(PUCK.dy.min, PUCK.dy.max) or math.random(PUCK.dy.min, PUCK.dy.max) * -1
+    return dx, dy
 end
 
 function Puck:collides(paddle)

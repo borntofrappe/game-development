@@ -24,7 +24,8 @@ PADDLE = {
 
 PUCK = {
     size = 10,
-    speed = {
+    dx = {-150, 150},
+    dy = {
         min = 80,
         max = 160
     }
@@ -148,11 +149,11 @@ function love.update(dt)
         ai1:update(dt)
         ai2:update(dt)
 
-        if ai1.looksAhead and puck.dy < 0 and math.abs(ai1.y + ai1.height / 2 - puck.y) < ai1.scope then
+        if ai1.looksAhead and puck.dy < 0 and math.abs(ai1.y + ai1.height - puck.y) < ai1.scope then
             ai1:target(puck)
         end
 
-        if ai2.looksAhead and puck.dy > 0 and math.abs(ai2.y + ai2.height / 2 - puck.y) < ai2.scope then
+        if ai2.looksAhead and puck.dy > 0 and math.abs(ai2.y - puck.y + puck.height) < ai2.scope then
             ai2:target(puck)
         end
 
@@ -209,9 +210,13 @@ function love.update(dt)
         if puck:collides(ai1) then
             puck.y = ai1.y + ai1.height
             puck.dy = math.abs(puck.dy) * 1.2
+
+            ai2.looksAhead = true
         elseif puck:collides(ai2) then
             puck.y = ai2.y - puck.height
             puck.dy = math.abs(puck.dy) * -1 * 1.2
+
+            ai1.looksAhead = true
         end
     end
 end
