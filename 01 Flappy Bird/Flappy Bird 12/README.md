@@ -42,7 +42,7 @@ end
 In `Bird.lua` then, you can check the overlap and react accordingly.
 
 ```lua
-function love.update(dt)
+function Bird:update(dt)
   if love.mouse.coor['x'] > self.x and love.mouse.coor['x'] < self.x + self.width then
     if love.mouse.coor['y'] > self.y and love.mouse.coor['y'] < self.y + self.height then
       sounds['jump']:play()
@@ -50,5 +50,4 @@ function love.update(dt)
     end
   end
 end
-
 ```

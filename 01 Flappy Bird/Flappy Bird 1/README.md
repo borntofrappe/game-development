@@ -13,7 +13,7 @@ Movement is created by offsetting the position of the images used in the project
 - define constants for the images speed, as well as the point at which to reset the horizontal position
 
   ```lua
-  BACKGROUND_OFFSET_SPEED = 10
+  BACKGROUND_OFFSET_SPEED = 30
   BACKGROUND_LOOPING_POINT = 512
   ```
 

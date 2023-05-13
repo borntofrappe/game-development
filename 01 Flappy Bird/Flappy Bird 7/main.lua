@@ -62,6 +62,7 @@ function love.keypressed(key)
     end
 
     if key == "r" then
+        bird = Bird()
         pipePairs = {}
         scrolling = true
     end

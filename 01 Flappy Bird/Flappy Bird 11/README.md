@@ -27,7 +27,7 @@ sounds = {
 }
 ```
 
-However, the course introduces two concepts for a more refined approach.
+However, the course introduces two concepts for a more refined setup.
 
 ## Soundtrack
 

@@ -48,7 +48,7 @@ function love.load()
     ground_offset = 0
 
     love.keyboard.key_pressed = {}
-    love.mouse.waspressed = false
+    love.mouse.button_pressed = {}
 
     gStateMachine =
         StateMachine(
@@ -106,9 +106,11 @@ function love.keyboard.waspressed(key)
 end
 
 function love.mousepressed(x, y, button)
-    if button == 1 then
-        love.mouse.waspressed = true
-    end
+    love.mouse.button_pressed[button] = true
+end
+
+function love.mouse.waspressed(button)
+    return love.mouse.button_pressed[button]
 end
 
 function love.update(dt)
@@ -118,7 +120,7 @@ function love.update(dt)
     gStateMachine:update(dt)
 
     love.keyboard.key_pressed = {}
-    love.mouse.waspressed = false
+    love.mouse.button_pressed = {}
 end
 
 function love.draw()

@@ -53,7 +53,7 @@ function StateMachine:init(states)
 end
 ```
 
-Notice `self.empty` in particular. The table describes four keys with a value of empty functions. These four keys describe the phases through which a state goes. Within these keys you detail what a state needs to accomplish. For instance and in the `render` field, you include the function(s) to render the necessary assets.
+Notice `self.empty` in particular. The table describes four keys with a value of empty functions. These four keys describe the phases through which a state goes. Within these keys you detail what a state needs to accomplish. For instance and in the `render` field, you include the function to render the necessary assets.
 
 Past this initialization function, the state machine includes a few more functions:
 
@@ -242,9 +242,9 @@ table = {
 }
 ```
 
-It makes no different for the current situation, but it is helpful once/if you specify complex strings, or strings which include special characters, like spaces.
+It makes no difference in the current setup, but it is helpful once/if you specify complex strings, or strings which include special characters, like spaces.
 
-## states/2
+## states 2
 
 The game will increase in complexity with future updates, but to test out the state machine, the idea is to go through two states with the following logic
 

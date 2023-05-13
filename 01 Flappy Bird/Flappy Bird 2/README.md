@@ -27,8 +27,7 @@ The project leans on the `class` library to work with object oriented programmin
 
   ```lua
   function Bird:init()
-    self.image = love.graphics.newImage('Resources/bird.png')
-    -- other images
+    self.image = love.graphics.newImage('res/graphics/bird.png')
   end
   ```
 

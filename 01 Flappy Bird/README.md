@@ -1,8 +1,8 @@
 # 01 Flappy Bird
 
-The second video continues with Lua and LOVE2D to create the game Flappy Bird.
+[The second video](https://youtu.be/rBHusPevM5k) continues with Lua and LOVE2D to create the game Flappy Bird.
 
-![A few frames from the assignment for "Flappy Bird"](https://github.com/borntofrappe/game-development/blob/main/01%20Flappy%20Bird/flappy-bird.gif)
+![](https://github.com/borntofrappe/game-development/blob/main/01%20Flappy%20Bird/flappy-bird.gif)
 
 ## Topics
 
@@ -19,8 +19,6 @@ The second video continues with Lua and LOVE2D to create the game Flappy Bird.
 - music with a looping soundtrack
 
 ## Increments
-
-The game is developed step by step in `Flappy Bird *` folders:
 
 0. render images
 

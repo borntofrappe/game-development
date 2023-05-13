@@ -135,7 +135,6 @@ function love.update(dt)
         -- update game assets
     end
 end
-
 ```
 
 Then flip the boolean to false when a collision is detected.
@@ -145,5 +144,17 @@ for l, pipe in pairs(pipePair.pipes) do
     if bird:collides(pipe) then
         scrolling = false
     end
+end
+```
+
+## Update — scrolling
+
+To try and continue testing the game I added an instruction following a keypress through the letter `"r"`.
+
+```lua
+if key == "r" then
+    bird = Bird()
+    pipePairs = {}
+    scrolling = true
 end
 ```
