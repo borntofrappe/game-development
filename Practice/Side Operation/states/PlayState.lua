@@ -1,6 +1,7 @@
 PlayState = Class({__includes = BaseState})
 
-local GRAVITY = 0.25
+local GRAVITY = 2
+local THRUST = 1
 
 function PlayState:init()
     local width_wall = gImages["wall"]:getWidth()
@@ -20,7 +21,7 @@ function PlayState:enter(params)
 end
 
 function PlayState:turn(direction)
-    local dx = direction == "left" and -0.2 or 0.2
+    local dx = direction == "left" and -THRUST or THRUST
     self.dx = dx
 end
 

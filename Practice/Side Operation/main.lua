@@ -25,6 +25,10 @@ OPTIONS = {
     resizable = true
 }
 
+local SCROLL_SPEED = 50
+local SCROLL_THRESHOLD = VIRTUAL_HEIGHT
+local scroll_offset = 0
+
 function love.load()
     love.window.setTitle("Side Operation")
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -63,6 +67,8 @@ function love.keyboard.was_pressed(key)
 end
 
 function love.update(dt)
+    scroll_offset = (scroll_offset + SCROLL_SPEED * dt) % SCROLL_THRESHOLD
+
     gStateMachine:update(dt)
 
     love.keyboard.key_pressed = {}
@@ -71,7 +77,8 @@ end
 function love.draw()
     push:start()
 
-    love.graphics.draw(gImages["background"], 0, 0)
+    love.graphics.draw(gImages["background"], 0, -scroll_offset)
+    love.graphics.draw(gImages["background"], 0, VIRTUAL_HEIGHT - scroll_offset)
     love.graphics.draw(gImages["wall"], 0, 0)
     love.graphics.draw(gImages["wall"], VIRTUAL_WIDTH, 0, 0, -1, 1)
 
