@@ -17,7 +17,11 @@ end
 function PlayState:enter(params)
     self.player = params.player
     self.timer = 0
-    self.interval = 3
+    self.interval = 4
+    self.progress = {
+        ["x"] = 0,
+        ["y"] = VIRTUAL_HEIGHT - gImages["progress"]:getHeight()
+    }
 end
 
 function PlayState:turn(direction)
@@ -37,6 +41,11 @@ function PlayState:update(dt)
     end
 
     self.timer = self.timer + dt
+    if self.gravity > 0 then
+        self.progress.x = VIRTUAL_WIDTH * math.min(1, self.timer / self.interval)
+    else
+        self.progress.x = -VIRTUAL_WIDTH * math.min(1, self.timer / self.interval)
+    end
 
     if self.timer > self.interval then
         self.timer = self.timer % self.interval
@@ -57,6 +66,8 @@ function PlayState:render()
     else
         love.graphics.draw(gImages["strip"], self.thresholds["left"], 0)
     end
+
+    love.graphics.draw(gImages["progress"], self.progress.x, 0)
 
     self.player:render()
 end

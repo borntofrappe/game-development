@@ -42,6 +42,8 @@ function TitleState:update(dt)
 end
 
 function TitleState:render()
+    love.graphics.draw(gImages["progress"], 0, 0)
+
     self.player:render()
 
     love.graphics.setColor(1, 1, 1, 0.5)

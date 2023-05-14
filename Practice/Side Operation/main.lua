@@ -13,7 +13,8 @@ gImages = {
     ["background"] = love.graphics.newImage("res/graphics/background.png"),
     ["wall"] = love.graphics.newImage("res/graphics/wall.png"),
     ["strip"] = love.graphics.newImage("res/graphics/strip.png"),
-    ["player"] = love.graphics.newImage("res/graphics/player.png")
+    ["player"] = love.graphics.newImage("res/graphics/player.png"),
+    ["progress"] = love.graphics.newImage("res/graphics/progress.png")
 }
 
 WINDOW_WIDTH = 404
@@ -25,7 +26,7 @@ OPTIONS = {
     resizable = true
 }
 
-local SCROLL_SPEED = 50
+local SCROLL_SPEED = 60
 local SCROLL_THRESHOLD = VIRTUAL_HEIGHT
 local scroll_offset = 0
 
@@ -77,12 +78,15 @@ end
 function love.draw()
     push:start()
 
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(gImages["background"], 0, -scroll_offset)
     love.graphics.draw(gImages["background"], 0, VIRTUAL_HEIGHT - scroll_offset)
-    love.graphics.draw(gImages["wall"], 0, 0)
-    love.graphics.draw(gImages["wall"], VIRTUAL_WIDTH, 0, 0, -1, 1)
 
     gStateMachine:render()
+
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(gImages["wall"], 0, 0)
+    love.graphics.draw(gImages["wall"], VIRTUAL_WIDTH, 0, 0, -1, 1)
 
     push:finish()
 end
