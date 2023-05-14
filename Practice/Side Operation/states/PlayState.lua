@@ -22,6 +22,13 @@ function PlayState:init()
 end
 
 function PlayState:enter(params)
+    if params then
+        self.gravity = params.gravity
+        self.direction = params.direction
+        self.timer = params.timer
+        self.progress = params.progress
+        self.player = params.player
+    end
 end
 
 function PlayState:move(direction)
@@ -31,6 +38,19 @@ end
 function PlayState:update(dt)
     if love.keyboard.was_pressed("escape") then
         gStateMachine:change("title")
+    end
+
+    if love.keyboard.was_pressed("p") then
+        gStateMachine:change(
+            "pause",
+            {
+                ["gravity"] = self.gravity,
+                ["direction"] = self.direction,
+                ["timer"] = self.timer,
+                ["progress"] = self.progress,
+                ["player"] = self.player
+            }
+        )
     end
 
     if love.keyboard.was_pressed("left") then
