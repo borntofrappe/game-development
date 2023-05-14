@@ -22,6 +22,8 @@ function TitleState:init()
         ["width"] = VIRTUAL_WIDTH,
         ["align"] = "center"
     }
+
+    self.player = Player()
 end
 
 function TitleState:update(dt)
@@ -30,11 +32,18 @@ function TitleState:update(dt)
     end
 
     if love.keyboard.was_pressed("return") then
-        gStateMachine:change("play")
+        gStateMachine:change(
+            "play",
+            {
+                ["player"] = self.player
+            }
+        )
     end
 end
 
 function TitleState:render()
+    self.player:render()
+
     love.graphics.setColor(1, 1, 1, 0.5)
     love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 

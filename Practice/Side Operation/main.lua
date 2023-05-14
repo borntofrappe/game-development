@@ -1,6 +1,8 @@
 push = require("res/lib/push")
 Class = require("res/lib/class")
 
+require "Player"
+
 require "StateMachine"
 
 require "states/BaseState"
