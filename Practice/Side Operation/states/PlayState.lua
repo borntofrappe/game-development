@@ -1,6 +1,6 @@
 PlayState = Class({__includes = BaseState})
 
-local GRAVITY = 2
+local GRAVITY = 1.8
 local THRUST = 1
 
 function PlayState:init()

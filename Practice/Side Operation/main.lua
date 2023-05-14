@@ -16,9 +16,9 @@ gImages = {
     ["player"] = love.graphics.newImage("res/graphics/player.png")
 }
 
-WINDOW_WIDTH = 292
+WINDOW_WIDTH = 404
 WINDOW_HEIGHT = 408
-VIRTUAL_WIDTH = 73
+VIRTUAL_WIDTH = 101
 VIRTUAL_HEIGHT = 102
 OPTIONS = {
     fullscreen = false,
