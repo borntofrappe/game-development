@@ -1,4 +1,11 @@
 push = require("res/lib/push")
+Class = require("res/lib/class")
+
+require "StateMachine"
+
+require "states/BaseState"
+require "states/TitleState"
+require "states/PlayState"
 
 gImages = {
     ["background"] = love.graphics.newImage("res/graphics/background.png"),
@@ -24,16 +31,21 @@ function love.load()
     gFont = love.graphics.newFont("res/fonts/font.ttf", 8)
     love.graphics.setFont(gFont)
 
-    text = string.upper("Side\noperation")
-    local width = gFont:getWidth(text) * 1.1
-    local height = gFont:getHeight() * 2
-    title = {
-        ["text"] = text,
-        ["width"] = width,
-        ["height"] = height,
-        ["x"] = VIRTUAL_WIDTH / 2 - width / 2,
-        ["y"] = VIRTUAL_HEIGHT / 4
-    }
+    love.keyboard.key_pressed = {}
+
+    gStateMachine =
+        StateMachine(
+        {
+            ["title"] = function()
+                return TitleState()
+            end,
+            ["play"] = function()
+                return PlayState()
+            end
+        }
+    )
+
+    gStateMachine:change("title")
 end
 
 function love.resize(width, height)
@@ -41,9 +53,17 @@ function love.resize(width, height)
 end
 
 function love.keypressed(key)
-    if key == "escape" then
-        love.event.quit()
-    end
+    love.keyboard.key_pressed[key] = true
+end
+
+function love.keyboard.was_pressed(key)
+    return love.keyboard.key_pressed[key]
+end
+
+function love.update(dt)
+    gStateMachine:update(dt)
+
+    love.keyboard.key_pressed = {}
 end
 
 function love.draw()
@@ -53,16 +73,7 @@ function love.draw()
     love.graphics.draw(gImages["wall"], 0, 0)
     love.graphics.draw(gImages["wall"], VIRTUAL_WIDTH, 0, 0, -1, 1)
 
-    love.graphics.setColor(1, 1, 1, 0.5)
-    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
-
-    love.graphics.setColor(0.2, 0.2, 0.2, 1)
-    love.graphics.rectangle("fill", title["x"], title["y"], title["width"], title["height"])
-    love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.printf(title["text"], title["x"], title["y"], title["width"], "center")
-
-    love.graphics.setColor(0.2, 0.2, 0.2, 1)
-    love.graphics.printf("Press\nto play", 0, VIRTUAL_HEIGHT * 3 / 4 - gFont:getHeight(), VIRTUAL_WIDTH, "center")
+    gStateMachine:render()
 
     push:finish()
 end
