@@ -12,7 +12,7 @@ Following [the assignment](https://docs.cs50.net/ocw/games/assignments/1/assignm
 
 ## Randomize
 
-The first two parts of the assignment are connected in that they both rely on `math.random`
+The first two parts of the assignment are connected in that they both rely on `math.random`.
 
 ### Random gap
 
@@ -39,7 +39,7 @@ This is because it is necessary to know the gap in order to ensure that the pipe
 self.y = math.random(THRESHOLD_UPPER + self.gap, THRESHOLD_LOWER)
 ```
 
-The same is true when the pair is included at an interval. Update `self.gap`, update `self.y` and pass the value to the new instance.
+The same is true when the pair is added with the timer. Update `self.gap`, update `self.y` and pass the value to the new instance.
 
 ### Random interval
 
@@ -64,11 +64,11 @@ end
 
 Keep in mind that in lua, using `math.random` with two integers has the effect of providing a random number in the range, extremes included.
 
-## Medal(s)
+## Medals
 
 Upon entering the score state, the game displays up to three medals. The medals are awarded by crossing arbitrary thresholds: 5, 10 and 15 points. In the `res/graphics` folder you find the different assets.
 
-In `ScoreState.lua`, these are included as follows:
+In `ScoreState.lua`, consider the images as follows:
 
 - stores the images in a table and according to the number of points associated with each asset
 
@@ -82,7 +82,7 @@ In `ScoreState.lua`, these are included as follows:
   end
   ```
 
-  Since tables are not sorted, sort according to the number of points behind each image.
+  Since tables are not sorted, sort according to the number of points.
 
   ```lua
   function ScoreState:init()
@@ -97,7 +97,7 @@ In `ScoreState.lua`, these are included as follows:
   end
   ```
 
-  This ensures the table is now in ascending order of points.
+  In this manner the table is sorted in ascending order of points.
 
 - when receiving the score from the play state, include the images strictly necessary in a different table
 
@@ -116,7 +116,7 @@ In `ScoreState.lua`, these are included as follows:
   end
   ```
 
-- render the medals in `self.awards`, using the index in the table and the length of the table itself to have the images separated from the center.
+- render the medals in `self.awards`, using the index in the table and the length of the table itself to have the images around the center
 
   ```lua
   for i, award in ipairs(self.awards) do
@@ -132,7 +132,7 @@ In `ScoreState.lua`, these are included as follows:
 
 ## PauseState
 
-From the play state, the game pauses by pressing the `p` key.
+From the play state, the game pauses by pressing the "p" or "P" key.
 
 ```lua
 function PlayState:update(dt)
@@ -146,12 +146,12 @@ To resume playing from the same point however, it is necessary to also pass the 
 
 ```lua
 gStateMachine:change('pause', {
-    bird = self.bird,
-    pipePairs = self.pipePairs,
     timer = self.timer,
     interval = self.interval,
     score = self.score,
-    y = self.y
+    bird = self.bird,
+    y = self.y,
+    pipePairs = self.pipePairs
 })
 ```
 
@@ -159,12 +159,12 @@ With this in mind the `PlayState` picks up the values in the `enter` function.
 
 ```lua
 function PauseState:enter(params)
-    self.bird = params.bird
-    self.pipePairs = params.pipePairs
     self.timer = params.timer
     self.interval = params.interval
     self.score = params.score
+    self.bird = params.bird
     self.y = params.y
+    self.pipePairs = params.pipePairs
 end
 ```
 
@@ -172,7 +172,7 @@ Keep in mind that the values need to be passed back to the play state.
 
 ```lua
 function PauseState:update(dt)
-    if love.keyboard.waspressed('p') or love.keyboard.waspressed('p') then
+    if love.keyboard.waspressed('p') or love.keyboard.waspressed('P') then
         gStateMachine:change('play', {
             bird = self.bird,
             -- include other values
@@ -217,4 +217,4 @@ end
 
 ### Pause
 
-In addition to the previous audio files, the assignment includes `pause.wav`, to signal when the game moves to the pause state.
+In addition to the previous audio files, the assignment includes `pause.wav` to signal when the game moves to the pause state.

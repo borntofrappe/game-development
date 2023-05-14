@@ -13,12 +13,13 @@ end
 
 function PlayState:enter(params)
     if params then
-        self.bird = params.bird
-        self.pipePairs = params.pipePairs
         self.timer = params.timer
         self.interval = params.interval
         self.score = params.score
+
+        self.bird = params.bird
         self.y = params.y
+        self.pipePairs = params.pipePairs
 
         sounds["soundtrack"]:play()
     end
@@ -37,6 +38,7 @@ function PlayState:update(dt)
     end
 
     self.bird:update(dt)
+
     for k, pipePair in pairs(self.pipePairs) do
         pipePair:update(dt)
 
@@ -44,6 +46,7 @@ function PlayState:update(dt)
             if self.bird:collides(pipe) then
                 sounds["lose"]:play()
                 sounds["hit"]:play()
+
                 gStateMachine:change(
                     "score",
                     {
@@ -58,9 +61,10 @@ function PlayState:update(dt)
         end
 
         if not pipePair.scored and self.bird.x > pipePair.x + pipePair.width then
-            sounds["score"]:play()
             pipePair.scored = true
             self.score = self.score + 1
+
+            sounds["score"]:play()
         end
     end
 
@@ -74,17 +78,17 @@ function PlayState:update(dt)
         )
     end
 
-    if love.keyboard.waspressed("p") or love.keyboard.waspressed("P") then
+    if love.keyboard.waspressed("p") or love.keyboard.waspressed("P") or love.mouse.waspressed(2) then
         sounds["pause"]:play()
         gStateMachine:change(
             "pause",
             {
-                bird = self.bird,
-                pipePairs = self.pipePairs,
                 timer = self.timer,
                 interval = self.interval,
                 score = self.score,
-                y = self.y
+                bird = self.bird,
+                y = self.y,
+                pipePairs = self.pipePairs
             }
         )
     end
