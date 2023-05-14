@@ -32,12 +32,7 @@ function TitleState:update(dt)
     end
 
     if love.keyboard.was_pressed("return") then
-        gStateMachine:change(
-            "play",
-            {
-                ["player"] = self.player
-            }
-        )
+        gStateMachine:change("countdown")
     end
 end
 

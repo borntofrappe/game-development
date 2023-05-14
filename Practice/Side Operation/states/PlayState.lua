@@ -13,13 +13,15 @@ function PlayState:init()
     self.gravity = GRAVITY[1]
     self.direction = math.random(2) == 1 and 1 or -1
     self.dx = 0
-end
 
-function PlayState:enter(params)
-    self.player = params.player
     self.timer = 0
     self.interval = 4
     self.progress = 0
+
+    self.player = Player()
+end
+
+function PlayState:enter(params)
 end
 
 function PlayState:move(direction)

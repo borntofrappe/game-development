@@ -8,6 +8,7 @@ require "StateMachine"
 require "states/BaseState"
 require "states/TitleState"
 require "states/PlayState"
+require "states/CountdownState"
 
 gImages = {
     ["background"] = love.graphics.newImage("res/graphics/background.png"),
@@ -48,6 +49,9 @@ function love.load()
             end,
             ["play"] = function()
                 return PlayState()
+            end,
+            ["countdown"] = function()
+                return CountdownState()
             end
         }
     )
