@@ -20,6 +20,12 @@ function PlayState:init()
 
     self.player = Player()
     self.score = 0
+    self.trophy = false
+    local width_strip = gImages["strip"]:getWidth()
+    self.thresholds["trophy"] = {
+        [-1] = self.thresholds[-1] + width_strip,
+        [1] = self.thresholds[1] - width_strip
+    }
 end
 
 function PlayState:enter(params)
@@ -29,6 +35,7 @@ function PlayState:enter(params)
         self.timer = params.timer
         self.progress = params.progress
         self.player = params.player
+        self.trophy = params.trophy
     end
 end
 
@@ -49,14 +56,22 @@ function PlayState:update(dt)
                 ["direction"] = self.direction,
                 ["timer"] = self.timer,
                 ["progress"] = self.progress,
-                ["player"] = self.player
+                ["player"] = self.player,
+                ["trophy"] = self.trophy
             }
         )
     end
 
     if love.keyboard.was_pressed("left") then
+        if not self.trophy and self.player.x + self.player.width > self.thresholds["trophy"][1] then
+            self.trophy = true
+        end
         self:move(-1)
     elseif love.keyboard.was_pressed("right") then
+        if not self.trophy and self.player.x < self.thresholds["trophy"][-1] then
+            self.trophy = true
+        end
+
         self:move(1)
     end
 
@@ -79,7 +94,8 @@ function PlayState:update(dt)
         gStateMachine:change(
             "score",
             {
-                ["score"] = self.score
+                ["score"] = self.score,
+                ["trophy"] = self.trophy
             }
         )
     end

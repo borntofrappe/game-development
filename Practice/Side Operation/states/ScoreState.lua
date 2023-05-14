@@ -3,6 +3,18 @@ ScoreState = Class({__includes = BaseState})
 function ScoreState:enter(params)
     self.score = params.score
 
+    self.trophy = false
+    if params.trophy then
+        local image = gImages["trophy"]
+        local width_image = image:getWidth()
+        local height_image = image:getHeight()
+        self.trophy = {
+            ["image"] = image,
+            ["x"] = math.floor(VIRTUAL_WIDTH / 2 - width_image / 2),
+            ["y"] = math.floor(VIRTUAL_HEIGHT / 2 - height_image / 2)
+        }
+    end
+
     local text_title = string.upper("Timeout!\n") .. string.format("%.2fs", self.score)
     local width_title = gFont:getWidth(text_title) * 1.1
     local height_title = gFont:getHeight() * 2
@@ -11,7 +23,7 @@ function ScoreState:enter(params)
         ["width"] = width_title,
         ["height"] = height_title,
         ["x"] = VIRTUAL_WIDTH / 2 - width_title / 2,
-        ["y"] = VIRTUAL_HEIGHT / 4
+        ["y"] = VIRTUAL_HEIGHT / 4 - height_title / 2
     }
 
     local text_message = "Press\nto replay"
@@ -42,6 +54,11 @@ function ScoreState:render()
     love.graphics.rectangle("fill", self.title["x"], self.title["y"], self.title["width"], self.title["height"])
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.printf(self.title["text"], self.title["x"], self.title["y"], self.title["width"], "center")
+
+    if (self.trophy) then
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(self.trophy["image"], self.trophy.x, self.trophy.y)
+    end
 
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
     love.graphics.printf(

@@ -17,7 +17,8 @@ gImages = {
     ["wall"] = love.graphics.newImage("res/graphics/wall.png"),
     ["strip"] = love.graphics.newImage("res/graphics/strip.png"),
     ["player"] = love.graphics.newImage("res/graphics/player.png"),
-    ["progress"] = love.graphics.newImage("res/graphics/progress.png")
+    ["progress"] = love.graphics.newImage("res/graphics/progress.png"),
+    ["trophy"] = love.graphics.newImage("res/graphics/trophy.png")
 }
 
 WINDOW_WIDTH = 404

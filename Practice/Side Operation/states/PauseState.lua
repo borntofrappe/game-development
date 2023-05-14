@@ -6,6 +6,7 @@ function PauseState:enter(params)
     self.timer = params.timer
     self.progress = params.progress
     self.player = params.player
+    self.trophy = params.trophy
 end
 
 function PauseState:update(dt)
@@ -17,7 +18,8 @@ function PauseState:update(dt)
                 ["direction"] = self.direction,
                 ["timer"] = self.timer,
                 ["progress"] = self.progress,
-                ["player"] = self.player
+                ["player"] = self.player,
+                ["trophy"] = self.trophy
             }
         )
     end
