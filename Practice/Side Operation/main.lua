@@ -10,6 +10,7 @@ require "states/TitleState"
 require "states/PlayState"
 require "states/CountdownState"
 require "states/PauseState"
+require "states/ScoreState"
 
 gImages = {
     ["background"] = love.graphics.newImage("res/graphics/background.png"),
@@ -56,6 +57,9 @@ function love.load()
             end,
             ["pause"] = function()
                 return PauseState()
+            end,
+            ["score"] = function()
+                return ScoreState()
             end
         }
     )

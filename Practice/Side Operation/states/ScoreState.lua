@@ -1,7 +1,9 @@
-TitleState = Class({__includes = BaseState})
+ScoreState = Class({__includes = BaseState})
 
-function TitleState:init()
-    local text_title = string.upper("Side\noperation")
+function ScoreState:enter(params)
+    self.score = params.score
+
+    local text_title = string.upper("Timeout!\n") .. string.format("%.2fs", self.score)
     local width_title = gFont:getWidth(text_title) * 1.1
     local height_title = gFont:getHeight() * 2
     self.title = {
@@ -12,7 +14,7 @@ function TitleState:init()
         ["y"] = VIRTUAL_HEIGHT / 4
     }
 
-    local text_message = "Press\nto play"
+    local text_message = "Press\nto replay"
     local width_message = gFont:getWidth(text_message)
     local height_message = gFont:getHeight() * 2
     self.message = {
@@ -24,17 +26,13 @@ function TitleState:init()
     }
 end
 
-function TitleState:update(dt)
-    if love.keyboard.was_pressed("escape") then
-        love.event.quit()
-    end
-
+function ScoreState:update(dt)
     if love.keyboard.was_pressed("return") then
         gStateMachine:change("countdown")
     end
 end
 
-function TitleState:render()
+function ScoreState:render()
     love.graphics.draw(gImages["progress"], 0, 0)
 
     love.graphics.setColor(1, 1, 1, 0.5)

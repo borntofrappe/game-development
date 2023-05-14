@@ -1,6 +1,6 @@
 PlayState = Class({__includes = BaseState})
 
-local GRAVITY = {2, 4}
+local GRAVITY = {2, 5}
 local COUNTER_GRAVITY = 0.4
 
 function PlayState:init()
@@ -19,6 +19,7 @@ function PlayState:init()
     self.progress = 0
 
     self.player = Player()
+    self.score = 0
 end
 
 function PlayState:enter(params)
@@ -63,6 +64,7 @@ function PlayState:update(dt)
     self.progress = VIRTUAL_WIDTH * math.max(0, math.min(1, self.timer / self.interval)) * self.direction
 
     if self.timer > self.interval then
+        self.score = self.score + self.timer
         self.timer = self.timer % self.interval
         self.gravity = math.random() * (GRAVITY[2] - GRAVITY[1]) + GRAVITY[1]
         if (math.random(2) == 1) then
@@ -70,9 +72,16 @@ function PlayState:update(dt)
         end
     end
 
-    if self.player.x > self.thresholds[-1] and self.player.x + self.player.width < self.thresholds[1] then
-        self.dx = self.dx + self.gravity * self.direction * dt
-        self.player.x = self.player.x + self.dx
+    self.dx = self.dx + self.gravity * self.direction * dt
+    self.player.x = self.player.x + self.dx
+    if self.player.x < self.thresholds[-1] or self.player.x + self.player.width > self.thresholds[1] then
+        self.score = self.score + self.timer
+        gStateMachine:change(
+            "score",
+            {
+                ["score"] = self.score
+            }
+        )
     end
 end
 
