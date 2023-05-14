@@ -1,32 +1,29 @@
 PlayState = Class({__includes = BaseState})
 
-local GRAVITY = 1.8
-local THRUST = 1
+local GRAVITY = {2, 4}
+local COUNTER_GRAVITY = 0.4
 
 function PlayState:init()
     local width_wall = gImages["wall"]:getWidth()
     self.thresholds = {
-        ["left"] = width_wall,
-        ["right"] = VIRTUAL_WIDTH - width_wall
+        [-1] = width_wall,
+        [1] = VIRTUAL_WIDTH - width_wall
     }
 
+    self.gravity = GRAVITY[1]
+    self.direction = math.random(2) == 1 and 1 or -1
     self.dx = 0
-    self.gravity = math.random(2) == 1 and GRAVITY or GRAVITY * -1
 end
 
 function PlayState:enter(params)
     self.player = params.player
     self.timer = 0
     self.interval = 4
-    self.progress = {
-        ["x"] = 0,
-        ["y"] = VIRTUAL_HEIGHT - gImages["progress"]:getHeight()
-    }
+    self.progress = 0
 end
 
-function PlayState:turn(direction)
-    local dx = direction == "left" and -THRUST or THRUST
-    self.dx = dx
+function PlayState:move(direction)
+    self.dx = self.gravity * direction * COUNTER_GRAVITY
 end
 
 function PlayState:update(dt)
@@ -35,39 +32,38 @@ function PlayState:update(dt)
     end
 
     if love.keyboard.was_pressed("left") then
-        self:turn("left")
+        self:move(-1)
     elseif love.keyboard.was_pressed("right") then
-        self:turn("right")
+        self:move(1)
     end
 
     self.timer = self.timer + dt
-    if self.gravity > 0 then
-        self.progress.x = VIRTUAL_WIDTH * math.min(1, self.timer / self.interval)
-    else
-        self.progress.x = -VIRTUAL_WIDTH * math.min(1, self.timer / self.interval)
-    end
+    self.progress = VIRTUAL_WIDTH * math.max(0, math.min(1, self.timer / self.interval)) * self.direction
 
     if self.timer > self.interval then
         self.timer = self.timer % self.interval
+        self.gravity = math.random() * (GRAVITY[2] - GRAVITY[1]) + GRAVITY[1]
         if (math.random(2) == 1) then
-            self.gravity = self.gravity * -1
+            self.direction = self.direction * -1
         end
     end
 
-    if self.player.x > self.thresholds["left"] and self.player.x + self.player.width < self.thresholds["right"] then
-        self.dx = self.dx + self.gravity * dt
+    if self.player.x > self.thresholds[-1] and self.player.x + self.player.width < self.thresholds[1] then
+        self.dx = self.dx + self.gravity * self.direction * dt
         self.player.x = self.player.x + self.dx
     end
 end
 
 function PlayState:render()
-    if self.gravity > 0 then
-        love.graphics.draw(gImages["strip"], self.thresholds["right"], 0, 0, -1, 1)
+    love.graphics.setColor(1, 1, 1, 1)
+
+    if self.direction == 1 then
+        love.graphics.draw(gImages["strip"], self.thresholds[1], 0, 0, -1, 1)
     else
-        love.graphics.draw(gImages["strip"], self.thresholds["left"], 0)
+        love.graphics.draw(gImages["strip"], self.thresholds[-1], 0)
     end
 
-    love.graphics.draw(gImages["progress"], self.progress.x, 0)
+    love.graphics.draw(gImages["progress"], self.progress, 0)
 
     self.player:render()
 end
