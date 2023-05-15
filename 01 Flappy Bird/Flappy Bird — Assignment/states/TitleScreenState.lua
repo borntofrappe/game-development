@@ -5,7 +5,7 @@ function TitleScreenState:update(dt)
         gStateMachine:change("countdown")
     end
 
-    if love.mouse.waspressed then
+    if love.mouse.waspressed(1) then
         gStateMachine:change("countdown")
     end
 end

@@ -2,7 +2,6 @@ push = require "res/lib/push"
 Class = require "res/lib/class"
 
 require "Bird"
-require "Pipe"
 require "PipePair"
 
 require "StateMachine"
@@ -45,17 +44,14 @@ function love.load()
     love.window.setTitle("Flappy Bird")
     math.randomseed(os.time())
 
-    font_small = love.graphics.newFont("res/fonts/font.ttf", 8)
-    font_normal = love.graphics.newFont("res/fonts/font.ttf", 16)
-    font_big = love.graphics.newFont("res/fonts/font.ttf", 48)
-
-    love.graphics.setFont(font_normal)
+    love.graphics.setDefaultFilter("nearest", "nearest")
+    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 
     background_offset = 0
     ground_offset = 0
 
     love.keyboard.key_pressed = {}
-    love.mouse.waspressed = false
+    love.mouse.button_pressed = {}
 
     gStateMachine =
         StateMachine(
@@ -80,6 +76,12 @@ function love.load()
 
     gStateMachine:change("title")
 
+    font_small = love.graphics.newFont("res/fonts/font.ttf", 8)
+    font_normal = love.graphics.newFont("res/fonts/font.ttf", 16)
+    font_big = love.graphics.newFont("res/fonts/font.ttf", 48)
+
+    love.graphics.setFont(font_normal)
+
     sounds = {
         ["countdown"] = love.audio.newSource("res/sounds/countdown.wav", "static"),
         ["hit"] = love.audio.newSource("res/sounds/hit.wav", "static"),
@@ -92,9 +94,6 @@ function love.load()
 
     sounds["soundtrack"]:setLooping(true)
     sounds["soundtrack"]:play()
-
-    love.graphics.setDefaultFilter("nearest", "nearest")
-    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, OPTIONS)
 end
 
 function love.resize(width, height)
@@ -113,8 +112,12 @@ function love.keyboard.waspressed(key)
     return love.keyboard.key_pressed[key]
 end
 
-function love.mousepressed()
-    love.mouse.waspressed = true
+function love.mousepressed(x, y, button)
+    love.mouse.button_pressed[button] = true
+end
+
+function love.mouse.waspressed(button)
+    return love.mouse.button_pressed[button]
 end
 
 function love.update(dt)
@@ -124,16 +127,15 @@ function love.update(dt)
     gStateMachine:update(dt)
 
     love.keyboard.key_pressed = {}
-    love.mouse.waspressed = false
+    love.mouse.button_pressed = {}
 end
 
 function love.draw()
     push:start()
 
     love.graphics.draw(background, -background_offset, 0)
-
     gStateMachine:render()
-
     love.graphics.draw(ground, -ground_offset, VIRTUAL_HEIGHT - 16)
+
     push:finish()
 end
