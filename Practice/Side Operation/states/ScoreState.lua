@@ -1,11 +1,26 @@
 ScoreState = Class({__includes = BaseState})
 
+function ScoreState:init()
+    self.timer = 0.2
+
+    local text_message = "Press\nto replay"
+    local width_message = gFont:getWidth(text_message)
+    local height_message = gFont:getHeight() * 2
+    self.message = {
+        ["text"] = text_message,
+        ["x"] = 0,
+        ["y"] = VIRTUAL_HEIGHT * 3 / 4 - height_message / 2,
+        ["width"] = VIRTUAL_WIDTH,
+        ["align"] = "center"
+    }
+end
+
 function ScoreState:enter(params)
     self.score = params.score
 
     self.trophy = false
     if params.trophy then
-        local image = gImages["trophy"]
+        local image = love.graphics.newImage("res/graphics/trophy.png")
         local width_image = image:getWidth()
         local height_image = image:getHeight()
         self.trophy = {
@@ -25,30 +40,24 @@ function ScoreState:enter(params)
         ["x"] = VIRTUAL_WIDTH / 2 - width_title / 2,
         ["y"] = VIRTUAL_HEIGHT / 4 - height_title / 2
     }
-
-    local text_message = "Press\nto replay"
-    local width_message = gFont:getWidth(text_message)
-    local height_message = gFont:getHeight() * 2
-    self.message = {
-        ["text"] = text_message,
-        ["x"] = 0,
-        ["y"] = VIRTUAL_HEIGHT * 3 / 4 - height_message / 2,
-        ["width"] = VIRTUAL_WIDTH,
-        ["align"] = "center"
-    }
 end
 
 function ScoreState:update(dt)
-    if love.keyboard.was_pressed("return") or love.mouse.button_pressed[1] then
+    if love.keyboard.was_pressed("escape") then
+        love.event.quit()
+    end
+
+    if self.timer > 0 then
+        self.timer = self.timer - dt
+    end
+
+    if self.timer <= 0 and (love.keyboard.was_pressed("return") or love.mouse.button_pressed[1]) then
         gStateMachine:change("countdown")
     end
 end
 
 function ScoreState:render()
-    love.graphics.draw(gImages["progress"], 0, 0)
-
-    love.graphics.setColor(1, 1, 1, 0.5)
-    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+    drawOverlay()
 
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
     love.graphics.rectangle("fill", self.title["x"], self.title["y"], self.title["width"], self.title["height"])

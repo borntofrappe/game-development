@@ -35,10 +35,7 @@ function TitleState:update(dt)
 end
 
 function TitleState:render()
-    love.graphics.draw(gImages["progress"], 0, 0)
-
-    love.graphics.setColor(1, 1, 1, 0.5)
-    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+    drawOverlay()
 
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
     love.graphics.rectangle("fill", self.title["x"], self.title["y"], self.title["width"], self.title["height"])

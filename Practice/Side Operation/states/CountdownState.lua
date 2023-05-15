@@ -4,6 +4,8 @@ function CountdownState:init()
     self.timer = 0
     self.interval = 0.5
     self.countdown = 3
+
+    self.player = Player()
 end
 
 function CountdownState:update(dt)
@@ -18,10 +20,13 @@ function CountdownState:update(dt)
 end
 
 function CountdownState:render()
-    love.graphics.draw(gImages["progress"], 0, 0)
+    love.graphics.setColor(0.2, 0.2, 0.2, 1)
+    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, 1)
 
-    love.graphics.setColor(1, 1, 1, 0.5)
-    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
+    love.graphics.setColor(1, 1, 1, 1)
+    self.player:render()
+
+    drawOverlay()
 
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
     love.graphics.printf(self.countdown, 0, VIRTUAL_HEIGHT / 2 - gFont:getHeight() / 2, VIRTUAL_WIDTH, "center")

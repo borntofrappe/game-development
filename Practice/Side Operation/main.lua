@@ -7,28 +7,25 @@ require "StateMachine"
 
 require "states/BaseState"
 require "states/TitleState"
-require "states/PlayState"
 require "states/CountdownState"
+require "states/PlayState"
 require "states/PauseState"
 require "states/ScoreState"
 
-gImages = {
+local images = {
     ["background"] = love.graphics.newImage("res/graphics/background.png"),
-    ["wall"] = love.graphics.newImage("res/graphics/wall.png"),
-    ["strip"] = love.graphics.newImage("res/graphics/strip.png"),
-    ["player"] = love.graphics.newImage("res/graphics/player.png"),
-    ["progress"] = love.graphics.newImage("res/graphics/progress.png"),
-    ["trophy"] = love.graphics.newImage("res/graphics/trophy.png")
+    ["wall"] = love.graphics.newImage("res/graphics/wall.png")
 }
 
-WINDOW_WIDTH = 404
-WINDOW_HEIGHT = 408
-VIRTUAL_WIDTH = 101
-VIRTUAL_HEIGHT = 102
-OPTIONS = {
+local WINDOW_WIDTH = 404
+local WINDOW_HEIGHT = 408
+local OPTIONS = {
     fullscreen = false,
     resizable = true
 }
+
+VIRTUAL_WIDTH = 101
+VIRTUAL_HEIGHT = 102
 
 local SCROLL_SPEED = 60
 local SCROLL_THRESHOLD = VIRTUAL_HEIGHT
@@ -102,14 +99,19 @@ function love.draw()
     push:start()
 
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(gImages["background"], 0, -scroll_offset)
-    love.graphics.draw(gImages["background"], 0, VIRTUAL_HEIGHT - scroll_offset)
+    love.graphics.draw(images["background"], 0, -scroll_offset)
+    love.graphics.draw(images["background"], 0, VIRTUAL_HEIGHT - scroll_offset)
 
     gStateMachine:render()
 
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(gImages["wall"], 0, 0)
-    love.graphics.draw(gImages["wall"], VIRTUAL_WIDTH, 0, 0, -1, 1)
+    love.graphics.draw(images["wall"], 0, 0)
+    love.graphics.draw(images["wall"], VIRTUAL_WIDTH, 0, 0, -1, 1)
 
     push:finish()
+end
+
+function drawOverlay()
+    love.graphics.setColor(1, 1, 1, 0.5)
+    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 end

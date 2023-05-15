@@ -1,10 +1,15 @@
 PlayState = Class({__includes = BaseState})
 
-local GRAVITY = {2, 5}
-local COUNTER_GRAVITY = 0.4
+local GRAVITY = {2, 6}
+local GRAVITY_MULTIPLIER = 0.4
+
+local images = {
+    ["wall"] = love.graphics.newImage("res/graphics/wall.png"),
+    ["strip"] = love.graphics.newImage("res/graphics/strip.png")
+}
 
 function PlayState:init()
-    local width_wall = gImages["wall"]:getWidth()
+    local width_wall = images["wall"]:getWidth()
     self.thresholds = {
         [-1] = width_wall,
         [1] = VIRTUAL_WIDTH - width_wall
@@ -16,12 +21,12 @@ function PlayState:init()
 
     self.timer = 0
     self.interval = 4
-    self.progress = 0
+    self.timer_progress = 0
 
     self.player = Player()
     self.score = 0
     self.trophy = false
-    local width_strip = gImages["strip"]:getWidth()
+    local width_strip = images["strip"]:getWidth()
     self.thresholds["trophy"] = {
         [-1] = self.thresholds[-1] + width_strip,
         [1] = self.thresholds[1] - width_strip
@@ -33,14 +38,14 @@ function PlayState:enter(params)
         self.gravity = params.gravity
         self.direction = params.direction
         self.timer = params.timer
-        self.progress = params.progress
+        self.timer_progress = params.timer_progress
         self.player = params.player
         self.trophy = params.trophy
     end
 end
 
 function PlayState:move(direction)
-    self.dx = self.gravity * direction * COUNTER_GRAVITY
+    self.dx = self.gravity * direction * GRAVITY_MULTIPLIER
 end
 
 function PlayState:update(dt)
@@ -55,19 +60,25 @@ function PlayState:update(dt)
                 ["gravity"] = self.gravity,
                 ["direction"] = self.direction,
                 ["timer"] = self.timer,
-                ["progress"] = self.progress,
+                ["timer_progress"] = self.timer_progress,
                 ["player"] = self.player,
                 ["trophy"] = self.trophy
             }
         )
     end
 
-    if love.keyboard.was_pressed("left") then
+    if
+        love.keyboard.was_pressed("left") or
+            (love.mouse.button_pressed[1] and love.mouse.button_pressed[1].x < VIRTUAL_WIDTH / 2)
+     then
         if not self.trophy and self.player.x + self.player.width > self.thresholds["trophy"][1] then
             self.trophy = true
         end
         self:move(-1)
-    elseif love.keyboard.was_pressed("right") then
+    elseif
+        love.keyboard.was_pressed("right") or
+            (love.mouse.button_pressed[1] and love.mouse.button_pressed[1].x > VIRTUAL_WIDTH / 2)
+     then
         if not self.trophy and self.player.x < self.thresholds["trophy"][-1] then
             self.trophy = true
         end
@@ -75,23 +86,8 @@ function PlayState:update(dt)
         self:move(1)
     end
 
-    if love.mouse.button_pressed[1] then
-        if love.mouse.button_pressed[1].x < VIRTUAL_WIDTH / 2 then
-            if not self.trophy and self.player.x + self.player.width > self.thresholds["trophy"][1] then
-                self.trophy = true
-            end
-            self:move(-1)
-        else
-            if not self.trophy and self.player.x < self.thresholds["trophy"][-1] then
-                self.trophy = true
-            end
-
-            self:move(1)
-        end
-    end
-
     self.timer = self.timer + dt
-    self.progress = VIRTUAL_WIDTH * math.max(0, math.min(1, self.timer / self.interval)) * self.direction
+    self.timer_progress = VIRTUAL_WIDTH * math.max(0, math.min(1, self.timer / self.interval)) * self.direction
 
     if self.timer > self.interval then
         self.score = self.score + self.timer
@@ -117,15 +113,16 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(0.2, 0.2, 0.2, 1)
+    love.graphics.rectangle("fill", self.timer_progress, 0, VIRTUAL_WIDTH, 1)
 
+    love.graphics.setColor(1, 1, 1, 1)
     if self.direction == 1 then
-        love.graphics.draw(gImages["strip"], self.thresholds[1], 0, 0, -1, 1)
+        love.graphics.draw(images["strip"], self.thresholds[1], 0, 0, -1, 1)
     else
-        love.graphics.draw(gImages["strip"], self.thresholds[-1], 0)
+        love.graphics.draw(images["strip"], self.thresholds[-1], 0)
     end
 
-    love.graphics.draw(gImages["progress"], self.progress, 0)
-
+    love.graphics.setColor(1, 1, 1, 1)
     self.player:render()
 end
