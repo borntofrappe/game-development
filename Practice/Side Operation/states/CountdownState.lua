@@ -20,7 +20,7 @@ function CountdownState:update(dt)
 end
 
 function CountdownState:render()
-    love.graphics.setColor(0.2, 0.2, 0.2, 1)
+    love.graphics.setColor(0.333, 0.325, 0.408, 1)
     love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, 1)
 
     love.graphics.setColor(1, 1, 1, 1)
