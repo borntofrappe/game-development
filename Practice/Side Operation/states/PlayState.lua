@@ -48,7 +48,7 @@ function PlayState:update(dt)
         gStateMachine:change("title")
     end
 
-    if love.keyboard.was_pressed("p") then
+    if love.keyboard.was_pressed("p") or love.mouse.button_pressed[2] then
         gStateMachine:change(
             "pause",
             {
@@ -73,6 +73,21 @@ function PlayState:update(dt)
         end
 
         self:move(1)
+    end
+
+    if love.mouse.button_pressed[1] then
+        if love.mouse.button_pressed[1].x < VIRTUAL_WIDTH / 2 then
+            if not self.trophy and self.player.x + self.player.width > self.thresholds["trophy"][1] then
+                self.trophy = true
+            end
+            self:move(-1)
+        else
+            if not self.trophy and self.player.x < self.thresholds["trophy"][-1] then
+                self.trophy = true
+            end
+
+            self:move(1)
+        end
     end
 
     self.timer = self.timer + dt

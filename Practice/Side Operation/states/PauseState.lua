@@ -10,7 +10,7 @@ function PauseState:enter(params)
 end
 
 function PauseState:update(dt)
-    if love.keyboard.was_pressed("p") or love.keyboard.was_pressed("return") then
+    if love.keyboard.was_pressed("p") or love.mouse.button_pressed[2] then
         gStateMachine:change(
             "play",
             {

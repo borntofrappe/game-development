@@ -43,6 +43,7 @@ function love.load()
     love.graphics.setFont(gFont)
 
     love.keyboard.key_pressed = {}
+    love.mouse.button_pressed = {}
 
     gStateMachine =
         StateMachine(
@@ -76,6 +77,14 @@ function love.keypressed(key)
     love.keyboard.key_pressed[key] = true
 end
 
+function love.mousepressed(x, y, button)
+    x, y = push:toGame(x, y)
+    love.mouse.button_pressed[button] = {
+        ["x"] = x,
+        ["y"] = y
+    }
+end
+
 function love.keyboard.was_pressed(key)
     return love.keyboard.key_pressed[key]
 end
@@ -86,6 +95,7 @@ function love.update(dt)
     gStateMachine:update(dt)
 
     love.keyboard.key_pressed = {}
+    love.mouse.button_pressed = {}
 end
 
 function love.draw()

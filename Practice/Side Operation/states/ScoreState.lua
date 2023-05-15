@@ -39,7 +39,7 @@ function ScoreState:enter(params)
 end
 
 function ScoreState:update(dt)
-    if love.keyboard.was_pressed("return") then
+    if love.keyboard.was_pressed("return") or love.mouse.button_pressed[1] then
         gStateMachine:change("countdown")
     end
 end
