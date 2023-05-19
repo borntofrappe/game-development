@@ -88,14 +88,7 @@ end
 function love.draw()
   push:start()
 
-  love.graphics.draw(
-    gTextures["background"],
-    0,
-    0,
-    0,
-    VIRTUAL_WIDTH / (gTextures["background"]:getWidth() - 1),
-    VIRTUAL_HEIGHT / (gTextures["background"]:getHeight() - 1)
-  )
+  love.graphics.draw(gTextures["background"], 0, 0)
 
   gStateMachine:render()
 

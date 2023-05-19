@@ -112,18 +112,3 @@ gSounds["music"]:play()
 ```
 
 The track is set to loop continuously to create the illusion of a continuous track.
-
-## Background size
-
-The texture used in the background is scaled according to the size of the virtual window and the dimensions of the actual image. This scaling is made possible thanks to the syntax of the `love.graphics.draw` function.
-
-```lua
-love.graphics.draw(
-  drawable,
-  x,
-  y,
-  rotation,
-  scaleX,
-  scaleY
-)
-```
