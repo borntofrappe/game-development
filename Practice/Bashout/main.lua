@@ -16,6 +16,8 @@ function love.load()
         ["spritesheet"] = love.graphics.newImage("res/graphics/spritesheet.png")
     }
 
+    gQuads = GenerateQuads(gTextures["spritesheet"])
+
     gStateMachine =
         StateMachine(
         {
