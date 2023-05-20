@@ -72,25 +72,21 @@ function PlayState:update(dt)
         gSounds["victory"]:play()
       end
 
-      if self.ball.dx > 0 then
-        local isBefore = self.ball.x + self.ball.width < brick.x + BRICK_X_PADDING
-        if isBefore then
-          self.ball.x = brick.x - self.ball.width
-          self.ball.dx = self.ball.dx * -1
-        else
-          self.ball.y = self.ball.dy > 0 and brick.y - self.ball.height or brick.y + brick.height
-          self.ball.dy = self.ball.dy * -1
-        end
+      if self.ball.x + self.ball.width - 3 < brick.x and self.ball.dx > 0 then
+        self.ball.x = brick.x - self.ball.width
+        self.ball.dx = self.ball.dx * -1
+      elseif self.ball.x + 3 > brick.x + brick.width and self.ball.dx < 0 then
+        self.ball.x = brick.x + brick.width
+        self.ball.dx = self.ball.dx * -1
+      elseif self.ball.y + self.ball.height / 2 < brick.y + brick.height / 2 then
+        self.ball.y = brick.y - self.ball.height
+        self.ball.dy = self.ball.dy * -1
       else
-        local isAfter = self.ball.x > brick.x + brick.width - BRICK_X_PADDING
-        if isAfter then
-          self.ball.x = brick.x + brick.width
-          self.ball.dx = self.ball.dx * -1
-        else
-          self.ball.y = self.ball.dy > 0 and brick.y - self.ball.height or brick.y + brick.height
-          self.ball.dy = self.ball.dy * -1
-        end
+        self.ball.y = brick.y + brick.height
+        self.ball.dy = self.ball.dy * -1
       end
+
+      break
     end
   end
 

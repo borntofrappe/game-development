@@ -139,25 +139,21 @@ function PlayState:update(dt)
           gSounds["victory"]:play()
         end
 
-        if ball.dx > 0 then
-          local isBefore = ball.x + ball.width < brick.x + BRICK_X_PADDING
-          if isBefore then
-            ball.x = brick.x - ball.width
-            ball.dx = ball.dx * -1
-          else
-            ball.y = ball.dy > 0 and brick.y - ball.height or brick.y + brick.height
-            ball.dy = ball.dy * -1
-          end
+        if ball.x + ball.width - 3 < brick.x and ball.dx > 0 then
+          ball.x = brick.x - ball.width
+          ball.dx = ball.dx * -1
+        elseif ball.x + 3 > brick.x + brick.width and ball.dx < 0 then
+          ball.x = brick.x + brick.width
+          ball.dx = ball.dx * -1
+        elseif ball.y + ball.height / 2 < brick.y + brick.height / 2 then
+          ball.y = brick.y - ball.height
+          ball.dy = ball.dy * -1
         else
-          local isAfter = ball.x > brick.x + brick.width - BRICK_X_PADDING
-          if isAfter then
-            ball.x = brick.x + brick.width
-            ball.dx = ball.dx * -1
-          else
-            ball.y = ball.dy > 0 and brick.y - ball.height or brick.y + brick.height
-            ball.dy = ball.dy * -1
-          end
+          ball.y = brick.y + brick.height
+          ball.dy = ball.dy * -1
         end
+
+        break
       end
     end
 
