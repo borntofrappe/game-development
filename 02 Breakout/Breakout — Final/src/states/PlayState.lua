@@ -42,10 +42,10 @@ function PlayState:update(dt)
 
   if self.ball:collides(self.paddle) then
     self.ball.y = self.paddle.y - self.ball.height
-    self.ball.dy = self.ball.dy * -1
+    self.ball.dy = math.max(-PADDLE_SPEED, self.ball.dy * -1 * 1.02)
 
     local deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
-    self.ball.dx = self.ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER
+    self.ball.dx = math.min(PADDLE_SPEED, math.max(-PADDLE_SPEED, self.ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER))
 
     gSounds["paddle_hit"]:play()
   end
