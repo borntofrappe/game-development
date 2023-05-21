@@ -9,8 +9,8 @@ local POWERUP_DY_MAX = 80
 function Powerup:init(x, y, powerup)
   self.x = x - POWERUP_WIDTH / 2
   self.y = y - POWERUP_HEIGHT / 2
-  self.startingY = self.y
   self.powerup = powerup or math.random(POWERUPS)
+  self.startingY = self.y
   self.width = POWERUP_WIDTH
   self.height = POWERUP_HEIGHT
   self.dy = math.random(POWERUP_DY_MIN, POWERUP_DY_MAX)

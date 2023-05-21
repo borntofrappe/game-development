@@ -7,7 +7,7 @@ local COLUMNS_MIN = 4
 local COLUMNS_MAX = 9
 
 local SKIP_ODDS = 5 -- 1 in 5
-local ALTENRATE_ODDS = 5 -- 1 in 5
+local ALTERNATE_ODDS = 5 -- 1 in 5
 
 local LOCK_ODDS = 15 -- 1 in 15
 local POWERUP_ODDS = 5 -- 1 in 5
@@ -21,7 +21,7 @@ function LevelMaker.createMap(level)
   for row = 1, rows do
     local skipFlag = math.random(SKIP_ODDS) == 1
     local skipOddsOrEven = math.random(2) == 1 and 1 or 0
-    local alternateFlag = math.random(ALTENRATE_ODDS) == 1
+    local alternateFlag = math.random(ALTERNATE_ODDS) == 1
 
     local maxColor = math.min(BRICK_COLORS, math.ceil(level / 2)) -- 2 as a magic number
     local colors = {math.random(maxColor), math.random(maxColor)}
@@ -39,7 +39,7 @@ function LevelMaker.createMap(level)
             table.insert(bricks, brick)
           else
             local tier = math.random(1, maxTier)
-            local powerupFlag = math.random(POWERUP_ODDS) == 1
+            local spawnPowerup = math.random(POWERUP_ODDS) == 1
 
             local brick =
               Brick(
@@ -47,7 +47,7 @@ function LevelMaker.createMap(level)
               row * BRICK_HEIGHT,
               tier,
               colors[colorIndex],
-              powerupFlag
+              spawnPowerup
             )
             table.insert(bricks, brick)
 
@@ -65,7 +65,7 @@ function LevelMaker.createMap(level)
           table.insert(bricks, brick)
         else
           local tier = math.random(1, maxTier)
-          local powerupFlag = math.random(POWERUP_ODDS) == 1
+          local spawnPowerup = math.random(POWERUP_ODDS) == 1
 
           local brick =
             Brick(
@@ -73,7 +73,7 @@ function LevelMaker.createMap(level)
             row * BRICK_HEIGHT,
             tier,
             colors[colorIndex],
-            powerupFlag
+            spawnPowerup
           )
           table.insert(bricks, brick)
 

@@ -53,10 +53,8 @@ function ServeState:render()
 
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setFont(gFonts["big"])
-
   love.graphics.printf("Level: " .. self.level, 0, VIRTUAL_HEIGHT / 2 - 20, VIRTUAL_WIDTH, "center")
 
   love.graphics.setFont(gFonts["normal"])
-
   love.graphics.printf("Press enter to play", 0, VIRTUAL_HEIGHT / 2 + 16, VIRTUAL_WIDTH, "center")
 end
