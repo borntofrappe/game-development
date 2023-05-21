@@ -16,7 +16,7 @@ The game is more structured than previous demos, and the organization reflects t
 
 The entry point defines a few global variables used throughout the game: `gFonts`, `gTextures`, and `gSounds`.
 
-The state machine is exactly the same state machine introduced in `02 Flappy Bird`, so I won't repeat the notes included in that project. For the current update, there's only one state, `StartState`, in which to show the game title and first menu.
+The state machine is exactly the same state machine introduced in `01 Flappy Bird`, so I won't repeat the notes included in that project. For the current update, there's only one state, `StartState`, in which to show the game title and first menu.
 
 Aside from these elements, the script defines basic state machine and includes a table in `love.keyboard` to keep track of the keys being pressed. This is similarly to `01 Flappy Bird`.
 

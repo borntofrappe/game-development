@@ -37,7 +37,7 @@ function EnterHighScoreState:update(dt)
           score = self.score
         }
       else
-        newHighScores[k] = highScores[k - 1]
+        newHighScores[k] = self.highScores[k - 1]
       end
     end
 

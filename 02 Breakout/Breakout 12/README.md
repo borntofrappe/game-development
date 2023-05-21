@@ -11,9 +11,11 @@ function ServeState:init()
 end
 ```
 
-## Gameover
+## Record high score
 
-The feature begins in the gameover state. Here, load the high scores in the `init` function.
+The update allows to record a high score past the game over state.
+
+In this instance load the high scores in the `init` function.
 
 ```lua
 function GameoverState:init()
@@ -21,7 +23,7 @@ function GameoverState:init()
 end
 ```
 
-To detect a high score, I decided to define a variable for the index, and use a controlled value of `-1`.
+To find if the number of points ranks up to a high score, I decided to define a variable for the index, and use a controlled value of `-1`.
 
 ```lua
 function GameoverState:enter(params)
@@ -41,7 +43,7 @@ for k, highScore in pairs(self.highScores) do
 end
 ```
 
-With this setup, once you leave the gameover state by pressing enter, check the value of the index. If this is still `-1`, move to the start state. Else, move to the enter state to actually record the score.
+With this setup, once you leave the gameover state by pressing enter, check the value of the index. If this is still `-1`, move to the start state. Else, move to `EnterHighScoreState` to actually record the score.
 
 ```lua
 if self.index == -1 then
@@ -55,9 +57,9 @@ else
 end
 ```
 
-## EnterHihScore
+## EnterHighScore
 
-The state is responsible for saving the score, but first, it is tasked to consider the player name.
+The state is responsible for saving the score, but first, it is tasked to consider the player's name.
 
 ### Score name
 
@@ -95,7 +97,7 @@ function EnterHighScoreState:render()
 end
 ```
 
-To update the letter, consider the values in the `[65, 90]` range.
+To update the letter, consider the values in the [65, 90] range.
 
 ### newHighScores
 
@@ -132,14 +134,23 @@ The idea is to:
     }
   ```
 
+  For the name concatenate the characters from `self.chars`.
+
+  ```lua
+  name = ""
+  for k, char in pairs(self.chars) do
+    name = name .. string.char(char)
+  end
+  ```
+
 - use the previous value for the scores which follow the new score
 
   ```lua
   else
-    newHighScores[k] = highScores[k - 1]
+    newHighScores[k] = self.highScores[k - 1]
   ```
 
-Following the loop, `newHighScores` includes the scores in the new order. Writing the scores in the `lst` file is a matter of repeating the process introduced in the previous update.
+Following the loop, `newHighScores` includes the scores in the new order. Writing the scores in the `lst` file is a matter of repeating the process introduced in `main.lua` with the `loadHighScores` function.
 
 - create a string
 
@@ -168,3 +179,5 @@ Following the loop, `newHighScores` includes the scores in the new order. Writin
   ```lua
   love.filesystem.write('highscores.lst', string.sub(highScores, 1, #highScores - 1))
   ```
+
+As you record the high score, finally, move the game to `HighScoresState` so that it is possible to find the number of points and name registered in the new spot.

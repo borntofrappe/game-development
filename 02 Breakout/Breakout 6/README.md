@@ -4,15 +4,27 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## States
 
-The game introduces two additional states:
+The game introduces two additional states.
 
-- `ServeState`, between the start and play. Here you show the level, and position the ball atop the paddle. The idea is to move to the play state by pressing enter, and always move the ball upwards away from the paddle
+### ServeState
 
-- `GameoverState`, once the ball crosses the bottom of the screen _and_ there are no lives left (see next section). The idea is to show the score and move to the serve state by pressing enter
+Right after the introductory title and `StartState`, initialize the serving state. In here initialize the level, the paddle, ball and bricks.
+
+The idea is to move to and from the playing state to show the paddle, always with the ball on top, so that it is necessary to pass the necessary information through the `:enter` functions and the `params` argument.
+
+As the ball starts from the paddle, update `Ball:init` so that the vertical speed is always negative, and the ball moves upwards.
+
+In the top right corner of the serving and playing state show the number of points and health points left. The two are the subject of later sections and a couple of utility functions.
+
+### GameoverState
+
+Once the crosses the bottom of the screen _and_ there are no health points left, instead of reverting back to the serving state, the idea is to initialize `GameoverState`.
+
+Here you receive the score, so you can display the information along a final message.
 
 ## Health points
 
-The heart icons are included in the `hearts.png` image, side by side and each with a (10x9) size. Creating the quads is therefore a matter of using `GenerateQuads` with the given measure.
+Include heart icons per the `hearts.png` image. The sprites are side by side and each with a (10x9) size, so that it's possible to use `GenerateQuads` directly.
 
 ```lua
 gFrames = {
@@ -24,4 +36,4 @@ To show the health, add a global function `displayHealth` in `main.lua`. This fu
 
 ## Score
 
-Add a global function `displayScore` to show the number of points below the heart icons. The score is increased in the play state, and by an arbitrary amount of 50 points for every collision, but a future update will specify a more complex scoring system.
+Add a global function `displayScore` to show the number of points below the heart icons. The score is increased in the play state, and by an arbitrary amount of 50 points for every brick collision, but a future update will specify a more complex scoring system.

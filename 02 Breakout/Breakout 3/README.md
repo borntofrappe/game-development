@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## Quads
 
-The instructions to create the quads mirror those included for the paddle, but are repeated to solidify the concept.
+The instructions to create the quads mirror those included for the paddle, but are repeated to rehearse the topic.
 
 In `main.lua`, the goal is to populate the `gFrames` table with tables of quads.
 
@@ -29,7 +29,7 @@ This function is created in `Utils.lua`, similarly to the previous `GenerateQuad
 
 - populate a table with as many rectangles as necessary
 
-With the balls, the idea is to consider two rows of (8x8) squares, starting at the point (96, 48) and considering four columns each.
+For the balls, the idea is to consider two rows of (8x8) squares, starting at the point (96, 48) and considering four columns each.
 
 ```lua
 function GenerateQuadsBalls(atlas)

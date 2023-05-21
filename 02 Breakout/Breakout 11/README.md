@@ -2,9 +2,9 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
-## Data
+## High score data
 
-The idea is to store the data in a `.lst` file, dedicating two lines for each high score.
+The idea is to store the data for the high scores in a `.lst` file, devoting two lines for each high score.
 
 ```lst
 name
@@ -15,9 +15,9 @@ name
 score
 ```
 
-One line for the player name, one for actual score.
+One line for the name of the player, one for actual score.
 
-When reading the data, the idea is to then produce a table, where each pairing occupies a key.
+When reading the data, the goal is to then produce a table, where each item collects a high score.
 
 ```lua
 highscores = {
@@ -34,39 +34,45 @@ highscores = {
 
 ## loadHighScores
 
-The relevant interface is the one provided by [love.filesystem](https://love2d.org/wiki/love.filesystem). `loadHighScores` makes use of several functions from this module, in order to:
+In `main.lua`, `loadHighScores` makes use of several functions from the [love.filesystem](https://love2d.org/wiki/love.filesystem) module.
 
-1. set the current folder
+Immediately, set the current folder to one "breakout". If one does not exist, love2d will produce one in the path specified by the wiki.
 
-   ```lua
-   love.filesystem.setIdentity('breakout')
-   ```
+```lua
+love.filesystem.setIdentity('breakout')
+```
 
-2. check if a file already exist
+In this directory, check if a `.lst` file exist, so to make up placeholder data if one is not present.
 
-   ```lua
-   love.filesystem.getInfo('highscores.lst')
-   ```
+```lua
+if not love.filesystem.getInfo('highscores.lst') then
+  -- ...
+end
+```
 
-3. create arbitrary data in case the file doesn't exist
+In the body of the if statement the idea is to create a string separating names and a decreasing number of points. Each name and each score is separated by a new line character to match the structure described above.
 
-   ```lua
-   love.filesystem.write('highscores.lst', highscores)
-   ```
+With this string, create a `.lst` file with the relevant information and with `love.filesystem.write()`.
 
-4. read from the sure-to-exist file one line at a time
+```lua
+love.filesystem.write("highscores.lst", stringData)
+```
 
-   ```lua
-   for line in love.filesystem.lines('highscores.lst') do
-     -- do something
-   end
-   ```
+Following the logic of the if statement, you are sure to have a `.lst` file with the records. In order to populate a table with the relevant information, `love.filesystem.lines()` provides what is essentially a table of lines, so that you can loop through the strings and extract the name, or again the score.
+
+```lua
+for line in love.filesystem.lines('highscores.lst') do
+    -- do something
+end
+```
 
 ## HighScoresState
 
-In terms of flow, you access the high scores from the start state, when the variable `choice` describes the matching option. By pressing escape or enter you then move back to the start state.
+The update adds a state for the high scores, accessible from `StartState` when the variable `choice` describes the second option.
 
-In terms of content, the state loads the high scores as through the `loadHighScores` function, and then iterates through the results to render the name and scores one after the other.
+In terms of logic, the state loads the high scores per the `loadHighScores○ function. Press escape or enter you then move back to the start state.
+
+In terms of content, the goal is to iterates through the results to render the name and scores one after the other.
 
 ```lua
 function HighScoresState:init()

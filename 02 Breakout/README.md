@@ -1,6 +1,6 @@
 # 02 Breakout
 
-After Pong and Flappy Bird, the course proceeds to recreate the game Breakout.
+The course continues to recreate the game Breakout.
 
 ![A few frames from the assignment for "Breakout"](https://github.com/borntofrappe/game-development/blob/main/02%20Breakout/breakout.gif)
 
@@ -8,13 +8,13 @@ After Pong and Flappy Bird, the course proceeds to recreate the game Breakout.
 
 - spritesheets, loading a single image and displaying portions of the larger whole
 
-- procedural generation, with bricks of different color and type
+- procedural generation, for bricks of different color and type
 
-- state, with state machine
+- state, with a state machine
 
-- levels, with a progression system
+- levels, implementing a progression system
 
-- player health, with an arbitrary number of lives
+- player health, with health points
 
 - particle systems, particles spawned to create a visual effect like a puff of smoke
 

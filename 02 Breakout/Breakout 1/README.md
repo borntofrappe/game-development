@@ -24,7 +24,7 @@ Use `image:getDimensions()` to retrieve this value.
 
 ### draw()
 
-The function accepts a variable number of arguments, and in the context of quads, it allows to draw a specific portion of the image using the image, and then the quad.
+The function accepts a variable number of arguments, and in the context of quads, it allows to draw a specific portion of the image by referring to the image and then the quad.
 
 ```lua
 love.graphics.draw(image, quad, x, y)
@@ -40,7 +40,7 @@ This function is created to divide the sprite image into quads.
 
 It takes as arguments:
 
-- `atlas`, the image to be 'quadded', so to speak
+- `atlas`, the image to be "quadded", so to speak
 
 - `tileWidth`, the unit of measure detailing the smallest measure in which the image can be sectioned horizontally
 
@@ -50,7 +50,7 @@ Consider for instance the graphic in `arrows.png`:
 
 - `atlas` refers to the entire image
 
-- `tileWidth` and `tileHeight` both describe `16`, for the width and the height of the square describing the individual arrow
+- `tileWidth` and `tileHeight` both describe 24, for the width and the height of the individual sprite
 
 With these arguments, the function `GenerateQuads` creates an empty table and fills it with quads from the image. This by looping through the tiles horizontally and vertically.
 
@@ -66,7 +66,7 @@ love.graphics.newQuad(
 )
 ```
 
-As described in the previous section, these values relate to the coordinates, size and dimension of the quad.
+As described in the previous section, these values relate to the coordinates, size and dimensions of the quad.
 
 Once you use this function on a spritesheet, you obtain a table, specifying the quads of the spritesheet in a structure similar to the following:
 
@@ -92,11 +92,11 @@ This utility function allows to slice an input table. It is not included in any 
 
 It takes as argument:
 
-- `table`, in the project the spreadsheet table to-be-divided
+- a table
 
 - `first`, `last` and `step`. The goal is to slice the table from a certain index to another specified index, and at a described interval
 
-Notice how in the for loop, the loop includes default values, in case `first`, `last`, `step` are left undefined.
+Notice how the loop includes default values, in case `first`, `last`, `step` are left undefined.
 
 ```lua
 for i = first or 1, last or #table, step or 1 do

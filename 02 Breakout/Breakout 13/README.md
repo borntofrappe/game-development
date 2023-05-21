@@ -2,64 +2,61 @@
 
 _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider copy-pasting the resources from `Breakout — Final`.
 
+## ServeState
+
+The update includes an additional state between start and serve, `PaddleSelectState`. The goal is to give the choice to the player to pick and choose a color for the paddle, so that the class is initialized before the serving state. To this end, update `ServeState` to always consider parameters in the `:enter` function, and set defaults if the matching value is not passed through the `params` table.
+
+```lua
+function ServeState:enter(params)
+  self.level = params.level or 1
+  self.health = params.health or 3
+  -- ...
+end
+```
+
 ## Arrows
 
-The graphics folder provide a helpul asset in `arrows.png`. The idea is to create the quads with a method similar to the one described for the hearts.
+In `res/graphics/arrows.png` you find the sprites for the arrows. Create the quads with a method similar to the one described for the hearts.
 
 ```lua
 gFrames = {
-  -- previous frames,
   ['arrows'] = GenerateQuads(gTextures['arrows'], 24, 24)
 }
 ```
 
-And to then render the arrows at either side of the paddle.
+With the idea of showing the left and right variants on either side of a paddle.
 
 ## PaddleSelect
 
-The new state is introduced between the start and serve state. The idea is to render some text, and only the paddle. By pressing the arrow keys then, the idea is to change the color of the paddle looping through the possible four variants.
+In terms of visuals, render some text the paddle, and the arrows on either side.
 
-It's important to note that the table start with a key of `1`, so accessing the `0`th element would result in an error.
-
-## Update
-
-The presence of the sound byte `no-select` leads me to revise the way the arrows are rendered. This is most likely covered in the video, but I forgot to repeat the feature when recreating the game. The idea is to have the arrow semi-transparent if the paddle describes the first/last choice.
-
-In the previuos version, the arrows are always representative of a choice. If you press the left arrow on the first choice, you'd obtain the last choice. Vice versa if pressing the right arrow for the last choice,
+In terms of logic, allow to change the color of the paddle between one of the four available variants by pressing the left and right key.
 
 ```lua
-if love.keyboard.waspressed('right') then
-  self.paddle.color = self.paddle.color == 4 and 1 or self.paddle.color + 1
-  gSounds['select']:play()
-end
-
-if love.keyboard.waspressed('left') then
-  self.paddle.color = self.paddle.color == 1 and 4 or self.paddle.color - 1
-  gSounds['select']:play()
+if love.keyboard.waspressed("left") then
+  self.paddle.color = self.paddle.color - 1
+  gSounds["select"]:play()
 end
 ```
 
-With this approach, however, you remove the option. The only way you reach the last option is by pressing the right arrow. The only way you reach the first is with the left. For one of the two sides for instance.
+Instead of looping to the other end when pressing the left key on the first option, or the right key on the last choice, prevent the action and play the matching sound byte.
 
 ```lua
-if love.keyboard.waspressed('right') then
-  if self.paddle.color == 4 then
-    gSounds['no-select']:play()
+if love.keyboard.waspressed("left") then
+  if self.paddle.color == 1 then
+    gSounds["no-select"]:play()
   else
-    self.paddle.color = self.paddle.color + 1
-    gSounds['select']:play()
+    self.paddle.color = self.paddle.color - 1
+    gSounds["select"]:play()
   end
 end
 ```
 
-You can update the color using `math.min`, or `math.max`, but with the explicit loop you also specify the sound to play the dedicated audio.
-
-The audio provides a hint, but so the way the arrows are rendered. Using the current color, the idea is to have the arrow semi-transparent by modifying the color with `setColor`. The fourth argument — alpha — affects images similarly to shapes.
+To accompany the logic, render the corresponding arrow as semi-transparent.
 
 ```lua
-
-if self.paddle.color == 4 then
+if self.paddle.color == 1 then
   love.graphics.setColor(1, 1, 1, 0.5)
-  -- right arrow
+  -- left arrow
 end
 ```

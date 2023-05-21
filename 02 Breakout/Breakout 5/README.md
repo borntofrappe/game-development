@@ -4,70 +4,75 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## Paddle collision
 
-Beside changing the direction of the ball through `dy`, the idea is to adjust `dx` depending on where the ball hits the paddle.
+Immediately, update the vertical component and the position of the ball to bounce in the opposite direction.
+
+```lua
+self.ball.y = self.paddle.y - self.ball.height
+self.ball.dy = self.ball.dy * -1
+```
+
+To increase the difficulty of the game consider multiplying the speed by an arbitrary amount, and capping the value so that it doesn't cross a given threshold.
+
+```lua
+self.ball.dy = math.max(-150, self.ball.dy * -1 * 1.02)
+```
+
+The logic works to have the ball bounce, but it is helpful to further modify the movement in the horizontal component and depending on where the ball hits the paddle.
 
 Start by computing the distance between the center of the paddle and the hit region.
 
-```text
- hit  center
-<-x------x-------->
+```lua
+local deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
 ```
 
-From this starting point, the larger the distance from the center, the steeper the change in `dx`.
+The idea is to change the horizontal component offsetting the `dx` by the distance and an arbitrary multiplying factor.
 
-It's also important to consider the direction of the ball, or rather the position from which the ball arrives at the paddle. With this in mind, hitting the paddle on the right side coming from the left results in a steeper incline, but coming from the right reduces the same value.
+```lua
+self.dx = self.ball.dx + deltaCenter * 5
+```
 
-In code:
+This helps to consider the direction of the ball as well, or rather, the position from which the ball arrives at the paddle.
 
-- compute the distance from the center
+If `self.dx` is positive, the ball comes from the left. If the hit is before the center, the value is detracted the distance from the center, resulting in a slower ball. If the distance is even greater than the horizontal speed, the ball moves in the opposite direction. If the hit is after the center, the ball becomes faster. The same is true if `self.dx` is negative, resulting in steeper/softer inclines.
 
-  ```lua
-  deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
-  ```
+Once again it is helpful to cap the values to given thresholds.
 
-- add the value weighed by a factor to increase its influence
+```lua
+self.ball.dx = math.min(150, math.max(-150, self.ball.dx + deltaCenter * 5))
+```
 
-  ```lua
-  self.ball.dx = self.ball.dx + deltaCenter * 4
-  ```
+## Brick collision
 
-Given the possible values, always adding `deltaCenter` is already enough to consider the direction of the ball.
+For the bricks, the trajectory needs to be adjusted depending on where the ball actually hits the structure.
 
-| dx  | deltaCenter | incline                    |
-| --- | ----------- | -------------------------- |
-| > 0 | > 0         | steeper (to the right)     |
-| > 0 | < 0         | softer (less to the right) |
-| < 0 | > 0         | softer (less to the left)  |
-| < 0 | < 0         | steeper (to the left)      |
+The idea is to here go through a series of conditional statements, considering if the ball hits the brick on the left, right, top or bottom side.
 
-It's important to note that given enough distance from the center, it's also possible to send the ball the opposite direction from which it came. This in the moment `deltaCenter * 4` more than offsets `dx`.
+- if the ball is before the brick and moving right, consider a collision with the left side
 
-## Bricks
+- else, if the ball is after the brick and moving left, consider a collision with the right side
 
-For the bricks, the trajectory needs to be adjusted depending on where the ball actually hits the shape.
+- else, if the ball is above the brick, consider a collision from above
 
-The idea is to here check through a series of conditional statements, considering if the ball hits the brick on the left, right, top or bottom side.
+- else, resolve the collision from below
 
-1. check whether the ball is moving to the right/left, to the top/bottom
-
-   Based on this first set of conditionals, you are able to narrow down the possible collisions.
-
-   If moving to the right and to the bottom, indeed the brick can only be hit on the left or top edge.
-
-2. check the horizontal coordinate of the ball vis-a-vis the horizontal coordinate of the brick
-
-   A simplified AABB test allows to decipher whether the ball hits the brick on its left/right side or on its top/bottom edge.
-
-   Case in point: if the horizontal coordinate falls within the coordinates provided by the brick, the collision must be on the top/bottom edge. If the horizontal coordinate describes a position before/after the brick, the collision must be on the left/right side.
-
-Barring edge cases, the approach is rather solid. Most importantly, it allows to have the ball estimate with good accuracy the behavior of the ball when it goes atop a row of contiguous bricks. This especially considering a slightly smaller bounding box.
+Barring edge cases, the approach is rather solid. This especially considering a slightly smaller bounding box for the left and right check.
 
 ```diff
--isBefore = self.ball.x + self.ball.width < brick.x
-+isBefore = self.ball.x + self.ball.width < brick.x + 5
+-self.ball.x + self.ball.width < brick.x and self.ball.dx > 0
++self.ball.x + self.ball.width - 3 < brick.x and self.ball.dx > 0
 
--isAfter = self.ball.x > brick.x + brick.width
-+isAfter = self.ball.x > brick.x + brick.width - 5
+-self.ball.x > brick.x + brick.width and self.ball.dx < 0
++self.ball.x + 3 > brick.x + brick.width and self.ball.dx < 0
 ```
 
-This preference for the top/bottom edge allows to avoid a messy situation in the moment the ball nears two bricks at the same time.
+This preference for the top and bottom edge allows to avoid a messy situation the moment the ball nears a brick at an angle.
+
+As you resolve a collision, it is possible to break out of the loop so that the ball considers one collision per frame.
+
+```lua
+if self.ball:collides(brick) and brick.inPlay then
+   -- collision
+
+   break
+end
+```

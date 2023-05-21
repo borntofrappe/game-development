@@ -4,7 +4,7 @@ _Please note:_ `main.lua` depends on a few assets in the `res` folder. Consider 
 
 ## Level cleared
 
-The variable for the level is initialized in the `ServeState` and then passed to and from the `PlayState` and `PauseState`. In terms of gameplay, it is in the play state where the value proves its worth, however.
+The variable for the level is initialized in the `ServeState` and then passed to and from the `PlayState` and `PauseState`. In terms of gameplay, it is in the play state where the value is updated.
 
 The idea is to include a function to check for a victory.
 

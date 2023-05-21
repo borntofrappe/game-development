@@ -75,7 +75,7 @@ function love.update(dt)
 end
 ```
 
-The brick class is appropriately updated.
+Update the brick class with the boolean variable and show the quad only if necessary.
 
 ```lua
 function Brick:init(x, y)

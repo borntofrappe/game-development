@@ -37,10 +37,10 @@ function PlayState:update(dt)
 
   if self.ball:collides(self.paddle) then
     self.ball.y = self.paddle.y - self.ball.height
-    self.ball.dy = self.ball.dy * -1
+    self.ball.dy = math.max(-150, self.ball.dy * -1 * 1.02)
 
-    deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
-    self.ball.dx = self.ball.dx + deltaCenter * 4
+    local deltaCenter = (self.ball.x + self.ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
+    self.ball.dx = math.min(150, math.max(-150, self.ball.dx + deltaCenter * 5))
 
     gSounds["paddle_hit"]:play()
   end
@@ -66,25 +66,21 @@ function PlayState:update(dt)
         )
       end
 
-      if self.ball.dx > 0 then
-        isBefore = self.ball.x + self.ball.width < brick.x + 5
-        if isBefore then
-          self.ball.x = brick.x - self.ball.width
-          self.ball.dx = self.ball.dx * -1
-        else
-          self.ball.y = self.ball.dy > 0 and brick.y - self.ball.height or brick.y + brick.height
-          self.ball.dy = self.ball.dy * -1
-        end
+      if self.ball.x + self.ball.width - 3 < brick.x and self.ball.dx > 0 then
+        self.ball.x = brick.x - self.ball.width
+        self.ball.dx = self.ball.dx * -1
+      elseif self.ball.x + 3 > brick.x + brick.width and self.ball.dx < 0 then
+        self.ball.x = brick.x + brick.width
+        self.ball.dx = self.ball.dx * -1
+      elseif self.ball.y + self.ball.height / 2 < brick.y + brick.height / 2 then
+        self.ball.y = brick.y - self.ball.height
+        self.ball.dy = self.ball.dy * -1
       else
-        isAfter = self.ball.x > brick.x + brick.width - 5
-        if isAfter then
-          self.ball.x = brick.x + brick.width
-          self.ball.dx = self.ball.dx * -1
-        else
-          self.ball.y = self.ball.dy > 0 and brick.y - self.ball.height or brick.y + brick.height
-          self.ball.dy = self.ball.dy * -1
-        end
+        self.ball.y = brick.y + brick.height
+        self.ball.dy = self.ball.dy * -1
       end
+
+      break
     end
   end
 
