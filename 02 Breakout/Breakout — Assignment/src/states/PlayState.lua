@@ -62,10 +62,10 @@ function PlayState:update(dt)
 
     if testAABB(ball, self.paddle) then
       ball.y = self.paddle.y - ball.height
-      ball.dy = math.max(-PADDLE_SPEED, ball.dy * -1 * 1.02)
+      ball.dy = math.max(-PADDLE_SPEED_MAX, ball.dy * -1 * PADDLE_SPEED_MULTIPLIER)
 
       local deltaCenter = (ball.x + ball.width / 2) - (self.paddle.x + self.paddle.width / 2)
-      ball.dx = math.min(PADDLE_SPEED, math.max(-PADDLE_SPEED, ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER))
+      ball.dx = math.min(PADDLE_SPEED_MAX, math.max(-PADDLE_SPEED_MAX, ball.dx + deltaCenter * DELTA_CENTER_MULTIPLER))
 
       gSounds["paddle_hit"]:play()
     end

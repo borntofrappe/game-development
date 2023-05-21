@@ -19,4 +19,4 @@ The game introduces a more complex structure in terms of state. Consider the fol
                     * ←-- victory ←-------
 ```
 
-By pressing `escape` in the paddle select, serve, play or victory state the game moves back to the start screen (symbolized by the asterisk character `*`). Otherwise, the game is quit altogether.
+By pressing `escape` in the paddle select, serve, play or victory state the game moves back to the start screen (symbolized by the asterisk character `*`). The escape key in the other states has the game quit altogether.
