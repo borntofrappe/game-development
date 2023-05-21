@@ -42,7 +42,6 @@ end
 function PaddleSelectState:render()
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setFont(gFonts["big"])
-
   love.graphics.printf("Paddle selection", 0, VIRTUAL_HEIGHT / 2 - 20, VIRTUAL_WIDTH, "center")
 
   love.graphics.setFont(gFonts["normal"])
@@ -57,13 +56,18 @@ function PaddleSelectState:render()
   love.graphics.draw(
     gTextures["arrows"],
     gFrames["arrows"][1],
-    VIRTUAL_WIDTH / 2 - 40 - 24,
-    VIRTUAL_HEIGHT - 32 + 8 - 12
+    VIRTUAL_WIDTH / 2 - self.paddle.width - 24,
+    self.paddle.y + self.paddle.height / 2 - 12
   )
 
   love.graphics.setColor(1, 1, 1, 1)
   if self.paddle.color == 4 then
     love.graphics.setColor(1, 1, 1, 0.4)
   end
-  love.graphics.draw(gTextures["arrows"], gFrames["arrows"][2], VIRTUAL_WIDTH / 2 + 40, VIRTUAL_HEIGHT - 32 + 8 - 12)
+  love.graphics.draw(
+    gTextures["arrows"],
+    gFrames["arrows"][2],
+    VIRTUAL_WIDTH / 2 + self.paddle.width,
+    self.paddle.y + self.paddle.height / 2 - 12
+  )
 end

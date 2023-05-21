@@ -5,11 +5,6 @@ function StartState:init()
 end
 
 function StartState:update(dt)
-  if love.keyboard.waspressed("up") or love.keyboard.waspressed("down") then
-    self.choice = self.choice == 1 and 2 or 1
-    gSounds["select"]:play()
-  end
-
   if love.keyboard.waspressed("escape") then
     love.event.quit()
   end
@@ -21,6 +16,11 @@ function StartState:update(dt)
       gStateMachine:change("highscores")
     end
     gSounds["confirm"]:play()
+  end
+
+  if love.keyboard.waspressed("up") or love.keyboard.waspressed("down") then
+    self.choice = self.choice == 1 and 2 or 1
+    gSounds["select"]:play()
   end
 end
 
@@ -36,7 +36,6 @@ function StartState:render()
   else
     love.graphics.setColor(1, 1, 1, 1)
   end
-
   love.graphics.printf("START", 0, VIRTUAL_HEIGHT * 3 / 4, VIRTUAL_WIDTH, "center")
 
   if self.choice == 2 then
@@ -44,6 +43,5 @@ function StartState:render()
   else
     love.graphics.setColor(1, 1, 1, 1)
   end
-
   love.graphics.printf("HIGH SCORES", 0, VIRTUAL_HEIGHT * 3 / 4 + 28, VIRTUAL_WIDTH, "center")
 end

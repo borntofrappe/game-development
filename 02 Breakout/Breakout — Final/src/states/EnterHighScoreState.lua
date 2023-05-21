@@ -82,7 +82,6 @@ end
 function EnterHighScoreState:render()
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setFont(gFonts["big"])
-
   love.graphics.printf("HIGH SCORE", 0, VIRTUAL_HEIGHT / 4 - 32, VIRTUAL_WIDTH, "center")
 
   love.graphics.setFont(gFonts["humongous"])

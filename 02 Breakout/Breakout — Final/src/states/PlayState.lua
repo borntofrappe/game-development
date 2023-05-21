@@ -3,7 +3,7 @@ PlayState = Class({__includes = BaseState})
 local POINTS_TIER = 200
 local POINTS_COLOR = 50
 local DELTA_CENTER_MULTIPLER = 3
-local BRICK_X_PADDING = 5
+local BRICK_X_INSET = 5
 
 function PlayState:enter(params)
   self.level = params.level
@@ -73,10 +73,10 @@ function PlayState:update(dt)
         gSounds["victory"]:play()
       end
 
-      if self.ball.x + self.ball.width - 3 < brick.x and self.ball.dx > 0 then
+      if self.ball.x + self.ball.width - BRICK_X_INSET < brick.x and self.ball.dx > 0 then
         self.ball.x = brick.x - self.ball.width
         self.ball.dx = self.ball.dx * -1
-      elseif self.ball.x + 3 > brick.x + brick.width and self.ball.dx < 0 then
+      elseif self.ball.x + BRICK_X_INSET > brick.x + brick.width and self.ball.dx < 0 then
         self.ball.x = brick.x + brick.width
         self.ball.dx = self.ball.dx * -1
       elseif self.ball.y + self.ball.height / 2 < brick.y + brick.height / 2 then
