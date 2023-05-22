@@ -3,7 +3,7 @@ PlayState = Class({__includes = BaseState})
 local POINTS_TIER = 200
 local POINTS_COLOR = 50
 local DELTA_CENTER_MULTIPLER = 3
-local BRICK_X_PADDING = 5
+local BRICK_X_INSET = 5
 
 local POINTS_LOCK = 1000
 local POWERUP_KEY = 10
@@ -133,10 +133,10 @@ function PlayState:update(dt)
           gSounds["victory"]:play()
         end
 
-        if ball.x + ball.width - 3 < brick.x and ball.dx > 0 then
+        if ball.x + ball.width - BRICK_X_INSET < brick.x and ball.dx > 0 then
           ball.x = brick.x - ball.width
           ball.dx = ball.dx * -1
-        elseif ball.x + 3 > brick.x + brick.width and ball.dx < 0 then
+        elseif ball.x + BRICK_X_INSET > brick.x + brick.width and ball.dx < 0 then
           ball.x = brick.x + brick.width
           ball.dx = ball.dx * -1
         elseif ball.y + ball.height / 2 < brick.y + brick.height / 2 then
@@ -151,7 +151,7 @@ function PlayState:update(dt)
       end
     end
 
-    if brick.showPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
+    if brick.spawnPowerup and brick.powerup.inPlay and testAABB(self.paddle, brick.powerup) then
       brick.powerup.inPlay = false
       gSounds["power-up"]:play()
       if brick.powerup.powerup == POWERUP_DOUBLE then

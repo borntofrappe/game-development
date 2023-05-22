@@ -38,7 +38,7 @@ local colorBricks = {
   }
 }
 
-function Brick:init(x, y, tier, color, showPowerup)
+function Brick:init(x, y, tier, color, spawnPowerup)
   self.x = x
   self.y = y
   self.width = BRICK_WIDTH
@@ -49,8 +49,8 @@ function Brick:init(x, y, tier, color, showPowerup)
 
   self.inPlay = true
 
-  self.showPowerup = showPowerup
-  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2)
+  self.spawnPowerup = spawnPowerup
+  self.powerup = spawnPowerup and Powerup(self.x + self.width / 2, self.y + self.height / 2) or nil
 
   self.particleSystem = love.graphics.newParticleSystem(gTextures["particle"], PARTICLES)
   self.particleSystem:setParticleLifetime(PARTICLES_LIFETIME_MIN, PARTICLES_LIFETIME_MAX)
@@ -89,7 +89,7 @@ function Brick:hit()
     gSounds["score"]:stop()
     gSounds["score"]:play()
 
-    if self.showPowerup and not self.powerup.inPlay then
+    if self.spawnPowerup and not self.powerup.inPlay then
       self.powerup.inPlay = true
     end
   end
@@ -98,16 +98,12 @@ end
 function Brick:update(dt)
   self.particleSystem:update(dt)
 
-  if self.showPowerup and self.powerup.inPlay then
+  if self.spawnPowerup and self.powerup.inPlay then
     self.powerup:update(dt)
   end
 end
 
 function Brick:render()
-  if self.showPowerup and self.powerup.inPlay then
-    self.powerup:render()
-  end
-
   if self.inPlay then
     love.graphics.draw(
       gTextures["breakout"],
@@ -115,6 +111,10 @@ function Brick:render()
       self.x,
       self.y
     )
+  end
+
+  if self.spawnPowerup and self.powerup.inPlay then
+    self.powerup:render()
   end
 end
 

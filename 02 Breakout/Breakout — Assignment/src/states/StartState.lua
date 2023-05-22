@@ -5,11 +5,6 @@ function StartState:init()
 end
 
 function StartState:update(dt)
-  if love.keyboard.waspressed("up") or love.keyboard.waspressed("down") then
-    self.choice = self.choice == 1 and 2 or 1
-    gSounds["select"]:play()
-  end
-
   if love.keyboard.waspressed("escape") then
     love.event.quit()
   end
@@ -21,6 +16,11 @@ function StartState:update(dt)
       gStateMachine:change("highscores")
     end
     gSounds["confirm"]:play()
+  end
+
+  if love.keyboard.waspressed("up") or love.keyboard.waspressed("down") then
+    self.choice = self.choice == 1 and 2 or 1
+    gSounds["select"]:play()
   end
 end
 

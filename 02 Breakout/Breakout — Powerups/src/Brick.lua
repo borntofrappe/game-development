@@ -50,7 +50,7 @@ function Brick:init(x, y, tier, color, spawnPowerup)
   self.inPlay = true
 
   self.spawnPowerup = spawnPowerup
-  self.powerup = Powerup(self.x + self.width / 2, self.y + self.height / 2)
+  self.powerup = spawnPowerup and Powerup(self.x + self.width / 2, self.y + self.height / 2) or nil
 
   self.particleSystem = love.graphics.newParticleSystem(gTextures["particle"], PARTICLES)
   self.particleSystem:setParticleLifetime(PARTICLES_LIFETIME_MIN, PARTICLES_LIFETIME_MAX)
